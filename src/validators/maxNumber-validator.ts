@@ -8,7 +8,7 @@ type MaxNumberValidator = (max: number, errorMessage?: string) => FieldValidator
  * @returns 
  */
 export const maxNumber: MaxNumberValidator = (max: number, errorMessage?: string) => {
-    let msg = `The maximum value for this field is ${max}`
+    let msg = `The maximum value for this field is ${max}.`
     if (errorMessage) {
         msg = errorMessage
     }

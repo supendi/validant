@@ -10,7 +10,7 @@ type EmailAddressValidator = (errorMessage?: string) => FieldValidator
  */
 export const emailAddress: EmailAddressValidator = (errorMessage?: string) => {
     if (!errorMessage) {
-        errorMessage = `Invalid email address. The valid email example: john.doe@example.com`
+        errorMessage = `Invalid email address. The valid email example: john.doe@example.com.`
     }
 
     var regex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;

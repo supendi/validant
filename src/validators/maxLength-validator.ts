@@ -9,7 +9,7 @@ type MaxLengthValidator = (max: number, errorMessage?: string) => FieldValidator
  */
 export const maxLength: MaxLengthValidator = (max: number, errorMessage?: string) => {
 
-    let msg = `The maximum length for this field is ${max}`
+    let msg = `The maximum length for this field is ${max}.`
     if (errorMessage) {
         msg = errorMessage
     }

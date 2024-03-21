@@ -8,7 +8,7 @@ type EqualToFieldValueValidator = (theFieldNameToCompare: string, errorMessage?:
  * @returns 
  */
 export const equalToFieldValue: EqualToFieldValueValidator = (equalToFieldName: string, errorMessage?: string) => {
-    let msg = `The value should be equal to the value of '${equalToFieldName}'`
+    let msg = `The value should be equal to the value of '${equalToFieldName}'.`
     if (errorMessage) {
         msg = errorMessage
     }

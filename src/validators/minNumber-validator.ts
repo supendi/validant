@@ -10,7 +10,7 @@ type MinNumberValidator = (min: number, errorMessage?: string) => FieldValidator
  */
 export const minNumber: MinNumberValidator = (min: number, errorMessage?: string) => {
 
-    let msg = `The minimum value for this field is ${min}`
+    let msg = `The minimum value for this field is ${min}.`
     if (errorMessage) {
         msg = errorMessage
     }

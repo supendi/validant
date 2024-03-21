@@ -8,7 +8,7 @@ type MinimumSumOfValidator = <T>(fieldNameToSum: keyof T, value: number, errorMe
  * @returns 
  */
 export const minSumOf: MinimumSumOfValidator = <T>(fieldNameToSum: keyof T, minSum: number, errorMessage?: string) => {
-    let msg = `The minimum sum of ${fieldNameToSum.toString()} is ${minSum}`
+    let msg = `The minimum sum of ${fieldNameToSum.toString()} is ${minSum}.`
     if (errorMessage) {
         msg = errorMessage
     }
