@@ -78,7 +78,8 @@ describe("ArrayStringErrorOf Complex Person Test", () => {
                                 // cityId: ["invalid city id ''"], //ensure each property is optional
                                 street: ["Please enter street name"]
                             },
-                        }
+                        },
+                        validatedObject: undefined
                     }
                 ]
             }
@@ -124,7 +125,8 @@ describe("ArrayStringErrorOf Complex Person Test", () => {
                         errors: {
                             cityId: ["invalid city id ''"],
                             street: ["Please enter street name"]
-                        }
+                        },
+                        validatedObject: undefined
                     }
                 ]
             },
@@ -153,11 +155,13 @@ describe("ArrayStringErrorOf Complex Person Test", () => {
                                         errors: {
                                             // cityId: ["invalid city id ''"], //ensure each property is optional
                                             street: ["Please enter street name"]
-                                        }
+                                        },
+                                        validatedObject: undefined
                                     }
                                 ]
-                            },
-                        }
+                            }
+                        },
+                        validatedObject: undefined
                     }
                 ]
             }

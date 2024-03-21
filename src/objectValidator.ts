@@ -129,7 +129,8 @@ export const getArrayStringErrorOf = <T>(object: T, validationRule: ValidationRu
                             }
                             errors[key as any].indexedErrors.push({
                                 index: index,
-                                errors: error
+                                errors: error,
+                                validatedObject: element
                             })
                         }
                         continue

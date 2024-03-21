@@ -191,7 +191,8 @@ describe("Validator test with children array", () => {
                             index: 0,
                             errors: {
                                 name: ["This field is required."],
-                            }
+                            },
+                            validatedObject: person.children[0]
                         }
                     ]
                 }
@@ -330,12 +331,14 @@ describe("Validator test with Order and Order item", () => {
                                 productId: ["This field is required."],
                                 quantity: ["The minimum value for this field is 1"],
                             },
+                            validatedObject: newOrder2.orderItems[0]
                         },
                         {
                             index: 1,
                             errors: {
                                 productId: ["This field is required."],
-                            }
+                            },
+                            validatedObject: newOrder2.orderItems[1]
                         }
                     ]
                 }
@@ -437,13 +440,15 @@ describe("Validator test with Order and Order item", () => {
                             errors: {
                                 productId: ["This field is required."],
                                 quantity: ["The minimum value for this field is 1"],
-                            }
+                            },
+                            validatedObject: newOrder2.orderItems[0]
                         },
                         {
                             index: 1,
                             errors: {
                                 productId: ["This field is required."],
-                            }
+                            },
+                            validatedObject: newOrder2.orderItems[1]
                         }
                     ]
                 }
@@ -585,15 +590,17 @@ describe("Validator complex validations", () => {
                             errors: {
                                 productId: ["This field is required.", "The value '0' is not the element of [1, 2, 3, 4, 5]."],
                                 quantity: ["The minimum value for this field is 1", "The maximum value for this field is 5"],
-                            }
+                            },
+                            validatedObject: newOrder2.orderItems[0]
                         },
                         {
                             index: 2,
                             errors: {
                                 productId: ["The value '6' is not the element of [1, 2, 3, 4, 5]."],
                                 quantity: ["The maximum value for this field is 5"],
-                            }
-                        }
+                            },
+                            validatedObject: newOrder2.orderItems[2]
+                        },
                     ]
                 }
             }

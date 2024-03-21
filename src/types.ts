@@ -29,7 +29,7 @@ export interface ValidationResult<T> {
     errors: ArrayStringErrorOf<T>
 }
 
-export type IndexedArrayStringErrorOf<T> = { index: number, errors: ArrayStringErrorOf<T> }
+export type IndexedArrayStringErrorOf<T> = { index: number, errors: ArrayStringErrorOf<T>, validatedObject: T | null | undefined}
 
 /**
  * Represents the error of object which property data type array of string
