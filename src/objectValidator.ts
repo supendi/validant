@@ -124,10 +124,10 @@ export const getArrayStringErrorOf = <T>(object: T, validationRule: ValidationRu
                             if (!errors[key]) {
                                 errors[key as any] = {}
                             }
-                            if (!errors[key as any].elementErrors) {
-                                errors[key as any].elementErrors = []
+                            if (!errors[key as any].indexedErrors) {
+                                errors[key as any].indexedErrors = []
                             }
-                            errors[key as any].elementErrors.push({
+                            errors[key as any].indexedErrors.push({
                                 index: index,
                                 errors: error
                             })

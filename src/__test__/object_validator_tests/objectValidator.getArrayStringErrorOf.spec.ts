@@ -179,7 +179,7 @@ describe("getArrayStringErrorOf test with children array", () => {
         const expected: ArrayStringErrorOf<Person> = {
             name: ["This field is required."],
             children: {
-                elementErrors: [
+                indexedErrors: [
                     {
                         index: 0,
                         errors: {
@@ -307,7 +307,7 @@ describe("getArrayStringErrorOf test with Order and Order item", () => {
             orderDate: ["This field is required."],
             orderNumber: ["This field is required."],
             orderItems: {
-                elementErrors: [
+                indexedErrors: [
                     {
                         index: 0,
                         errors: {
@@ -409,7 +409,7 @@ describe("getArrayStringErrorOf test with Order and Order item", () => {
             orderNumber: ["This field is required."],
             orderItems: {
                 fieldErrors: ["The minimum length for this field is 3"],
-                elementErrors: [
+                indexedErrors: [
                     {
                         index: 0,
                         errors: {
@@ -551,7 +551,7 @@ describe("getArrayStringErrorOf complex validations", () => {
             },
             orderItems: {
                 fieldErrors: ["The minimum length for this field is 4"],
-                elementErrors: [
+                indexedErrors: [
                     {
                         index: 0,
                         errors: {

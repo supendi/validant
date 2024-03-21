@@ -59,7 +59,7 @@ describe("ArrayStringErrorOf Complex Person Test", () => {
             },
             children: {
                 fieldErrors: [],
-                elementErrors: [
+                indexedErrors: [
                     {
                         index: 0,
                         errors: {
@@ -118,7 +118,7 @@ describe("ArrayStringErrorOf Complex Person Test", () => {
             ],
             addresses: {
                 fieldErrors: [],
-                elementErrors: [
+                indexedErrors: [
                     {
                         index: 0,
                         errors: {
@@ -130,7 +130,7 @@ describe("ArrayStringErrorOf Complex Person Test", () => {
             },
             children: {
                 fieldErrors: [],
-                elementErrors: [
+                indexedErrors: [
                     {
                         index: 0,
                         errors: {
@@ -147,7 +147,7 @@ describe("ArrayStringErrorOf Complex Person Test", () => {
                             ],
                             addresses: {
                                 fieldErrors: [],
-                                elementErrors: [
+                                indexedErrors: [
                                     {
                                         index: 0,
                                         errors: {

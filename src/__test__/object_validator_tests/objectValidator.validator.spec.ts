@@ -186,7 +186,7 @@ describe("Validator test with children array", () => {
             errors: {
                 name: ["This field is required."],
                 children: {
-                    elementErrors: [
+                    indexedErrors: [
                         {
                             index: 0,
                             errors: {
@@ -323,7 +323,7 @@ describe("Validator test with Order and Order item", () => {
                 orderDate: ["This field is required."],
                 orderNumber: ["This field is required."],
                 orderItems: {
-                    elementErrors: [
+                    indexedErrors: [
                         {
                             index: 0,
                             errors: {
@@ -431,7 +431,7 @@ describe("Validator test with Order and Order item", () => {
                 orderNumber: ["This field is required."],
                 orderItems: {
                     fieldErrors: ["The minimum length for this field is 3"],
-                    elementErrors: [
+                    indexedErrors: [
                         {
                             index: 0,
                             errors: {
@@ -579,7 +579,7 @@ describe("Validator complex validations", () => {
                 },
                 orderItems: {
                     fieldErrors: ["The minimum length for this field is 4"],
-                    elementErrors: [
+                    indexedErrors: [
                         {
                             index: 0,
                             errors: {

@@ -35,7 +35,7 @@ export type IndexedArrayStringErrorOf<T> = { index: number, errors: ArrayStringE
  * Represents the error of object which property data type array of string
  */
 export type ArrayStringErrorOf<T> = { [key in keyof T]?: T[key] extends object
-    ? T[key] extends Array<any> ? { fieldErrors?: string[], elementErrors?: IndexedArrayStringErrorOf<GetArrayReturnType<T[key]>>[] } :
+    ? T[key] extends Array<any> ? { fieldErrors?: string[], indexedErrors?: IndexedArrayStringErrorOf<GetArrayReturnType<T[key]>>[] } :
     T[key] extends Date
     ? string[] : ArrayStringErrorOf<T[key]>
     : string[] }
