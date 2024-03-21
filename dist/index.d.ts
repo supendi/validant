@@ -1,4 +1,5 @@
 import validator from "./objectValidator";
+import { ArrayStringErrorOf, ValidationRule, ValidationResult, ValidatorFunc, FieldValidationResult, FieldValidator, StringifiedErrorOf, StringifiedValidationResult, ValidationRuleForArrayOf } from './types';
 import { elementOf } from './validators/elementOf-validator';
 import { emailAddress } from './validators/emailAddress-validator';
 import { equalToFieldValue } from './validators/equalToFieldValue-validator';
@@ -10,3 +11,4 @@ import { regularExpression } from './validators/regularExpression-validator';
 import { required } from './validators/required-validator';
 export default validator;
 export { elementOf, emailAddress, equalToFieldValue, maxLength, maxNumber, minLength, minNumber, regularExpression, required, };
+export { ArrayStringErrorOf, ValidationRule, ValidationResult, ValidatorFunc, FieldValidationResult, FieldValidator, StringifiedErrorOf, StringifiedValidationResult, ValidationRuleForArrayOf };
