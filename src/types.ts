@@ -45,11 +45,17 @@ export type FieldValidator = {
 }
 
 /**
+ * Helps to get the original type of an array type.
+ * See: https://stackoverflow.com/questions/46376468/how-to-get-type-of-array-items
+ */
+type GetArrayReturnType<T> = T extends (infer U)[] ? U : never;
+
+/**
  * Represents a collection of validation rules.
  * The validation schema should implement this type.
  */
-export type ValidationRule<T, U = T> = { [key in keyof T]?: T[key] extends Array<any>
-    ? ValidationRuleForArrayOf<U> : T[key] extends object
+export type ValidationRule<T> = { [key in keyof T]?: T[key] extends Array<any>
+    ? ValidationRuleForArrayOf<GetArrayReturnType<T[key]>> : T[key] extends object
     ? ValidationRule<T[key]> : FieldValidator[] }
 
 /**
