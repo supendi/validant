@@ -260,7 +260,7 @@ describe("Validator test with Order and Order item", () => {
             quantity: number
         }
 
-        const rule: ValidationRule<Order, OrderItem> = {
+        const rule: ValidationRule<Order> = {
             orderDate: [required()],
             orderNumber: [required()],
             orderItems: {

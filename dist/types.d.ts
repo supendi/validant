@@ -39,11 +39,16 @@ export declare type FieldValidator = {
     returningErrorMessage: string;
 };
 /**
+ * Helps to get the original type of an array type.
+ * See: https://stackoverflow.com/questions/46376468/how-to-get-type-of-array-items
+ */
+declare type GetArrayReturnType<T> = T extends (infer U)[] ? U : never;
+/**
  * Represents a collection of validation rules.
  * The validation schema should implement this type.
  */
-export declare type ValidationRule<T, U = T> = {
-    [key in keyof T]?: T[key] extends Array<any> ? ValidationRuleForArrayOf<U> : T[key] extends object ? ValidationRule<T[key]> : FieldValidator[];
+export declare type ValidationRule<T> = {
+    [key in keyof T]?: T[key] extends Array<any> ? ValidationRuleForArrayOf<GetArrayReturnType<T[key]>> : T[key] extends object ? ValidationRule<T[key]> : FieldValidator[];
 };
 /**
  * Represents validation rule of array of T
@@ -62,3 +67,4 @@ export interface FieldValidationResult {
     isValid: boolean;
     errorMessage: string;
 }
+export {};
