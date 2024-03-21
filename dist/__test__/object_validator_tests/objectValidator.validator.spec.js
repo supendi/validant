@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const index_1 = require("../../index");
 const validators_1 = require("../../validators");
+const minSumOf_validator_1 = require("../../validators/minSumOf-validator");
 describe("Validator Simple Person Test", () => {
     it("Person name should return errors", () => {
         const rule = {
@@ -353,7 +354,7 @@ describe("Validator complex validations", () => {
                 email: [(0, validators_1.required)(), (0, validators_1.emailAddress)()]
             },
             orderItems: {
-                fieldValidators: [(0, validators_1.minLength)(4)],
+                fieldValidators: [(0, validators_1.minLength)(4), (0, minSumOf_validator_1.minSumOf)("quantity", 100)],
                 validationRule: orderItemsRule
             }
         };
@@ -380,7 +381,7 @@ describe("Validator complex validations", () => {
                     name: ["This field is required."]
                 },
                 orderItems: {
-                    fieldErrors: ["The minimum length for this field is 4"],
+                    fieldErrors: ["The minimum length for this field is 4", "The minimum sum of quantity is 100",],
                 }
             }
         };
@@ -427,7 +428,7 @@ describe("Validator complex validations", () => {
                     name: ["This field is required."]
                 },
                 orderItems: {
-                    fieldErrors: ["The minimum length for this field is 4"],
+                    fieldErrors: ["The minimum length for this field is 4", "The minimum sum of quantity is 100",],
                     indexedErrors: [
                         {
                             index: 0,
@@ -450,6 +451,70 @@ describe("Validator complex validations", () => {
             }
         };
         expect(actual2).toEqual(expected2);
+    });
+});
+describe("Validator test maximum sum of", () => {
+    it("Should return errors", () => {
+        const productIds = [1, 2, 3, 4, 5];
+        const customerIds = [10, 11, 12, 13];
+        const orderItemsRule = {
+            productId: [(0, validators_1.required)(), (0, validators_1.elementOf)(productIds)],
+            quantity: [(0, validators_1.minNumber)(1), (0, validators_1.maxNumber)(10)],
+        };
+        const rule = {
+            orderDate: [(0, validators_1.required)()],
+            orderNumber: [(0, validators_1.required)()],
+            customer: {
+                id: [(0, validators_1.required)(), (0, validators_1.elementOf)(customerIds)],
+                name: [(0, validators_1.required)()],
+                email: [(0, validators_1.required)(), (0, validators_1.emailAddress)()]
+            },
+            orderItems: {
+                fieldValidators: [(0, validators_1.minLength)(4), (0, index_1.maxSumOf)("quantity", 10)],
+                validationRule: orderItemsRule
+            }
+        };
+        const newOrder1 = {
+            id: "1",
+            orderDate: null,
+            orderNumber: "",
+            customer: {
+                id: 1,
+                email: "invalid",
+                name: ""
+            },
+            orderItems: [
+                {
+                    id: "1",
+                    orderId: "1",
+                    productId: 1,
+                    quantity: 6,
+                },
+                {
+                    id: "2",
+                    orderId: "2",
+                    productId: 1,
+                    quantity: 5,
+                },
+            ]
+        };
+        const actual1 = index_1.default.validate(newOrder1, rule);
+        const expected1 = {
+            isValid: false,
+            errors: {
+                orderDate: ["This field is required."],
+                orderNumber: ["This field is required."],
+                customer: {
+                    id: ["The value '1' is not the element of [10, 11, 12, 13]."],
+                    email: ["Invalid email address. The valid email example: john.doe@example.com"],
+                    name: ["This field is required."]
+                },
+                orderItems: {
+                    fieldErrors: ["The minimum length for this field is 4", "The maximum sum of quantity is 10",],
+                }
+            }
+        };
+        expect(actual1).toEqual(expected1);
     });
 });
 describe("Validator complex validations", () => {

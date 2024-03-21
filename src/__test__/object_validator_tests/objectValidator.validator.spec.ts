@@ -1,4 +1,4 @@
-import validator from "../../index"
+import validator, { maxSumOf } from "../../index"
 import { ValidationResult, ValidationRule } from "../../types"
 import { elementOf, emailAddress, maxNumber, minLength, required, minNumber } from "../../validators"
 import { minSumOf } from "../../validators/minSumOf-validator"
@@ -535,7 +535,7 @@ describe("Validator complex validations", () => {
                     name: ["This field is required."]
                 },
                 orderItems: {
-                    fieldErrors: ["The minimum length for this field is 4", "Minimum sum of quantity is 100",],
+                    fieldErrors: ["The minimum length for this field is 4", "The minimum sum of quantity is 100",],
                 }
             }
         }
@@ -584,7 +584,7 @@ describe("Validator complex validations", () => {
                     name: ["This field is required."]
                 },
                 orderItems: {
-                    fieldErrors: ["The minimum length for this field is 4", "Minimum sum of quantity is 100",],
+                    fieldErrors: ["The minimum length for this field is 4", "The minimum sum of quantity is 100",],
                     indexedErrors: [
                         {
                             index: 0,
@@ -607,6 +607,106 @@ describe("Validator complex validations", () => {
             }
         }
         expect(actual2).toEqual(expected2)
+    })
+})
+
+
+
+describe("Validator test maximum sum of", () => {
+    it("Should return errors", () => {
+        interface Product {
+            name: string
+            price: number
+            subProducts?: Product[]
+        }
+
+        interface Customer {
+            id: number
+            name: string
+            email: string
+        }
+
+        interface Order {
+            id: string
+            customer: Customer
+            orderNumber: string
+            orderDate: Date | null
+            orderItems: OrderItem[]
+        }
+
+        interface OrderItem {
+            id: string
+            orderId?: string
+            productId: number
+            product?: Product
+            quantity: number
+        }
+
+        const productIds = [1, 2, 3, 4, 5]
+        const customerIds = [10, 11, 12, 13]
+
+        const orderItemsRule: ValidationRule<OrderItem> = {
+            productId: [required(), elementOf(productIds)],
+            quantity: [minNumber(1), maxNumber(10)],
+        }
+
+        const rule: ValidationRule<Order> = {
+            orderDate: [required()],
+            orderNumber: [required()],
+            customer: {
+                id: [required(), elementOf(customerIds)],
+                name: [required()],
+                email: [required(), emailAddress()]
+            },
+            orderItems: {
+                fieldValidators: [minLength(4), maxSumOf<OrderItem>("quantity", 10,)],
+                validationRule: orderItemsRule
+            }
+        }
+
+        const newOrder1: Order = {
+            id: "1",
+            orderDate: null,
+            orderNumber: "",
+            customer: {
+                id: 1,
+                email: "invalid",
+                name: ""
+            },
+            orderItems: [
+                {
+                    id: "1",
+                    orderId: "1",
+                    productId: 1,
+                    quantity: 6,
+                },
+                {
+                    id: "2",
+                    orderId: "2",
+                    productId: 1,
+                    quantity: 5,
+                },
+            ]
+        }
+
+        const actual1 = validator.validate(newOrder1, rule)
+        const expected1: ValidationResult<Order> = {
+            isValid: false,
+            errors: {
+                orderDate: ["This field is required."],
+                orderNumber: ["This field is required."],
+                customer: {
+                    id: ["The value '1' is not the element of [10, 11, 12, 13]."],
+                    email: ["Invalid email address. The valid email example: john.doe@example.com"],
+                    name: ["This field is required."]
+                },
+                orderItems: {
+                    fieldErrors: ["The minimum length for this field is 4", "The maximum sum of quantity is 10",],
+                }
+            }
+        }
+
+        expect(actual1).toEqual(expected1)
     })
 })
 
