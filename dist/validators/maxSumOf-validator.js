@@ -7,7 +7,7 @@ exports.maxSumOf = void 0;
  * @returns
  */
 const maxSumOf = (fieldNameToSum, maxSum, errorMessage) => {
-    let msg = `The maximum sum of ${fieldNameToSum.toString()} is ${maxSum}`;
+    let msg = `The maximum sum of ${fieldNameToSum.toString()} is ${maxSum}.`;
     if (errorMessage) {
         msg = errorMessage;
     }

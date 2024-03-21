@@ -5,7 +5,7 @@ describe("EqualToFieldValueValidator Test", () => {
     it("should return false and have default error message", () => {
         const testValue = 'email'
         const validator = equalToFieldValue(testValue)
-        const defaultValidatorErrorMessage = `The value should be equal to the value of '${testValue}'`
+        const defaultValidatorErrorMessage = `The value should be equal to the value of '${testValue}'.`
         const inputValue = "test12333@gmail.com"
         const object = {
             email: "test123@gmail.com"

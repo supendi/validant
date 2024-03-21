@@ -313,7 +313,7 @@ describe("getArrayStringErrorOf test with Order and Order item", () => {
                         index: 0,
                         errors: {
                             productId: ["This field is required."],
-                            quantity: ["The minimum value for this field is 1"],
+                            quantity: ["The minimum value for this field is 1."],
                         },
                         validatedObject: newOrder2.orderItems[0]
                     },
@@ -401,7 +401,7 @@ describe("getArrayStringErrorOf test with Order and Order item", () => {
             orderDate: ["This field is required."],
             orderNumber: ["This field is required."],
             orderItems: {
-                fieldErrors: ["The minimum length for this field is 3"],
+                fieldErrors: ["The minimum length for this field is 3."],
             }
         }
         expect(actual1).toEqual(expected1)
@@ -411,13 +411,13 @@ describe("getArrayStringErrorOf test with Order and Order item", () => {
             orderDate: ["This field is required."],
             orderNumber: ["This field is required."],
             orderItems: {
-                fieldErrors: ["The minimum length for this field is 3"],
+                fieldErrors: ["The minimum length for this field is 3."],
                 indexedErrors: [
                     {
                         index: 0,
                         errors: {
                             productId: ["This field is required."],
-                            quantity: ["The minimum value for this field is 1"],
+                            quantity: ["The minimum value for this field is 1."],
                         },
                         validatedObject: newOrder2.orderItems[0]
                     },
@@ -505,11 +505,11 @@ describe("getArrayStringErrorOf complex validations", () => {
             orderNumber: ["This field is required."],
             customer: {
                 id: ["The value '1' is not the element of [10, 11, 12, 13]."],
-                email: ["Invalid email address. The valid email example: john.doe@example.com"],
+                email: ["Invalid email address. The valid email example: john.doe@example.com."],
                 name: ["This field is required."]
             },
             orderItems: {
-                fieldErrors: ["The minimum length for this field is 4"],
+                fieldErrors: ["The minimum length for this field is 4."],
             }
         }
 
@@ -551,17 +551,17 @@ describe("getArrayStringErrorOf complex validations", () => {
             orderNumber: ["This field is required."],
             customer: {
                 id: ["The value '1' is not the element of [10, 11, 12, 13]."],
-                email: ["This field is required.", "Invalid email address. The valid email example: john.doe@example.com"],
+                email: ["This field is required.", "Invalid email address. The valid email example: john.doe@example.com."],
                 name: ["This field is required."]
             },
             orderItems: {
-                fieldErrors: ["The minimum length for this field is 4"],
+                fieldErrors: ["The minimum length for this field is 4."],
                 indexedErrors: [
                     {
                         index: 0,
                         errors: {
                             productId: ["This field is required.", "The value '0' is not the element of [1, 2, 3, 4, 5]."],
-                            quantity: ["The minimum value for this field is 1", "The maximum value for this field is 5"],
+                            quantity: ["The minimum value for this field is 1.", "The maximum value for this field is 5."],
                         },
                         validatedObject: newOrder2.orderItems[0]
                     },
@@ -569,7 +569,7 @@ describe("getArrayStringErrorOf complex validations", () => {
                         index: 1,
                         errors: {
                             productId: ["This field is required.", "The value '0' is not the element of [1, 2, 3, 4, 5]."],
-                            quantity: ["The maximum value for this field is 5"],
+                            quantity: ["The maximum value for this field is 5."],
                         },
                         validatedObject: newOrder2.orderItems[1]
                     },
@@ -577,7 +577,7 @@ describe("getArrayStringErrorOf complex validations", () => {
                         index: 2,
                         errors: {
                             productId: ["The value '6' is not the element of [1, 2, 3, 4, 5]."],
-                            quantity: ["The maximum value for this field is 5"],
+                            quantity: ["The maximum value for this field is 5."],
                         },
                         validatedObject: newOrder2.orderItems[2]
                     }

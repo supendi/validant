@@ -6,7 +6,7 @@ describe("MinNumberValidator Test", () => {
         const minValue = 10;
         const validator = (0, minNumber_validator_1.minNumber)(minValue);
         const myNumber = 5;
-        const defaultValidatorErrorMessage = `The minimum value for this field is ${minValue}`;
+        const defaultValidatorErrorMessage = `The minimum value for this field is ${minValue}.`;
         expect(validator).not.toBeUndefined();
         expect(validator.validate).not.toBeUndefined();
         expect(validator.returningErrorMessage).toEqual(defaultValidatorErrorMessage);

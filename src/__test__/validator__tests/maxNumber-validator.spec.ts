@@ -5,7 +5,7 @@ describe("MaxNumberValidator Test", () => {
         const maxValue = 5
         const validator = maxNumber(maxValue)
         const myNumber = 10
-        const defaultValidatorErrorMessage =  `The maximum value for this field is ${maxValue}`
+        const defaultValidatorErrorMessage =  `The maximum value for this field is ${maxValue}.`
 
         expect(validator).not.toBeUndefined()
         expect(validator.validate).not.toBeUndefined()
@@ -20,7 +20,7 @@ describe("MaxNumberValidator Test", () => {
 describe("MaxNumberValidator Test", () => {
     it("should return false and have custom error message", () => {
         const maxValue = 1
-        const customErrorMessage = `Maximum order for this item is ${maxValue}`
+        const customErrorMessage = `Maximum order for this item is ${maxValue}.`
         const validator = maxNumber(maxValue, customErrorMessage)
         const myNumber = 2
 
@@ -37,7 +37,7 @@ describe("MaxNumberValidator Test", () => {
 describe("MaxNumberValidator Test", () => {
     it("should return true and have custom error message", () => {
         const maxValue = 100
-        const customErrorMessage = `Maximum order for this item is ${maxValue}`
+        const customErrorMessage = `Maximum order for this item is ${maxValue}.`
         const validator = maxNumber(maxValue, customErrorMessage)
         const orderItems = 1
 

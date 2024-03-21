@@ -4,7 +4,7 @@ describe("EmailAddressValidator Test", () => {
     it("should return false and have default error message", () => {
         const testValue = "wrongemail@.com"
         const validator = emailAddress()
-        const defaultValidatorErrorMessage = `Invalid email address. The valid email example: john.doe@example.com`
+        const defaultValidatorErrorMessage = `Invalid email address. The valid email example: john.doe@example.com.`
 
         expect(validator).not.toBeUndefined()
         expect(validator.validate).not.toBeUndefined()

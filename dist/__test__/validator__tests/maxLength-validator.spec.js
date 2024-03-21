@@ -6,7 +6,7 @@ describe("MaxLengthValidator Test", () => {
         const maxValue = 2;
         const validator = (0, maxLength_validator_1.maxLength)(maxValue);
         const myArray = [1, 2, 3];
-        const defaultValidatorErrorMessage = `The maximum length for this field is ${maxValue}`;
+        const defaultValidatorErrorMessage = `The maximum length for this field is ${maxValue}.`;
         expect(validator).not.toBeUndefined();
         expect(validator.validate).not.toBeUndefined();
         expect(validator.returningErrorMessage).toEqual(defaultValidatorErrorMessage);

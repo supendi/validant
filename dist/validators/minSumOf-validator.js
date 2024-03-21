@@ -7,7 +7,7 @@ exports.minSumOf = void 0;
  * @returns
  */
 const minSumOf = (fieldNameToSum, minSum, errorMessage) => {
-    let msg = `The minimum sum of ${fieldNameToSum.toString()} is ${minSum}`;
+    let msg = `The minimum sum of ${fieldNameToSum.toString()} is ${minSum}.`;
     if (errorMessage) {
         msg = errorMessage;
     }

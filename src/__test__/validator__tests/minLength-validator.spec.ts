@@ -5,7 +5,7 @@ describe("MinLengthValidator Test", () => {
         const minValue = 1
         const validator = minLength(minValue)
         const myArray = []
-        const defaultValidatorErrorMessage = `The minimum length for this field is ${minValue}`
+        const defaultValidatorErrorMessage = `The minimum length for this field is ${minValue}.`
 
         expect(validator).not.toBeUndefined()
         expect(validator.validate).not.toBeUndefined()

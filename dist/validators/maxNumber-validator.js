@@ -7,7 +7,7 @@ exports.maxNumber = void 0;
  * @returns
  */
 const maxNumber = (max, errorMessage) => {
-    let msg = `The maximum value for this field is ${max}`;
+    let msg = `The maximum value for this field is ${max}.`;
     if (errorMessage) {
         msg = errorMessage;
     }

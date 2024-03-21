@@ -7,7 +7,7 @@ exports.equalToFieldValue = void 0;
  * @returns
  */
 const equalToFieldValue = (equalToFieldName, errorMessage) => {
-    let msg = `The value should be equal to the value of '${equalToFieldName}'`;
+    let msg = `The value should be equal to the value of '${equalToFieldName}'.`;
     if (errorMessage) {
         msg = errorMessage;
     }

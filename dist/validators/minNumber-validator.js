@@ -7,7 +7,7 @@ exports.minNumber = void 0;
  * @returns
  */
 const minNumber = (min, errorMessage) => {
-    let msg = `The minimum value for this field is ${min}`;
+    let msg = `The minimum value for this field is ${min}.`;
     if (errorMessage) {
         msg = errorMessage;
     }

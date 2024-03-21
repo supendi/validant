@@ -7,7 +7,7 @@ exports.minLength = void 0;
  * @returns
  */
 const minLength = (min, errorMessage) => {
-    let msg = `The minimum length for this field is ${min}`;
+    let msg = `The minimum length for this field is ${min}.`;
     if (errorMessage) {
         msg = errorMessage;
     }
