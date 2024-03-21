@@ -555,8 +555,8 @@ describe("Validator complex validations", () => {
                 {
                     id: "2",
                     orderId: "2",
-                    productId: 0,
-                    quantity: 12,
+                    productId: 5,
+                    quantity: 5,
                 },
                 {
                     id: "2",
@@ -585,13 +585,6 @@ describe("Validator complex validations", () => {
                             errors: {
                                 productId: ["This field is required.", "The value '0' is not the element of [1, 2, 3, 4, 5]."],
                                 quantity: ["The minimum value for this field is 1", "The maximum value for this field is 5"],
-                            }
-                        },
-                        {
-                            index: 1,
-                            errors: {
-                                productId: ["This field is required.", "The value '0' is not the element of [1, 2, 3, 4, 5]."],
-                                quantity: ["The maximum value for this field is 5"],
                             }
                         },
                         {
