@@ -1,3 +1,11 @@
+
+/**
+ * Helps to get the original type of an array type.
+ * See: https://stackoverflow.com/questions/46376468/how-to-get-type-of-array-items
+ */
+type GetArrayReturnType<T> = T extends (infer U)[] ? U : never;
+
+
 /**
  * Represents the error of object which property data type is string
  */
@@ -21,11 +29,13 @@ export interface ValidationResult<T> {
     errors: ArrayStringErrorOf<T>
 }
 
+export type IndexedArrayStringErrorOf<T> = { index: number, errors: ArrayStringErrorOf<T> }
+
 /**
  * Represents the error of object which property data type array of string
  */
 export type ArrayStringErrorOf<T> = { [key in keyof T]?: T[key] extends object
-    ? T[key] extends Array<any> ? { fieldErrors?: string[], elementErrors?: ArrayStringErrorOf<T[key]> } :
+    ? T[key] extends Array<any> ? { fieldErrors?: string[], elementErrors?: IndexedArrayStringErrorOf<GetArrayReturnType<T[key]>>[] } :
     T[key] extends Date
     ? string[] : ArrayStringErrorOf<T[key]>
     : string[] }
@@ -43,12 +53,6 @@ export type FieldValidator = {
     validate: ValidatorFunc
     returningErrorMessage: string
 }
-
-/**
- * Helps to get the original type of an array type.
- * See: https://stackoverflow.com/questions/46376468/how-to-get-type-of-array-items
- */
-type GetArrayReturnType<T> = T extends (infer U)[] ? U : never;
 
 /**
  * Represents a collection of validation rules.

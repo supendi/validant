@@ -188,7 +188,10 @@ describe("Validator test with children array", () => {
                 children: {
                     elementErrors: [
                         {
-                            name: ["This field is required."],
+                            index: 0,
+                            errors: {
+                                name: ["This field is required."],
+                            }
                         }
                     ]
                 }
@@ -322,11 +325,17 @@ describe("Validator test with Order and Order item", () => {
                 orderItems: {
                     elementErrors: [
                         {
-                            productId: ["This field is required."],
-                            quantity: ["The minimum value for this field is 1"],
+                            index: 0,
+                            errors: {
+                                productId: ["This field is required."],
+                                quantity: ["The minimum value for this field is 1"],
+                            },
                         },
                         {
-                            productId: ["This field is required."],
+                            index: 1,
+                            errors: {
+                                productId: ["This field is required."],
+                            }
                         }
                     ]
                 }
@@ -424,11 +433,17 @@ describe("Validator test with Order and Order item", () => {
                     fieldErrors: ["The minimum length for this field is 3"],
                     elementErrors: [
                         {
-                            productId: ["This field is required."],
-                            quantity: ["The minimum value for this field is 1"],
+                            index: 0,
+                            errors: {
+                                productId: ["This field is required."],
+                                quantity: ["The minimum value for this field is 1"],
+                            }
                         },
                         {
-                            productId: ["This field is required."],
+                            index: 1,
+                            errors: {
+                                productId: ["This field is required."],
+                            }
                         }
                     ]
                 }
@@ -566,16 +581,25 @@ describe("Validator complex validations", () => {
                     fieldErrors: ["The minimum length for this field is 4"],
                     elementErrors: [
                         {
-                            productId: ["This field is required.", "The value '0' is not the element of [1, 2, 3, 4, 5]."],
-                            quantity: ["The minimum value for this field is 1", "The maximum value for this field is 5"],
+                            index: 0,
+                            errors: {
+                                productId: ["This field is required.", "The value '0' is not the element of [1, 2, 3, 4, 5]."],
+                                quantity: ["The minimum value for this field is 1", "The maximum value for this field is 5"],
+                            }
                         },
                         {
-                            productId: ["This field is required.", "The value '0' is not the element of [1, 2, 3, 4, 5]."],
-                            quantity: ["The maximum value for this field is 5"],
+                            index: 1,
+                            errors: {
+                                productId: ["This field is required.", "The value '0' is not the element of [1, 2, 3, 4, 5]."],
+                                quantity: ["The maximum value for this field is 5"],
+                            }
                         },
                         {
-                            productId: ["The value '6' is not the element of [1, 2, 3, 4, 5]."],
-                            quantity: ["The maximum value for this field is 5"],
+                            index: 2,
+                            errors: {
+                                productId: ["The value '6' is not the element of [1, 2, 3, 4, 5]."],
+                                quantity: ["The maximum value for this field is 5"],
+                            }
                         }
                     ]
                 }
