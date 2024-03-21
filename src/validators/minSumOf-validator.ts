@@ -8,7 +8,7 @@ type MinimumSumOfValidator = <T>(fieldNameToSum: keyof T, value: number, errorMe
  * @returns 
  */
 export const minSumOf: MinimumSumOfValidator = <T>(fieldNameToSum: keyof T, minSum: number, errorMessage?: string) => {
-    let msg = `Minimum sum of ${fieldNameToSum.toString()} is ${minSum}`
+    let msg = `The minimum sum of ${fieldNameToSum.toString()} is ${minSum}`
     if (errorMessage) {
         msg = errorMessage
     }
@@ -30,12 +30,12 @@ export const minSumOf: MinimumSumOfValidator = <T>(fieldNameToSum: keyof T, minS
             const parsedNumber = parseFloat(fieldValue)
             return accumulator + parsedNumber
         }, 0);
- 
-        return total >= minSum
+
+        return minSum <= total
     }
 
     const validator: FieldValidator = {
-        description: "Specifies the rule if a value is an element of the specified array.",
+        description: "Specifies the rule of minimum sum of the spesified field of an array.",
         validate: validatorFunc,
         returningErrorMessage: msg
     }
