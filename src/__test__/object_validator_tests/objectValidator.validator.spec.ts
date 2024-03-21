@@ -1,6 +1,7 @@
 import validator from "../../index"
 import { ValidationResult, ValidationRule } from "../../types"
 import { elementOf, emailAddress, maxNumber, minLength, required, minNumber } from "../../validators"
+import { minSumOf } from "../../validators/minSumOf-validator"
 
 describe("Validator Simple Person Test", () => {
     it("Person name should return errors", () => {
@@ -505,7 +506,7 @@ describe("Validator complex validations", () => {
                 email: [required(), emailAddress()]
             },
             orderItems: {
-                fieldValidators: [minLength(4)],
+                fieldValidators: [minLength(4), minSumOf<OrderItem>("quantity", 100,)],
                 validationRule: orderItemsRule
             }
         }
@@ -534,7 +535,7 @@ describe("Validator complex validations", () => {
                     name: ["This field is required."]
                 },
                 orderItems: {
-                    fieldErrors: ["The minimum length for this field is 4"],
+                    fieldErrors: ["The minimum length for this field is 4", "Minimum sum of quantity is 100",],
                 }
             }
         }
@@ -583,7 +584,7 @@ describe("Validator complex validations", () => {
                     name: ["This field is required."]
                 },
                 orderItems: {
-                    fieldErrors: ["The minimum length for this field is 4"],
+                    fieldErrors: ["The minimum length for this field is 4", "Minimum sum of quantity is 100",],
                     indexedErrors: [
                         {
                             index: 0,

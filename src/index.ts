@@ -8,6 +8,7 @@ import { maxLength } from './validators/maxLength-validator'
 import { maxNumber } from './validators/maxNumber-validator'
 import { minLength } from './validators/minLength-validator'
 import { minNumber } from './validators/minNumber-validator'
+import { minSumOf } from './validators/minSumOf-validator'
 import { regularExpression } from './validators/regularExpression-validator'
 import { required } from './validators/required-validator'
 
@@ -23,6 +24,7 @@ export {
     minNumber,
     regularExpression,
     required,
+    minSumOf
 }
 
 export {
@@ -34,5 +36,5 @@ export {
     FieldValidator,
     StringifiedErrorOf,
     StringifiedValidationResult,
-    ValidationRuleForArrayOf
+    ValidationRuleForArrayOf,
 } 
