@@ -518,7 +518,7 @@ describe("Validator complex validations", () => {
                 email: [required(), emailAddress()]
             },
             orderItems: {
-                propertyValidators: [minLength(4), minSumOf<OrderItem>("quantity", 100,)],
+                propertyValidators: [minLength(4), minSumOf("quantity", 100,)],
                 validationRule: orderItemsRule
             }
         }
@@ -673,7 +673,7 @@ describe("Validator test maximum sum of", () => {
                 email: [required(), emailAddress()]
             },
             orderItems: {
-                propertyValidators: [minLength(4), maxSumOf<OrderItem>("quantity", 10,)],
+                propertyValidators: [minLength(4), maxSumOf("quantity", 10,)],
                 validationRule: orderItemsRule
             }
         }
@@ -871,7 +871,7 @@ describe("Validator Test The Custom Validator", () => {
             console.log(value, object)
             return false
         }
-        
+
         const rule: ValidationRule<Order> = {
             orderDate: [required()],
             orderNumber: [required()],

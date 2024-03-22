@@ -29,7 +29,7 @@ describe("ValidationRuleArrayOf Simple Person Test", () => {
             age: [requiredValidator, minNumberValidator],
         }
 
-        const arrayOfPersonRule: ValidationRuleForArrayOf<Person> = {
+        const arrayOfPersonRule: ValidationRuleForArrayOf<Person, Person> = {
             propertyValidators: [requiredValidator],
             validationRule: personRule,
         }

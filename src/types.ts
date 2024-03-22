@@ -93,15 +93,15 @@ export type PropertyValidator<T> = {
  * The validation schema should implement this type.
  */
 export type ValidationRule<T> = { [key in keyof T]?: T[key] extends Array<any>
-    ? ValidationRuleForArrayOf<TypeOfArray<T[key]>> : T[key] extends object
+    ? ValidationRuleForArrayOf<T, TypeOfArray<T[key]>> : T[key] extends object
     ? ValidationRule<T[key]> : PropertyValidator<T>[] }
 
 /**
  * Represents validation rule of array of T
  */
-export type ValidationRuleForArrayOf<T> = {
-    propertyValidators?: PropertyValidator<T>[],
-    validationRule?: ValidationRule<T>
+export type ValidationRuleForArrayOf<TParent, TChild> = {
+    propertyValidators?: PropertyValidator<TParent>[],
+    validationRule?: ValidationRule<TChild>
 }
 
 /**

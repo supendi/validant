@@ -1,13 +1,13 @@
 import { PropertyValidator, ValidatorFunc } from "../types"
 
-type MaximumSumOfValidator = <T>(propNameToBeSummed: keyof T, value: number, errorMessage?: string) => PropertyValidator<T>
+type MaximumSumOfValidator = <T>(propNameToBeSummed: string, value: number, errorMessage?: string) => PropertyValidator<T>
 
 /**
  * Specifies the rule of maximum sum of the spesified property name of an array.
  * @param errorMessage Custom error messages
  * @returns 
  */
-export const maxSumOf: MaximumSumOfValidator = <T>(propNameToBeSummed: keyof T, maxSum: number, errorMessage?: string) => {
+export const maxSumOf: MaximumSumOfValidator = <T>(propNameToBeSummed: string, maxSum: number, errorMessage?: string) => {
     let msg = `The maximum sum of ${propNameToBeSummed.toString()} is ${maxSum}.`
     if (errorMessage) {
         msg = errorMessage
