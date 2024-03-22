@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.required = void 0;
 /**
- * The validator of required property
+ * Specifies the rule that the property is required.
  * @param errorMessage Custom error messages
  * @returns
  */
@@ -18,7 +18,7 @@ const required = (errorMessage) => {
         return true;
     };
     const propValidator = {
-        description: "Validates if a property value is required",
+        description: "Specifies the rule that the property is required.",
         returningErrorMessage: msg,
         validate: validatorFunc
     };
