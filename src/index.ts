@@ -1,17 +1,6 @@
 import validator from "./objectValidator";
-import { ErrorOf, ValidationRule, ValidationResult, ValidatorFunc, FieldValidationResult, FieldValidator, StringifiedErrorOf, StringifiedValidationResult, ValidationRuleForArrayOf } from './types'
-
-import { elementOf } from './validators/elementOf-validator'
-import { emailAddress } from './validators/emailAddress-validator'
-import { equalToFieldValue } from './validators/equalToFieldValue-validator'
-import { maxLength } from './validators/maxLength-validator'
-import { maxNumber } from './validators/maxNumber-validator'
-import { minLength } from './validators/minLength-validator'
-import { minNumber } from './validators/minNumber-validator'
-import { minSumOf } from './validators/minSumOf-validator'
-import { maxSumOf } from './validators/maxSumOf-validator'
-import { regularExpression } from './validators/regularExpression-validator'
-import { required } from './validators/required-validator'
+import { ErrorOf, ValidationRule, ValidationResult, ValidatorFunc, FieldValidationResult, FieldValidator, StringifiedErrorOf, StringifiedValidationResult, ValidationRuleForArrayOf, ErrorOfArray, IndexedErrorOf } from './types'
+import { emailAddress, equalToFieldValue, maxLength, maxNumber, minLength, minNumber, minSumOf, maxSumOf, regularExpression, required, elementOf } from './validators/'
 
 export default validator
 
@@ -31,6 +20,8 @@ export {
 
 export {
     ErrorOf,
+    ErrorOfArray,
+    IndexedErrorOf,
     ValidationRule,
     ValidationResult,
     ValidatorFunc,

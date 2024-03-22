@@ -7,6 +7,8 @@ import { minLength } from './minLength-validator'
 import { minNumber } from './minNumber-validator'
 import { regularExpression } from './regularExpression-validator'
 import { required } from './required-validator'
+import { minSumOf } from './minSumOf-validator'
+import { maxSumOf } from './maxSumOf-validator'
 
 export {
     elementOf,
@@ -18,4 +20,6 @@ export {
     minNumber,
     regularExpression,
     required,
+    minSumOf,
+    maxSumOf,
 }
