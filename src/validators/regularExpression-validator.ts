@@ -13,7 +13,7 @@ export const regularExpression: RegularExpressionValidator = (regex: RegExp, err
         msg = errorMessage
     }
 
-    const validatorFunc: ValidatorFunc = (value: any, objRef?: any): boolean => {
+    const validatorFunc: ValidatorFunc = <T>(value: any, objRef?: T): boolean => {
         return regex.test(value)
     }
 

@@ -68,7 +68,7 @@ export declare type ErrorOf<T> = {
  * Specifies the contract of validator function.
  * See the PropertyValidator implementation of how the validator func being implemented.
  */
-export declare type ValidatorFunc = (value: any, objRef?: any) => boolean;
+export declare type ValidatorFunc = <T>(value: any, objRef?: T) => boolean;
 /**
  * Represents the object model of property validator.
  * See the validators implementation.
@@ -95,9 +95,9 @@ export declare type ValidationRuleForArrayOf<T> = {
 /**
  * Represents a single validation result of property
  */
-export interface PropertyValidationResult {
+export interface PropertyValidationResult<T> {
     object: any;
-    propertyName: string;
+    propertyName: keyof T;
     propertyValue: any;
     isValid: boolean;
     errorMessage: string;

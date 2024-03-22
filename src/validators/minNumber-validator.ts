@@ -8,14 +8,14 @@ type MinNumberValidator = (min: number, errorMessage?: string) => PropertyValida
  * @param errorMessage Custom error messages
  * @returns 
  */
-export const minNumber: MinNumberValidator = (min: number, errorMessage?: string) => {
+export const minNumber: MinNumberValidator = <T>(min: number, errorMessage?: string) => {
 
     let msg = `The minimum value for this field is ${min}.`
     if (errorMessage) {
         msg = errorMessage
     }
 
-    const validatorFunc: ValidatorFunc = (value: number, objRef?: any): boolean => {
+    const validatorFunc: ValidatorFunc = <T>(value: number, objRef?: T): boolean => {
         if (!value) {
             return false
         }

@@ -1,5 +1,5 @@
 import { PropertyValidator } from "../types";
-declare type RequiredValidator = (errorMessage?: string) => PropertyValidator;
+declare type RequiredValidator = <T>(errorMessage?: string) => PropertyValidator;
 /**
  * The validator of required property
  * @param errorMessage Custom error messages

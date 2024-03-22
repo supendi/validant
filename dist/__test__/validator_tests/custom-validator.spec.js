@@ -71,11 +71,6 @@ describe("CustomValidator Test", () => {
             if (!object) {
                 return false;
             }
-            const isOrderObject = !!object.number && object.orderItems;
-            if (!isOrderObject) {
-                return false;
-            }
-            const order = object;
             for (let index = 0; index < order.orderItems.length; index++) {
                 const orderItem = order.orderItems[index];
                 if (orderItem.qty < 0) {

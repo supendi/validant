@@ -13,7 +13,7 @@ export const minSumOf: MinimumSumOfValidator = <T>(propNameToBeSummed: keyof T, 
         msg = errorMessage
     }
 
-    const validatorFunc: ValidatorFunc = (value: T[], objRef?: any): boolean => {
+    const validatorFunc: ValidatorFunc = <T>(value: T[], objRef?: T): boolean => {
         if (!value) {
             return false
         }
@@ -23,7 +23,7 @@ export const minSumOf: MinimumSumOfValidator = <T>(propNameToBeSummed: keyof T, 
         const arr = [...value]
 
         const total = arr.reduce((accumulator, obj) => {
-            const propValue = obj[propNameToBeSummed] as any;
+            const propValue = obj[propNameToBeSummed as unknown as keyof T] as any;
             if (!propValue) {
                 return accumulator
             }

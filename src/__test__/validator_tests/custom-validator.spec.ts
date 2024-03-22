@@ -88,15 +88,11 @@ describe("CustomValidator Test", () => {
             ]
         }
 
-        const guardAgainstMinusValidator: ValidatorFunc = (value, object) => {
+        const guardAgainstMinusValidator: ValidatorFunc = <Order>(value, object: Order) => {
             if (!object) {
                 return false
             }
-            const isOrderObject = !!object.number && object.orderItems
-            if (!isOrderObject) {
-                return false
-            }
-            const order = object as Order
+
             for (let index = 0; index < order.orderItems.length; index++) {
                 const orderItem = order.orderItems[index];
                 if (orderItem.qty < 0) {

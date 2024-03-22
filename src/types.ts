@@ -76,7 +76,7 @@ export type ErrorOf<T> = { [key in keyof T]?: T[key] extends object
  * Specifies the contract of validator function.
  * See the PropertyValidator implementation of how the validator func being implemented.
  */
-export type ValidatorFunc = (value: any, objRef?: any) => boolean
+export type ValidatorFunc = <T>(value: any, objRef?: T) => boolean
 
 /**
  * Represents the object model of property validator.
@@ -107,9 +107,9 @@ export type ValidationRuleForArrayOf<T> = {
 /**
  * Represents a single validation result of property 
  */
-export interface PropertyValidationResult {
+export interface PropertyValidationResult<T> {
     object: any,
-    propertyName: string,
+    propertyName: keyof T,
     propertyValue: any
     isValid: boolean,
     errorMessage: string
