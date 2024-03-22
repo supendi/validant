@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const equalToFieldValue_validator_1 = require("../../validators/equalToFieldValue-validator");
-describe("EqualToFieldValueValidator Test", () => {
+const equalToPropertyValue_validator_1 = require("../../validators/equalToPropertyValue-validator");
+describe("EqualToPropertyValueValidator Test", () => {
     it("should return false and have default error message", () => {
         const testValue = 'email';
-        const validator = (0, equalToFieldValue_validator_1.equalToFieldValue)(testValue);
+        const validator = (0, equalToPropertyValue_validator_1.equalToPropertyValue)(testValue);
         const defaultValidatorErrorMessage = `The value should be equal to the value of '${testValue}'.`;
         const inputValue = "test12333@gmail.com";
         const object = {
@@ -17,11 +17,11 @@ describe("EqualToFieldValueValidator Test", () => {
         expect(isValid).toEqual(false);
     });
 });
-describe("EqualToFieldValueValidator Test", () => {
+describe("EqualToPropertyValueValidator Test", () => {
     it("should return false and have custom error message", () => {
         const testValue = 'email';
         const customErrorMessage = `Hey the email and re-enter email is must be equal`;
-        const validator = (0, equalToFieldValue_validator_1.equalToFieldValue)(testValue, customErrorMessage);
+        const validator = (0, equalToPropertyValue_validator_1.equalToPropertyValue)(testValue, customErrorMessage);
         const inputValue = "test123@gmail.com";
         const object = {
             email: "test@gmail.com"
@@ -33,11 +33,11 @@ describe("EqualToFieldValueValidator Test", () => {
         expect(isValid).toEqual(false);
     });
 });
-describe("EqualToFieldValueValidator Test", () => {
+describe("EqualToPropertyValueValidator Test", () => {
     it("should return true and have custom error message", () => {
         const testValue = 'email';
         const customErrorMessage = `Hey the email and re-enter email is must be equal`;
-        const validator = (0, equalToFieldValue_validator_1.equalToFieldValue)(testValue, customErrorMessage);
+        const validator = (0, equalToPropertyValue_validator_1.equalToPropertyValue)(testValue, customErrorMessage);
         const inputValue = "test@gmail.com";
         const object = {
             email: "test@gmail.com"

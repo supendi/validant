@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.maxSumOf = exports.minSumOf = exports.required = exports.regularExpression = exports.minNumber = exports.minLength = exports.maxNumber = exports.maxLength = exports.equalToFieldValue = exports.emailAddress = exports.elementOf = void 0;
+exports.maxSumOf = exports.minSumOf = exports.required = exports.regularExpression = exports.minNumber = exports.minLength = exports.maxNumber = exports.maxLength = exports.equalToPropertyValue = exports.emailAddress = exports.elementOf = void 0;
 const elementOf_validator_1 = require("./elementOf-validator");
 Object.defineProperty(exports, "elementOf", { enumerable: true, get: function () { return elementOf_validator_1.elementOf; } });
 const emailAddress_validator_1 = require("./emailAddress-validator");
 Object.defineProperty(exports, "emailAddress", { enumerable: true, get: function () { return emailAddress_validator_1.emailAddress; } });
-const equalToFieldValue_validator_1 = require("./equalToFieldValue-validator");
-Object.defineProperty(exports, "equalToFieldValue", { enumerable: true, get: function () { return equalToFieldValue_validator_1.equalToFieldValue; } });
+const equalToPropertyValue_validator_1 = require("./equalToPropertyValue-validator");
+Object.defineProperty(exports, "equalToPropertyValue", { enumerable: true, get: function () { return equalToPropertyValue_validator_1.equalToPropertyValue; } });
 const maxLength_validator_1 = require("./maxLength-validator");
 Object.defineProperty(exports, "maxLength", { enumerable: true, get: function () { return maxLength_validator_1.maxLength; } });
 const maxNumber_validator_1 = require("./maxNumber-validator");

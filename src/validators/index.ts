@@ -1,6 +1,6 @@
 import { elementOf } from './elementOf-validator'
 import { emailAddress } from './emailAddress-validator'
-import { equalToFieldValue } from './equalToFieldValue-validator'
+import { equalToPropertyValue } from './equalToPropertyValue-validator'
 import { maxLength } from './maxLength-validator'
 import { maxNumber } from './maxNumber-validator'
 import { minLength } from './minLength-validator'
@@ -13,7 +13,7 @@ import { maxSumOf } from './maxSumOf-validator'
 export {
     elementOf,
     emailAddress,
-    equalToFieldValue,
+    equalToPropertyValue,
     maxLength,
     maxNumber,
     minLength,
