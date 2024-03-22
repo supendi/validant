@@ -7,8 +7,11 @@ exports.custom = void 0;
  * @returns
  */
 const custom = (func, errorMessage) => {
-    const validatorFunc = (value, objRef) => {
-        return func(value, objRef);
+    if (!errorMessage) {
+        console.error((`You are calling the custom validator. The error message needs to be set. Assigned error message: '${errorMessage}'`));
+    }
+    const validatorFunc = (value, object) => {
+        return func(value, object);
     };
     const propValidator = {
         description: "User defined validator",

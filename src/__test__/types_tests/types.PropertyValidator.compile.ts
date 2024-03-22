@@ -7,7 +7,7 @@ import { PropertyValidator, ValidatorFunc } from "../../types"
 describe("PropertyValidator Test", () => {
     it("Should compile", () => {
 
-        const validator: PropertyValidator = {
+        const validator: PropertyValidator<any> = {
             description: "Required Validator",
             validate: function (value: any, objRef: any) {
                 return true
@@ -25,7 +25,7 @@ describe("PropertyValidator Test", () => {
         expect(validator.returningErrorMessage).toEqual("The value of :value is required")
 
         // Ensure ts compile this
-        const validatorFunction: ValidatorFunc = validator.validate
+        const validatorFunction: ValidatorFunc<any> = validator.validate
         expect(validatorFunction).not.toBeNull()
 
         const isValid = validator.validate(1)

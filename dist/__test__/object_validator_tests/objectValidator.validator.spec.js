@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const index_1 = require("../../index");
 const validators_1 = require("../../validators");
+const custom_validator_1 = require("../../validators/custom-validator");
 const minSumOf_validator_1 = require("../../validators/minSumOf-validator");
 const defaultMessage = { okMessage: "Good to go.", errorMessage: "One or more validation errors occurred." };
 describe("Validator Simple Person Test", () => {
@@ -592,6 +593,83 @@ describe("Validator complex validations", () => {
             message: defaultMessage.okMessage,
             isValid: true,
             errors: undefined,
+        };
+        expect(actual1).toEqual(expected1);
+    });
+});
+describe("Validator Test The Custom Validator", () => {
+    it("Custom validator test", () => {
+        const productIds = [1, 2, 3, 4, 5];
+        const customerIds = [10, 11, 12, 13];
+        const orderItemsRule = {
+            productId: [(0, validators_1.required)(), (0, validators_1.elementOf)(productIds)],
+            quantity: [(0, validators_1.minNumber)(1), (0, validators_1.maxNumber)(5)],
+        };
+        const customerNameValidator = function (value, object) {
+            console.log(value, object);
+            return false;
+        };
+        const rule = {
+            orderDate: [(0, validators_1.required)()],
+            orderNumber: [(0, validators_1.required)()],
+            customer: {
+                id: [(0, validators_1.required)(), (0, validators_1.elementOf)(customerIds)],
+                name: [(0, validators_1.required)(), (0, custom_validator_1.custom)(customerNameValidator, "Error customer name")],
+                email: [(0, validators_1.required)(), (0, validators_1.emailAddress)()]
+            },
+            orderItems: {
+                propertyValidators: [(0, validators_1.minLength)(4), (0, custom_validator_1.custom)(function (value, object) {
+                        console.log(object);
+                        return true;
+                    }, "Order item has error.")],
+                validationRule: orderItemsRule
+            }
+        };
+        const newOrder1 = {
+            id: "1",
+            orderDate: new Date(),
+            orderNumber: "ORD/0001",
+            customer: {
+                id: 10,
+                email: "invalid@email.com",
+                name: "Agung"
+            },
+            orderItems: [
+                {
+                    id: "1",
+                    orderId: "1",
+                    productId: 1,
+                    quantity: 2,
+                },
+                {
+                    id: "2",
+                    orderId: "2",
+                    productId: 1,
+                    quantity: 5,
+                },
+                {
+                    id: "2",
+                    orderId: "2",
+                    productId: 1,
+                    quantity: 5,
+                },
+                {
+                    id: "2",
+                    orderId: "2",
+                    productId: 2,
+                    quantity: 5,
+                },
+            ]
+        };
+        const actual1 = index_1.default.validate(newOrder1, rule);
+        const expected1 = {
+            message: defaultMessage.errorMessage,
+            isValid: false,
+            errors: {
+                customer: {
+                    name: ["Error customer name"]
+                }
+            },
         };
         expect(actual1).toEqual(expected1);
     });

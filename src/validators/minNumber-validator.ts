@@ -1,6 +1,6 @@
 import { PropertyValidator, ValidatorFunc } from "../types";
 
-type MinNumberValidator = (min: number, errorMessage?: string) => PropertyValidator
+type MinNumberValidator = <T>(min: number, errorMessage?: string) => PropertyValidator<T>
 
 
 /**
@@ -15,7 +15,7 @@ export const minNumber: MinNumberValidator = <T>(min: number, errorMessage?: str
         msg = errorMessage
     }
 
-    const validatorFunc: ValidatorFunc = <T>(value: number, objRef?: T): boolean => {
+    const validatorFunc: ValidatorFunc<T> = (value: number, objRef?: T): boolean => {
         if (!value) {
             return false
         }
@@ -23,7 +23,7 @@ export const minNumber: MinNumberValidator = <T>(min: number, errorMessage?: str
         return value >= min
     }
 
-    const validator: PropertyValidator = {
+    const validator: PropertyValidator<T> = {
         description: "Spesify the minimum value of number rule.",
         validate: validatorFunc,
         returningErrorMessage: msg,

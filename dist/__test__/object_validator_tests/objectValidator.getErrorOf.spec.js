@@ -7,7 +7,7 @@ const maxNumber_validator_1 = require("../../validators/maxNumber-validator");
 const minLength_validator_1 = require("../../validators/minLength-validator");
 const minNumber_validator_1 = require("../../validators/minNumber-validator");
 const required_validator_1 = require("../../validators/required-validator");
-describe("getArrayStringErrorOf Simple Person Test", () => {
+describe("getErrorOf Simple Person Test", () => {
     it("Person name should return errors", () => {
         const rule = {
             name: [(0, required_validator_1.required)()]
@@ -22,7 +22,7 @@ describe("getArrayStringErrorOf Simple Person Test", () => {
         expect(actual).toEqual(expected);
     });
 });
-describe("getArrayStringErrorOf Simple Person With Child Test", () => {
+describe("getErrorOf Simple Person With Child Test", () => {
     it("Parent and child name should return errors", () => {
         const rule = {
             name: [(0, required_validator_1.required)()],
@@ -46,7 +46,7 @@ describe("getArrayStringErrorOf Simple Person With Child Test", () => {
         expect(actual).toEqual(expected);
     });
 });
-describe("getArrayStringErrorOf Nested Object Test with nested address", () => {
+describe("getErrorOf Nested Object Test with nested address", () => {
     it("Nested object test should return errors", () => {
         const rule = {
             name: [(0, required_validator_1.required)()],
@@ -106,7 +106,7 @@ describe("getArrayStringErrorOf Nested Object Test with nested address", () => {
         expect(actual).toEqual(expected);
     });
 });
-describe("getArrayStringErrorOf test with children array", () => {
+describe("getErrorOf test with children array", () => {
     it("Children has to contain suberrors", () => {
         const rule = {
             name: [(0, required_validator_1.required)()],
@@ -140,7 +140,7 @@ describe("getArrayStringErrorOf test with children array", () => {
         expect(actual).toEqual(expected);
     });
 });
-describe("getArrayStringErrorOf test with children array", () => {
+describe("getErrorOf test with children array", () => {
     it("Children has to contain errors", () => {
         const rule = {
             name: [(0, required_validator_1.required)()],
@@ -163,7 +163,7 @@ describe("getArrayStringErrorOf test with children array", () => {
         expect(actual).toEqual(expected);
     });
 });
-describe("getArrayStringErrorOf test with Order and Order item", () => {
+describe("getErrorOf test with Order and Order item", () => {
     it("Validating order item approach 1", () => {
         const rule = {
             orderDate: [(0, required_validator_1.required)()],
@@ -237,7 +237,7 @@ describe("getArrayStringErrorOf test with Order and Order item", () => {
         expect(actual2).toEqual(expected2);
     });
 });
-describe("getArrayStringErrorOf test with Order and Order item", () => {
+describe("getErrorOf test with Order and Order item", () => {
     it("Validating order item approach 2, separate the validation rule", () => {
         const orderItemsRule = {
             productId: [(0, required_validator_1.required)()],
@@ -313,7 +313,7 @@ describe("getArrayStringErrorOf test with Order and Order item", () => {
         expect(actual2).toEqual(expected2);
     });
 });
-describe("getArrayStringErrorOf complex validations", () => {
+describe("getErrorOf complex validations", () => {
     it("Should return errors", () => {
         const productIds = [1, 2, 3, 4, 5];
         const customerIds = [10, 11, 12, 13];

@@ -7,12 +7,12 @@ exports.equalToPropertyValue = void 0;
  * @returns
  */
 const equalToPropertyValue = (equalToPropName, errorMessage) => {
-    let msg = `The value should be equal to the value of '${equalToPropName}'.`;
+    let msg = `The value should be equal to the value of '${equalToPropName.toString()}'.`;
     if (errorMessage) {
         msg = errorMessage;
     }
-    const validatorFunc = (value, objRef) => {
-        return value === objRef[equalToPropName];
+    const validatorFunc = (value, object) => {
+        return value === object[equalToPropName];
     };
     const validator = {
         description: "Specifies a rule that a value should equal to the specified property value.",

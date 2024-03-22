@@ -1,13 +1,13 @@
 import { PropertyValidator, ValidatorFunc } from "../types"
 
-type ElementOfValidator = <T>(list: T[], errorMessage?: string) => PropertyValidator
+type ElementOfValidator = <T>(list: any[], errorMessage?: string) => PropertyValidator<T>
 
 /**
  * Specifies the rule if a value is an element of the specified array.
  * @param errorMessage Custom error messages
  * @returns 
  */
-export const elementOf: ElementOfValidator = <T>(list: T[], errorMessage?: string) => {
+export const elementOf: ElementOfValidator = <T>(list: any[], errorMessage?: string) => {
     if (!list) {
         console.error(`Validator: the list is ${list}`)
     }
@@ -16,7 +16,7 @@ export const elementOf: ElementOfValidator = <T>(list: T[], errorMessage?: strin
         msg = errorMessage
     }
 
-    const validatorFunc: ValidatorFunc = (value: any, objRef?: any): boolean => {
+    const validatorFunc: ValidatorFunc<T> = (value, object): boolean => {
         if (!list) {
             return false
         }
@@ -25,7 +25,7 @@ export const elementOf: ElementOfValidator = <T>(list: T[], errorMessage?: strin
         return !!element
     }
 
-    const validator: PropertyValidator = {
+    const validator: PropertyValidator<T> = {
         description: "Specifies the rule if a value is an element of the specified array.",
         validate: validatorFunc,
         returningErrorMessage: msg

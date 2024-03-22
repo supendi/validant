@@ -1,5 +1,5 @@
 import { PropertyValidator } from "../types";
-declare type ElementOfValidator = <T>(list: T[], errorMessage?: string) => PropertyValidator;
+declare type ElementOfValidator = <T>(list: any[], errorMessage?: string) => PropertyValidator<T>;
 /**
  * Specifies the rule if a value is an element of the specified array.
  * @param errorMessage Custom error messages

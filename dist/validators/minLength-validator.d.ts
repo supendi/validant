@@ -1,5 +1,5 @@
 import { PropertyValidator } from "../types";
-declare type MinLengthValidator = (min: number, errorMessage?: string) => PropertyValidator;
+declare type MinLengthValidator = <T>(min: number, errorMessage?: string) => PropertyValidator<T>;
 /**
  * Specifies the minimum length of an array.
  * @param errorMessage Custom error messages

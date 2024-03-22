@@ -1,5 +1,5 @@
 import { PropertyValidator } from "../types";
-declare type EqualToPropertyValueValidator = (equalToPropName: string, errorMessage?: string) => PropertyValidator;
+declare type EqualToPropertyValueValidator = <T>(equalToPropName: keyof T, errorMessage?: string) => PropertyValidator<T>;
 /**
  * Specifies a rule that a value should equal to the specified property value.
  * @param errorMessage Custom error messages

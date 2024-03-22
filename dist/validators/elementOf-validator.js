@@ -14,7 +14,7 @@ const elementOf = (list, errorMessage) => {
     if (errorMessage) {
         msg = errorMessage;
     }
-    const validatorFunc = (value, objRef) => {
+    const validatorFunc = (value, object) => {
         if (!list) {
             return false;
         }

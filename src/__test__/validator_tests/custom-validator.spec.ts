@@ -3,19 +3,22 @@ import { custom } from "../../validators/custom-validator"
 
 describe("CustomValidator Test", () => {
     it("Test simple custom validator", () => {
-        const maximumNumberIsOneValidator: ValidatorFunc = (value, object) => {
-            if (value === undefined || value === null) {
-                return false
+        function hoc<T>() {
+            const maximumNumberIsOneValidator: ValidatorFunc<T> = (value, object) => {
+                if (value === undefined || value === null) {
+                    return false
+                }
+                const typeofValue = typeof (value)
+                const valueIsNumber = typeofValue === "bigint" || typeofValue === "number"
+                if (!valueIsNumber) {
+                    return false
+                }
+                return value <= 1
             }
-            const typeofValue = typeof (value)
-            const valueIsNumber = typeofValue === "bigint" || typeofValue === "number"
-            if (!valueIsNumber) {
-                return false
-            }
-            return value <= 1
+            return maximumNumberIsOneValidator
         }
         const errorMessage = "There is error."
-        const validator = custom(maximumNumberIsOneValidator, errorMessage)
+        const validator = custom(hoc(), errorMessage)
 
         expect(validator).not.toBeUndefined()
         expect(validator.validate).not.toBeUndefined()
@@ -88,7 +91,7 @@ describe("CustomValidator Test", () => {
             ]
         }
 
-        const guardAgainstMinusValidator: ValidatorFunc = <Order>(value, object: Order) => {
+        const guardAgainstMinusValidator: ValidatorFunc<Order> = (value, object) => {
             if (!object) {
                 return false
             }

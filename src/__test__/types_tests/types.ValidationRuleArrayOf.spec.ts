@@ -10,14 +10,14 @@ describe("ValidationRuleArrayOf Simple Person Test", () => {
             name: string
             age: number
         }
-        const requiredValidator: PropertyValidator = {
+        const requiredValidator: PropertyValidator<any> = {
             description: "Required Validator",
             returningErrorMessage: "This field is required",
             validate: (value: any, obj?: any) => {
                 return !!value
             }
         }
-        const minNumberValidator: PropertyValidator = {
+        const minNumberValidator: PropertyValidator<any> = {
             description: "Minimum Number Validator",
             returningErrorMessage: "Minimum number is",
             validate: (value: any, obj?: any) => {

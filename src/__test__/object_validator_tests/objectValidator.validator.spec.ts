@@ -1,6 +1,7 @@
 import validator, { maxSumOf } from "../../index"
 import { ValidationResult, ValidationRule } from "../../types"
 import { elementOf, emailAddress, maxNumber, minLength, required, minNumber } from "../../validators"
+import { custom } from "../../validators/custom-validator"
 import { minSumOf } from "../../validators/minSumOf-validator"
 
 const defaultMessage = { okMessage: "Good to go.", errorMessage: "One or more validation errors occurred." }
@@ -818,7 +819,122 @@ describe("Validator complex validations", () => {
         const expected1: ValidationResult<Order> = {
             message: defaultMessage.okMessage,
             isValid: true,
-            errors: undefined, 
+            errors: undefined,
+        }
+
+        expect(actual1).toEqual(expected1)
+    })
+})
+
+
+
+
+describe("Validator Test The Custom Validator", () => {
+    it("Custom validator test", () => {
+        interface Product {
+            name: string
+            price: number
+            subProducts?: Product[]
+        }
+
+        interface Customer {
+            id: number
+            name: string
+            email: string
+        }
+
+        interface Order {
+            id: string
+            customer: Customer
+            orderNumber: string
+            orderDate: Date | null
+            orderItems: OrderItem[]
+        }
+
+        interface OrderItem {
+            id: string
+            orderId?: string
+            productId: number
+            product?: Product
+            quantity: number
+        }
+
+        const productIds = [1, 2, 3, 4, 5]
+        const customerIds = [10, 11, 12, 13]
+
+        const orderItemsRule: ValidationRule<OrderItem> = {
+            productId: [required(), elementOf(productIds)],
+            quantity: [minNumber(1), maxNumber(5)],
+        }
+
+        const customerNameValidator = function (value, object) {
+            console.log(value, object)
+            return false
+        }
+        
+        const rule: ValidationRule<Order> = {
+            orderDate: [required()],
+            orderNumber: [required()],
+            customer: {
+                id: [required(), elementOf(customerIds)],
+                name: [required(), custom(customerNameValidator, "Error customer name")],
+                email: [required(), emailAddress()]
+            },
+            orderItems: {
+                propertyValidators: [minLength(4), custom(function (value, object) {
+                    console.log(object)
+                    return true
+                }, "Order item has error.")],
+                validationRule: orderItemsRule
+            }
+        }
+
+        const newOrder1: Order = {
+            id: "1",
+            orderDate: new Date(),
+            orderNumber: "ORD/0001",
+            customer: {
+                id: 10,
+                email: "invalid@email.com", //this is not invalid one
+                name: "Agung"
+            },
+            orderItems: [
+                {
+                    id: "1",
+                    orderId: "1",
+                    productId: 1,
+                    quantity: 2,
+                },
+                {
+                    id: "2",
+                    orderId: "2",
+                    productId: 1,
+                    quantity: 5,
+                },
+                {
+                    id: "2",
+                    orderId: "2",
+                    productId: 1,
+                    quantity: 5,
+                },
+                {
+                    id: "2",
+                    orderId: "2",
+                    productId: 2,
+                    quantity: 5,
+                },
+            ]
+        }
+
+        const actual1 = validator.validate(newOrder1, rule)
+        const expected1: ValidationResult<Order> = {
+            message: defaultMessage.errorMessage,
+            isValid: false,
+            errors: {
+                customer: {
+                    name: ["Error customer name"]
+                }
+            },
         }
 
         expect(actual1).toEqual(expected1)

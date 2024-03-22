@@ -1,5 +1,5 @@
 import { PropertyValidator } from "../types";
-declare type MinNumberValidator = (min: number, errorMessage?: string) => PropertyValidator;
+declare type MinNumberValidator = <T>(min: number, errorMessage?: string) => PropertyValidator<T>;
 /**
  * Returns a minimum number validation rule
  * @param errorMessage Custom error messages

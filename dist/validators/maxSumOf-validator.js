@@ -21,7 +21,9 @@ const maxSumOf = (propNameToBeSummed, maxSum, errorMessage) => {
         const arr = [...value];
         const total = arr.reduce((accumulator, obj) => {
             const propValue = obj[propNameToBeSummed];
-            if (!propValue) {
+            const typeofValue = typeof (propValue);
+            const isNumber = typeofValue === "bigint" || typeofValue === "number";
+            if (!propValue || propValue === undefined || propValue === null || !isNumber) {
                 return accumulator;
             }
             const parsedNumber = parseFloat(propValue);

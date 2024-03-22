@@ -7,7 +7,7 @@ import { ErrorOf, PropertyValidationResult, PropertyValidator, ValidationResult,
  * @param propValidator 
  * @returns 
  */
-const validateProperty = <T>(propName: keyof T, object: T, propValidator: PropertyValidator): PropertyValidationResult<T> => {
+const validateProperty = <T>(propName: keyof T, object: T, propValidator: PropertyValidator<T>): PropertyValidationResult<T> => {
     const value = object[propName]
     const isValid = propValidator.validate(value, object)
 
@@ -53,7 +53,7 @@ export const getErrorOf = <T>(object: T, validationRule: ValidationRule<T>): Err
                         continue
                     }
 
-                    const isPropValidator = !!propValidator.validate && !!propValidator.returningErrorMessage
+                    const isPropValidator = !!propValidator.validate
                     if (!isPropValidator) {
                         continue
                     }
@@ -95,7 +95,7 @@ export const getErrorOf = <T>(object: T, validationRule: ValidationRule<T>): Err
                             continue
                         }
 
-                        const propValidationResult = validateProperty(key, object, propValidator)
+                        const propValidationResult = validateProperty(key, object, propValidator as any)
 
                         const isValid = propValidationResult.isValid
 

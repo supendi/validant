@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.maxSumOf = exports.minSumOf = exports.required = exports.regularExpression = exports.minNumber = exports.minLength = exports.maxNumber = exports.maxLength = exports.equalToPropertyValue = exports.emailAddress = exports.elementOf = void 0;
+exports.custom = exports.maxSumOf = exports.minSumOf = exports.required = exports.regularExpression = exports.minNumber = exports.minLength = exports.maxNumber = exports.maxLength = exports.equalToPropertyValue = exports.emailAddress = exports.elementOf = void 0;
 const elementOf_validator_1 = require("./elementOf-validator");
 Object.defineProperty(exports, "elementOf", { enumerable: true, get: function () { return elementOf_validator_1.elementOf; } });
 const emailAddress_validator_1 = require("./emailAddress-validator");
@@ -23,3 +23,5 @@ const minSumOf_validator_1 = require("./minSumOf-validator");
 Object.defineProperty(exports, "minSumOf", { enumerable: true, get: function () { return minSumOf_validator_1.minSumOf; } });
 const maxSumOf_validator_1 = require("./maxSumOf-validator");
 Object.defineProperty(exports, "maxSumOf", { enumerable: true, get: function () { return maxSumOf_validator_1.maxSumOf; } });
+const custom_validator_1 = require("./custom-validator");
+Object.defineProperty(exports, "custom", { enumerable: true, get: function () { return custom_validator_1.custom; } });

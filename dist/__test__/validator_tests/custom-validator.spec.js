@@ -3,19 +3,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const custom_validator_1 = require("../../validators/custom-validator");
 describe("CustomValidator Test", () => {
     it("Test simple custom validator", () => {
-        const maximumNumberIsOneValidator = (value, object) => {
-            if (value === undefined || value === null) {
-                return false;
-            }
-            const typeofValue = typeof (value);
-            const valueIsNumber = typeofValue === "bigint" || typeofValue === "number";
-            if (!valueIsNumber) {
-                return false;
-            }
-            return value <= 1;
-        };
+        function hoc() {
+            const maximumNumberIsOneValidator = (value, object) => {
+                if (value === undefined || value === null) {
+                    return false;
+                }
+                const typeofValue = typeof (value);
+                const valueIsNumber = typeofValue === "bigint" || typeofValue === "number";
+                if (!valueIsNumber) {
+                    return false;
+                }
+                return value <= 1;
+            };
+            return maximumNumberIsOneValidator;
+        }
         const errorMessage = "There is error.";
-        const validator = (0, custom_validator_1.custom)(maximumNumberIsOneValidator, errorMessage);
+        const validator = (0, custom_validator_1.custom)(hoc(), errorMessage);
         expect(validator).not.toBeUndefined();
         expect(validator.validate).not.toBeUndefined();
         expect(validator.returningErrorMessage).toEqual(errorMessage);

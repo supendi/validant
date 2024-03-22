@@ -9,4 +9,5 @@ import { regularExpression } from './regularExpression-validator';
 import { required } from './required-validator';
 import { minSumOf } from './minSumOf-validator';
 import { maxSumOf } from './maxSumOf-validator';
-export { elementOf, emailAddress, equalToPropertyValue, maxLength, maxNumber, minLength, minNumber, regularExpression, required, minSumOf, maxSumOf, };
+import { custom } from './custom-validator';
+export { elementOf, emailAddress, equalToPropertyValue, maxLength, maxNumber, minLength, minNumber, regularExpression, required, minSumOf, maxSumOf, custom };

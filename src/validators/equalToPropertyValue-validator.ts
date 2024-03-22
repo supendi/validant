@@ -1,23 +1,23 @@
 import { PropertyValidator, ValidatorFunc } from "../types";
 
-type EqualToPropertyValueValidator = (equalToPropName: string, errorMessage?: string) => PropertyValidator
+type EqualToPropertyValueValidator = <T>(equalToPropName: keyof T, errorMessage?: string) => PropertyValidator<T>
 
 /**
  * Specifies a rule that a value should equal to the specified property value.
  * @param errorMessage Custom error messages
  * @returns 
  */
-export const equalToPropertyValue: EqualToPropertyValueValidator = (equalToPropName: string, errorMessage?: string) => {
-    let msg = `The value should be equal to the value of '${equalToPropName}'.`
+export const equalToPropertyValue: EqualToPropertyValueValidator = <T>(equalToPropName: keyof T, errorMessage?: string) => {
+    let msg = `The value should be equal to the value of '${equalToPropName.toString()}'.`
     if (errorMessage) {
         msg = errorMessage
     }
 
-    const validatorFunc: ValidatorFunc = (value: any, objRef?: any): boolean => {
-        return value === objRef[equalToPropName]
+    const validatorFunc: ValidatorFunc<T> = (value, object): boolean => {
+        return value === object[equalToPropName]
     }
 
-    const validator: PropertyValidator = {
+    const validator: PropertyValidator<T> = {
         description: "Specifies a rule that a value should equal to the specified property value.",
         validate: validatorFunc,
         returningErrorMessage: msg

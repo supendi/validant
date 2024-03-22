@@ -47,7 +47,7 @@ const getErrorOf = (object, validationRule) => {
                     if (!propValidator) {
                         continue;
                     }
-                    const isPropValidator = !!propValidator.validate && !!propValidator.returningErrorMessage;
+                    const isPropValidator = !!propValidator.validate;
                     if (!isPropValidator) {
                         continue;
                     }
