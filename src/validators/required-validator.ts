@@ -3,7 +3,7 @@ import { PropertyValidator, ValidatorFunc } from "../types";
 type RequiredValidator = <TValue, TObject>(errorMessage?: string) => PropertyValidator<TValue, TObject>
 
 /**
- * The validator of required property
+ * Specifies the rule that the property is required.
  * @param errorMessage Custom error messages
  * @returns 
  */
@@ -21,7 +21,7 @@ export const required: RequiredValidator = <TValue, TObject>(errorMessage?: stri
     }
 
     const propValidator: PropertyValidator<TValue, TObject> = {
-        description: "Validates if a property value is required",
+        description: "Specifies the rule that the property is required.",
         returningErrorMessage: msg,
         validate: validatorFunc
     }
