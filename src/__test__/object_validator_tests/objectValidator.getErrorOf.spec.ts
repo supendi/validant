@@ -7,7 +7,7 @@ import { minLength } from "../../validators/minLength-validator"
 import { minNumber } from "../../validators/minNumber-validator"
 import { required } from "../../validators/required-validator"
 
-describe("getArrayStringErrorOf Simple Person Test", () => {
+describe("getErrorOf Simple Person Test", () => {
     it("Person name should return errors", () => {
         interface SimplePerson {
             name: string
@@ -31,7 +31,7 @@ describe("getArrayStringErrorOf Simple Person Test", () => {
     })
 })
 
-describe("getArrayStringErrorOf Simple Person With Child Test", () => {
+describe("getErrorOf Simple Person With Child Test", () => {
     it("Parent and child name should return errors", () => {
         interface SimplePerson {
             name: string
@@ -64,7 +64,7 @@ describe("getArrayStringErrorOf Simple Person With Child Test", () => {
     })
 })
 
-describe("getArrayStringErrorOf Nested Object Test with nested address", () => {
+describe("getErrorOf Nested Object Test with nested address", () => {
     it("Nested object test should return errors", () => {
         interface Continent {
             name: string
@@ -150,7 +150,7 @@ describe("getArrayStringErrorOf Nested Object Test with nested address", () => {
 })
 
 
-describe("getArrayStringErrorOf test with children array", () => {
+describe("getErrorOf test with children array", () => {
     it("Children has to contain suberrors", () => {
         interface Person {
             name?: string
@@ -196,7 +196,7 @@ describe("getArrayStringErrorOf test with children array", () => {
 })
 
 
-describe("getArrayStringErrorOf test with children array", () => {
+describe("getErrorOf test with children array", () => {
     it("Children has to contain errors", () => {
         interface Person {
             name?: string
@@ -230,7 +230,7 @@ describe("getArrayStringErrorOf test with children array", () => {
     })
 })
 
-describe("getArrayStringErrorOf test with Order and Order item", () => {
+describe("getErrorOf test with Order and Order item", () => {
     it("Validating order item approach 1", () => {
         interface Product {
             name: string
@@ -331,7 +331,7 @@ describe("getArrayStringErrorOf test with Order and Order item", () => {
     })
 })
 
-describe("getArrayStringErrorOf test with Order and Order item", () => {
+describe("getErrorOf test with Order and Order item", () => {
     it("Validating order item approach 2, separate the validation rule", () => {
         interface Product {
             name: string
@@ -435,7 +435,7 @@ describe("getArrayStringErrorOf test with Order and Order item", () => {
     })
 })
 
-describe("getArrayStringErrorOf complex validations", () => {
+describe("getErrorOf complex validations", () => {
     it("Should return errors", () => {
         interface Product {
             name: string
