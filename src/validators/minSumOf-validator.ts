@@ -13,7 +13,7 @@ export const minSumOf: MinimumSumOfValidator = <T>(propNameToBeSummed: string, m
         msg = errorMessage
     }
 
-    const validatorFunc: ValidatorFunc<T> = <T>(value: T[], objRef?: T): boolean => {
+    const validatorFunc: ValidatorFunc<T> = <T>(value: any, objRef?: T): boolean => {
         if (!value) {
             return false
         }

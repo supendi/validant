@@ -867,17 +867,16 @@ describe("Validator Test The Custom Validator", () => {
             quantity: [minNumber(1), maxNumber(5)],
         }
 
-        const customerNameValidator = function (value, object) {
-            console.log(value, object)
-            return false
-        }
 
         const rule: ValidationRule<Order> = {
             orderDate: [required()],
             orderNumber: [required()],
             customer: {
                 id: [required(), elementOf(customerIds)],
-                name: [required(), custom(customerNameValidator, "Error customer name")],
+                name: [required(), custom(function (value, object) {
+                    console.log(value, object)
+                    return false
+                }, "Error customer name")],
                 email: [required(), emailAddress()]
             },
             orderItems: {
