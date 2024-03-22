@@ -18,39 +18,39 @@ describe("CustomValidator Test", () => {
             return maximumNumberIsOneValidator;
         }
         const errorMessage = "There is error.";
-        const validator = (0, custom_validator_1.custom)(hoc(), errorMessage);
-        expect(validator).not.toBeUndefined();
-        expect(validator.validate).not.toBeUndefined();
-        expect(validator.returningErrorMessage).toEqual(errorMessage);
+        const customValidator = (0, custom_validator_1.custom)(hoc(), errorMessage);
+        expect(customValidator).not.toBeUndefined();
+        expect(customValidator.validate).not.toBeUndefined();
+        expect(customValidator.returningErrorMessage).toEqual(errorMessage);
         let input = undefined;
-        let isValid = validator.validate(input);
+        let isValid = customValidator.validate(input);
         expect(isValid).toEqual(false);
         input = "undefined";
-        isValid = validator.validate(input);
+        isValid = customValidator.validate(input);
         expect(isValid).toEqual(false);
         input = "";
-        isValid = validator.validate(input);
+        isValid = customValidator.validate(input);
         expect(isValid).toEqual(false);
         input = "1";
-        isValid = validator.validate(input);
+        isValid = customValidator.validate(input);
         expect(isValid).toEqual(false);
         input = 2;
-        isValid = validator.validate(input);
+        isValid = customValidator.validate(input);
         expect(isValid).toEqual(false);
         input = false;
-        isValid = validator.validate(input);
+        isValid = customValidator.validate(input);
         expect(isValid).toEqual(false);
         input = function () { };
-        isValid = validator.validate(input);
+        isValid = customValidator.validate(input);
         expect(isValid).toEqual(false);
         input = 1;
-        isValid = validator.validate(input);
+        isValid = customValidator.validate(input);
         expect(isValid).toEqual(true);
         input = 0;
-        isValid = validator.validate(input);
+        isValid = customValidator.validate(input);
         expect(isValid).toEqual(true);
         input = 0;
-        isValid = validator.validate(input);
+        isValid = customValidator.validate(input);
         expect(isValid).toEqual(true);
     });
 });
@@ -70,12 +70,12 @@ describe("CustomValidator Test", () => {
                 }
             ]
         };
-        const guardAgainstMinusValidator = (value, object) => {
+        const guardAgainstMinusQuantityValidator = (value, object) => {
             if (!object) {
                 return false;
             }
-            for (let index = 0; index < order.orderItems.length; index++) {
-                const orderItem = order.orderItems[index];
+            for (let index = 0; index < object.orderItems.length; index++) {
+                const orderItem = object.orderItems[index];
                 if (orderItem.qty < 0) {
                     return false;
                 }
@@ -83,18 +83,18 @@ describe("CustomValidator Test", () => {
             return true;
         };
         const errorMessage = "There is error.";
-        const validator = (0, custom_validator_1.custom)(guardAgainstMinusValidator, errorMessage);
-        expect(validator).not.toBeUndefined();
-        expect(validator.validate).not.toBeUndefined();
-        expect(validator.returningErrorMessage).toEqual(errorMessage);
+        const customValidator = (0, custom_validator_1.custom)(guardAgainstMinusQuantityValidator, errorMessage);
+        expect(customValidator).not.toBeUndefined();
+        expect(customValidator.validate).not.toBeUndefined();
+        expect(customValidator.returningErrorMessage).toEqual(errorMessage);
         let inputValue = undefined;
-        let isValid = validator.validate(inputValue);
+        let isValid = customValidator.validate(inputValue);
         expect(isValid).toEqual(false);
         inputValue = undefined;
-        isValid = validator.validate(inputValue);
+        isValid = customValidator.validate(inputValue);
         expect(isValid).toEqual(false);
         inputValue = undefined;
-        isValid = validator.validate(inputValue, order);
+        isValid = customValidator.validate(inputValue, order);
         expect(isValid).toEqual(false);
     });
 });
