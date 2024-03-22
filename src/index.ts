@@ -1,5 +1,5 @@
 import validator from "./objectValidator";
-import { ArrayStringErrorOf, ValidationRule, ValidationResult, ValidatorFunc, FieldValidationResult, FieldValidator, StringifiedErrorOf, StringifiedValidationResult, ValidationRuleForArrayOf } from './types'
+import { ErrorOf, ValidationRule, ValidationResult, ValidatorFunc, FieldValidationResult, FieldValidator, StringifiedErrorOf, StringifiedValidationResult, ValidationRuleForArrayOf } from './types'
 
 import { elementOf } from './validators/elementOf-validator'
 import { emailAddress } from './validators/emailAddress-validator'
@@ -30,7 +30,7 @@ export {
 }
 
 export {
-    ArrayStringErrorOf,
+    ErrorOf,
     ValidationRule,
     ValidationResult,
     ValidatorFunc,

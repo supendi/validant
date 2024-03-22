@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateObject = exports.getArrayStringErrorOf = void 0;
+exports.validateObject = exports.getErrorOf = void 0;
 /**
  * Do a single validation against single field
  * @param fieldName
@@ -30,7 +30,7 @@ const validateField = (fieldName, object, fieldValidator) => {
  * @param validationRule
  * @returns
  */
-const getArrayStringErrorOf = (object, validationRule) => {
+const getErrorOf = (object, validationRule) => {
     var errors = undefined;
     for (const key in object) {
         if (Object.prototype.hasOwnProperty.call(object, key)) {
@@ -99,7 +99,7 @@ const getArrayStringErrorOf = (object, validationRule) => {
                 if (childValidationRule.validationRule) {
                     for (let index = 0; index < value.length; index++) {
                         const element = value[index];
-                        const error = (0, exports.getArrayStringErrorOf)(element, childValidationRule.validationRule);
+                        const error = (0, exports.getErrorOf)(element, childValidationRule.validationRule);
                         if (error) {
                             if (!errors) {
                                 errors = {};
@@ -125,7 +125,7 @@ const getArrayStringErrorOf = (object, validationRule) => {
             if (typeofValue === "object") {
                 const childObject = object[key];
                 const childValidationRule = rule;
-                const error = (0, exports.getArrayStringErrorOf)(childObject, childValidationRule);
+                const error = (0, exports.getErrorOf)(childObject, childValidationRule);
                 if (error) {
                     if (!errors) {
                         errors = {};
@@ -140,7 +140,7 @@ const getArrayStringErrorOf = (object, validationRule) => {
     }
     return errors;
 };
-exports.getArrayStringErrorOf = getArrayStringErrorOf;
+exports.getErrorOf = getErrorOf;
 /**
  * Validates an object with the specified validation rule
  * @param object
@@ -148,7 +148,7 @@ exports.getArrayStringErrorOf = getArrayStringErrorOf;
  * @returns ValidationResult
  */
 const validateObject = (object, validationRule) => {
-    const errors = (0, exports.getArrayStringErrorOf)(object, validationRule);
+    const errors = (0, exports.getErrorOf)(object, validationRule);
     let isValid = true;
     for (const key in errors) {
         if (Object.prototype.hasOwnProperty.call(errors, key)) {

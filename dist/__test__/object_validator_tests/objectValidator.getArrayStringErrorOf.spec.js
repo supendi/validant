@@ -15,7 +15,7 @@ describe("getArrayStringErrorOf Simple Person Test", () => {
         const person = {
             name: "",
         };
-        const actual = (0, objectValidator_1.getArrayStringErrorOf)(person, rule);
+        const actual = (0, objectValidator_1.getErrorOf)(person, rule);
         const expected = {
             name: ["This field is required."]
         };
@@ -36,7 +36,7 @@ describe("getArrayStringErrorOf Simple Person With Child Test", () => {
                 name: "",
             }
         };
-        const actual = (0, objectValidator_1.getArrayStringErrorOf)(parent, rule);
+        const actual = (0, objectValidator_1.getErrorOf)(parent, rule);
         const expected = {
             name: ["This field is required."],
             child: {
@@ -84,7 +84,7 @@ describe("getArrayStringErrorOf Nested Object Test with nested address", () => {
                 name: "",
             }
         };
-        const actual = (0, objectValidator_1.getArrayStringErrorOf)(parent, rule);
+        const actual = (0, objectValidator_1.getErrorOf)(parent, rule);
         const expected = {
             name: ["This field is required."],
             address: {
@@ -122,7 +122,7 @@ describe("getArrayStringErrorOf test with children array", () => {
                 },
             ]
         };
-        const actual = (0, objectValidator_1.getArrayStringErrorOf)(person, rule);
+        const actual = (0, objectValidator_1.getErrorOf)(person, rule);
         const expected = {
             name: ["This field is required."],
             children: {
@@ -153,7 +153,7 @@ describe("getArrayStringErrorOf test with children array", () => {
             name: "",
             children: []
         };
-        const actual = (0, objectValidator_1.getArrayStringErrorOf)(person, rule);
+        const actual = (0, objectValidator_1.getErrorOf)(person, rule);
         const expected = {
             name: ["This field is required."],
             children: {
@@ -182,7 +182,7 @@ describe("getArrayStringErrorOf test with Order and Order item", () => {
             orderNumber: "",
             orderItems: []
         };
-        const actual1 = (0, objectValidator_1.getArrayStringErrorOf)(newOrder1, rule);
+        const actual1 = (0, objectValidator_1.getErrorOf)(newOrder1, rule);
         const expected1 = {
             orderDate: ["This field is required."],
             orderNumber: ["This field is required."],
@@ -210,7 +210,7 @@ describe("getArrayStringErrorOf test with Order and Order item", () => {
                 },
             ]
         };
-        const actual2 = (0, objectValidator_1.getArrayStringErrorOf)(newOrder2, rule);
+        const actual2 = (0, objectValidator_1.getErrorOf)(newOrder2, rule);
         const expected2 = {
             orderDate: ["This field is required."],
             orderNumber: ["This field is required."],
@@ -276,7 +276,7 @@ describe("getArrayStringErrorOf test with Order and Order item", () => {
                 },
             ]
         };
-        const actual1 = (0, objectValidator_1.getArrayStringErrorOf)(newOrder1, rule);
+        const actual1 = (0, objectValidator_1.getErrorOf)(newOrder1, rule);
         const expected1 = {
             orderDate: ["This field is required."],
             orderNumber: ["This field is required."],
@@ -285,7 +285,7 @@ describe("getArrayStringErrorOf test with Order and Order item", () => {
             }
         };
         expect(actual1).toEqual(expected1);
-        const actual2 = (0, objectValidator_1.getArrayStringErrorOf)(newOrder2, rule);
+        const actual2 = (0, objectValidator_1.getErrorOf)(newOrder2, rule);
         const expected2 = {
             orderDate: ["This field is required."],
             orderNumber: ["This field is required."],
@@ -345,7 +345,7 @@ describe("getArrayStringErrorOf complex validations", () => {
             },
             orderItems: []
         };
-        const actual1 = (0, objectValidator_1.getArrayStringErrorOf)(newOrder1, rule);
+        const actual1 = (0, objectValidator_1.getErrorOf)(newOrder1, rule);
         const expected1 = {
             orderDate: ["This field is required."],
             orderNumber: ["This field is required."],
@@ -389,7 +389,7 @@ describe("getArrayStringErrorOf complex validations", () => {
                 },
             ]
         };
-        const actual2 = (0, objectValidator_1.getArrayStringErrorOf)(newOrder2, rule);
+        const actual2 = (0, objectValidator_1.getErrorOf)(newOrder2, rule);
         const expected2 = {
             orderDate: ["This field is required."],
             orderNumber: ["This field is required."],

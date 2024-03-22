@@ -1,13 +1,16 @@
 
 /**
  * Helps to get the original type of an array type.
+ * Example if we have a type of T[],
+ * then the TypeOfArray<T[]> is T.
  * See: https://stackoverflow.com/questions/46376468/how-to-get-type-of-array-items
  */
-type GetArrayReturnType<T> = T extends (infer U)[] ? U : never;
-
+type TypeOfArray<T> = T extends (infer U)[] ? U : never;
 
 /**
- * Represents the error of object which property data type is string
+ * Represents the error of object which property data type is string.
+ * Example: T = { name: string: age: number, birthDate: Date },
+ * then the StringifiedErrorOf<T> =  { name: string: age: string, birthDate: string } (notice the type of its properties is all string).
  */
 export type StringifiedErrorOf<T> = { [key in keyof T]?: T[key] extends object
     ? T[key] extends Array<any> ? StringifiedValidationResult<T[key]>
@@ -24,24 +27,53 @@ export type StringifiedValidationResult<T> = {
     subErrors?: StringifiedErrorOf<T> | null
 }
 
+/**
+ * Represents the validation result.
+ * This model is the return type of validate() function. 
+ * See validator.validate().
+ */
 export interface ValidationResult<T> {
     isValid: boolean
-    errors: ArrayStringErrorOf<T>
+    errors: ErrorOf<T>
 }
 
-export type IndexedArrayStringErrorOf<T> = { index: number, errors: ArrayStringErrorOf<T>, validatedObject: T | null | undefined}
+/**
+ * Represent the error that has index as one of its properties.
+ */
+export type IndexedErrorOf<T> = { index: number, errors: ErrorOf<T>, validatedObject: T | null | undefined }
 
 /**
- * Represents the error of object which property data type array of string
+ * Represent the error model for array.
+ * Example: If T { name: string, children: T[]}
+ * Then ErrorOfArray<T> will be  { name: string[], children: { fieldErrors: string[], indexedErrors: { index: number, errors: ErrorOf<T>, validatedObject: T | null | undefined }}}
  */
-export type ArrayStringErrorOf<T> = { [key in keyof T]?: T[key] extends object
-    ? T[key] extends Array<any> ? { fieldErrors?: string[], indexedErrors?: IndexedArrayStringErrorOf<GetArrayReturnType<T[key]>>[] } :
-    T[key] extends Date
-    ? string[] : ArrayStringErrorOf<T[key]>
+export type ErrorOfArray<T> = {
+    /**
+     * Represents the error of the property value it self
+     */
+    fieldErrors?: string[],
+
+    /**
+     * Each element of array need to be validated.
+     * The indexedErrors represents the errors of the each element of the array.
+     */
+    indexedErrors?: IndexedErrorOf<TypeOfArray<T>>[]
+}
+
+/**
+ * Represents an error of T.
+ * Example: If T is { name: string }
+ * Then ErrorOf<T> is { name: string[] } 
+ */
+export type ErrorOf<T> = { [key in keyof T]?: T[key] extends object
+    ? T[key] extends Array<any> ? ErrorOfArray<T[key]>
+    : T[key] extends Date
+    ? string[] : ErrorOf<T[key]>
     : string[] }
 
 /**
- * Specifies the contract of validator function
+ * Specifies the contract of validator function.
+ * See theFieldValidator implementation of how the validator func being implemented.
  */
 export type ValidatorFunc = (value: any, objRef?: any) => boolean
 
@@ -59,7 +91,7 @@ export type FieldValidator = {
  * The validation schema should implement this type.
  */
 export type ValidationRule<T> = { [key in keyof T]?: T[key] extends Array<any>
-    ? ValidationRuleForArrayOf<GetArrayReturnType<T[key]>> : T[key] extends object
+    ? ValidationRuleForArrayOf<TypeOfArray<T[key]>> : T[key] extends object
     ? ValidationRule<T[key]> : FieldValidator[] }
 
 /**

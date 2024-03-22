@@ -1,5 +1,5 @@
-import { getArrayStringErrorOf } from "../../objectValidator"
-import { ArrayStringErrorOf, ValidationRule } from "../../types"
+import { getErrorOf } from "../../objectValidator"
+import { ErrorOf, ValidationRule } from "../../types"
 import { elementOf } from "../../validators/elementOf-validator"
 import { emailAddress } from "../../validators/emailAddress-validator"
 import { maxNumber } from "../../validators/maxNumber-validator"
@@ -21,9 +21,9 @@ describe("getArrayStringErrorOf Simple Person Test", () => {
             name: "",
         }
 
-        const actual = getArrayStringErrorOf(person, rule)
+        const actual = getErrorOf(person, rule)
 
-        const expected: ArrayStringErrorOf<SimplePerson> = {
+        const expected: ErrorOf<SimplePerson> = {
             name: ["This field is required."]
         }
 
@@ -51,9 +51,9 @@ describe("getArrayStringErrorOf Simple Person With Child Test", () => {
             }
         }
 
-        const actual = getArrayStringErrorOf(parent, rule)
+        const actual = getErrorOf(parent, rule)
 
-        const expected: ArrayStringErrorOf<SimplePerson> = {
+        const expected: ErrorOf<SimplePerson> = {
             name: ["This field is required."],
             child: {
                 name: ["This field is required."],
@@ -124,9 +124,9 @@ describe("getArrayStringErrorOf Nested Object Test with nested address", () => {
             }
         }
 
-        const actual = getArrayStringErrorOf(parent, rule)
+        const actual = getErrorOf(parent, rule)
 
-        const expected: ArrayStringErrorOf<SimplePerson> = {
+        const expected: ErrorOf<SimplePerson> = {
             name: ["This field is required."],
             address: {
                 street: ["This field is required."],
@@ -174,9 +174,9 @@ describe("getArrayStringErrorOf test with children array", () => {
             ]
         }
 
-        const actual = getArrayStringErrorOf(person, rule)
+        const actual = getErrorOf(person, rule)
 
-        const expected: ArrayStringErrorOf<Person> = {
+        const expected: ErrorOf<Person> = {
             name: ["This field is required."],
             children: {
                 indexedErrors: [
@@ -217,9 +217,9 @@ describe("getArrayStringErrorOf test with children array", () => {
             children: []
         }
 
-        const actual = getArrayStringErrorOf(person, rule)
+        const actual = getErrorOf(person, rule)
 
-        const expected: ArrayStringErrorOf<Person> = {
+        const expected: ErrorOf<Person> = {
             name: ["This field is required."],
             children: {
                 fieldErrors: ["Please add at least one child."],
@@ -272,8 +272,8 @@ describe("getArrayStringErrorOf test with Order and Order item", () => {
             orderItems: []
         }
 
-        const actual1 = getArrayStringErrorOf(newOrder1, rule)
-        const expected1: ArrayStringErrorOf<Order> = {
+        const actual1 = getErrorOf(newOrder1, rule)
+        const expected1: ErrorOf<Order> = {
             orderDate: ["This field is required."],
             orderNumber: ["This field is required."],
             orderItems: {
@@ -303,8 +303,8 @@ describe("getArrayStringErrorOf test with Order and Order item", () => {
             ]
         }
 
-        const actual2 = getArrayStringErrorOf(newOrder2, rule)
-        const expected2: ArrayStringErrorOf<Order> = {
+        const actual2 = getErrorOf(newOrder2, rule)
+        const expected2: ErrorOf<Order> = {
             orderDate: ["This field is required."],
             orderNumber: ["This field is required."],
             orderItems: {
@@ -396,8 +396,8 @@ describe("getArrayStringErrorOf test with Order and Order item", () => {
             ]
         }
 
-        const actual1 = getArrayStringErrorOf(newOrder1, rule)
-        const expected1: ArrayStringErrorOf<Order> = {
+        const actual1 = getErrorOf(newOrder1, rule)
+        const expected1: ErrorOf<Order> = {
             orderDate: ["This field is required."],
             orderNumber: ["This field is required."],
             orderItems: {
@@ -406,8 +406,8 @@ describe("getArrayStringErrorOf test with Order and Order item", () => {
         }
         expect(actual1).toEqual(expected1)
 
-        const actual2 = getArrayStringErrorOf(newOrder2, rule)
-        const expected2: ArrayStringErrorOf<Order> = {
+        const actual2 = getErrorOf(newOrder2, rule)
+        const expected2: ErrorOf<Order> = {
             orderDate: ["This field is required."],
             orderNumber: ["This field is required."],
             orderItems: {
@@ -499,8 +499,8 @@ describe("getArrayStringErrorOf complex validations", () => {
             orderItems: []
         }
 
-        const actual1 = getArrayStringErrorOf(newOrder1, rule)
-        const expected1: ArrayStringErrorOf<Order> = {
+        const actual1 = getErrorOf(newOrder1, rule)
+        const expected1: ErrorOf<Order> = {
             orderDate: ["This field is required."],
             orderNumber: ["This field is required."],
             customer: {
@@ -545,8 +545,8 @@ describe("getArrayStringErrorOf complex validations", () => {
                 },
             ]
         }
-        const actual2 = getArrayStringErrorOf(newOrder2, rule)
-        const expected2: ArrayStringErrorOf<Order> = {
+        const actual2 = getErrorOf(newOrder2, rule)
+        const expected2: ErrorOf<Order> = {
             orderDate: ["This field is required."],
             orderNumber: ["This field is required."],
             customer: {

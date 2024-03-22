@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * Ensure all the code below compiled
  */
-describe("ArrayStringErrorOf Simple Person Test", () => {
+describe("ErrorOf Simple Person Test", () => {
     it("Should compile", () => {
         const actual = {
             age: [
@@ -18,7 +18,7 @@ describe("ArrayStringErrorOf Simple Person Test", () => {
         expect(!actual).not.toBeNull();
     });
 });
-describe("ArrayStringErrorOf Complex Person Test", () => {
+describe("ErrorOf Complex Person Test", () => {
     it("Should compile", () => {
         const actual = {
             age: [
@@ -67,7 +67,7 @@ describe("ArrayStringErrorOf Complex Person Test", () => {
         expect(!actual).not.toBeNull();
     });
 });
-describe("ArrayStringErrorOf Complex Person Test", () => {
+describe("ErrorOf Complex Person Test", () => {
     it("Should compile", () => {
         const actual = {
             age: [

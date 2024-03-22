@@ -1,17 +1,17 @@
-import { ArrayStringErrorOf } from "../../types"
+import { ErrorOf } from "../../types"
 
 /**
  * Ensure all the code below compiled
  */
 
-describe("ArrayStringErrorOf Simple Person Test", () => {
+describe("ErrorOf Simple Person Test", () => {
     it("Should compile", () => {
         interface SimplePerson {
             name: string
             age: number
         }
 
-        const actual: ArrayStringErrorOf<SimplePerson> = {
+        const actual: ErrorOf<SimplePerson> = {
             age: [
                 "Age is required",
                 "Maximum age is 56"
@@ -26,7 +26,7 @@ describe("ArrayStringErrorOf Simple Person Test", () => {
 })
 
 
-describe("ArrayStringErrorOf Complex Person Test", () => {
+describe("ErrorOf Complex Person Test", () => {
     it("Should compile", () => {
         interface Address {
             street: string,
@@ -40,7 +40,7 @@ describe("ArrayStringErrorOf Complex Person Test", () => {
             children: ComplexPerson[]
         }
 
-        const actual: ArrayStringErrorOf<ComplexPerson> = {
+        const actual: ErrorOf<ComplexPerson> = {
             age: [
                 "Age is required",
                 "Maximum age is 56"
@@ -90,7 +90,7 @@ describe("ArrayStringErrorOf Complex Person Test", () => {
 
 
 
-describe("ArrayStringErrorOf Complex Person Test", () => {
+describe("ErrorOf Complex Person Test", () => {
     it("Should compile", () => {
         interface Address {
             street: string,
@@ -104,7 +104,7 @@ describe("ArrayStringErrorOf Complex Person Test", () => {
             children: ComplexPerson[]
         }
 
-        const actual: ArrayStringErrorOf<ComplexPerson> = {
+        const actual: ErrorOf<ComplexPerson> = {
             age: [
                 "Age is required",
                 "Maximum age is 56"

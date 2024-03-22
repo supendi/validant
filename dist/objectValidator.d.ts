@@ -1,11 +1,11 @@
-import { ArrayStringErrorOf, ValidationResult, ValidationRule } from "./types";
+import { ErrorOf, ValidationResult, ValidationRule } from "./types";
 /**
  * Validates and collects errors of each fields as array of string
  * @param object
  * @param validationRule
  * @returns
  */
-export declare const getArrayStringErrorOf: <T>(object: T, validationRule: ValidationRule<T>) => ArrayStringErrorOf<T>;
+export declare const getErrorOf: <T>(object: T, validationRule: ValidationRule<T>) => ErrorOf<T>;
 /**
  * Validates an object with the specified validation rule
  * @param object

@@ -1,4 +1,4 @@
-import { ArrayStringErrorOf, FieldValidationResult, FieldValidator, ValidationResult, ValidationRule, ValidationRuleForArrayOf } from "./types";
+import { ErrorOf, FieldValidationResult, FieldValidator, ValidationResult, ValidationRule, ValidationRuleForArrayOf } from "./types";
 
 /**
  * Do a single validation against single field
@@ -33,8 +33,8 @@ const validateField = (fieldName: string, object: any, fieldValidator: FieldVali
  * @param validationRule 
  * @returns 
  */
-export const getArrayStringErrorOf = <T>(object: T, validationRule: ValidationRule<T>): ArrayStringErrorOf<T> => {
-    var errors: ArrayStringErrorOf<T> = undefined
+export const getErrorOf = <T>(object: T, validationRule: ValidationRule<T>): ErrorOf<T> => {
+    var errors: ErrorOf<T> = undefined
     for (const key in object) {
         if (Object.prototype.hasOwnProperty.call(object, key)) {
             const value = object[key];
@@ -64,7 +64,7 @@ export const getArrayStringErrorOf = <T>(object: T, validationRule: ValidationRu
 
                     if (!isValid) {
                         if (!errors) {
-                            errors = {} as ArrayStringErrorOf<T>
+                            errors = {} as ErrorOf<T>
                         }
                         if (!errors[key]) {
                             errors[key as any] = []
@@ -116,7 +116,7 @@ export const getArrayStringErrorOf = <T>(object: T, validationRule: ValidationRu
                 if (childValidationRule.validationRule) {
                     for (let index = 0; index < value.length; index++) {
                         const element = value[index];
-                        const error = getArrayStringErrorOf(element, childValidationRule.validationRule)
+                        const error = getErrorOf(element, childValidationRule.validationRule)
                         if (error) {
                             if (!errors) {
                                 errors = {}
@@ -143,7 +143,7 @@ export const getArrayStringErrorOf = <T>(object: T, validationRule: ValidationRu
             if (typeofValue === "object") {
                 const childObject = object[key]
                 const childValidationRule = rule as ValidationRule<typeof childObject>;
-                const error = getArrayStringErrorOf(childObject, childValidationRule)
+                const error = getErrorOf(childObject, childValidationRule)
                 if (error) {
                     if (!errors) {
                         errors = {}
@@ -166,7 +166,7 @@ export const getArrayStringErrorOf = <T>(object: T, validationRule: ValidationRu
  * @returns ValidationResult
  */
 export const validateObject = <T>(object: T, validationRule: ValidationRule<T>): ValidationResult<T> => {
-    const errors = getArrayStringErrorOf(object, validationRule)
+    const errors = getErrorOf(object, validationRule)
     let isValid = true
 
     for (const key in errors) {
