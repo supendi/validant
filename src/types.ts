@@ -18,7 +18,7 @@ export type StringifiedErrorOf<T> = { [key in keyof T]?: T[key] extends object
     : StringifiedErrorOf<T[key]> : string }
 
 /**
- * Represents the model of validation result returned by the validateObject and the validationField method
+ * Represents the model of validation result returned by the validateObject and the validationProperty method
  */
 export type StringifiedValidationResult<T> = {
     isValid: boolean,
@@ -74,12 +74,13 @@ export type ErrorOf<T> = { [key in keyof T]?: T[key] extends object
 
 /**
  * Specifies the contract of validator function.
- * See the FieldValidator implementation of how the validator func being implemented.
+ * See the PropertyValidator implementation of how the validator func being implemented.
  */
 export type ValidatorFunc = (value: any, objRef?: any) => boolean
 
 /**
- * Represents the object model of field validator
+ * Represents the object model of property validator.
+ * See the validators implementation.
  */
 export type PropertyValidator = {
     description: string
@@ -104,7 +105,7 @@ export type ValidationRuleForArrayOf<T> = {
 }
 
 /**
- * Represents a single validation result of property/field 
+ * Represents a single validation result of property 
  */
 export interface PropertyValidationResult {
     object: any,

@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateObject = exports.getErrorOf = void 0;
 /**
- * Do a single validation against single field
+ * Do a single validation against single property
  * @param propName
  * @param object
  * @param propValidator
@@ -25,7 +25,7 @@ const validateProperty = (propName, object, propValidator) => {
     return validationResult;
 };
 /**
- * Validates and collects errors of each fields as array of string
+ * Validates and collects errors of each property as array of string
  * @param object
  * @param validationRule
  * @returns

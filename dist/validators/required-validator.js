@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.required = void 0;
 /**
- * The validator of required field
+ * The validator of required property
  * @param errorMessage Custom error messages
  * @returns
  */
@@ -17,11 +17,11 @@ const required = (errorMessage) => {
         }
         return true;
     };
-    const fieldValidator = {
-        description: "Validates if a field value is required",
+    const propValidator = {
+        description: "Validates if a property value is required",
         returningErrorMessage: msg,
         validate: validatorFunc
     };
-    return fieldValidator;
+    return propValidator;
 };
 exports.required = required;

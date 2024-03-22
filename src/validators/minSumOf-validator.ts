@@ -1,14 +1,14 @@
 import { PropertyValidator, ValidatorFunc } from "../types"
 
-type MinimumSumOfValidator = <T>(fieldNameToSum: keyof T, value: number, errorMessage?: string) => PropertyValidator
+type MinimumSumOfValidator = <T>(propNameToBeSummed: keyof T, value: number, errorMessage?: string) => PropertyValidator
 
 /**
- * Specifies the rule if a value is an element of the specified array.
+ * Specifies the rule of minimum sum of the specified property name of an array.
  * @param errorMessage Custom error messages
  * @returns 
  */
-export const minSumOf: MinimumSumOfValidator = <T>(fieldNameToSum: keyof T, minSum: number, errorMessage?: string) => {
-    let msg = `The minimum sum of ${fieldNameToSum.toString()} is ${minSum}.`
+export const minSumOf: MinimumSumOfValidator = <T>(propNameToBeSummed: keyof T, minSum: number, errorMessage?: string) => {
+    let msg = `The minimum sum of ${propNameToBeSummed.toString()} is ${minSum}.`
     if (errorMessage) {
         msg = errorMessage
     }
@@ -23,11 +23,11 @@ export const minSumOf: MinimumSumOfValidator = <T>(fieldNameToSum: keyof T, minS
         const arr = [...value]
 
         const total = arr.reduce((accumulator, obj) => {
-            const fieldValue = obj[fieldNameToSum] as any;
-            if (!fieldValue) {
+            const propValue = obj[propNameToBeSummed] as any;
+            if (!propValue) {
                 return accumulator
             }
-            const parsedNumber = parseFloat(fieldValue)
+            const parsedNumber = parseFloat(propValue)
             return accumulator + parsedNumber
         }, 0);
 
@@ -35,7 +35,7 @@ export const minSumOf: MinimumSumOfValidator = <T>(fieldNameToSum: keyof T, minS
     }
 
     const validator: PropertyValidator = {
-        description: "Specifies the rule of minimum sum of the spesified field of an array.",
+        description: "Specifies the rule of minimum sum of the specified property name of an array.",
         validate: validatorFunc,
         returningErrorMessage: msg
     }

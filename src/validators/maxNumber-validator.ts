@@ -3,7 +3,7 @@ import { PropertyValidator, ValidatorFunc } from "../types";
 type MaxNumberValidator = (max: number, errorMessage?: string) => PropertyValidator
 
 /**
- * Returns a maximum number validation rule
+ * Specifies the rule of maximum value of a number.
  * @param errorMessage Custom error messages
  * @returns 
  */

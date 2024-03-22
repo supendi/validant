@@ -1,6 +1,6 @@
 import { ErrorOf, ValidationResult, ValidationRule } from "./types";
 /**
- * Validates and collects errors of each fields as array of string
+ * Validates and collects errors of each property as array of string
  * @param object
  * @param validationRule
  * @returns

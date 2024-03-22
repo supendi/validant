@@ -3,7 +3,7 @@ import { PropertyValidator, ValidatorFunc } from "../types";
 type RequiredValidator = (errorMessage?: string) => PropertyValidator
 
 /**
- * The validator of required field
+ * The validator of required property
  * @param errorMessage Custom error messages
  * @returns 
  */
@@ -20,10 +20,10 @@ export const required: RequiredValidator = (errorMessage?: string) => {
         return true
     }
 
-    const fieldValidator: PropertyValidator = {
-        description: "Validates if a field value is required",
+    const propValidator: PropertyValidator = {
+        description: "Validates if a property value is required",
         returningErrorMessage: msg,
         validate: validatorFunc
     }
-    return fieldValidator
+    return propValidator
 }

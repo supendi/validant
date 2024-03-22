@@ -1,7 +1,7 @@
 import { PropertyValidator } from "../types";
 declare type MinLengthValidator = (min: number, errorMessage?: string) => PropertyValidator;
 /**
- * Returns a minimum length validation rule
+ * Specifies the minimum length of an array.
  * @param errorMessage Custom error messages
  * @returns
  */

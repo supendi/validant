@@ -1,7 +1,7 @@
 import { ErrorOf, PropertyValidationResult, PropertyValidator, ValidationResult, ValidationRule, ValidationRuleForArrayOf } from "./types";
 
 /**
- * Do a single validation against single field
+ * Do a single validation against single property
  * @param propName 
  * @param object 
  * @param propValidator 
@@ -28,7 +28,7 @@ const validateProperty = (propName: string, object: any, propValidator: Property
 }
 
 /**
- * Validates and collects errors of each fields as array of string
+ * Validates and collects errors of each property as array of string
  * @param object 
  * @param validationRule 
  * @returns 

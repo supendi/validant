@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.maxNumber = void 0;
 /**
- * Returns a maximum number validation rule
+ * Specifies the rule of maximum value of a number.
  * @param errorMessage Custom error messages
  * @returns
  */

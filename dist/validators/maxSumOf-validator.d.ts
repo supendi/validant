@@ -1,7 +1,7 @@
 import { PropertyValidator } from "../types";
-declare type MaximumSumOfValidator = <T>(fieldNameToSum: keyof T, value: number, errorMessage?: string) => PropertyValidator;
+declare type MaximumSumOfValidator = <T>(propNameToBeSummed: keyof T, value: number, errorMessage?: string) => PropertyValidator;
 /**
- * Specifies the rule if a value is an element of the specified array.
+ * Specifies the rule of maximum sum of the spesified property name of an array.
  * @param errorMessage Custom error messages
  * @returns
  */

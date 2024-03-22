@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.equalToPropertyValue = void 0;
 /**
- * Specifies a rule that a value should equal to the specified field value.
+ * Specifies a rule that a value should equal to the specified property value.
  * @param errorMessage Custom error messages
  * @returns
  */

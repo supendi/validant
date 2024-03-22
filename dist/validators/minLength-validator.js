@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.minLength = void 0;
 /**
- * Returns a minimum length validation rule
+ * Specifies the minimum length of an array.
  * @param errorMessage Custom error messages
  * @returns
  */
@@ -22,11 +22,11 @@ const minLength = (min, errorMessage) => {
         let actualLength = value.length;
         return actualLength >= min;
     };
-    const fieldValidator = {
-        description: "Specify the minimum length of an array",
+    const propValidator = {
+        description: "Specifies the minimum length of an array.",
         returningErrorMessage: msg,
         validate: validateFunc
     };
-    return fieldValidator;
+    return propValidator;
 };
 exports.minLength = minLength;

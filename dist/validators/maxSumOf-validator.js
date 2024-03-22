@@ -2,12 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.maxSumOf = void 0;
 /**
- * Specifies the rule if a value is an element of the specified array.
+ * Specifies the rule of maximum sum of the spesified property name of an array.
  * @param errorMessage Custom error messages
  * @returns
  */
-const maxSumOf = (fieldNameToSum, maxSum, errorMessage) => {
-    let msg = `The maximum sum of ${fieldNameToSum.toString()} is ${maxSum}.`;
+const maxSumOf = (propNameToBeSummed, maxSum, errorMessage) => {
+    let msg = `The maximum sum of ${propNameToBeSummed.toString()} is ${maxSum}.`;
     if (errorMessage) {
         msg = errorMessage;
     }
@@ -20,17 +20,17 @@ const maxSumOf = (fieldNameToSum, maxSum, errorMessage) => {
         }
         const arr = [...value];
         const total = arr.reduce((accumulator, obj) => {
-            const fieldValue = obj[fieldNameToSum];
-            if (!fieldValue) {
+            const propValue = obj[propNameToBeSummed];
+            if (!propValue) {
                 return accumulator;
             }
-            const parsedNumber = parseFloat(fieldValue);
+            const parsedNumber = parseFloat(propValue);
             return accumulator + parsedNumber;
         }, 0);
         return maxSum >= total;
     };
     const validator = {
-        description: "Specifies the rule of maximum sum of the spesified field of an array.",
+        description: "Specifies the rule of maximum sum of the spesified property name of an array.",
         validate: validatorFunc,
         returningErrorMessage: msg
     };

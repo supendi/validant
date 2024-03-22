@@ -1,7 +1,7 @@
 import { PropertyValidator } from "../types";
 declare type MaxNumberValidator = (max: number, errorMessage?: string) => PropertyValidator;
 /**
- * Returns a maximum number validation rule
+ * Specifies the rule of maximum value of a number.
  * @param errorMessage Custom error messages
  * @returns
  */
