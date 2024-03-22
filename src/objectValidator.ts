@@ -106,10 +106,10 @@ export const getErrorOf = <T>(object: T, validationRule: ValidationRule<T>): Err
                             if (!errors[key]) {
                                 errors[key as any] = {}
                             }
-                            if (!errors[key as any].fieldErrors) {
-                                errors[key as any].fieldErrors = []
+                            if (!errors[key as any].propErrors) {
+                                errors[key as any].propErrors = []
                             }
-                            errors[key as any].fieldErrors.push(fieldValidationResult.errorMessage)
+                            errors[key as any].propErrors.push(fieldValidationResult.errorMessage)
                         }
                     }
                 }

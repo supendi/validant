@@ -52,7 +52,7 @@ export type ErrorOfArray<T> = {
     /**
      * Represents the error of the property value it self
      */
-    fieldErrors?: string[],
+    propErrors?: string[],
 
     /**
      * Each element of array need to be validated.

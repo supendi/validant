@@ -89,10 +89,10 @@ const getErrorOf = (object, validationRule) => {
                             if (!errors[key]) {
                                 errors[key] = {};
                             }
-                            if (!errors[key].fieldErrors) {
-                                errors[key].fieldErrors = [];
+                            if (!errors[key].propErrors) {
+                                errors[key].propErrors = [];
                             }
-                            errors[key].fieldErrors.push(fieldValidationResult.errorMessage);
+                            errors[key].propErrors.push(fieldValidationResult.errorMessage);
                         }
                     }
                 }

@@ -58,7 +58,7 @@ describe("ErrorOf Complex Person Test", () => {
                 street: ["Please enter street name"]
             },
             children: {
-                fieldErrors: [],
+                propErrors: [],
                 indexedErrors: [
                     {
                         index: 0,
@@ -118,7 +118,7 @@ describe("ErrorOf Complex Person Test", () => {
                 "Date cannot be future"
             ],
             addresses: {
-                fieldErrors: [],
+                propErrors: [],
                 indexedErrors: [
                     {
                         index: 0,
@@ -131,7 +131,7 @@ describe("ErrorOf Complex Person Test", () => {
                 ]
             },
             children: {
-                fieldErrors: [],
+                propErrors: [],
                 indexedErrors: [
                     {
                         index: 0,
@@ -148,7 +148,7 @@ describe("ErrorOf Complex Person Test", () => {
                                 "Date cannot be future"
                             ],
                             addresses: {
-                                fieldErrors: [],
+                                propErrors: [],
                                 indexedErrors: [
                                     {
                                         index: 0,
