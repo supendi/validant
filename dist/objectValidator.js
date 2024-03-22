@@ -147,7 +147,7 @@ exports.getErrorOf = getErrorOf;
  * @param validationRule
  * @returns ValidationResult
  */
-const validateObject = (object, validationRule) => {
+const validateObject = (object, validationRule, validationMessage = { okMessage: "Good to go.", errorMessage: "One or more validation errors occurred." }) => {
     const errors = (0, exports.getErrorOf)(object, validationRule);
     let isValid = true;
     for (const key in errors) {
@@ -160,6 +160,7 @@ const validateObject = (object, validationRule) => {
         }
     }
     return {
+        message: isValid ? validationMessage.okMessage : validationMessage.errorMessage,
         isValid: isValid,
         errors: errors,
     };

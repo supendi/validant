@@ -3,6 +3,8 @@ import { ValidationResult, ValidationRule } from "../../types"
 import { elementOf, emailAddress, maxNumber, minLength, required, minNumber } from "../../validators"
 import { minSumOf } from "../../validators/minSumOf-validator"
 
+const defaultMessage = { okMessage: "Good to go.", errorMessage: "One or more validation errors occurred." }
+
 describe("Validator Simple Person Test", () => {
     it("Person name should return errors", () => {
         interface SimplePerson {
@@ -20,6 +22,7 @@ describe("Validator Simple Person Test", () => {
         const actual = validator.validate(person, rule)
 
         const expected: ValidationResult<SimplePerson> = {
+            message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
                 name: ["This field is required."]
@@ -53,6 +56,7 @@ describe("Validator Simple Person With Child Test", () => {
         const actual = validator.validate(parent, rule)
 
         const expected: ValidationResult<SimplePerson> = {
+            message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
                 name: ["This field is required."],
@@ -129,6 +133,7 @@ describe("Validator Nested Object Test with nested address", () => {
         const actual = validator.validate(parent, rule)
 
         const expected: ValidationResult<SimplePerson> = {
+            message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
                 name: ["This field is required."],
@@ -183,6 +188,7 @@ describe("Validator test with children array", () => {
         const actual = validator.validate(person, rule)
 
         const expected: ValidationResult<Person> = {
+            message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
                 name: ["This field is required."],
@@ -229,6 +235,7 @@ describe("Validator test with children array", () => {
         const actual = validator.validate(person, rule)
 
         const expected: ValidationResult<Person> = {
+            message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
                 name: ["This field is required."],
@@ -286,6 +293,7 @@ describe("Validator test with Order and Order item", () => {
 
         const actual1 = validator.validate(newOrder1, rule)
         const expected1: ValidationResult<Order> = {
+            message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
                 orderDate: ["This field is required."],
@@ -320,6 +328,7 @@ describe("Validator test with Order and Order item", () => {
 
         const actual2 = validator.validate(newOrder2, rule)
         const expected2: ValidationResult<Order> = {
+            message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
                 orderDate: ["This field is required."],
@@ -416,6 +425,7 @@ describe("Validator test with Order and Order item", () => {
 
         const actual1 = validator.validate(newOrder1, rule)
         const expected1: ValidationResult<Order> = {
+            message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
                 orderDate: ["This field is required."],
@@ -429,6 +439,7 @@ describe("Validator test with Order and Order item", () => {
 
         const actual2 = validator.validate(newOrder2, rule)
         const expected2: ValidationResult<Order> = {
+            message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
                 orderDate: ["This field is required."],
@@ -525,6 +536,7 @@ describe("Validator complex validations", () => {
 
         const actual1 = validator.validate(newOrder1, rule)
         const expected1: ValidationResult<Order> = {
+            message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
                 orderDate: ["This field is required."],
@@ -574,6 +586,7 @@ describe("Validator complex validations", () => {
         }
         const actual2 = validator.validate(newOrder2, rule)
         const expected2: ValidationResult<Order> = {
+            message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
                 orderDate: ["This field is required."],
@@ -691,6 +704,7 @@ describe("Validator test maximum sum of", () => {
 
         const actual1 = validator.validate(newOrder1, rule)
         const expected1: ValidationResult<Order> = {
+            message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
                 orderDate: ["This field is required."],
@@ -802,8 +816,9 @@ describe("Validator complex validations", () => {
 
         const actual1 = validator.validate(newOrder1, rule)
         const expected1: ValidationResult<Order> = {
+            message: defaultMessage.okMessage,
             isValid: true,
-            errors: undefined
+            errors: undefined, 
         }
 
         expect(actual1).toEqual(expected1)

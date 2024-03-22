@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const index_1 = require("../../index");
 const validators_1 = require("../../validators");
 const minSumOf_validator_1 = require("../../validators/minSumOf-validator");
+const defaultMessage = { okMessage: "Good to go.", errorMessage: "One or more validation errors occurred." };
 describe("Validator Simple Person Test", () => {
     it("Person name should return errors", () => {
         const rule = {
@@ -13,6 +14,7 @@ describe("Validator Simple Person Test", () => {
         };
         const actual = index_1.default.validate(person, rule);
         const expected = {
+            message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
                 name: ["This field is required."]
@@ -37,6 +39,7 @@ describe("Validator Simple Person With Child Test", () => {
         };
         const actual = index_1.default.validate(parent, rule);
         const expected = {
+            message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
                 name: ["This field is required."],
@@ -88,6 +91,7 @@ describe("Validator Nested Object Test with nested address", () => {
         };
         const actual = index_1.default.validate(parent, rule);
         const expected = {
+            message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
                 name: ["This field is required."],
@@ -130,6 +134,7 @@ describe("Validator test with children array", () => {
         };
         const actual = index_1.default.validate(person, rule);
         const expected = {
+            message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
                 name: ["This field is required."],
@@ -164,6 +169,7 @@ describe("Validator test with children array", () => {
         };
         const actual = index_1.default.validate(person, rule);
         const expected = {
+            message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
                 name: ["This field is required."],
@@ -196,6 +202,7 @@ describe("Validator test with Order and Order item", () => {
         };
         const actual1 = index_1.default.validate(newOrder1, rule);
         const expected1 = {
+            message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
                 orderDate: ["This field is required."],
@@ -227,6 +234,7 @@ describe("Validator test with Order and Order item", () => {
         };
         const actual2 = index_1.default.validate(newOrder2, rule);
         const expected2 = {
+            message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
                 orderDate: ["This field is required."],
@@ -296,6 +304,7 @@ describe("Validator test with Order and Order item", () => {
         };
         const actual1 = index_1.default.validate(newOrder1, rule);
         const expected1 = {
+            message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
                 orderDate: ["This field is required."],
@@ -308,6 +317,7 @@ describe("Validator test with Order and Order item", () => {
         expect(actual1).toEqual(expected1);
         const actual2 = index_1.default.validate(newOrder2, rule);
         const expected2 = {
+            message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
                 orderDate: ["This field is required."],
@@ -371,6 +381,7 @@ describe("Validator complex validations", () => {
         };
         const actual1 = index_1.default.validate(newOrder1, rule);
         const expected1 = {
+            message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
                 orderDate: ["This field is required."],
@@ -418,6 +429,7 @@ describe("Validator complex validations", () => {
         };
         const actual2 = index_1.default.validate(newOrder2, rule);
         const expected2 = {
+            message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
                 orderDate: ["This field is required."],
@@ -500,6 +512,7 @@ describe("Validator test maximum sum of", () => {
         };
         const actual1 = index_1.default.validate(newOrder1, rule);
         const expected1 = {
+            message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
                 orderDate: ["This field is required."],
@@ -576,8 +589,9 @@ describe("Validator complex validations", () => {
         };
         const actual1 = index_1.default.validate(newOrder1, rule);
         const expected1 = {
+            message: defaultMessage.okMessage,
             isValid: true,
-            errors: undefined
+            errors: undefined,
         };
         expect(actual1).toEqual(expected1);
     });

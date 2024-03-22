@@ -159,13 +159,19 @@ export const getErrorOf = <T>(object: T, validationRule: ValidationRule<T>): Err
     return errors
 }
 
+// Represents the validation message when the validation process is done.
+export interface ValidationMessage {
+    okMessage: string
+    errorMessage: string
+}
+
 /**
  * Validates an object with the specified validation rule
  * @param object 
  * @param validationRule 
  * @returns ValidationResult
  */
-export const validateObject = <T>(object: T, validationRule: ValidationRule<T>): ValidationResult<T> => {
+export const validateObject = <T>(object: T, validationRule: ValidationRule<T>, validationMessage: ValidationMessage = { okMessage: "Good to go.", errorMessage: "One or more validation errors occurred." }): ValidationResult<T> => {
     const errors = getErrorOf(object, validationRule)
     let isValid = true
 
@@ -180,6 +186,7 @@ export const validateObject = <T>(object: T, validationRule: ValidationRule<T>):
     }
 
     return {
+        message: isValid ? validationMessage.okMessage : validationMessage.errorMessage,
         isValid: isValid,
         errors: errors,
     }

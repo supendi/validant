@@ -6,14 +6,18 @@ import { ErrorOf, ValidationResult, ValidationRule } from "./types";
  * @returns
  */
 export declare const getErrorOf: <T>(object: T, validationRule: ValidationRule<T>) => ErrorOf<T>;
+export interface ValidationMessage {
+    okMessage: string;
+    errorMessage: string;
+}
 /**
  * Validates an object with the specified validation rule
  * @param object
  * @param validationRule
  * @returns ValidationResult
  */
-export declare const validateObject: <T>(object: T, validationRule: ValidationRule<T>) => ValidationResult<T>;
+export declare const validateObject: <T>(object: T, validationRule: ValidationRule<T>, validationMessage?: ValidationMessage) => ValidationResult<T>;
 declare const validator: {
-    validate: <T>(object: T, validationRule: ValidationRule<T>) => ValidationResult<T>;
+    validate: <T>(object: T, validationRule: ValidationRule<T>, validationMessage?: ValidationMessage) => ValidationResult<T>;
 };
 export default validator;
