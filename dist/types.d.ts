@@ -4,7 +4,7 @@
  * then the TypeOfArray<T[]> is T.
  * See: https://stackoverflow.com/questions/46376468/how-to-get-type-of-array-items
  */
-declare type TypeOfArray<T> = T extends (infer U)[] ? U : never;
+export declare type TypeOfArray<T> = T extends (infer U)[] ? U : never;
 /**
  * Represents the error of object which property data type is string.
  * Example: T = { name: string: age: number, birthDate: Date },
@@ -68,14 +68,14 @@ export declare type ErrorOf<T> = {
  * Specifies the contract of validator function.
  * See the PropertyValidator implementation of how the validator func being implemented.
  */
-export declare type ValidatorFunc<T> = (value: any, objRef?: T) => boolean;
+export declare type ValidatorFunc<TValue, TObject> = (value: TValue, objRef?: TObject) => boolean;
 /**
  * Represents the object model of property validator.
  * See the validators implementation.
  */
-export declare type PropertyValidator<T> = {
+export declare type PropertyValidator<TValue, TObject> = {
     description: string;
-    validate: ValidatorFunc<T>;
+    validate: ValidatorFunc<TValue, TObject>;
     returningErrorMessage: string;
 };
 /**
@@ -83,14 +83,14 @@ export declare type PropertyValidator<T> = {
  * The validation schema should implement this type.
  */
 export declare type ValidationRule<T> = {
-    [key in keyof T]?: T[key] extends Array<any> ? ValidationRuleForArrayOf<T, TypeOfArray<T[key]>> : T[key] extends object ? ValidationRule<T[key]> : PropertyValidator<T>[];
+    [key in keyof T]?: T[key] extends Array<any> ? ValidationRuleForArrayOf<T, T[key]> : T[key] extends object ? ValidationRule<T[key]> : PropertyValidator<T[key], T>[];
 };
 /**
  * Represents validation rule of array of T
  */
-export declare type ValidationRuleForArrayOf<TParent, TChild> = {
-    propertyValidators?: PropertyValidator<TParent>[];
-    validationRule?: ValidationRule<TChild>;
+export declare type ValidationRuleForArrayOf<TObject, TValue> = {
+    propertyValidators?: PropertyValidator<TValue, TObject>[];
+    validationRule?: ValidationRule<TypeOfArray<TValue>>;
 };
 /**
  * Represents a single validation result of property
@@ -102,4 +102,3 @@ export interface PropertyValidationResult<T> {
     isValid: boolean;
     errorMessage: string;
 }
-export {};

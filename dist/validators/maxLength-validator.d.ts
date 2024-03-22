@@ -1,5 +1,5 @@
 import { PropertyValidator } from "../types";
-declare type MaxLengthValidator = <T>(max: number, errorMessage?: string) => PropertyValidator<T>;
+declare type MaxLengthValidator = <TValue, TObject>(max: number, errorMessage?: string) => PropertyValidator<TValue, TObject>;
 /**
  * Specifies the rule of the maximum number of element to exist in an array.
  * @param errorMessage Custom error messages

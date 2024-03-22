@@ -1,5 +1,5 @@
 import { PropertyValidator } from "../types";
-declare type EmailAddressValidator = <T>(errorMessage?: string) => PropertyValidator<T>;
+declare type EmailAddressValidator = <TValue, TObject>(errorMessage?: string) => PropertyValidator<TValue, TObject>;
 /**
  * Specifies the rule of email address validation.
  * @param errorMessage Custom error messages

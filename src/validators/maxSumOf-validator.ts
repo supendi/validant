@@ -1,19 +1,19 @@
-import { PropertyValidator, ValidatorFunc } from "../types"
+import { PropertyValidator, TypeOfArray, ValidatorFunc } from "../types"
 
-type MaximumSumOfValidator = <T>(propNameToBeSummed: string, value: number, errorMessage?: string) => PropertyValidator<T>
+type MaximumSumOfValidator = <TValue, TObject>(propNameToBeSummed: keyof TypeOfArray<TValue>, value: number, errorMessage?: string) => PropertyValidator<TValue, TObject>
 
 /**
  * Specifies the rule of maximum sum of the spesified property name of an array.
  * @param errorMessage Custom error messages
  * @returns 
  */
-export const maxSumOf: MaximumSumOfValidator = <T>(propNameToBeSummed: string, maxSum: number, errorMessage?: string) => {
+export const maxSumOf: MaximumSumOfValidator = <TValue, TObject>(propNameToBeSummed: keyof TypeOfArray<TValue>, maxSum: number, errorMessage?: string) => {
     let msg = `The maximum sum of ${propNameToBeSummed.toString()} is ${maxSum}.`
     if (errorMessage) {
         msg = errorMessage
     }
 
-    const validatorFunc: ValidatorFunc<T> = <T>(value: T[], objRef?: T): boolean => {
+    const validatorFunc: ValidatorFunc<TValue, TObject> = (value: TValue, objRef?: TObject): boolean => {
         if (!value) {
             return false
         }
@@ -23,7 +23,7 @@ export const maxSumOf: MaximumSumOfValidator = <T>(propNameToBeSummed: string, m
         const arr = [...value]
 
         const total = arr.reduce((accumulator, obj) => {
-            const propValue = obj[propNameToBeSummed as unknown as keyof T];
+            const propValue = obj[propNameToBeSummed as unknown as keyof TValue];
             const typeofValue = typeof (propValue)
             const isNumber = typeofValue === "bigint" || typeofValue === "number"
             if (!propValue || propValue === undefined || propValue === null || !isNumber) {
@@ -36,7 +36,7 @@ export const maxSumOf: MaximumSumOfValidator = <T>(propNameToBeSummed: string, m
         return maxSum >= total
     }
 
-    const validator: PropertyValidator<T> = {
+    const validator: PropertyValidator<TValue, TObject> = {
         description: "Specifies the rule of maximum sum of the spesified property name of an array.",
         validate: validatorFunc,
         returningErrorMessage: msg

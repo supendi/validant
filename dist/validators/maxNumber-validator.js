@@ -15,7 +15,11 @@ const maxNumber = (max, errorMessage) => {
         if (!value) {
             return false;
         }
-        return value <= max;
+        const typeOfValue = typeof (value);
+        const valueIsNumber = typeOfValue === "bigint" || typeOfValue === "number";
+        if (valueIsNumber) {
+            return value <= max;
+        }
     };
     const validator = {
         description: "Specifies the rule of maximum value of a number.",

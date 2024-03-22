@@ -10,14 +10,14 @@ describe("ValidationRules Simple Person Test", () => {
             name: string
             age: number
         }
-        const requiredValidator: PropertyValidator<any> = {
+        const requiredValidator: PropertyValidator<any, any> = {
             description: "Required Validator",
             returningErrorMessage: "This field is required",
             validate: (value: any, obj?: any) => {
                 return !!value
             }
         }
-        const minNumberValidator: PropertyValidator<any> = {
+        const minNumberValidator: PropertyValidator<any, any> = {
             description: "Minimum Number Validator",
             returningErrorMessage: "Minimum number is",
             validate: (value: any, obj?: any) => {
@@ -62,21 +62,21 @@ describe("ValidationRules Complex Person Test", () => {
             father: Person
             children: Person[]
         }
-        const requiredValidator: PropertyValidator<any>  = {
+        const requiredValidator: PropertyValidator<any, any> = {
             description: "Required Validator",
             returningErrorMessage: "This field is required",
             validate: (value: any, obj?: any) => {
                 return !!value
             }
         }
-        const minNumberValidator: PropertyValidator<any> = {
+        const minNumberValidator: PropertyValidator<any, any> = {
             description: "Minimum Number Validator",
             returningErrorMessage: "Minimum number is",
             validate: (value: any, obj?: any) => {
                 return false
             }
         }
-        const maxNumberValidator: PropertyValidator<any> = {
+        const maxNumberValidator: PropertyValidator<any, any> = {
             description: "Max Number Validator",
             returningErrorMessage: "Maximum number is",
             validate: (value: any, obj?: any) => {

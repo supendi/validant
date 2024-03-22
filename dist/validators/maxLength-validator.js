@@ -19,6 +19,10 @@ const maxLength = (max, errorMessage) => {
             console.error("Validator: max length should be > 0");
             return false;
         }
+        const valueIsArray = Array.isArray(value);
+        if (!valueIsArray) {
+            return false;
+        }
         let actualLength = value.length;
         return actualLength <= max;
     };

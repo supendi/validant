@@ -7,16 +7,16 @@ import { ErrorOf, PropertyValidationResult, PropertyValidator, ValidationResult,
  * @param propValidator 
  * @returns 
  */
-const validateProperty = <T>(propName: keyof T, object: T, propValidator: PropertyValidator<T>): PropertyValidationResult<T> => {
+const validateProperty = <TValue, TObject>(propName: keyof TObject, object: TObject, propValidator: PropertyValidator<TValue, TObject>): PropertyValidationResult<TObject> => {
     const value = object[propName]
-    const isValid = propValidator.validate(value, object)
+    const isValid = propValidator.validate(value as unknown as TValue, object)
 
     var errorMessage = propValidator.returningErrorMessage
     if (propValidator.returningErrorMessage) {
         errorMessage = propValidator.returningErrorMessage.replace(":value", value as any)
     }
 
-    const validationResult: PropertyValidationResult<T> = {
+    const validationResult: PropertyValidationResult<TObject> = {
         object: object,
         propertyName: propName,
         propertyValue: value,

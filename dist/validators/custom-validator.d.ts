@@ -1,5 +1,5 @@
 import { PropertyValidator, ValidatorFunc } from "../types";
-declare type CustomValidator = <T>(func: ValidatorFunc<T>, errorMessage: string) => PropertyValidator<T>;
+declare type CustomValidator = <TValue, TObject>(func: ValidatorFunc<TValue, TObject>, errorMessage: string) => PropertyValidator<TValue, TObject>;
 /**
  * The validator of required property
  * @param errorMessage Custom error messages

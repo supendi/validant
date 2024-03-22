@@ -1,7 +1,7 @@
 import { PropertyValidator } from "../types";
 import { regularExpression } from "./regularExpression-validator";
 
-type EmailAddressValidator = <T>(errorMessage?: string) => PropertyValidator<T>
+type EmailAddressValidator = <TValue, TObject>(errorMessage?: string) => PropertyValidator<TValue, TObject>
 
 /**
  * Specifies the rule of email address validation.

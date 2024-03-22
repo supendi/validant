@@ -5,7 +5,7 @@
  * then the TypeOfArray<T[]> is T.
  * See: https://stackoverflow.com/questions/46376468/how-to-get-type-of-array-items
  */
-type TypeOfArray<T> = T extends (infer U)[] ? U : never;
+export type TypeOfArray<T> = T extends (infer U)[] ? U : never;
 
 /**
  * Represents the error of object which property data type is string.
@@ -76,15 +76,15 @@ export type ErrorOf<T> = { [key in keyof T]?: T[key] extends object
  * Specifies the contract of validator function.
  * See the PropertyValidator implementation of how the validator func being implemented.
  */
-export type ValidatorFunc<T> = (value: any, objRef?: T) => boolean
+export type ValidatorFunc<TValue, TObject> = (value: TValue, objRef?: TObject) => boolean
 
 /**
  * Represents the object model of property validator.
  * See the validators implementation.
  */
-export type PropertyValidator<T> = {
+export type PropertyValidator<TValue, TObject> = {
     description: string
-    validate: ValidatorFunc<T>
+    validate: ValidatorFunc<TValue, TObject>
     returningErrorMessage: string
 }
 
@@ -93,15 +93,15 @@ export type PropertyValidator<T> = {
  * The validation schema should implement this type.
  */
 export type ValidationRule<T> = { [key in keyof T]?: T[key] extends Array<any>
-    ? ValidationRuleForArrayOf<T, TypeOfArray<T[key]>> : T[key] extends object
-    ? ValidationRule<T[key]> : PropertyValidator<T>[] }
+    ? ValidationRuleForArrayOf<T, T[key]> : T[key] extends object
+    ? ValidationRule<T[key]> : PropertyValidator<T[key], T>[] }
 
 /**
  * Represents validation rule of array of T
  */
-export type ValidationRuleForArrayOf<TParent, TChild> = {
-    propertyValidators?: PropertyValidator<TParent>[],
-    validationRule?: ValidationRule<TChild>
+export type ValidationRuleForArrayOf<TObject, TValue> = {
+    propertyValidators?: PropertyValidator<TValue, TObject>[],
+    validationRule?: ValidationRule<TypeOfArray<TValue>>
 }
 
 /**

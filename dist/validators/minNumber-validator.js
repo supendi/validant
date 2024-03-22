@@ -15,7 +15,11 @@ const minNumber = (min, errorMessage) => {
         if (!value) {
             return false;
         }
-        return value >= min;
+        const typeOfValue = typeof (value);
+        const valueIsNumber = typeOfValue === "bigint" || typeOfValue === "number";
+        if (valueIsNumber) {
+            return value >= min;
+        }
     };
     const validator = {
         description: "Spesify the minimum value of number rule.",

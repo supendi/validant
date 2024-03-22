@@ -3,8 +3,8 @@ import { custom } from "../../validators/custom-validator"
 
 describe("CustomValidator Test", () => {
     it("Test simple custom validator", () => {
-        function hoc<T>() {
-            const maximumNumberIsOneValidator: ValidatorFunc<T> = (value, object) => {
+        function hoc<T, U>() {
+            const maximumNumberIsOneValidator: ValidatorFunc<T, U> = (value, object) => {
                 if (value === undefined || value === null) {
                     return false
                 }
@@ -13,7 +13,7 @@ describe("CustomValidator Test", () => {
                 if (!valueIsNumber) {
                     return false
                 }
-                return value <= 1
+                return (value as unknown as number) <= 1
             }
             return maximumNumberIsOneValidator
         }
@@ -91,7 +91,7 @@ describe("CustomValidator Test", () => {
             ]
         }
 
-        const guardAgainstMinusValidator: ValidatorFunc<Order> = (value, object) => {
+        const guardAgainstMinusValidator: ValidatorFunc<OrderItem, Order> = (value, object) => {
             if (!object) {
                 return false
             }

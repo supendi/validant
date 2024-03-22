@@ -605,16 +605,15 @@ describe("Validator Test The Custom Validator", () => {
             productId: [(0, validators_1.required)(), (0, validators_1.elementOf)(productIds)],
             quantity: [(0, validators_1.minNumber)(1), (0, validators_1.maxNumber)(5)],
         };
-        const customerNameValidator = function (value, object) {
-            console.log(value, object);
-            return false;
-        };
         const rule = {
             orderDate: [(0, validators_1.required)()],
             orderNumber: [(0, validators_1.required)()],
             customer: {
                 id: [(0, validators_1.required)(), (0, validators_1.elementOf)(customerIds)],
-                name: [(0, validators_1.required)(), (0, custom_validator_1.custom)(customerNameValidator, "Error customer name")],
+                name: [(0, validators_1.required)(), (0, custom_validator_1.custom)(function (value, object) {
+                        console.log(value, object);
+                        return false;
+                    }, "Error customer name")],
                 email: [(0, validators_1.required)(), (0, validators_1.emailAddress)()]
             },
             orderItems: {

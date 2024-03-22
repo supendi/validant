@@ -19,6 +19,10 @@ const minLength = (min, errorMessage) => {
             console.error("Validator: min length should be > 0");
             return false;
         }
+        const valueIsArray = Array.isArray(value);
+        if (!valueIsArray) {
+            return false;
+        }
         let actualLength = value.length;
         return actualLength >= min;
     };

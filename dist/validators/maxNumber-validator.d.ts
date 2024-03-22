@@ -1,5 +1,5 @@
 import { PropertyValidator } from "../types";
-declare type MaxNumberValidator = <T>(max: number, errorMessage?: string) => PropertyValidator<T>;
+declare type MaxNumberValidator = <TValue, TObject>(max: number, errorMessage?: string) => PropertyValidator<TValue, TObject>;
 /**
  * Specifies the rule of maximum value of a number.
  * @param errorMessage Custom error messages

@@ -1,5 +1,5 @@
 import { PropertyValidator } from "../types";
-declare type RequiredValidator = <T>(errorMessage?: string) => PropertyValidator<T>;
+declare type RequiredValidator = <TValue, TObject>(errorMessage?: string) => PropertyValidator<TValue, TObject>;
 /**
  * The validator of required property
  * @param errorMessage Custom error messages

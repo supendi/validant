@@ -6,7 +6,7 @@ import { ValidatorFunc } from "../../types"
 
 describe("ValidatorFunc Test", () => {
     it("Should compile", () => {
-        const validatorFunc: ValidatorFunc<any> = function (value: any, objRef?: any) {
+        const validatorFunc: ValidatorFunc<any, any> = function (value: any, objRef?: any) {
             return true
         }
 
