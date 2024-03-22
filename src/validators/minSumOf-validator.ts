@@ -1,6 +1,6 @@
-import { FieldValidator, ValidatorFunc } from "../types"
+import { PropertyValidator, ValidatorFunc } from "../types"
 
-type MinimumSumOfValidator = <T>(fieldNameToSum: keyof T, value: number, errorMessage?: string) => FieldValidator
+type MinimumSumOfValidator = <T>(fieldNameToSum: keyof T, value: number, errorMessage?: string) => PropertyValidator
 
 /**
  * Specifies the rule if a value is an element of the specified array.
@@ -34,7 +34,7 @@ export const minSumOf: MinimumSumOfValidator = <T>(fieldNameToSum: keyof T, minS
         return minSum <= total
     }
 
-    const validator: FieldValidator = {
+    const validator: PropertyValidator = {
         description: "Specifies the rule of minimum sum of the spesified field of an array.",
         validate: validatorFunc,
         returningErrorMessage: msg

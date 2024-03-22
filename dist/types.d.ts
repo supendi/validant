@@ -43,13 +43,13 @@ export declare type IndexedErrorOf<T> = {
 /**
  * Represent the error model for array.
  * Example: If T { name: string, children: T[]}
- * Then ErrorOfArray<T> will be  { name: string[], children: { fieldErrors: string[], indexedErrors: { index: number, errors: ErrorOf<T>, validatedObject: T | null | undefined }}}
+ * Then ErrorOfArray<T> will be  { name: string[], children: { propertyErrors: string[], indexedErrors: { index: number, errors: ErrorOf<T>, validatedObject: T | null | undefined }}}
  */
 export declare type ErrorOfArray<T> = {
     /**
      * Represents the error of the property value it self
      */
-    propErrors?: string[];
+    propertyErrors?: string[];
     /**
      * Each element of array need to be validated.
      * The indexedErrors represents the errors of the each element of the array.
@@ -66,13 +66,13 @@ export declare type ErrorOf<T> = {
 };
 /**
  * Specifies the contract of validator function.
- * See theFieldValidator implementation of how the validator func being implemented.
+ * See the FieldValidator implementation of how the validator func being implemented.
  */
 export declare type ValidatorFunc = (value: any, objRef?: any) => boolean;
 /**
  * Represents the object model of field validator
  */
-export declare type FieldValidator = {
+export declare type PropertyValidator = {
     description: string;
     validate: ValidatorFunc;
     returningErrorMessage: string;
@@ -82,22 +82,22 @@ export declare type FieldValidator = {
  * The validation schema should implement this type.
  */
 export declare type ValidationRule<T> = {
-    [key in keyof T]?: T[key] extends Array<any> ? ValidationRuleForArrayOf<TypeOfArray<T[key]>> : T[key] extends object ? ValidationRule<T[key]> : FieldValidator[];
+    [key in keyof T]?: T[key] extends Array<any> ? ValidationRuleForArrayOf<TypeOfArray<T[key]>> : T[key] extends object ? ValidationRule<T[key]> : PropertyValidator[];
 };
 /**
  * Represents validation rule of array of T
  */
 export declare type ValidationRuleForArrayOf<T> = {
-    fieldValidators?: FieldValidator[];
+    propertyValidators?: PropertyValidator[];
     validationRule?: ValidationRule<T>;
 };
 /**
  * Represents a single validation result of property/field
  */
-export interface FieldValidationResult {
+export interface PropertyValidationResult {
     object: any;
-    fieldName: string;
-    fieldValue: any;
+    propertyName: string;
+    propertyValue: any;
     isValid: boolean;
     errorMessage: string;
 }

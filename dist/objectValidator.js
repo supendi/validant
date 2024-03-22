@@ -3,22 +3,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateObject = exports.getErrorOf = void 0;
 /**
  * Do a single validation against single field
- * @param fieldName
+ * @param propName
  * @param object
- * @param fieldValidator
+ * @param propValidator
  * @returns
  */
-const validateField = (fieldName, object, fieldValidator) => {
-    const value = object[fieldName];
-    const isValid = fieldValidator.validate(value, object);
-    var errorMessage = fieldValidator.returningErrorMessage;
-    if (fieldValidator.returningErrorMessage) {
-        errorMessage = fieldValidator.returningErrorMessage.replace(":value", value);
+const validateProperty = (propName, object, propValidator) => {
+    const value = object[propName];
+    const isValid = propValidator.validate(value, object);
+    var errorMessage = propValidator.returningErrorMessage;
+    if (propValidator.returningErrorMessage) {
+        errorMessage = propValidator.returningErrorMessage.replace(":value", value);
     }
     const validationResult = {
         object: object,
-        fieldName: fieldName,
-        fieldValue: value,
+        propertyName: propName,
+        propertyValue: value,
         errorMessage: errorMessage,
         isValid: isValid
     };
@@ -39,20 +39,20 @@ const getErrorOf = (object, validationRule) => {
             if (!rule) {
                 continue;
             }
-            // if rule is array it probably means rule = fieldValidator []
+            // if rule is array it probably means rule = PropertyValidator []
             const isRuleAnArray = Array.isArray(rule);
             if (isRuleAnArray) {
                 for (let index = 0; index < rule.length; index++) {
-                    const fieldValidator = rule[index];
-                    if (!fieldValidator) {
+                    const propValidator = rule[index];
+                    if (!propValidator) {
                         continue;
                     }
-                    const isFieldValidator = !!fieldValidator.validate && !!fieldValidator.returningErrorMessage;
-                    if (!isFieldValidator) {
+                    const isPropValidator = !!propValidator.validate && !!propValidator.returningErrorMessage;
+                    if (!isPropValidator) {
                         continue;
                     }
-                    const fieldValidationResult = validateField(key, object, fieldValidator);
-                    const isValid = fieldValidationResult.isValid;
+                    const propValidationResult = validateProperty(key, object, propValidator);
+                    const isValid = propValidationResult.isValid;
                     if (!isValid) {
                         if (!errors) {
                             errors = {};
@@ -60,7 +60,7 @@ const getErrorOf = (object, validationRule) => {
                         if (!errors[key]) {
                             errors[key] = [];
                         }
-                        errors[key].push(fieldValidationResult.errorMessage);
+                        errors[key].push(propValidationResult.errorMessage);
                     }
                 }
                 continue;
@@ -70,18 +70,18 @@ const getErrorOf = (object, validationRule) => {
             if (valueIsArray) {
                 const childObject = object[key];
                 const childValidationRule = rule;
-                if (childValidationRule.fieldValidators) {
-                    for (let index = 0; index < childValidationRule.fieldValidators.length; index++) {
-                        const fieldValidator = childValidationRule.fieldValidators[index];
-                        if (!fieldValidator) {
+                if (childValidationRule.propertyValidators) {
+                    for (let index = 0; index < childValidationRule.propertyValidators.length; index++) {
+                        const propValidator = childValidationRule.propertyValidators[index];
+                        if (!propValidator) {
                             continue;
                         }
-                        const isFieldValidator = !!fieldValidator.validate && !!fieldValidator.returningErrorMessage;
-                        if (!isFieldValidator) {
+                        const isPropValidator = !!propValidator.validate && !!propValidator.returningErrorMessage;
+                        if (!isPropValidator) {
                             continue;
                         }
-                        const fieldValidationResult = validateField(key, object, fieldValidator);
-                        const isValid = fieldValidationResult.isValid;
+                        const propValidationResult = validateProperty(key, object, propValidator);
+                        const isValid = propValidationResult.isValid;
                         if (!isValid) {
                             if (!errors) {
                                 errors = {};
@@ -89,10 +89,10 @@ const getErrorOf = (object, validationRule) => {
                             if (!errors[key]) {
                                 errors[key] = {};
                             }
-                            if (!errors[key].propErrors) {
-                                errors[key].propErrors = [];
+                            if (!errors[key].propertyErrors) {
+                                errors[key].propertyErrors = [];
                             }
-                            errors[key].propErrors.push(fieldValidationResult.errorMessage);
+                            errors[key].propertyErrors.push(propValidationResult.errorMessage);
                         }
                     }
                 }

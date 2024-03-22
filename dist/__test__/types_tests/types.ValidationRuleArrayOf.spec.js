@@ -24,13 +24,13 @@ describe("ValidationRuleArrayOf Simple Person Test", () => {
             age: [requiredValidator, minNumberValidator],
         };
         const arrayOfPersonRule = {
-            fieldValidators: [requiredValidator],
+            propertyValidators: [requiredValidator],
             validationRule: personRule,
         };
         expect(arrayOfPersonRule).not.toBeUndefined();
-        expect(arrayOfPersonRule.fieldValidators).not.toBeUndefined();
-        expect(Array.isArray(arrayOfPersonRule.fieldValidators)).toBeTruthy();
-        expect(arrayOfPersonRule.fieldValidators.length).toEqual(1);
-        expect(arrayOfPersonRule.fieldValidators[0]).toEqual(requiredValidator);
+        expect(arrayOfPersonRule.propertyValidators).not.toBeUndefined();
+        expect(Array.isArray(arrayOfPersonRule.propertyValidators)).toBeTruthy();
+        expect(arrayOfPersonRule.propertyValidators.length).toEqual(1);
+        expect(arrayOfPersonRule.propertyValidators[0]).toEqual(requiredValidator);
     });
 });

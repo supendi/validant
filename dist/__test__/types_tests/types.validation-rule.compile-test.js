@@ -16,7 +16,7 @@ const rule1 = {
 // ensure order items has the correct type check
 const rule2 = {
     orderItems: {
-        fieldValidators: [(0, validators_1.minLength)(4)],
+        propertyValidators: [(0, validators_1.minLength)(4)],
         validationRule: {
             id: [(0, validators_1.required)()],
             productId: [],
@@ -32,14 +32,14 @@ const orderItemsRule = {
 // Apply the predefined order item rules
 const rule3 = {
     orderItems: {
-        fieldValidators: [(0, validators_1.minLength)(4)],
+        propertyValidators: [(0, validators_1.minLength)(4)],
         validationRule: orderItemsRule
     },
 };
 // Ensure deep type check on order items, see the customer properties
 const rule4 = {
     orderItems: {
-        fieldValidators: [(0, validators_1.minLength)(4)],
+        propertyValidators: [(0, validators_1.minLength)(4)],
         validationRule: {
             customers: {
                 validationRule: {

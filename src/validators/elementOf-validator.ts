@@ -1,6 +1,6 @@
-import { FieldValidator, ValidatorFunc } from "../types"
+import { PropertyValidator, ValidatorFunc } from "../types"
 
-type ElementOfValidator = <T>(list: T[], errorMessage?: string) => FieldValidator
+type ElementOfValidator = <T>(list: T[], errorMessage?: string) => PropertyValidator
 
 /**
  * Specifies the rule if a value is an element of the specified array.
@@ -25,7 +25,7 @@ export const elementOf: ElementOfValidator = <T>(list: T[], errorMessage?: strin
         return !!element
     }
 
-    const validator: FieldValidator = {
+    const validator: PropertyValidator = {
         description: "Specifies the rule if a value is an element of the specified array.",
         validate: validatorFunc,
         returningErrorMessage: msg

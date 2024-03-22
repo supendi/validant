@@ -6,6 +6,9 @@ import { ErrorOf, ValidationResult, ValidationRule } from "./types";
  * @returns
  */
 export declare const getErrorOf: <T>(object: T, validationRule: ValidationRule<T>) => ErrorOf<T>;
+/**
+ * Represents the validation message when the validation process is done.
+ */
 export interface ValidationMessage {
     okMessage: string;
     errorMessage: string;

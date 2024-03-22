@@ -1,4 +1,4 @@
-import { FieldValidator, ValidationRule, ValidationRuleForArrayOf } from "../../types"
+import { PropertyValidator, ValidationRule, ValidationRuleForArrayOf } from "../../types"
 
 /**
  * Ensure all the code below compiled
@@ -10,14 +10,14 @@ describe("ValidationRuleArrayOf Simple Person Test", () => {
             name: string
             age: number
         }
-        const requiredValidator: FieldValidator = {
+        const requiredValidator: PropertyValidator = {
             description: "Required Validator",
             returningErrorMessage: "This field is required",
             validate: (value: any, obj?: any) => {
                 return !!value
             }
         }
-        const minNumberValidator: FieldValidator = {
+        const minNumberValidator: PropertyValidator = {
             description: "Minimum Number Validator",
             returningErrorMessage: "Minimum number is",
             validate: (value: any, obj?: any) => {
@@ -30,15 +30,15 @@ describe("ValidationRuleArrayOf Simple Person Test", () => {
         }
 
         const arrayOfPersonRule: ValidationRuleForArrayOf<Person> = {
-            fieldValidators: [requiredValidator],
+            propertyValidators: [requiredValidator],
             validationRule: personRule,
         }
 
         expect(arrayOfPersonRule).not.toBeUndefined()
 
-        expect(arrayOfPersonRule.fieldValidators).not.toBeUndefined()
-        expect(Array.isArray(arrayOfPersonRule.fieldValidators)).toBeTruthy()
-        expect(arrayOfPersonRule.fieldValidators.length).toEqual(1)
-        expect(arrayOfPersonRule.fieldValidators[0]).toEqual(requiredValidator)
+        expect(arrayOfPersonRule.propertyValidators).not.toBeUndefined()
+        expect(Array.isArray(arrayOfPersonRule.propertyValidators)).toBeTruthy()
+        expect(arrayOfPersonRule.propertyValidators.length).toEqual(1)
+        expect(arrayOfPersonRule.propertyValidators[0]).toEqual(requiredValidator)
     })
 })

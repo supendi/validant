@@ -1,6 +1,6 @@
-import { FieldValidator, ValidatorFunc } from "../types"
+import { PropertyValidator, ValidatorFunc } from "../types"
 
-type RegularExpressionValidator = (regex: RegExp, errorMessage?: string) => FieldValidator
+type RegularExpressionValidator = (regex: RegExp, errorMessage?: string) => PropertyValidator
 
 /**
  * Specifies the rule if a value is match with the specified regular expressin.
@@ -17,7 +17,7 @@ export const regularExpression: RegularExpressionValidator = (regex: RegExp, err
         return regex.test(value)
     }
 
-    const validator: FieldValidator = {
+    const validator: PropertyValidator = {
         description: "Specifies the rule if a value is match with the specified regular expression.",
         validate: validatorFunc,
         returningErrorMessage: msg

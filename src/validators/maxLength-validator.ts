@@ -1,6 +1,6 @@
-import { FieldValidator, ValidatorFunc } from "../types";
+import { PropertyValidator, ValidatorFunc } from "../types";
 
-type MaxLengthValidator = (max: number, errorMessage?: string) => FieldValidator
+type MaxLengthValidator = (max: number, errorMessage?: string) => PropertyValidator
 
 /**
  * Specifies the rule of the maximum number of element to exist in an array.
@@ -26,7 +26,7 @@ export const maxLength: MaxLengthValidator = (max: number, errorMessage?: string
         return actualLength <= max
     }
 
-    const validator: FieldValidator = {
+    const validator: PropertyValidator = {
         description: "Specifies the rule of the maximum number of element to exist in an array.",
         validate: validatorFunc,
         returningErrorMessage: msg

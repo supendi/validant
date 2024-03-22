@@ -1,7 +1,7 @@
-import { FieldValidator } from "../types";
+import { PropertyValidator } from "../types";
 import { regularExpression } from "./regularExpression-validator";
 
-type EmailAddressValidator = (errorMessage?: string) => FieldValidator
+type EmailAddressValidator = (errorMessage?: string) => PropertyValidator
 
 /**
  * Specifies the rule of email address validation.

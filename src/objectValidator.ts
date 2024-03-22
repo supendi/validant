@@ -1,25 +1,25 @@
-import { ErrorOf, FieldValidationResult, FieldValidator, ValidationResult, ValidationRule, ValidationRuleForArrayOf } from "./types";
+import { ErrorOf, PropertyValidationResult, PropertyValidator, ValidationResult, ValidationRule, ValidationRuleForArrayOf } from "./types";
 
 /**
  * Do a single validation against single field
- * @param fieldName 
+ * @param propName 
  * @param object 
- * @param fieldValidator 
+ * @param propValidator 
  * @returns 
  */
-const validateField = (fieldName: string, object: any, fieldValidator: FieldValidator): FieldValidationResult => {
-    const value = object[fieldName]
-    const isValid = fieldValidator.validate(value, object)
+const validateProperty = (propName: string, object: any, propValidator: PropertyValidator): PropertyValidationResult => {
+    const value = object[propName]
+    const isValid = propValidator.validate(value, object)
 
-    var errorMessage = fieldValidator.returningErrorMessage
-    if (fieldValidator.returningErrorMessage) {
-        errorMessage = fieldValidator.returningErrorMessage.replace(":value", value as any)
+    var errorMessage = propValidator.returningErrorMessage
+    if (propValidator.returningErrorMessage) {
+        errorMessage = propValidator.returningErrorMessage.replace(":value", value as any)
     }
 
-    const validationResult: FieldValidationResult = {
+    const validationResult: PropertyValidationResult = {
         object: object,
-        fieldName: fieldName,
-        fieldValue: value,
+        propertyName: propName,
+        propertyValue: value,
         errorMessage: errorMessage,
         isValid: isValid
     }
@@ -44,23 +44,23 @@ export const getErrorOf = <T>(object: T, validationRule: ValidationRule<T>): Err
                 continue
             }
 
-            // if rule is array it probably means rule = fieldValidator []
+            // if rule is array it probably means rule = PropertyValidator []
             const isRuleAnArray = Array.isArray(rule)
             if (isRuleAnArray) {
                 for (let index = 0; index < rule.length; index++) {
-                    const fieldValidator = rule[index]
-                    if (!fieldValidator) {
+                    const propValidator = rule[index]
+                    if (!propValidator) {
                         continue
                     }
 
-                    const isFieldValidator = !!fieldValidator.validate && !!fieldValidator.returningErrorMessage
-                    if (!isFieldValidator) {
+                    const isPropValidator = !!propValidator.validate && !!propValidator.returningErrorMessage
+                    if (!isPropValidator) {
                         continue
                     }
 
-                    const fieldValidationResult = validateField(key, object, fieldValidator)
+                    const propValidationResult = validateProperty(key, object, propValidator)
 
-                    const isValid = fieldValidationResult.isValid
+                    const isValid = propValidationResult.isValid
 
                     if (!isValid) {
                         if (!errors) {
@@ -70,7 +70,7 @@ export const getErrorOf = <T>(object: T, validationRule: ValidationRule<T>): Err
                             errors[key as any] = []
                         }
 
-                        (errors[key] as string[]).push(fieldValidationResult.errorMessage)
+                        (errors[key] as string[]).push(propValidationResult.errorMessage)
                     }
                 }
                 continue
@@ -82,22 +82,22 @@ export const getErrorOf = <T>(object: T, validationRule: ValidationRule<T>): Err
 
                 const childObject = object[key]
                 const childValidationRule = rule as ValidationRuleForArrayOf<typeof childObject>;
-                if (childValidationRule.fieldValidators) {
-                    for (let index = 0; index < childValidationRule.fieldValidators.length; index++) {
-                        const fieldValidator = childValidationRule.fieldValidators[index];
+                if (childValidationRule.propertyValidators) {
+                    for (let index = 0; index < childValidationRule.propertyValidators.length; index++) {
+                        const propValidator = childValidationRule.propertyValidators[index];
 
-                        if (!fieldValidator) {
+                        if (!propValidator) {
                             continue
                         }
 
-                        const isFieldValidator = !!fieldValidator.validate && !!fieldValidator.returningErrorMessage
-                        if (!isFieldValidator) {
+                        const isPropValidator = !!propValidator.validate && !!propValidator.returningErrorMessage
+                        if (!isPropValidator) {
                             continue
                         }
 
-                        const fieldValidationResult = validateField(key, object, fieldValidator)
+                        const propValidationResult = validateProperty(key, object, propValidator)
 
-                        const isValid = fieldValidationResult.isValid
+                        const isValid = propValidationResult.isValid
 
                         if (!isValid) {
                             if (!errors) {
@@ -106,10 +106,10 @@ export const getErrorOf = <T>(object: T, validationRule: ValidationRule<T>): Err
                             if (!errors[key]) {
                                 errors[key as any] = {}
                             }
-                            if (!errors[key as any].propErrors) {
-                                errors[key as any].propErrors = []
+                            if (!errors[key as any].propertyErrors) {
+                                errors[key as any].propertyErrors = []
                             }
-                            errors[key as any].propErrors.push(fieldValidationResult.errorMessage)
+                            errors[key as any].propertyErrors.push(propValidationResult.errorMessage)
                         }
                     }
                 }
@@ -159,7 +159,9 @@ export const getErrorOf = <T>(object: T, validationRule: ValidationRule<T>): Err
     return errors
 }
 
-// Represents the validation message when the validation process is done.
+/**
+ * Represents the validation message when the validation process is done.
+ */
 export interface ValidationMessage {
     okMessage: string
     errorMessage: string

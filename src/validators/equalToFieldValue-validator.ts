@@ -1,6 +1,6 @@
-import { FieldValidator, ValidatorFunc } from "../types";
+import { PropertyValidator, ValidatorFunc } from "../types";
 
-type EqualToFieldValueValidator = (theFieldNameToCompare: string, errorMessage?: string) => FieldValidator
+type EqualToFieldValueValidator = (theFieldNameToCompare: string, errorMessage?: string) => PropertyValidator
 
 /**
  * Specifies a rule that a value should equal to the specified field value.
@@ -17,7 +17,7 @@ export const equalToFieldValue: EqualToFieldValueValidator = (equalToFieldName: 
         return value === objRef[equalToFieldName]
     }
 
-    const validator: FieldValidator = {
+    const validator: PropertyValidator = {
         description: "Specifies a rule that a value should equal to the specified field value.",
         validate: validatorFunc,
         returningErrorMessage: msg

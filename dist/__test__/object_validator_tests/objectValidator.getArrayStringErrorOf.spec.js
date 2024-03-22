@@ -146,7 +146,7 @@ describe("getArrayStringErrorOf test with children array", () => {
             name: [(0, required_validator_1.required)()],
         };
         rule.children = {
-            fieldValidators: [(0, minLength_validator_1.minLength)(1, "Please add at least one child.")],
+            propertyValidators: [(0, minLength_validator_1.minLength)(1, "Please add at least one child.")],
             validationRule: rule
         };
         const person = {
@@ -157,7 +157,7 @@ describe("getArrayStringErrorOf test with children array", () => {
         const expected = {
             name: ["This field is required."],
             children: {
-                propErrors: ["Please add at least one child."],
+                propertyErrors: ["Please add at least one child."],
             }
         };
         expect(actual).toEqual(expected);
@@ -169,7 +169,7 @@ describe("getArrayStringErrorOf test with Order and Order item", () => {
             orderDate: [(0, required_validator_1.required)()],
             orderNumber: [(0, required_validator_1.required)()],
             orderItems: {
-                fieldValidators: [(0, minLength_validator_1.minLength)(1, "Please add at least one order item.")],
+                propertyValidators: [(0, minLength_validator_1.minLength)(1, "Please add at least one order item.")],
                 validationRule: {
                     productId: [(0, required_validator_1.required)()],
                     quantity: [(0, minNumber_validator_1.minNumber)(1)],
@@ -187,7 +187,7 @@ describe("getArrayStringErrorOf test with Order and Order item", () => {
             orderDate: ["This field is required."],
             orderNumber: ["This field is required."],
             orderItems: {
-                propErrors: ["Please add at least one order item."],
+                propertyErrors: ["Please add at least one order item."],
             }
         };
         expect(actual1).toEqual(expected1);
@@ -247,7 +247,7 @@ describe("getArrayStringErrorOf test with Order and Order item", () => {
             orderDate: [(0, required_validator_1.required)()],
             orderNumber: [(0, required_validator_1.required)()],
             orderItems: {
-                fieldValidators: [(0, minLength_validator_1.minLength)(3)],
+                propertyValidators: [(0, minLength_validator_1.minLength)(3)],
                 validationRule: orderItemsRule
             }
         };
@@ -281,7 +281,7 @@ describe("getArrayStringErrorOf test with Order and Order item", () => {
             orderDate: ["This field is required."],
             orderNumber: ["This field is required."],
             orderItems: {
-                propErrors: ["The minimum length for this field is 3."],
+                propertyErrors: ["The minimum length for this field is 3."],
             }
         };
         expect(actual1).toEqual(expected1);
@@ -290,7 +290,7 @@ describe("getArrayStringErrorOf test with Order and Order item", () => {
             orderDate: ["This field is required."],
             orderNumber: ["This field is required."],
             orderItems: {
-                propErrors: ["The minimum length for this field is 3."],
+                propertyErrors: ["The minimum length for this field is 3."],
                 indexedErrors: [
                     {
                         index: 0,
@@ -330,7 +330,7 @@ describe("getArrayStringErrorOf complex validations", () => {
                 email: [(0, required_validator_1.required)(), (0, emailAddress_validator_1.emailAddress)()]
             },
             orderItems: {
-                fieldValidators: [(0, minLength_validator_1.minLength)(4)],
+                propertyValidators: [(0, minLength_validator_1.minLength)(4)],
                 validationRule: orderItemsRule
             }
         };
@@ -355,7 +355,7 @@ describe("getArrayStringErrorOf complex validations", () => {
                 name: ["This field is required."]
             },
             orderItems: {
-                propErrors: ["The minimum length for this field is 4."],
+                propertyErrors: ["The minimum length for this field is 4."],
             }
         };
         expect(actual1).toEqual(expected1);
@@ -399,7 +399,7 @@ describe("getArrayStringErrorOf complex validations", () => {
                 name: ["This field is required."]
             },
             orderItems: {
-                propErrors: ["The minimum length for this field is 4."],
+                propertyErrors: ["The minimum length for this field is 4."],
                 indexedErrors: [
                     {
                         index: 0,

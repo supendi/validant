@@ -72,7 +72,7 @@ describe("ValidationRules Complex Person Test", () => {
             }
         };
         personRules.children = {
-            fieldValidators: [requiredValidator],
+            propertyValidators: [requiredValidator],
             validationRule: {
                 name: [requiredValidator],
                 age: [requiredValidator, minNumberValidator],
@@ -114,7 +114,7 @@ describe("ValidationRules Complex Person Test", () => {
         const childrenRules = personRules.children;
         expect(childrenRules).not.toBeUndefined();
         expect(childrenRules).toEqual({
-            fieldValidators: [requiredValidator],
+            propertyValidators: [requiredValidator],
             validationRule: {
                 name: [requiredValidator],
                 age: [requiredValidator, minNumberValidator],
@@ -124,7 +124,7 @@ describe("ValidationRules Complex Person Test", () => {
                 }
             }
         });
-        expect(childrenRules.fieldValidators.length).toEqual(1);
+        expect(childrenRules.propertyValidators.length).toEqual(1);
         expect(childrenRules.validationRule).toEqual({
             name: [requiredValidator],
             age: [requiredValidator, minNumberValidator],

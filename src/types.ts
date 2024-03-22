@@ -46,13 +46,13 @@ export type IndexedErrorOf<T> = { index: number, errors: ErrorOf<T>, validatedOb
 /**
  * Represent the error model for array.
  * Example: If T { name: string, children: T[]}
- * Then ErrorOfArray<T> will be  { name: string[], children: { fieldErrors: string[], indexedErrors: { index: number, errors: ErrorOf<T>, validatedObject: T | null | undefined }}}
+ * Then ErrorOfArray<T> will be  { name: string[], children: { propertyErrors: string[], indexedErrors: { index: number, errors: ErrorOf<T>, validatedObject: T | null | undefined }}}
  */
 export type ErrorOfArray<T> = {
     /**
      * Represents the error of the property value it self
      */
-    propErrors?: string[],
+    propertyErrors?: string[],
 
     /**
      * Each element of array need to be validated.
@@ -74,14 +74,14 @@ export type ErrorOf<T> = { [key in keyof T]?: T[key] extends object
 
 /**
  * Specifies the contract of validator function.
- * See theFieldValidator implementation of how the validator func being implemented.
+ * See the FieldValidator implementation of how the validator func being implemented.
  */
 export type ValidatorFunc = (value: any, objRef?: any) => boolean
 
 /**
  * Represents the object model of field validator
  */
-export type FieldValidator = {
+export type PropertyValidator = {
     description: string
     validate: ValidatorFunc
     returningErrorMessage: string
@@ -93,23 +93,23 @@ export type FieldValidator = {
  */
 export type ValidationRule<T> = { [key in keyof T]?: T[key] extends Array<any>
     ? ValidationRuleForArrayOf<TypeOfArray<T[key]>> : T[key] extends object
-    ? ValidationRule<T[key]> : FieldValidator[] }
+    ? ValidationRule<T[key]> : PropertyValidator[] }
 
 /**
  * Represents validation rule of array of T
  */
 export type ValidationRuleForArrayOf<T> = {
-    fieldValidators?: FieldValidator[],
+    propertyValidators?: PropertyValidator[],
     validationRule?: ValidationRule<T>
 }
 
 /**
  * Represents a single validation result of property/field 
  */
-export interface FieldValidationResult {
+export interface PropertyValidationResult {
     object: any,
-    fieldName: string,
-    fieldValue: any
+    propertyName: string,
+    propertyValue: any
     isValid: boolean,
     errorMessage: string
 }

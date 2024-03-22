@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * Ensure all the code below compiled
  */
-describe("FieldValidator Test", () => {
+describe("PropertyValidator Test", () => {
     it("Should compile", () => {
         const validator = {
             description: "Required Validator",

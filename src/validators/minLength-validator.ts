@@ -1,6 +1,6 @@
-import { FieldValidator, ValidatorFunc } from "../types"
+import { PropertyValidator, ValidatorFunc } from "../types"
 
-type MinLengthValidator = (min: number, errorMessage?: string) => FieldValidator
+type MinLengthValidator = (min: number, errorMessage?: string) => PropertyValidator
 
 /**
  * Returns a minimum length validation rule
@@ -27,7 +27,7 @@ export const minLength: MinLengthValidator = (min: number, errorMessage?: string
         return actualLength >= min
     }
 
-    const fieldValidator: FieldValidator = {
+    const fieldValidator: PropertyValidator = {
         description: "Specify the minimum length of an array",
         returningErrorMessage: msg,
         validate: validateFunc

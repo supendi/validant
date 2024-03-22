@@ -1,13 +1,13 @@
-import { FieldValidator, ValidatorFunc } from "../../types"
+import { PropertyValidator, ValidatorFunc } from "../../types"
 
 /**
  * Ensure all the code below compiled
  */
 
-describe("FieldValidator Test", () => {
+describe("PropertyValidator Test", () => {
     it("Should compile", () => {
 
-        const validator: FieldValidator = {
+        const validator: PropertyValidator = {
             description: "Required Validator",
             validate: function (value: any, objRef: any) {
                 return true
@@ -30,7 +30,5 @@ describe("FieldValidator Test", () => {
 
         const isValid = validator.validate(1)
         expect(isValid).toBeTruthy()
-
-
     })
 })

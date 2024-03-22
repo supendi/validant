@@ -121,7 +121,7 @@ describe("Validator test with children array", () => {
             name: [(0, validators_1.required)()],
         };
         rule.children = {
-            fieldValidators: [(0, validators_1.minLength)(1)],
+            propertyValidators: [(0, validators_1.minLength)(1)],
             validationRule: rule
         };
         const person = {
@@ -160,7 +160,7 @@ describe("Validator test with children array", () => {
             name: [(0, validators_1.required)()],
         };
         rule.children = {
-            fieldValidators: [(0, validators_1.minLength)(1, "Please add at least one child.")],
+            propertyValidators: [(0, validators_1.minLength)(1, "Please add at least one child.")],
             validationRule: rule
         };
         const person = {
@@ -174,7 +174,7 @@ describe("Validator test with children array", () => {
             errors: {
                 name: ["This field is required."],
                 children: {
-                    propErrors: ["Please add at least one child."],
+                    propertyErrors: ["Please add at least one child."],
                 }
             }
         };
@@ -187,7 +187,7 @@ describe("Validator test with Order and Order item", () => {
             orderDate: [(0, validators_1.required)()],
             orderNumber: [(0, validators_1.required)()],
             orderItems: {
-                fieldValidators: [(0, validators_1.minLength)(1, "Please add at least one order item.")],
+                propertyValidators: [(0, validators_1.minLength)(1, "Please add at least one order item.")],
                 validationRule: {
                     productId: [(0, validators_1.required)()],
                     quantity: [(0, validators_1.minNumber)(1)],
@@ -208,7 +208,7 @@ describe("Validator test with Order and Order item", () => {
                 orderDate: ["This field is required."],
                 orderNumber: ["This field is required."],
                 orderItems: {
-                    propErrors: ["Please add at least one order item."],
+                    propertyErrors: ["Please add at least one order item."],
                 }
             }
         };
@@ -273,7 +273,7 @@ describe("Validator test with Order and Order item", () => {
             orderDate: [(0, validators_1.required)()],
             orderNumber: [(0, validators_1.required)()],
             orderItems: {
-                fieldValidators: [(0, validators_1.minLength)(3)],
+                propertyValidators: [(0, validators_1.minLength)(3)],
                 validationRule: orderItemsRule
             }
         };
@@ -310,7 +310,7 @@ describe("Validator test with Order and Order item", () => {
                 orderDate: ["This field is required."],
                 orderNumber: ["This field is required."],
                 orderItems: {
-                    propErrors: ["The minimum length for this field is 3."],
+                    propertyErrors: ["The minimum length for this field is 3."],
                 }
             }
         };
@@ -323,7 +323,7 @@ describe("Validator test with Order and Order item", () => {
                 orderDate: ["This field is required."],
                 orderNumber: ["This field is required."],
                 orderItems: {
-                    propErrors: ["The minimum length for this field is 3."],
+                    propertyErrors: ["The minimum length for this field is 3."],
                     indexedErrors: [
                         {
                             index: 0,
@@ -364,7 +364,7 @@ describe("Validator complex validations", () => {
                 email: [(0, validators_1.required)(), (0, validators_1.emailAddress)()]
             },
             orderItems: {
-                fieldValidators: [(0, validators_1.minLength)(4), (0, minSumOf_validator_1.minSumOf)("quantity", 100)],
+                propertyValidators: [(0, validators_1.minLength)(4), (0, minSumOf_validator_1.minSumOf)("quantity", 100)],
                 validationRule: orderItemsRule
             }
         };
@@ -392,7 +392,7 @@ describe("Validator complex validations", () => {
                     name: ["This field is required."]
                 },
                 orderItems: {
-                    propErrors: ["The minimum length for this field is 4.", "The minimum sum of quantity is 100.",],
+                    propertyErrors: ["The minimum length for this field is 4.", "The minimum sum of quantity is 100.",],
                 }
             }
         };
@@ -440,7 +440,7 @@ describe("Validator complex validations", () => {
                     name: ["This field is required."]
                 },
                 orderItems: {
-                    propErrors: ["The minimum length for this field is 4.", "The minimum sum of quantity is 100.",],
+                    propertyErrors: ["The minimum length for this field is 4.", "The minimum sum of quantity is 100.",],
                     indexedErrors: [
                         {
                             index: 0,
@@ -482,7 +482,7 @@ describe("Validator test maximum sum of", () => {
                 email: [(0, validators_1.required)(), (0, validators_1.emailAddress)()]
             },
             orderItems: {
-                fieldValidators: [(0, validators_1.minLength)(4), (0, index_1.maxSumOf)("quantity", 10)],
+                propertyValidators: [(0, validators_1.minLength)(4), (0, index_1.maxSumOf)("quantity", 10)],
                 validationRule: orderItemsRule
             }
         };
@@ -523,7 +523,7 @@ describe("Validator test maximum sum of", () => {
                     name: ["This field is required."]
                 },
                 orderItems: {
-                    propErrors: ["The minimum length for this field is 4.", "The maximum sum of quantity is 10.",],
+                    propertyErrors: ["The minimum length for this field is 4.", "The maximum sum of quantity is 10.",],
                 }
             }
         };
@@ -547,7 +547,7 @@ describe("Validator complex validations", () => {
                 email: [(0, validators_1.required)(), (0, validators_1.emailAddress)()]
             },
             orderItems: {
-                fieldValidators: [(0, validators_1.minLength)(4)],
+                propertyValidators: [(0, validators_1.minLength)(4)],
                 validationRule: orderItemsRule
             }
         };

@@ -1,5 +1,5 @@
-import { FieldValidator } from "../types";
-declare type MinLengthValidator = (min: number, errorMessage?: string) => FieldValidator;
+import { PropertyValidator } from "../types";
+declare type MinLengthValidator = (min: number, errorMessage?: string) => PropertyValidator;
 /**
  * Returns a minimum length validation rule
  * @param errorMessage Custom error messages

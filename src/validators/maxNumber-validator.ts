@@ -1,6 +1,6 @@
-import { FieldValidator, ValidatorFunc } from "../types";
+import { PropertyValidator, ValidatorFunc } from "../types";
 
-type MaxNumberValidator = (max: number, errorMessage?: string) => FieldValidator
+type MaxNumberValidator = (max: number, errorMessage?: string) => PropertyValidator
 
 /**
  * Returns a maximum number validation rule
@@ -21,7 +21,7 @@ export const maxNumber: MaxNumberValidator = (max: number, errorMessage?: string
         return value <= max
     }
 
-    const validator: FieldValidator = {
+    const validator: PropertyValidator = {
         description: "Specifies the rule of maximum value of a number.",
         validate: validatorFunc,
         returningErrorMessage: msg

@@ -1,4 +1,4 @@
-import { FieldValidator, ValidationRule } from "../../types"
+import { PropertyValidator, ValidationRule } from "../../types"
 
 /**
  * Ensure all the code below compiled
@@ -10,14 +10,14 @@ describe("ValidationRules Simple Person Test", () => {
             name: string
             age: number
         }
-        const requiredValidator: FieldValidator = {
+        const requiredValidator: PropertyValidator = {
             description: "Required Validator",
             returningErrorMessage: "This field is required",
             validate: (value: any, obj?: any) => {
                 return !!value
             }
         }
-        const minNumberValidator: FieldValidator = {
+        const minNumberValidator: PropertyValidator = {
             description: "Minimum Number Validator",
             returningErrorMessage: "Minimum number is",
             validate: (value: any, obj?: any) => {
@@ -62,21 +62,21 @@ describe("ValidationRules Complex Person Test", () => {
             father: Person
             children: Person[]
         }
-        const requiredValidator: FieldValidator = {
+        const requiredValidator: PropertyValidator = {
             description: "Required Validator",
             returningErrorMessage: "This field is required",
             validate: (value: any, obj?: any) => {
                 return !!value
             }
         }
-        const minNumberValidator: FieldValidator = {
+        const minNumberValidator: PropertyValidator = {
             description: "Minimum Number Validator",
             returningErrorMessage: "Minimum number is",
             validate: (value: any, obj?: any) => {
                 return false
             }
         }
-        const maxNumberValidator: FieldValidator = {
+        const maxNumberValidator: PropertyValidator = {
             description: "Max Number Validator",
             returningErrorMessage: "Maximum number is",
             validate: (value: any, obj?: any) => {
@@ -94,7 +94,7 @@ describe("ValidationRules Complex Person Test", () => {
         }
 
         personRules.children = {
-            fieldValidators: [requiredValidator],
+            propertyValidators: [requiredValidator],
             validationRule: {
                 name: [requiredValidator],
                 age: [requiredValidator, minNumberValidator],
@@ -149,7 +149,7 @@ describe("ValidationRules Complex Person Test", () => {
         const childrenRules = personRules.children
         expect(childrenRules).not.toBeUndefined()
         expect(childrenRules).toEqual({
-            fieldValidators: [requiredValidator],
+            propertyValidators: [requiredValidator],
             validationRule: {
                 name: [requiredValidator],
                 age: [requiredValidator, minNumberValidator],
@@ -160,7 +160,7 @@ describe("ValidationRules Complex Person Test", () => {
             }
         })
 
-        expect(childrenRules.fieldValidators.length).toEqual(1)
+        expect(childrenRules.propertyValidators.length).toEqual(1)
         expect(childrenRules.validationRule).toEqual({
             name: [requiredValidator],
             age: [requiredValidator, minNumberValidator],

@@ -1,5 +1,5 @@
-import { FieldValidator } from "../types";
-declare type EmailAddressValidator = (errorMessage?: string) => FieldValidator;
+import { PropertyValidator } from "../types";
+declare type EmailAddressValidator = (errorMessage?: string) => PropertyValidator;
 /**
  * Specifies the rule of email address validation.
  * @param errorMessage Custom error messages

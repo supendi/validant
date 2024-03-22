@@ -1,5 +1,5 @@
-import { FieldValidator } from "../types";
-declare type RequiredValidator = (errorMessage?: string) => FieldValidator;
+import { PropertyValidator } from "../types";
+declare type RequiredValidator = (errorMessage?: string) => PropertyValidator;
 /**
  * The validator of required field
  * @param errorMessage Custom error messages
