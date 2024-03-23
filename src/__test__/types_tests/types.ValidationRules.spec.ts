@@ -1,4 +1,4 @@
-import { PropertyValidator, ValidationRule } from "../../types"
+import { PropertyValidator, ValidationRule, ValidationRuleForArrayOf } from "../../types"
 
 /**
  * Ensure all the code below compiled
@@ -94,8 +94,8 @@ describe("ValidationRules Complex Person Test", () => {
         }
 
         personRules.children = {
-            propertyValidators: [requiredValidator],
-            validationRule: {
+            validatorOfArray: [requiredValidator],
+            validationRuleOfArrayElement: {
                 name: [requiredValidator],
                 age: [requiredValidator, minNumberValidator],
                 father: {
@@ -148,9 +148,9 @@ describe("ValidationRules Complex Person Test", () => {
 
         const childrenRules = personRules.children
         expect(childrenRules).not.toBeUndefined()
-        expect(childrenRules).toEqual({
-            propertyValidators: [requiredValidator],
-            validationRule: {
+        expect(childrenRules).toEqual<ValidationRuleForArrayOf<Person, Person[]>>({
+            validatorOfArray: [requiredValidator],
+            validationRuleOfArrayElement: {
                 name: [requiredValidator],
                 age: [requiredValidator, minNumberValidator],
                 father: {
@@ -160,8 +160,8 @@ describe("ValidationRules Complex Person Test", () => {
             }
         })
 
-        expect(childrenRules.propertyValidators.length).toEqual(1)
-        expect(childrenRules.validationRule).toEqual({
+        expect(childrenRules.validatorOfArray.length).toEqual(1)
+        expect(childrenRules.validationRuleOfArrayElement).toEqual({
             name: [requiredValidator],
             age: [requiredValidator, minNumberValidator],
             father: {
@@ -170,8 +170,7 @@ describe("ValidationRules Complex Person Test", () => {
             }
         })
 
-        //should be question to person validation rules
-        const childrenValidationRule = childrenRules.validationRule
+        const childrenValidationRule = childrenRules.validationRuleOfArrayElement
         expect(childrenValidationRule.name).not.toBeUndefined()
         expect(childrenValidationRule.name).toEqual([requiredValidator])
 

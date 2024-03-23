@@ -105,8 +105,8 @@ export type ValidationRule<T> = { [key in keyof T]?: T[key] extends Array<any>
  * Represents validation rule of array of T
  */
 export type ValidationRuleForArrayOf<TObject, TValue> = {
-    propertyValidators?: PropertyValidator<TValue, TObject>[],
-    validationRule?: ValidationRule<TypeOfArray<TValue>>
+    validatorOfArray?: PropertyValidator<TValue, TObject>[],
+    validationRuleOfArrayElement?: ValidationRule<TypeOfArray<TValue>>
 }
 
 /**

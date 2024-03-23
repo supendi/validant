@@ -82,9 +82,9 @@ export const getErrorOf = <T>(object: T, validationRule: ValidationRule<T>): Err
 
                 const childObject = object[key]
                 const childValidationRule = rule as ValidationRuleForArrayOf<T, typeof childObject>;
-                if (childValidationRule.propertyValidators) {
-                    for (let index = 0; index < childValidationRule.propertyValidators.length; index++) {
-                        const propValidator = childValidationRule.propertyValidators[index];
+                if (childValidationRule.validatorOfArray) {
+                    for (let index = 0; index < childValidationRule.validatorOfArray.length; index++) {
+                        const propValidator = childValidationRule.validatorOfArray[index];
 
                         if (!propValidator) {
                             continue
@@ -113,10 +113,10 @@ export const getErrorOf = <T>(object: T, validationRule: ValidationRule<T>): Err
                         }
                     }
                 }
-                if (childValidationRule.validationRule) {
+                if (childValidationRule.validationRuleOfArrayElement) {
                     for (let index = 0; index < value.length; index++) {
                         const element = value[index];
-                        const error = getErrorOf(element, childValidationRule.validationRule)
+                        const error = getErrorOf(element, childValidationRule.validationRuleOfArrayElement)
                         if (error) {
                             if (!errors) {
                                 errors = {}

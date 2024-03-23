@@ -173,8 +173,8 @@ describe("Validator test with children array", () => {
         }
 
         rule.children = {
-            propertyValidators: [minLength(1)],
-            validationRule: rule
+            validatorOfArray: [minLength(1)],
+            validationRuleOfArrayElement: rule
         }
 
         const person: Person = {
@@ -224,8 +224,8 @@ describe("Validator test with children array", () => {
         }
 
         rule.children = {
-            propertyValidators: [minLength(1, "Please add at least one child.")],
-            validationRule: rule
+            validatorOfArray: [minLength(1, "Please add at least one child.")],
+            validationRuleOfArrayElement: rule
         }
 
         const person: Person = {
@@ -277,8 +277,8 @@ describe("Validator test with Order and Order item", () => {
             orderDate: [required()],
             orderNumber: [required()],
             orderItems: {
-                propertyValidators: [minLength(1, "Please add at least one order item.")],
-                validationRule: {
+                validatorOfArray: [minLength(1, "Please add at least one order item.")],
+                validationRuleOfArrayElement: {
                     productId: [required()],
                     quantity: [minNumber(1)],
                 }
@@ -391,8 +391,8 @@ describe("Validator test with Order and Order item", () => {
             orderDate: [required()],
             orderNumber: [required()],
             orderItems: {
-                propertyValidators: [minLength(3)],
-                validationRule: orderItemsRule
+                validatorOfArray: [minLength(3)],
+                validationRuleOfArrayElement: orderItemsRule
             }
         }
 
@@ -518,8 +518,8 @@ describe("Validator complex validations", () => {
                 email: [required(), emailAddress()]
             },
             orderItems: {
-                propertyValidators: [minLength(4), minSumOf("quantity", 100,)],
-                validationRule: orderItemsRule
+                validatorOfArray: [minLength(4), minSumOf("quantity", 100,)],
+                validationRuleOfArrayElement: orderItemsRule
             }
         }
 
@@ -673,8 +673,8 @@ describe("Validator test maximum sum of", () => {
                 email: [required(), emailAddress()]
             },
             orderItems: {
-                propertyValidators: [minLength(4), maxSumOf("quantity", 10,)],
-                validationRule: orderItemsRule
+                validatorOfArray: [minLength(4), maxSumOf("quantity", 10,)],
+                validationRuleOfArrayElement: orderItemsRule
             }
         }
 
@@ -773,8 +773,8 @@ describe("Validator complex validations", () => {
                 email: [required(), emailAddress()]
             },
             orderItems: {
-                propertyValidators: [minLength(4)],
-                validationRule: orderItemsRule
+                validatorOfArray: [minLength(4)],
+                validationRuleOfArrayElement: orderItemsRule
             }
         }
 
@@ -880,11 +880,11 @@ describe("Validator Test The Custom Validator", () => {
                 email: [required(), emailAddress()]
             },
             orderItems: {
-                propertyValidators: [minLength(4), custom(function (value, object) {
+                validatorOfArray: [minLength(4), custom(function (value, object) {
                     console.log(object)
                     return true
                 }, "Order item has error.")],
-                validationRule: orderItemsRule
+                validationRuleOfArrayElement: orderItemsRule
             }
         }
 

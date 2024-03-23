@@ -30,15 +30,15 @@ describe("ValidationRuleArrayOf Simple Person Test", () => {
         }
 
         const arrayOfPersonRule: ValidationRuleForArrayOf<Person, Person[]> = {
-            propertyValidators: [requiredValidator],
-            validationRule: personRule,
+            validatorOfArray: [requiredValidator],
+            validationRuleOfArrayElement: personRule,
         }
 
         expect(arrayOfPersonRule).not.toBeUndefined()
 
-        expect(arrayOfPersonRule.propertyValidators).not.toBeUndefined()
-        expect(Array.isArray(arrayOfPersonRule.propertyValidators)).toBeTruthy()
-        expect(arrayOfPersonRule.propertyValidators.length).toEqual(1)
-        expect(arrayOfPersonRule.propertyValidators[0]).toEqual(requiredValidator)
+        expect(arrayOfPersonRule.validatorOfArray).not.toBeUndefined()
+        expect(Array.isArray(arrayOfPersonRule.validatorOfArray)).toBeTruthy()
+        expect(arrayOfPersonRule.validatorOfArray.length).toEqual(1)
+        expect(arrayOfPersonRule.validatorOfArray[0]).toEqual(requiredValidator)
     })
 })

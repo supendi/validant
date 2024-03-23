@@ -162,7 +162,7 @@ describe("getErrorOf test with children array", () => {
         }
 
         rule.children = {
-            validationRule: rule
+            validationRuleOfArrayElement: rule
         }
 
         const person: Person = {
@@ -208,8 +208,8 @@ describe("getErrorOf test with children array", () => {
         }
 
         rule.children = {
-            propertyValidators: [minLength(1, "Please add at least one child.")],
-            validationRule: rule
+            validatorOfArray: [minLength(1, "Please add at least one child.")],
+            validationRuleOfArrayElement: rule
         }
 
         const person: Person = {
@@ -257,8 +257,8 @@ describe("getErrorOf test with Order and Order item", () => {
             orderDate: [required()],
             orderNumber: [required()],
             orderItems: {
-                propertyValidators: [minLength(1, "Please add at least one order item.")],
-                validationRule: {
+                validatorOfArray: [minLength(1, "Please add at least one order item.")],
+                validationRuleOfArrayElement: {
                     productId: [required()],
                     quantity: [minNumber(1)],
                 }
@@ -363,8 +363,8 @@ describe("getErrorOf test with Order and Order item", () => {
             orderDate: [required()],
             orderNumber: [required()],
             orderItems: {
-                propertyValidators: [minLength(3)],
-                validationRule: orderItemsRule
+                validatorOfArray: [minLength(3)],
+                validationRuleOfArrayElement: orderItemsRule
             }
         }
 
@@ -482,8 +482,8 @@ describe("getErrorOf complex validations", () => {
                 email: [required(), emailAddress()]
             },
             orderItems: {
-                propertyValidators: [minLength(4)],
-                validationRule: orderItemsRule
+                validatorOfArray: [minLength(4)],
+                validationRuleOfArrayElement: orderItemsRule
             }
         }
 

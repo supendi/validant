@@ -48,8 +48,8 @@ const rule1: ValidationRule<Order> = {
 // ensure order items has the correct type check
 const rule2: ValidationRule<Order> = {
     orderItems: {
-        propertyValidators: [minLength(4)],
-        validationRule: {
+        validatorOfArray: [minLength(4)],
+        validationRuleOfArrayElement: {
             id: [required()],
             productId: [],
         }
@@ -67,18 +67,18 @@ const orderItemsRule: ValidationRule<OrderItem> = {
 // Apply the predefined order item rules
 const rule3: ValidationRule<Order> = {
     orderItems: {
-        propertyValidators: [minLength(4)],
-        validationRule: orderItemsRule
+        validatorOfArray: [minLength(4)],
+        validationRuleOfArrayElement: orderItemsRule
     },
 }
 
 // Ensure deep type check on order items, see the customer properties
 const rule4: ValidationRule<Order> = {
     orderItems: {
-        propertyValidators: [minLength(4)],
-        validationRule: {
+        validatorOfArray: [minLength(4)],
+        validationRuleOfArrayElement: {
             customers: {
-                validationRule: {
+                validationRuleOfArrayElement: {
                     id: [required(), elementOf(customerIds)],
                     name: [required()],
                     email: [required(), emailAddress()]
