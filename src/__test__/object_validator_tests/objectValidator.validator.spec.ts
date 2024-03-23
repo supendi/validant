@@ -194,7 +194,7 @@ describe("Validator test with children array", () => {
             errors: {
                 name: ["This field is required."],
                 children: {
-                    indexedErrors: [
+                    errorOfArrayElements: [
                         {
                             index: 0,
                             errors: {
@@ -241,7 +241,7 @@ describe("Validator test with children array", () => {
             errors: {
                 name: ["This field is required."],
                 children: {
-                    propertyErrors: ["Please add at least one child."],
+                    errorOfArray: ["Please add at least one child."],
                 }
             }
         }
@@ -300,7 +300,7 @@ describe("Validator test with Order and Order item", () => {
                 orderDate: ["This field is required."],
                 orderNumber: ["This field is required."],
                 orderItems: {
-                    propertyErrors: ["Please add at least one order item."],
+                    errorOfArray: ["Please add at least one order item."],
                 }
             }
         }
@@ -335,7 +335,7 @@ describe("Validator test with Order and Order item", () => {
                 orderDate: ["This field is required."],
                 orderNumber: ["This field is required."],
                 orderItems: {
-                    indexedErrors: [
+                    errorOfArrayElements: [
                         {
                             index: 0,
                             errors: {
@@ -432,7 +432,7 @@ describe("Validator test with Order and Order item", () => {
                 orderDate: ["This field is required."],
                 orderNumber: ["This field is required."],
                 orderItems: {
-                    propertyErrors: ["The minimum length for this field is 3."],
+                    errorOfArray: ["The minimum length for this field is 3."],
                 }
             }
         }
@@ -446,8 +446,8 @@ describe("Validator test with Order and Order item", () => {
                 orderDate: ["This field is required."],
                 orderNumber: ["This field is required."],
                 orderItems: {
-                    propertyErrors: ["The minimum length for this field is 3."],
-                    indexedErrors: [
+                    errorOfArray: ["The minimum length for this field is 3."],
+                    errorOfArrayElements: [
                         {
                             index: 0,
                             errors: {
@@ -548,7 +548,7 @@ describe("Validator complex validations", () => {
                     name: ["This field is required."]
                 },
                 orderItems: {
-                    propertyErrors: ["The minimum length for this field is 4.", "The minimum sum of quantity is 100.",],
+                    errorOfArray: ["The minimum length for this field is 4.", "The minimum sum of quantity is 100.",],
                 }
             }
         }
@@ -598,8 +598,8 @@ describe("Validator complex validations", () => {
                     name: ["This field is required."]
                 },
                 orderItems: {
-                    propertyErrors: ["The minimum length for this field is 4.", "The minimum sum of quantity is 100.",],
-                    indexedErrors: [
+                    errorOfArray: ["The minimum length for this field is 4.", "The minimum sum of quantity is 100.",],
+                    errorOfArrayElements: [
                         {
                             index: 0,
                             errors: {
@@ -716,7 +716,7 @@ describe("Validator test maximum sum of", () => {
                     name: ["This field is required."]
                 },
                 orderItems: {
-                    propertyErrors: ["The minimum length for this field is 4.", "The maximum sum of quantity is 10.",],
+                    errorOfArray: ["The minimum length for this field is 4.", "The maximum sum of quantity is 10.",],
                 }
             }
         }

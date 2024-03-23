@@ -106,10 +106,10 @@ export const getErrorOf = <T>(object: T, validationRule: ValidationRule<T>): Err
                             if (!errors[key]) {
                                 errors[key as any] = {}
                             }
-                            if (!errors[key as any].propertyErrors) {
-                                errors[key as any].propertyErrors = []
+                            if (!errors[key as any].errorOfArray) {
+                                errors[key as any].errorOfArray = []
                             }
-                            errors[key as any].propertyErrors.push(propValidationResult.errorMessage)
+                            errors[key as any].errorOfArray.push(propValidationResult.errorMessage)
                         }
                     }
                 }
@@ -124,10 +124,10 @@ export const getErrorOf = <T>(object: T, validationRule: ValidationRule<T>): Err
                             if (!errors[key]) {
                                 errors[key as any] = {}
                             }
-                            if (!errors[key as any].indexedErrors) {
-                                errors[key as any].indexedErrors = []
+                            if (!errors[key as any].errorOfArrayElements) {
+                                errors[key as any].errorOfArrayElements = []
                             }
-                            errors[key as any].indexedErrors.push({
+                            errors[key as any].errorOfArrayElements.push({
                                 index: index,
                                 errors: error,
                                 validatedObject: element

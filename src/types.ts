@@ -50,15 +50,20 @@ export type IndexedErrorOf<T> = { index: number, errors: ErrorOf<T>, validatedOb
  */
 export type ErrorOfArray<T> = {
     /**
-     * Represents the error of the property value it self
+     * Represents the error of the array as whole (or a single property that is validated).
+     * Example: 
+     * { orderItems: OrderItem[] } 
+     * If we need the minimum count of order items to be 5 items. Then such error will be exist here.   
+     * The error will be represented as:
+     * { orderItems: { arrayErrors: ["The minimum order is 5 items"]}}
      */
-    propertyErrors?: string[],
+    errorOfArray?: string[],
 
     /**
-     * Each element of array need to be validated.
+     * If each element of array need to be validated.
      * The indexedErrors represents the errors of the each element of the array.
      */
-    indexedErrors?: IndexedErrorOf<TypeOfArray<T>>[]
+    errorOfArrayElements?: IndexedErrorOf<TypeOfArray<T>>[]
 }
 
 /**

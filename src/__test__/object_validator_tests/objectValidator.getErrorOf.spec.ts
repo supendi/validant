@@ -179,7 +179,7 @@ describe("getErrorOf test with children array", () => {
         const expected: ErrorOf<Person> = {
             name: ["This field is required."],
             children: {
-                indexedErrors: [
+                errorOfArrayElements: [
                     {
                         index: 0,
                         errors: {
@@ -222,7 +222,7 @@ describe("getErrorOf test with children array", () => {
         const expected: ErrorOf<Person> = {
             name: ["This field is required."],
             children: {
-                propertyErrors: ["Please add at least one child."],
+                errorOfArray: ["Please add at least one child."],
             }
         }
 
@@ -277,7 +277,7 @@ describe("getErrorOf test with Order and Order item", () => {
             orderDate: ["This field is required."],
             orderNumber: ["This field is required."],
             orderItems: {
-                propertyErrors: ["Please add at least one order item."],
+                errorOfArray: ["Please add at least one order item."],
             }
         }
         expect(actual1).toEqual(expected1)
@@ -308,7 +308,7 @@ describe("getErrorOf test with Order and Order item", () => {
             orderDate: ["This field is required."],
             orderNumber: ["This field is required."],
             orderItems: {
-                indexedErrors: [
+                errorOfArrayElements: [
                     {
                         index: 0,
                         errors: {
@@ -401,7 +401,7 @@ describe("getErrorOf test with Order and Order item", () => {
             orderDate: ["This field is required."],
             orderNumber: ["This field is required."],
             orderItems: {
-                propertyErrors: ["The minimum length for this field is 3."],
+                errorOfArray: ["The minimum length for this field is 3."],
             }
         }
         expect(actual1).toEqual(expected1)
@@ -411,8 +411,8 @@ describe("getErrorOf test with Order and Order item", () => {
             orderDate: ["This field is required."],
             orderNumber: ["This field is required."],
             orderItems: {
-                propertyErrors: ["The minimum length for this field is 3."],
-                indexedErrors: [
+                errorOfArray: ["The minimum length for this field is 3."],
+                errorOfArrayElements: [
                     {
                         index: 0,
                         errors: {
@@ -509,7 +509,7 @@ describe("getErrorOf complex validations", () => {
                 name: ["This field is required."]
             },
             orderItems: {
-                propertyErrors: ["The minimum length for this field is 4."],
+                errorOfArray: ["The minimum length for this field is 4."],
             }
         }
 
@@ -555,8 +555,8 @@ describe("getErrorOf complex validations", () => {
                 name: ["This field is required."]
             },
             orderItems: {
-                propertyErrors: ["The minimum length for this field is 4."],
-                indexedErrors: [
+                errorOfArray: ["The minimum length for this field is 4."],
+                errorOfArrayElements: [
                     {
                         index: 0,
                         errors: {
