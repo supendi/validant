@@ -35,10 +35,13 @@ const validateProperty = <TValue, TObject>(propName: keyof TObject, object: TObj
  */
 export const getErrorOf = <T>(object: T, validationRule: ValidationRule<T>): ErrorOf<T> => {
     var errors: ErrorOf<T> = undefined
-    for (const key in object) {
-        if (Object.prototype.hasOwnProperty.call(object, key)) {
+    
+    //Iterate against validation rule instead.
+    //Example : the rule is {name:[required()]}, if we passed an empty object {}, then the validation wont work. It will always returns empty errors, which is very wrong. 
+    for (const key in validationRule) {
+        if (Object.prototype.hasOwnProperty.call(validationRule, key)) {
             const value = object[key];
-
+ 
             const rule = validationRule[key]
             if (!rule) {
                 continue
@@ -142,6 +145,7 @@ export const getErrorOf = <T>(object: T, validationRule: ValidationRule<T>): Err
             const typeofValue = typeof (value)
             if (typeofValue === "object") {
                 const childObject = object[key]
+
                 const childValidationRule = rule as ValidationRule<typeof childObject>;
                 const error = getErrorOf(childObject, childValidationRule)
                 if (error) {

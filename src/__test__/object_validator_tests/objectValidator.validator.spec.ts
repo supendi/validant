@@ -826,9 +826,6 @@ describe("Validator complex validations", () => {
     })
 })
 
-
-
-
 describe("Validator Test The Custom Validator", () => {
     it("Custom validator test", () => {
         interface Product {
@@ -874,7 +871,6 @@ describe("Validator Test The Custom Validator", () => {
             customer: {
                 id: [required(), elementOf(customerIds)],
                 name: [required(), custom(function (value, object) {
-                    console.log(value, object)
                     return false
                 }, "Error customer name")],
                 email: [required(), emailAddress()]
@@ -937,5 +933,42 @@ describe("Validator Test The Custom Validator", () => {
         }
 
         expect(actual1).toEqual(expected1)
+    })
+})
+
+
+
+describe("Validator Test Date Test", () => {
+    it("Test date value", () => {
+        interface Product {
+            expiredDate?: Date
+        }
+        const product: Product = {
+        }
+        const rule: ValidationRule<Product> = {
+            expiredDate: [required()],
+        }
+
+        const actual1 = validator.validate(product, rule)
+        const expected1: ValidationResult<Product> = {
+            message: defaultMessage.errorMessage,
+            isValid: false,
+            errors: {
+                expiredDate: ["This field is required."]
+            },
+        }
+
+        expect(actual1).toEqual(expected1)
+
+        const actual2 = validator.validate({
+            expiredDate: new Date()
+        }, rule)
+        const expected2: ValidationResult<Product> = {
+            message: defaultMessage.okMessage,
+            isValid: true,
+            errors: undefined
+        }
+
+        expect(actual2).toEqual(expected2)
     })
 })
