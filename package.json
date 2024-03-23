@@ -1,6 +1,6 @@
 {
   "name": "tsjson-validation",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "Simple json validator by using user-defined validation rules",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
