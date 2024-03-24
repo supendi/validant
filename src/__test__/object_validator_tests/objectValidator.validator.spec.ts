@@ -1,7 +1,7 @@
 import validator, { maxSumOf } from "../../index"
 import { ValidationResult, ValidationRule } from "../../types"
 import { elementOf, emailAddress, maxNumber, arrayMinLength, required, minNumber } from "../../validators"
-import { custom } from "../../validators/custom-validator"
+import { propertyValidator } from "../../validators/property-validator"
 import { minSumOf } from "../../validators/minSumOf-validator"
 
 const defaultMessage = { okMessage: "Good to go.", errorMessage: "One or more validation errors occurred." }
@@ -870,13 +870,13 @@ describe("Validator Test The Custom Validator", () => {
             orderNumber: [required()],
             customer: {
                 id: [required(), elementOf(customerIds)],
-                name: [required(), custom(function (value, object) {
+                name: [required(), propertyValidator(function (value, object) {
                     return false
                 }, "Error customer name")],
                 email: [required(), emailAddress()]
             },
             orderItems: {
-                validatorOfArray: [arrayMinLength(4), custom(function (value, object) {
+                validatorOfArray: [arrayMinLength(4), propertyValidator(function (value, object) {
                     return true
                 }, "Order item has error.")],
                 validationRuleOfArrayElement: orderItemsRule

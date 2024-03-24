@@ -9,7 +9,7 @@ import { regularExpression } from './regularExpression-validator'
 import { required } from './required-validator'
 import { minSumOf } from './minSumOf-validator'
 import { maxSumOf } from './maxSumOf-validator'
-import { custom } from './custom-validator'
+import { propertyValidator } from './property-validator'
 
 export {
     elementOf,
@@ -23,5 +23,5 @@ export {
     required,
     minSumOf,
     maxSumOf,
-    custom
+    propertyValidator as custom
 }
