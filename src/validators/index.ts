@@ -1,7 +1,7 @@
 import { elementOf } from './elementOf-validator'
 import { emailAddress } from './emailAddress-validator'
 import { equalToPropertyValue } from './equalToPropertyValue-validator'
-import { maxLength } from './maxLength-validator'
+import { arrayMaxLength } from './arrayMaxLength-validator'
 import { maxNumber } from './maxNumber-validator'
 import { arrayMinLength } from './arrayMinLength-validator'
 import { minNumber } from './minNumber-validator'
@@ -15,7 +15,7 @@ export {
     elementOf,
     emailAddress,
     equalToPropertyValue,
-    maxLength,
+    arrayMaxLength as maxLength,
     maxNumber,
     arrayMinLength,
     minNumber,

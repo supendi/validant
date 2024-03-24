@@ -1,13 +1,13 @@
 import { PropertyValidator, ValidatorFunc } from "../types";
 
-type MaxLengthValidator = <TValue, TObject>(max: number, errorMessage?: string) => PropertyValidator<TValue, TObject>
+type ArrayMaxLengthValidator = <TValue, TObject>(max: number, errorMessage?: string) => PropertyValidator<TValue, TObject>
 
 /**
  * Specifies the rule of the maximum number of element to exist in an array.
  * @param errorMessage Custom error messages
  * @returns 
  */
-export const maxLength: MaxLengthValidator = <TValue, TObject>(max: number, errorMessage?: string) => {
+export const arrayMaxLength: ArrayMaxLengthValidator = <TValue, TObject>(max: number, errorMessage?: string) => {
 
     let msg = `The maximum length for this field is ${max}.`
     if (errorMessage) {
