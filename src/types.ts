@@ -35,7 +35,7 @@ export type StringifiedValidationResult<T> = {
 export interface ValidationResult<T> {
     isValid: boolean
     message: string
-    errors: ErrorOf<T>
+    errors?: ErrorOf<T> | undefined
 }
 
 /**
