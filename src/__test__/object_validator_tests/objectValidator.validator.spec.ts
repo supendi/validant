@@ -877,7 +877,6 @@ describe("Validator Test The Custom Validator", () => {
             },
             orderItems: {
                 validatorOfArray: [arrayMinLength(4), custom(function (value, object) {
-                    console.log(object)
                     return true
                 }, "Order item has error.")],
                 validationRuleOfArrayElement: orderItemsRule

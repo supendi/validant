@@ -46,4 +46,20 @@ describe(`Test ${emailAddress.name}`, () => {
 
         expect(isValid).toEqual(true)
     })
+})
+
+describe(`Test ${emailAddress.name}`, () => {
+    it("should return false and have custom error message", () => {
+        const testValue = 'john@'
+        const customErrorMessage = `Invalid email :value`
+        const validator = emailAddress(customErrorMessage)
+
+        expect(validator).not.toBeUndefined()
+        expect(validator.validate).not.toBeUndefined()
+        expect(validator.returningErrorMessage).toEqual(customErrorMessage)
+
+        var isValid = validator.validate(testValue)
+
+        expect(isValid).toEqual(false)
+    })
 }) 
