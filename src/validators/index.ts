@@ -15,7 +15,7 @@ export {
     elementOf,
     emailAddress,
     equalToPropertyValue,
-    arrayMaxLength as maxLength,
+    arrayMaxLength,
     maxNumber,
     arrayMinLength,
     minNumber,
@@ -23,5 +23,5 @@ export {
     required,
     minSumOf,
     maxSumOf,
-    propertyValidator as custom
+    propertyValidator
 }
