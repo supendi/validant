@@ -3,7 +3,7 @@ import { emailAddress } from './emailAddress-validator'
 import { equalToPropertyValue } from './equalToPropertyValue-validator'
 import { maxLength } from './maxLength-validator'
 import { maxNumber } from './maxNumber-validator'
-import { minLength } from './minLength-validator'
+import { arrayMinLength } from './arrayMinLength-validator'
 import { minNumber } from './minNumber-validator'
 import { regularExpression } from './regularExpression-validator'
 import { required } from './required-validator'
@@ -17,7 +17,7 @@ export {
     equalToPropertyValue,
     maxLength,
     maxNumber,
-    minLength,
+    arrayMinLength,
     minNumber,
     regularExpression,
     required,

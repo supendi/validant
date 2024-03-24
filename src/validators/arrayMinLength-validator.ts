@@ -1,13 +1,13 @@
 import { PropertyValidator, ValidatorFunc } from "../types"
 
-type MinLengthValidator = <TValue, TObject>(min: number, errorMessage?: string) => PropertyValidator<TValue, TObject>
+type ArrayMinLengthValidator = <TValue, TObject>(min: number, errorMessage?: string) => PropertyValidator<TValue, TObject>
 
 /**
  * Specifies the minimum length of an array.
  * @param errorMessage Custom error messages
  * @returns 
  */
-export const minLength: MinLengthValidator = <TValue, TObject>(min: number, errorMessage?: string) => {
+export const arrayMinLength: ArrayMinLengthValidator = <TValue, TObject>(min: number, errorMessage?: string) => {
 
     let msg = `The minimum length for this field is ${min}.`
     if (errorMessage) {

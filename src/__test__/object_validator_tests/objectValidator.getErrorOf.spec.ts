@@ -3,7 +3,7 @@ import { ErrorOf, ValidationRule } from "../../types"
 import { elementOf } from "../../validators/elementOf-validator"
 import { emailAddress } from "../../validators/emailAddress-validator"
 import { maxNumber } from "../../validators/maxNumber-validator"
-import { minLength } from "../../validators/minLength-validator"
+import { arrayMinLength } from "../../validators/arrayMinLength-validator"
 import { minNumber } from "../../validators/minNumber-validator"
 import { required } from "../../validators/required-validator"
 
@@ -208,7 +208,7 @@ describe("getErrorOf test with children array", () => {
         }
 
         rule.children = {
-            validatorOfArray: [minLength(1, "Please add at least one child.")],
+            validatorOfArray: [arrayMinLength(1, "Please add at least one child.")],
             validationRuleOfArrayElement: rule
         }
 
@@ -257,7 +257,7 @@ describe("getErrorOf test with Order and Order item", () => {
             orderDate: [required()],
             orderNumber: [required()],
             orderItems: {
-                validatorOfArray: [minLength(1, "Please add at least one order item.")],
+                validatorOfArray: [arrayMinLength(1, "Please add at least one order item.")],
                 validationRuleOfArrayElement: {
                     productId: [required()],
                     quantity: [minNumber(1)],
@@ -363,7 +363,7 @@ describe("getErrorOf test with Order and Order item", () => {
             orderDate: [required()],
             orderNumber: [required()],
             orderItems: {
-                validatorOfArray: [minLength(3)],
+                validatorOfArray: [arrayMinLength(3)],
                 validationRuleOfArrayElement: orderItemsRule
             }
         }
@@ -482,7 +482,7 @@ describe("getErrorOf complex validations", () => {
                 email: [required(), emailAddress()]
             },
             orderItems: {
-                validatorOfArray: [minLength(4)],
+                validatorOfArray: [arrayMinLength(4)],
                 validationRuleOfArrayElement: orderItemsRule
             }
         }
