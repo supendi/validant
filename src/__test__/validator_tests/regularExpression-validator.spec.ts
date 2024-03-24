@@ -1,7 +1,7 @@
 import { regularExpression } from "../../validators/regularExpression-validator"
 
 
-describe("RegularExpressionValidator Test", () => {
+describe(`Test ${regularExpression.name}`, () => {
     it("should return false and have default error message", () => {
         const testValue = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d])([A-Za-z\d]|[^a-zA-Z\d]){8,}$/
         const validator = regularExpression(testValue)
@@ -17,7 +17,7 @@ describe("RegularExpressionValidator Test", () => {
     })
 })
 
-describe("RegularExpressionValidator Test", () => {
+describe(`Test ${regularExpression.name}`, () => {
     it("should return false and have custom error message", () => {
         const testValue = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d])([A-Za-z\d]|[^a-zA-Z\d]){8,}$/
         const customErrorMessage = `Invalid value`
@@ -34,7 +34,7 @@ describe("RegularExpressionValidator Test", () => {
     })
 })
 
-describe("RegularExpressionValidator Test", () => {
+describe(`Test ${regularExpression.name}`, () => {
     it("should return true and have custom error message", () => {
         const testValue = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d])([A-Za-z\d]|[^a-zA-Z\d]){8,}$/
         const customErrorMessage = `Invalid value`

@@ -1,7 +1,6 @@
 import { equalToPropertyValue } from "../../validators/equalToPropertyValue-validator"
 
-
-describe("EqualToPropertyValueValidator Test", () => {
+describe(`Test ${equalToPropertyValue.name}`, () => {
     it("should return false and have default error message", () => {
         const testValue = 'email'
         const validator = equalToPropertyValue(testValue)
@@ -21,7 +20,7 @@ describe("EqualToPropertyValueValidator Test", () => {
     })
 })
 
-describe("EqualToPropertyValueValidator Test", () => {
+describe(`Test ${equalToPropertyValue.name}`, () => {
     it("should return false and have custom error message", () => {
         const testValue = 'email'
         const customErrorMessage = `Hey the email and re-enter email is must be equal`
@@ -41,7 +40,7 @@ describe("EqualToPropertyValueValidator Test", () => {
     })
 })
 
-describe("EqualToPropertyValueValidator Test", () => {
+describe(`Test ${equalToPropertyValue.name}`, () => {
     it("should return true and have custom error message", () => {
         const testValue = 'email'
         const customErrorMessage = `Hey the email and re-enter email is must be equal`

@@ -1,6 +1,6 @@
 import { maxNumber } from "../../validators/maxNumber-validator"
 
-describe("MaxNumberValidator Test", () => {
+describe(`Test ${maxNumber.name}`, () => {
     it("should return false and have default error message", () => {
         const maxValue = 5
         const validator = maxNumber(maxValue)
@@ -17,7 +17,7 @@ describe("MaxNumberValidator Test", () => {
     })
 })
 
-describe("MaxNumberValidator Test", () => {
+describe(`Test ${maxNumber.name}`, () => {
     it("should return false and have custom error message", () => {
         const maxValue = 1
         const customErrorMessage = `Maximum order for this item is ${maxValue}.`
@@ -34,7 +34,7 @@ describe("MaxNumberValidator Test", () => {
     })
 })
 
-describe("MaxNumberValidator Test", () => {
+describe(`Test ${maxNumber.name}`, () => {
     it("should return true and have custom error message", () => {
         const maxValue = 100
         const customErrorMessage = `Maximum order for this item is ${maxValue}.`

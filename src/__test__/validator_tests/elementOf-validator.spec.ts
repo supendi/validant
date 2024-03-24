@@ -1,7 +1,7 @@
 import { elementOf } from "../../validators/elementOf-validator"
 
 
-describe("ElementOfValidator Test", () => {
+describe(`Test ${elementOf.name}`, () => {
     it("should return false and have default error message", () => {
         const testValue = [1, 2, 3]
         const validator = elementOf(testValue)
@@ -18,7 +18,7 @@ describe("ElementOfValidator Test", () => {
     })
 })
 
-describe("ElementOfValidator Test", () => {
+describe(`Test ${elementOf.name}`, () => {
     it("should return false and have custom error message", () => {
         const testValue = [1, 2, 3]
         const customerErrorMessage = `Wrong guess.`
@@ -35,7 +35,7 @@ describe("ElementOfValidator Test", () => {
     })
 })
 
-describe("ElementOfValidator Test", () => {
+describe(`Test ${elementOf.name}`, () => {
     it("should return true and have custom error message", () => {
         const testValue = [1, 2, 3]
         const customerErrorMessage = `Wrong guess.`
@@ -52,7 +52,7 @@ describe("ElementOfValidator Test", () => {
     })
 })
 
-describe("ElementOfValidator Test", () => {
+describe(`Test ${elementOf.name}`, () => {
     it("should return true and have custom error message", () => {
         const testValue = ["Indonesia", "India", "UK", "USA"]
         const customerErrorMessage = `Wrong guess.`
@@ -69,7 +69,7 @@ describe("ElementOfValidator Test", () => {
     })
 })
 
-describe("ElementOfValidator Test", () => {
+describe(`Test ${elementOf.name}`, () => {
     it("should return false and have custom error message", () => {
         const testValue = [
             {
@@ -100,7 +100,7 @@ describe("ElementOfValidator Test", () => {
     })
 })
 
-describe("ElementOfValidator Test", () => {
+describe(`Test ${elementOf.name}`, () => {
     it("should return true and have custom error message", () => {
         const testValue = [
             {

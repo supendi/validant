@@ -1,6 +1,6 @@
 import { required } from "../../validators/required-validator"
 
-describe("RequiredValidator Test", () => {
+describe(`Test ${required.name}`, () => {
     it("RequiredValidator should return false and have default error message", () => {
         const validator = required()
         const myName = ""
@@ -16,7 +16,7 @@ describe("RequiredValidator Test", () => {
     })
 })
 
-describe("RequiredValidator Test", () => {
+describe(`Test ${required.name}`, () => {
     it("RequiredValidator should return false and have custom error message", () => {
         const customErrorMessage = "Please fill this field" 
         const validator = required(customErrorMessage)
@@ -32,7 +32,7 @@ describe("RequiredValidator Test", () => {
     })
 })
 
-describe("RequiredValidator Test", () => {
+describe(`Test ${required.name}`, () => {
     it("RequiredValidator should return true and have custom error message", () => {
         const customErrorMessage = "Please fill this field" 
         const validator = required(customErrorMessage)

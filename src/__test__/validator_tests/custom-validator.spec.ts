@@ -1,7 +1,7 @@
 import { ValidatorFunc } from "../../types"
 import { custom } from "../../validators/custom-validator"
 
-describe("CustomValidator Test", () => {
+describe(`Test ${custom.name}`, () => {
     it("Test simple custom validator", () => {
         function hoc<T, U>() {
             const maximumNumberIsOneValidator: ValidatorFunc<T, U> = (value, object) => {
@@ -67,7 +67,7 @@ describe("CustomValidator Test", () => {
 })
 
 
-describe("CustomValidator Test", () => {
+describe(`Test ${custom.name}`, () => {
     it("Test custom validator against complex type", () => {
         interface Order {
             number: number

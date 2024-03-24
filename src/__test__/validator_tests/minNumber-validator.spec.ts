@@ -1,6 +1,6 @@
 import { minNumber } from "../../validators/minNumber-validator"
 
-describe("MinNumberValidator Test", () => {
+describe(`Test ${minNumber.name}`, () => {
     it("should return false and have default error message", () => {
         const minValue = 10
         const validator = minNumber(minValue)
@@ -17,7 +17,7 @@ describe("MinNumberValidator Test", () => {
     })
 })
 
-describe("MinNumberValidator Test", () => {
+describe(`Test ${minNumber.name}`, () => {
     it("should return false and have custom error message", () => {
         const minValue = 2
         const customErrorMessage = "Minimum order for this item is 2"
@@ -34,7 +34,7 @@ describe("MinNumberValidator Test", () => {
     })
 })
 
-describe("MinNumberValidator Test", () => {
+describe(`Test ${minNumber.name}`, () => {
     it("should return true and have custom error message", () => {
         const minValue = 2
         const customErrorMessage = "Minimum order for this item is 2"
