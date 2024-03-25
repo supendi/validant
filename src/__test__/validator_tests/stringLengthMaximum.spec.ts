@@ -1,10 +1,10 @@
-import { stringLengthMinimum } from "../../validators/stringLengthMinimum"
+import { stringLengthMaximum } from "../../validators/stringLengthMaximum"
 
-describe(`Test ${stringLengthMinimum.name}`, () => {
+describe(`Test ${stringLengthMaximum.name}`, () => {
     it("should return false and have default error message", () => {
-        const minLen = 10
-        const defaultValidatorErrorMessage = `The minimum string is ${minLen}.`
-        const validator = stringLengthMinimum(minLen, defaultValidatorErrorMessage)
+        const maxLength = 3
+        const defaultValidatorErrorMessage = `The max string is ${maxLength}.`
+        const validator = stringLengthMaximum(maxLength, defaultValidatorErrorMessage)
 
         expect(validator).not.toBeUndefined()
         expect(validator.validate).not.toBeUndefined()
@@ -16,11 +16,11 @@ describe(`Test ${stringLengthMinimum.name}`, () => {
     })
 })
 
-describe(`Test ${stringLengthMinimum.name}`, () => {
+describe(`Test ${stringLengthMaximum.name}`, () => {
     it("should return false and have custom error message", () => {
-        const minLen = 10
+        const maxLength = 5
         const defaultValidatorErrorMessage = `Hey we want a string with minimum length = 10.`
-        const validator = stringLengthMinimum(minLen, defaultValidatorErrorMessage)
+        const validator = stringLengthMaximum(maxLength, defaultValidatorErrorMessage)
 
         expect(validator).not.toBeUndefined()
         expect(validator.validate).not.toBeUndefined()
@@ -32,11 +32,11 @@ describe(`Test ${stringLengthMinimum.name}`, () => {
     })
 })
 
-describe(`Test ${stringLengthMinimum.name}`, () => {
+describe(`Test ${stringLengthMaximum.name}`, () => {
     it("should return true and have custom error message", () => {
-        const minLen = 5
-        const defaultValidatorErrorMessage = `The minimum length string is ${minLen}.`
-        const validator = stringLengthMinimum(1, defaultValidatorErrorMessage)
+        const maxLength = 5
+        const defaultValidatorErrorMessage = `The max length string is ${maxLength}.`
+        const validator = stringLengthMaximum(maxLength, defaultValidatorErrorMessage)
 
         expect(validator).not.toBeUndefined()
         expect(validator.validate).not.toBeUndefined()
@@ -48,11 +48,11 @@ describe(`Test ${stringLengthMinimum.name}`, () => {
     })
 })
 
-describe(`Test ${stringLengthMinimum.name}`, () => {
-    it("should return true and have custom error message", () => {
-        const minLen = 5
-        const defaultValidatorErrorMessage = `The minimum length string is ${minLen}.`
-        const validator = stringLengthMinimum(1, defaultValidatorErrorMessage)
+describe(`Test ${stringLengthMaximum.name}`, () => {
+    it("should return false and have custom error message", () => {
+        const maxLength = 5
+        const defaultValidatorErrorMessage = `The max length string is ${maxLength}.`
+        const validator = stringLengthMaximum(maxLength, defaultValidatorErrorMessage)
 
         expect(validator).not.toBeUndefined()
         expect(validator.validate).not.toBeUndefined()
@@ -60,15 +60,15 @@ describe(`Test ${stringLengthMinimum.name}`, () => {
 
         var isValid = validator.validate("asdfasdfasdf")
 
-        expect(isValid).toEqual(true)
+        expect(isValid).toEqual(false)
     })
 })
 
-describe(`Test ${stringLengthMinimum.name}`, () => {
+describe(`Test ${stringLengthMaximum.name}`, () => {
     it("should return true and have custom error message", () => {
-        const minLen = 5
-        const defaultValidatorErrorMessage = `The minimum length string is ${minLen}.`
-        const validator = stringLengthMinimum(1, defaultValidatorErrorMessage)
+        const maxLength = 1000
+        const defaultValidatorErrorMessage = `The max length string is ${maxLength}.`
+        const validator = stringLengthMaximum(maxLength, defaultValidatorErrorMessage)
 
         expect(validator).not.toBeUndefined()
         expect(validator.validate).not.toBeUndefined()

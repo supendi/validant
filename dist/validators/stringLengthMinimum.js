@@ -20,6 +20,6 @@ function stringLengthMinimum(minLen, errorMessage) {
             throw new Error(`${stringLengthMinimum}: The value is not string. The value was ${value}`);
         }
         return value.toString().length >= minLen;
-    }, errorMessage ? errorMessage : `The minimum string is ${minLen}.`, "Specifies the minimum length of a string.");
+    }, errorMessage ? errorMessage : `The minimum length string is ${minLen}.`, "Specifies the minimum length of a string.");
 }
 exports.stringLengthMinimum = stringLengthMinimum;

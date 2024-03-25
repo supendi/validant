@@ -21,5 +21,5 @@ export function stringLengthMinimum(minLen: number, errorMessage?: string) {
         }
 
         return value.toString().length >= minLen
-    }, errorMessage ? errorMessage : `The minimum string is ${minLen}.`, "Specifies the minimum length of a string.")
+    }, errorMessage ? errorMessage : `The minimum length string is ${minLen}.`, "Specifies the minimum length of a string.")
 }

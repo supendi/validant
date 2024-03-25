@@ -617,7 +617,7 @@ describe("getErrorOf complex validations", () => {
 
         const actual1 = getErrorOf(customer, rule)
         const expected1: ErrorOf<Customer> = {
-            name: ["This field should not contain any numbers or symbols. Accept only A-Z a-z and spaces.", `The minimum string is ${stringLenMin}.`],
+            name: ["This field should not contain any numbers or symbols. Accept only A-Z a-z and spaces.", `The minimum length string is ${stringLenMin}.`],
             email: ["Invalid email address. The valid email example: john.doe@example.com."],
         }
 
