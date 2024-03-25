@@ -10,4 +10,7 @@ import { required } from './required';
 import { minSumOf } from './minSumOf';
 import { maxSumOf } from './maxSumOf';
 import { propertyValidator } from './propertyValidator';
-export { elementOf, emailAddress, equalToPropertyValue, arrayMaxLength, maxNumber, arrayMinLength, minNumber, regularExpression, required, minSumOf, maxSumOf, propertyValidator, };
+import { alphabetOnly } from './alphabetOnly';
+import { stringLengthMinimum } from './stringLengthMinimum';
+import { stringLengthMaximum } from './stringLengthMaximum';
+export { elementOf, emailAddress, equalToPropertyValue, arrayMaxLength, maxNumber, arrayMinLength, minNumber, regularExpression, required, minSumOf, maxSumOf, propertyValidator, alphabetOnly, stringLengthMinimum, stringLengthMaximum };

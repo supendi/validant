@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.propertyValidator = exports.maxSumOf = exports.minSumOf = exports.required = exports.regularExpression = exports.minNumber = exports.arrayMinLength = exports.maxNumber = exports.arrayMaxLength = exports.equalToPropertyValue = exports.emailAddress = exports.elementOf = void 0;
+exports.stringLengthMaximum = exports.stringLengthMinimum = exports.alphabetOnly = exports.propertyValidator = exports.maxSumOf = exports.minSumOf = exports.required = exports.regularExpression = exports.minNumber = exports.arrayMinLength = exports.maxNumber = exports.arrayMaxLength = exports.equalToPropertyValue = exports.emailAddress = exports.elementOf = void 0;
 const elementOf_1 = require("./elementOf");
 Object.defineProperty(exports, "elementOf", { enumerable: true, get: function () { return elementOf_1.elementOf; } });
 const emailAddress_1 = require("./emailAddress");
@@ -25,3 +25,9 @@ const maxSumOf_1 = require("./maxSumOf");
 Object.defineProperty(exports, "maxSumOf", { enumerable: true, get: function () { return maxSumOf_1.maxSumOf; } });
 const propertyValidator_1 = require("./propertyValidator");
 Object.defineProperty(exports, "propertyValidator", { enumerable: true, get: function () { return propertyValidator_1.propertyValidator; } });
+const alphabetOnly_1 = require("./alphabetOnly");
+Object.defineProperty(exports, "alphabetOnly", { enumerable: true, get: function () { return alphabetOnly_1.alphabetOnly; } });
+const stringLengthMinimum_1 = require("./stringLengthMinimum");
+Object.defineProperty(exports, "stringLengthMinimum", { enumerable: true, get: function () { return stringLengthMinimum_1.stringLengthMinimum; } });
+const stringLengthMaximum_1 = require("./stringLengthMaximum");
+Object.defineProperty(exports, "stringLengthMaximum", { enumerable: true, get: function () { return stringLengthMaximum_1.stringLengthMaximum; } });
