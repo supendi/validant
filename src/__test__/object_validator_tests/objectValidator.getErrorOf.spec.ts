@@ -6,6 +6,8 @@ import { maxNumber } from "../../validators/maxNumber"
 import { arrayMinLength } from "../../validators/arrayMinLength"
 import { minNumber } from "../../validators/minNumber"
 import { required } from "../../validators/required"
+import { alphabetOnly } from "../../validators/alphabetOnly"
+import { stringLengthMinimum } from "../../validators/stringLengthMinimum"
 
 describe("getErrorOf Simple Person Test", () => {
     it("Person name should return errors", () => {
@@ -584,6 +586,53 @@ describe("getErrorOf complex validations", () => {
                 ]
             }
         }
+        expect(actual2).toEqual(expected2)
+    })
+})
+
+
+describe("getErrorOf complex validations", () => {
+    it("Should return errors", () => {
+        interface Customer {
+            id: number
+            name: string
+            email: string,
+            address: { street: string }[]
+        }
+        const stringLenMin = 10
+        const rule: ValidationRule<Customer> = {
+            name: [required(), alphabetOnly(), stringLengthMinimum(stringLenMin)],
+            email: [required(), emailAddress()],
+            address: {
+                validatorOfArray: []
+            }
+        }
+
+        const customer: Customer = {
+            id: 1,
+            name: "notN@me",
+            email: "invalid",
+            address: []
+        }
+
+        const actual1 = getErrorOf(customer, rule)
+        const expected1: ErrorOf<Customer> = {
+            name: ["This field should not contain any numbers or symbols. Accept only A-Z a-z and spaces.", `The minimum string is ${stringLenMin}.`],
+            email: ["Invalid email address. The valid email example: john.doe@example.com."],
+        }
+
+        expect(actual1).toEqual(expected1)
+
+        const customer2: Customer = {
+            id: 1,
+            name: "This is the correct name",
+            email: "invalid@gmail.com",
+            address: []
+        }
+
+        const actual2 = getErrorOf(customer2, rule)
+        const expected2: ErrorOf<Customer> = undefined
+
         expect(actual2).toEqual(expected2)
     })
 })

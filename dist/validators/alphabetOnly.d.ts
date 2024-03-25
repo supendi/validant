@@ -4,4 +4,4 @@
  * @param errorMessage
  * @returns
  */
-export declare function alphabetOnly(errorMessage?: string): import("..").PropertyValidator<unknown, unknown>;
+export declare function alphabetOnly(errorMessage?: string): import("..").PropertyValidator<string, unknown>;

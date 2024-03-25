@@ -7,6 +7,8 @@ const maxNumber_1 = require("../../validators/maxNumber");
 const arrayMinLength_1 = require("../../validators/arrayMinLength");
 const minNumber_1 = require("../../validators/minNumber");
 const required_1 = require("../../validators/required");
+const alphabetOnly_1 = require("../../validators/alphabetOnly");
+const stringLengthMinimum_1 = require("../../validators/stringLengthMinimum");
 describe("getErrorOf Simple Person Test", () => {
     it("Person name should return errors", () => {
         const rule = {
@@ -428,6 +430,39 @@ describe("getErrorOf complex validations", () => {
                 ]
             }
         };
+        expect(actual2).toEqual(expected2);
+    });
+});
+describe("getErrorOf complex validations", () => {
+    it("Should return errors", () => {
+        const stringLenMin = 10;
+        const rule = {
+            name: [(0, required_1.required)(), (0, alphabetOnly_1.alphabetOnly)(), (0, stringLengthMinimum_1.stringLengthMinimum)(stringLenMin)],
+            email: [(0, required_1.required)(), (0, emailAddress_1.emailAddress)()],
+            address: {
+                validatorOfArray: []
+            }
+        };
+        const customer = {
+            id: 1,
+            name: "notN@me",
+            email: "invalid",
+            address: []
+        };
+        const actual1 = (0, objectValidator_1.getErrorOf)(customer, rule);
+        const expected1 = {
+            name: ["This field should not contain any numbers or symbols. Accept only A-Z a-z and spaces.", `The minimum string is ${stringLenMin}.`],
+            email: ["Invalid email address. The valid email example: john.doe@example.com."],
+        };
+        expect(actual1).toEqual(expected1);
+        const customer2 = {
+            id: 1,
+            name: "This is the correct name",
+            email: "invalid@gmail.com",
+            address: []
+        };
+        const actual2 = (0, objectValidator_1.getErrorOf)(customer2, rule);
+        const expected2 = undefined;
         expect(actual2).toEqual(expected2);
     });
 });
