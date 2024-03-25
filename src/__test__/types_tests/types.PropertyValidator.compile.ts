@@ -3,7 +3,6 @@ import { PropertyValidator, ValidatorFunc } from "../../types"
 /**
  * Ensure all the code below compiled
  */
-
 describe("PropertyValidator Test", () => {
     it("Should compile", () => {
 

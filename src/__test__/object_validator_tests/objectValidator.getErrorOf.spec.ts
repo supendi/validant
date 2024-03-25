@@ -1,11 +1,11 @@
 import { getErrorOf } from "../../objectValidator"
 import { ErrorOf, ValidationRule } from "../../types"
-import { elementOf } from "../../validators/elementOf-validator"
-import { emailAddress } from "../../validators/emailAddress-validator"
-import { maxNumber } from "../../validators/maxNumber-validator"
-import { arrayMinLength } from "../../validators/arrayMinLength-validator"
-import { minNumber } from "../../validators/minNumber-validator"
-import { required } from "../../validators/required-validator"
+import { elementOf } from "../../validators/elementOf"
+import { emailAddress } from "../../validators/emailAddress"
+import { maxNumber } from "../../validators/maxNumber"
+import { arrayMinLength } from "../../validators/arrayMinLength"
+import { minNumber } from "../../validators/minNumber"
+import { required } from "../../validators/required"
 
 describe("getErrorOf Simple Person Test", () => {
     it("Person name should return errors", () => {

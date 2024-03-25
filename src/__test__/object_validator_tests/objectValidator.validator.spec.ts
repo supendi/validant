@@ -1,8 +1,8 @@
-import validator, { maxSumOf } from "../../index"
+import { validator, maxSumOf } from "../../index"
 import { ValidationResult, ValidationRule } from "../../types"
 import { elementOf, emailAddress, maxNumber, arrayMinLength, required, minNumber } from "../../validators"
-import { propertyValidator } from "../../validators/property-validator"
-import { minSumOf } from "../../validators/minSumOf-validator"
+import { propertyValidator } from "../../validators/propertyValidator"
+import { minSumOf } from "../../validators/minSumOf"
 
 const defaultMessage = { okMessage: "Good to go.", errorMessage: "One or more validation errors occurred." }
 
@@ -518,7 +518,7 @@ describe("Validator complex validations", () => {
                 email: [required(), emailAddress()]
             },
             orderItems: {
-                validatorOfArray: [arrayMinLength(4), minSumOf("quantity", 100,)],
+                validatorOfArray: [arrayMinLength(4), minSumOf("quantity", 100)],
                 validationRuleOfArrayElement: orderItemsRule
             }
         }
@@ -934,8 +934,6 @@ describe("Validator Test The Custom Validator", () => {
         expect(actual1).toEqual(expected1)
     })
 })
-
-
 
 describe("Validator Test Date Test", () => {
     it("Test date value", () => {

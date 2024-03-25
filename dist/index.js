@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.propertyValidator = exports.maxSumOf = exports.minSumOf = exports.required = exports.regularExpression = exports.minNumber = exports.maxNumber = exports.equalToPropertyValue = exports.emailAddress = exports.elementOf = exports.arrayMinLength = exports.arrayMaxLength = void 0;
+exports.propertyValidator = exports.maxSumOf = exports.minSumOf = exports.required = exports.regularExpression = exports.minNumber = exports.maxNumber = exports.equalToPropertyValue = exports.emailAddress = exports.elementOf = exports.arrayMinLength = exports.arrayMaxLength = exports.validator = void 0;
 const objectValidator_1 = require("./objectValidator");
+exports.validator = objectValidator_1.default;
 const validators_1 = require("./validators/");
 Object.defineProperty(exports, "emailAddress", { enumerable: true, get: function () { return validators_1.emailAddress; } });
 Object.defineProperty(exports, "equalToPropertyValue", { enumerable: true, get: function () { return validators_1.equalToPropertyValue; } });
@@ -15,4 +16,3 @@ Object.defineProperty(exports, "regularExpression", { enumerable: true, get: fun
 Object.defineProperty(exports, "required", { enumerable: true, get: function () { return validators_1.required; } });
 Object.defineProperty(exports, "elementOf", { enumerable: true, get: function () { return validators_1.elementOf; } });
 Object.defineProperty(exports, "propertyValidator", { enumerable: true, get: function () { return validators_1.propertyValidator; } });
-exports.default = objectValidator_1.default;

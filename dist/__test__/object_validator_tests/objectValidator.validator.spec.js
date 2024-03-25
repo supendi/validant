@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const index_1 = require("../../index");
 const validators_1 = require("../../validators");
-const property_validator_1 = require("../../validators/property-validator");
-const minSumOf_validator_1 = require("../../validators/minSumOf-validator");
+const propertyValidator_1 = require("../../validators/propertyValidator");
+const minSumOf_1 = require("../../validators/minSumOf");
 const defaultMessage = { okMessage: "Good to go.", errorMessage: "One or more validation errors occurred." };
 describe("Validator Simple Person Test", () => {
     it("Person name should return errors", () => {
@@ -13,7 +13,7 @@ describe("Validator Simple Person Test", () => {
         const person = {
             name: "",
         };
-        const actual = index_1.default.validate(person, rule);
+        const actual = index_1.validator.validate(person, rule);
         const expected = {
             message: defaultMessage.errorMessage,
             isValid: false,
@@ -38,7 +38,7 @@ describe("Validator Simple Person With Child Test", () => {
                 name: "",
             }
         };
-        const actual = index_1.default.validate(parent, rule);
+        const actual = index_1.validator.validate(parent, rule);
         const expected = {
             message: defaultMessage.errorMessage,
             isValid: false,
@@ -90,7 +90,7 @@ describe("Validator Nested Object Test with nested address", () => {
                 name: "",
             }
         };
-        const actual = index_1.default.validate(parent, rule);
+        const actual = index_1.validator.validate(parent, rule);
         const expected = {
             message: defaultMessage.errorMessage,
             isValid: false,
@@ -133,7 +133,7 @@ describe("Validator test with children array", () => {
                 },
             ]
         };
-        const actual = index_1.default.validate(person, rule);
+        const actual = index_1.validator.validate(person, rule);
         const expected = {
             message: defaultMessage.errorMessage,
             isValid: false,
@@ -168,7 +168,7 @@ describe("Validator test with children array", () => {
             name: "",
             children: []
         };
-        const actual = index_1.default.validate(person, rule);
+        const actual = index_1.validator.validate(person, rule);
         const expected = {
             message: defaultMessage.errorMessage,
             isValid: false,
@@ -201,7 +201,7 @@ describe("Validator test with Order and Order item", () => {
             orderNumber: "",
             orderItems: []
         };
-        const actual1 = index_1.default.validate(newOrder1, rule);
+        const actual1 = index_1.validator.validate(newOrder1, rule);
         const expected1 = {
             message: defaultMessage.errorMessage,
             isValid: false,
@@ -233,7 +233,7 @@ describe("Validator test with Order and Order item", () => {
                 },
             ]
         };
-        const actual2 = index_1.default.validate(newOrder2, rule);
+        const actual2 = index_1.validator.validate(newOrder2, rule);
         const expected2 = {
             message: defaultMessage.errorMessage,
             isValid: false,
@@ -303,7 +303,7 @@ describe("Validator test with Order and Order item", () => {
                 },
             ]
         };
-        const actual1 = index_1.default.validate(newOrder1, rule);
+        const actual1 = index_1.validator.validate(newOrder1, rule);
         const expected1 = {
             message: defaultMessage.errorMessage,
             isValid: false,
@@ -316,7 +316,7 @@ describe("Validator test with Order and Order item", () => {
             }
         };
         expect(actual1).toEqual(expected1);
-        const actual2 = index_1.default.validate(newOrder2, rule);
+        const actual2 = index_1.validator.validate(newOrder2, rule);
         const expected2 = {
             message: defaultMessage.errorMessage,
             isValid: false,
@@ -365,7 +365,7 @@ describe("Validator complex validations", () => {
                 email: [(0, validators_1.required)(), (0, validators_1.emailAddress)()]
             },
             orderItems: {
-                validatorOfArray: [(0, validators_1.arrayMinLength)(4), (0, minSumOf_validator_1.minSumOf)("quantity", 100)],
+                validatorOfArray: [(0, validators_1.arrayMinLength)(4), (0, minSumOf_1.minSumOf)("quantity", 100)],
                 validationRuleOfArrayElement: orderItemsRule
             }
         };
@@ -380,7 +380,7 @@ describe("Validator complex validations", () => {
             },
             orderItems: []
         };
-        const actual1 = index_1.default.validate(newOrder1, rule);
+        const actual1 = index_1.validator.validate(newOrder1, rule);
         const expected1 = {
             message: defaultMessage.errorMessage,
             isValid: false,
@@ -428,7 +428,7 @@ describe("Validator complex validations", () => {
                 },
             ]
         };
-        const actual2 = index_1.default.validate(newOrder2, rule);
+        const actual2 = index_1.validator.validate(newOrder2, rule);
         const expected2 = {
             message: defaultMessage.errorMessage,
             isValid: false,
@@ -511,7 +511,7 @@ describe("Validator test maximum sum of", () => {
                 },
             ]
         };
-        const actual1 = index_1.default.validate(newOrder1, rule);
+        const actual1 = index_1.validator.validate(newOrder1, rule);
         const expected1 = {
             message: defaultMessage.errorMessage,
             isValid: false,
@@ -588,7 +588,7 @@ describe("Validator complex validations", () => {
                 },
             ]
         };
-        const actual1 = index_1.default.validate(newOrder1, rule);
+        const actual1 = index_1.validator.validate(newOrder1, rule);
         const expected1 = {
             message: defaultMessage.okMessage,
             isValid: true,
@@ -610,13 +610,13 @@ describe("Validator Test The Custom Validator", () => {
             orderNumber: [(0, validators_1.required)()],
             customer: {
                 id: [(0, validators_1.required)(), (0, validators_1.elementOf)(customerIds)],
-                name: [(0, validators_1.required)(), (0, property_validator_1.propertyValidator)(function (value, object) {
+                name: [(0, validators_1.required)(), (0, propertyValidator_1.propertyValidator)(function (value, object) {
                         return false;
                     }, "Error customer name")],
                 email: [(0, validators_1.required)(), (0, validators_1.emailAddress)()]
             },
             orderItems: {
-                validatorOfArray: [(0, validators_1.arrayMinLength)(4), (0, property_validator_1.propertyValidator)(function (value, object) {
+                validatorOfArray: [(0, validators_1.arrayMinLength)(4), (0, propertyValidator_1.propertyValidator)(function (value, object) {
                         return true;
                     }, "Order item has error.")],
                 validationRuleOfArrayElement: orderItemsRule
@@ -658,7 +658,7 @@ describe("Validator Test The Custom Validator", () => {
                 },
             ]
         };
-        const actual1 = index_1.default.validate(newOrder1, rule);
+        const actual1 = index_1.validator.validate(newOrder1, rule);
         const expected1 = {
             message: defaultMessage.errorMessage,
             isValid: false,
@@ -677,7 +677,7 @@ describe("Validator Test Date Test", () => {
         const rule = {
             expiredDate: [(0, validators_1.required)()],
         };
-        const actual1 = index_1.default.validate(product, rule);
+        const actual1 = index_1.validator.validate(product, rule);
         const expected1 = {
             message: defaultMessage.errorMessage,
             isValid: false,
@@ -686,7 +686,7 @@ describe("Validator Test Date Test", () => {
             },
         };
         expect(actual1).toEqual(expected1);
-        const actual2 = index_1.default.validate({
+        const actual2 = index_1.validator.validate({
             expiredDate: new Date()
         }, rule);
         const expected2 = {

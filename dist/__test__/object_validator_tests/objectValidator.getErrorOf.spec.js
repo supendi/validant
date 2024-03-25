@@ -1,16 +1,16 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const objectValidator_1 = require("../../objectValidator");
-const elementOf_validator_1 = require("../../validators/elementOf-validator");
-const emailAddress_validator_1 = require("../../validators/emailAddress-validator");
-const maxNumber_validator_1 = require("../../validators/maxNumber-validator");
-const arrayMinLength_validator_1 = require("../../validators/arrayMinLength-validator");
-const minNumber_validator_1 = require("../../validators/minNumber-validator");
-const required_validator_1 = require("../../validators/required-validator");
+const elementOf_1 = require("../../validators/elementOf");
+const emailAddress_1 = require("../../validators/emailAddress");
+const maxNumber_1 = require("../../validators/maxNumber");
+const arrayMinLength_1 = require("../../validators/arrayMinLength");
+const minNumber_1 = require("../../validators/minNumber");
+const required_1 = require("../../validators/required");
 describe("getErrorOf Simple Person Test", () => {
     it("Person name should return errors", () => {
         const rule = {
-            name: [(0, required_validator_1.required)()]
+            name: [(0, required_1.required)()]
         };
         const person = {
             name: "",
@@ -25,9 +25,9 @@ describe("getErrorOf Simple Person Test", () => {
 describe("getErrorOf Simple Person With Child Test", () => {
     it("Parent and child name should return errors", () => {
         const rule = {
-            name: [(0, required_validator_1.required)()],
+            name: [(0, required_1.required)()],
             child: {
-                name: [(0, required_validator_1.required)()]
+                name: [(0, required_1.required)()]
             }
         };
         const parent = {
@@ -49,21 +49,21 @@ describe("getErrorOf Simple Person With Child Test", () => {
 describe("getErrorOf Nested Object Test with nested address", () => {
     it("Nested object test should return errors", () => {
         const rule = {
-            name: [(0, required_validator_1.required)()],
+            name: [(0, required_1.required)()],
             address: {
-                street: [(0, required_validator_1.required)()],
+                street: [(0, required_1.required)()],
                 city: {
-                    name: [(0, required_validator_1.required)()],
+                    name: [(0, required_1.required)()],
                     country: {
-                        name: [(0, required_validator_1.required)()],
+                        name: [(0, required_1.required)()],
                         continent: {
-                            name: [(0, required_validator_1.required)()],
+                            name: [(0, required_1.required)()],
                         }
                     }
                 }
             },
             child: {
-                name: [(0, required_validator_1.required)()]
+                name: [(0, required_1.required)()]
             }
         };
         const parent = {
@@ -109,7 +109,7 @@ describe("getErrorOf Nested Object Test with nested address", () => {
 describe("getErrorOf test with children array", () => {
     it("Children has to contain suberrors", () => {
         const rule = {
-            name: [(0, required_validator_1.required)()],
+            name: [(0, required_1.required)()],
         };
         rule.children = {
             validationRuleOfArrayElement: rule
@@ -143,10 +143,10 @@ describe("getErrorOf test with children array", () => {
 describe("getErrorOf test with children array", () => {
     it("Children has to contain errors", () => {
         const rule = {
-            name: [(0, required_validator_1.required)()],
+            name: [(0, required_1.required)()],
         };
         rule.children = {
-            validatorOfArray: [(0, arrayMinLength_validator_1.arrayMinLength)(1, "Please add at least one child.")],
+            validatorOfArray: [(0, arrayMinLength_1.arrayMinLength)(1, "Please add at least one child.")],
             validationRuleOfArrayElement: rule
         };
         const person = {
@@ -166,13 +166,13 @@ describe("getErrorOf test with children array", () => {
 describe("getErrorOf test with Order and Order item", () => {
     it("Validating order item approach 1", () => {
         const rule = {
-            orderDate: [(0, required_validator_1.required)()],
-            orderNumber: [(0, required_validator_1.required)()],
+            orderDate: [(0, required_1.required)()],
+            orderNumber: [(0, required_1.required)()],
             orderItems: {
-                validatorOfArray: [(0, arrayMinLength_validator_1.arrayMinLength)(1, "Please add at least one order item.")],
+                validatorOfArray: [(0, arrayMinLength_1.arrayMinLength)(1, "Please add at least one order item.")],
                 validationRuleOfArrayElement: {
-                    productId: [(0, required_validator_1.required)()],
-                    quantity: [(0, minNumber_validator_1.minNumber)(1)],
+                    productId: [(0, required_1.required)()],
+                    quantity: [(0, minNumber_1.minNumber)(1)],
                 }
             }
         };
@@ -240,14 +240,14 @@ describe("getErrorOf test with Order and Order item", () => {
 describe("getErrorOf test with Order and Order item", () => {
     it("Validating order item approach 2, separate the validation rule", () => {
         const orderItemsRule = {
-            productId: [(0, required_validator_1.required)()],
-            quantity: [(0, minNumber_validator_1.minNumber)(1)],
+            productId: [(0, required_1.required)()],
+            quantity: [(0, minNumber_1.minNumber)(1)],
         };
         const rule = {
-            orderDate: [(0, required_validator_1.required)()],
-            orderNumber: [(0, required_validator_1.required)()],
+            orderDate: [(0, required_1.required)()],
+            orderNumber: [(0, required_1.required)()],
             orderItems: {
-                validatorOfArray: [(0, arrayMinLength_validator_1.arrayMinLength)(3)],
+                validatorOfArray: [(0, arrayMinLength_1.arrayMinLength)(3)],
                 validationRuleOfArrayElement: orderItemsRule
             }
         };
@@ -318,19 +318,19 @@ describe("getErrorOf complex validations", () => {
         const productIds = [1, 2, 3, 4, 5];
         const customerIds = [10, 11, 12, 13];
         const orderItemsRule = {
-            productId: [(0, required_validator_1.required)(), (0, elementOf_validator_1.elementOf)(productIds)],
-            quantity: [(0, minNumber_validator_1.minNumber)(1), (0, maxNumber_validator_1.maxNumber)(5)],
+            productId: [(0, required_1.required)(), (0, elementOf_1.elementOf)(productIds)],
+            quantity: [(0, minNumber_1.minNumber)(1), (0, maxNumber_1.maxNumber)(5)],
         };
         const rule = {
-            orderDate: [(0, required_validator_1.required)()],
-            orderNumber: [(0, required_validator_1.required)()],
+            orderDate: [(0, required_1.required)()],
+            orderNumber: [(0, required_1.required)()],
             customer: {
-                id: [(0, required_validator_1.required)(), (0, elementOf_validator_1.elementOf)(customerIds)],
-                name: [(0, required_validator_1.required)()],
-                email: [(0, required_validator_1.required)(), (0, emailAddress_validator_1.emailAddress)()]
+                id: [(0, required_1.required)(), (0, elementOf_1.elementOf)(customerIds)],
+                name: [(0, required_1.required)()],
+                email: [(0, required_1.required)(), (0, emailAddress_1.emailAddress)()]
             },
             orderItems: {
-                validatorOfArray: [(0, arrayMinLength_validator_1.arrayMinLength)(4)],
+                validatorOfArray: [(0, arrayMinLength_1.arrayMinLength)(4)],
                 validationRuleOfArrayElement: orderItemsRule
             }
         };
