@@ -10,6 +10,9 @@ import { required } from './required'
 import { minSumOf } from './minSumOf'
 import { maxSumOf } from './maxSumOf'
 import { propertyValidator } from './propertyValidator'
+import { alphabetOnly } from './alphabetOnly'
+import { stringLengthMinimum } from './stringLengthMinimum'
+import { stringLengthMaximum } from './stringLengthMaximum'
 
 export {
     elementOf,
@@ -24,4 +27,7 @@ export {
     minSumOf,
     maxSumOf,
     propertyValidator,
+    alphabetOnly,
+    stringLengthMinimum,
+    stringLengthMaximum
 }
