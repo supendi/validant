@@ -122,8 +122,8 @@ describe("Validator test with children array", () => {
             name: [(0, validators_1.required)()],
         };
         rule.children = {
-            validatorOfArray: [(0, validators_1.arrayMinLength)(1)],
-            validationRuleOfArrayElement: rule
+            validators: [(0, validators_1.arrayMinLength)(1)],
+            validationRule: rule
         };
         const person = {
             name: "",
@@ -140,7 +140,7 @@ describe("Validator test with children array", () => {
             errors: {
                 name: ["This field is required."],
                 children: {
-                    errorOfArrayElements: [
+                    errorsEach: [
                         {
                             index: 0,
                             errors: {
@@ -161,8 +161,8 @@ describe("Validator test with children array", () => {
             name: [(0, validators_1.required)()],
         };
         rule.children = {
-            validatorOfArray: [(0, validators_1.arrayMinLength)(1, "Please add at least one child.")],
-            validationRuleOfArrayElement: rule
+            validators: [(0, validators_1.arrayMinLength)(1, "Please add at least one child.")],
+            validationRule: rule
         };
         const person = {
             name: "",
@@ -175,7 +175,7 @@ describe("Validator test with children array", () => {
             errors: {
                 name: ["This field is required."],
                 children: {
-                    errorOfArray: ["Please add at least one child."],
+                    errors: ["Please add at least one child."],
                 }
             }
         };
@@ -188,8 +188,8 @@ describe("Validator test with Order and Order item", () => {
             orderDate: [(0, validators_1.required)()],
             orderNumber: [(0, validators_1.required)()],
             orderItems: {
-                validatorOfArray: [(0, validators_1.arrayMinLength)(1, "Please add at least one order item.")],
-                validationRuleOfArrayElement: {
+                validators: [(0, validators_1.arrayMinLength)(1, "Please add at least one order item.")],
+                validationRule: {
                     productId: [(0, validators_1.required)()],
                     quantity: [(0, validators_1.minNumber)(1)],
                 }
@@ -209,7 +209,7 @@ describe("Validator test with Order and Order item", () => {
                 orderDate: ["This field is required."],
                 orderNumber: ["This field is required."],
                 orderItems: {
-                    errorOfArray: ["Please add at least one order item."],
+                    errors: ["Please add at least one order item."],
                 }
             }
         };
@@ -241,7 +241,7 @@ describe("Validator test with Order and Order item", () => {
                 orderDate: ["This field is required."],
                 orderNumber: ["This field is required."],
                 orderItems: {
-                    errorOfArrayElements: [
+                    errorsEach: [
                         {
                             index: 0,
                             errors: {
@@ -274,8 +274,8 @@ describe("Validator test with Order and Order item", () => {
             orderDate: [(0, validators_1.required)()],
             orderNumber: [(0, validators_1.required)()],
             orderItems: {
-                validatorOfArray: [(0, validators_1.arrayMinLength)(3)],
-                validationRuleOfArrayElement: orderItemsRule
+                validators: [(0, validators_1.arrayMinLength)(3)],
+                validationRule: orderItemsRule
             }
         };
         const newOrder1 = {
@@ -311,7 +311,7 @@ describe("Validator test with Order and Order item", () => {
                 orderDate: ["This field is required."],
                 orderNumber: ["This field is required."],
                 orderItems: {
-                    errorOfArray: ["The minimum length for this field is 3."],
+                    errors: ["The minimum length for this field is 3."],
                 }
             }
         };
@@ -324,8 +324,8 @@ describe("Validator test with Order and Order item", () => {
                 orderDate: ["This field is required."],
                 orderNumber: ["This field is required."],
                 orderItems: {
-                    errorOfArray: ["The minimum length for this field is 3."],
-                    errorOfArrayElements: [
+                    errors: ["The minimum length for this field is 3."],
+                    errorsEach: [
                         {
                             index: 0,
                             errors: {
@@ -365,8 +365,8 @@ describe("Validator complex validations", () => {
                 email: [(0, validators_1.required)(), (0, validators_1.emailAddress)()]
             },
             orderItems: {
-                validatorOfArray: [(0, validators_1.arrayMinLength)(4), (0, minSumOf_1.minSumOf)("quantity", 100)],
-                validationRuleOfArrayElement: orderItemsRule
+                validators: [(0, validators_1.arrayMinLength)(4), (0, minSumOf_1.minSumOf)("quantity", 100)],
+                validationRule: orderItemsRule
             }
         };
         const newOrder1 = {
@@ -393,7 +393,7 @@ describe("Validator complex validations", () => {
                     name: ["This field is required."]
                 },
                 orderItems: {
-                    errorOfArray: ["The minimum length for this field is 4.", "The minimum sum of quantity is 100.",],
+                    errors: ["The minimum length for this field is 4.", "The minimum sum of quantity is 100.",],
                 }
             }
         };
@@ -441,8 +441,8 @@ describe("Validator complex validations", () => {
                     name: ["This field is required."]
                 },
                 orderItems: {
-                    errorOfArray: ["The minimum length for this field is 4.", "The minimum sum of quantity is 100.",],
-                    errorOfArrayElements: [
+                    errors: ["The minimum length for this field is 4.", "The minimum sum of quantity is 100.",],
+                    errorsEach: [
                         {
                             index: 0,
                             errors: {
@@ -483,8 +483,8 @@ describe("Validator test maximum sum of", () => {
                 email: [(0, validators_1.required)(), (0, validators_1.emailAddress)()]
             },
             orderItems: {
-                validatorOfArray: [(0, validators_1.arrayMinLength)(4), (0, index_1.maxSumOf)("quantity", 10)],
-                validationRuleOfArrayElement: orderItemsRule
+                validators: [(0, validators_1.arrayMinLength)(4), (0, index_1.maxSumOf)("quantity", 10)],
+                validationRule: orderItemsRule
             }
         };
         const newOrder1 = {
@@ -524,7 +524,7 @@ describe("Validator test maximum sum of", () => {
                     name: ["This field is required."]
                 },
                 orderItems: {
-                    errorOfArray: ["The minimum length for this field is 4.", "The maximum sum of quantity is 10.",],
+                    errors: ["The minimum length for this field is 4.", "The maximum sum of quantity is 10.",],
                 }
             }
         };
@@ -548,8 +548,8 @@ describe("Validator complex validations", () => {
                 email: [(0, validators_1.required)(), (0, validators_1.emailAddress)()]
             },
             orderItems: {
-                validatorOfArray: [(0, validators_1.arrayMinLength)(4)],
-                validationRuleOfArrayElement: orderItemsRule
+                validators: [(0, validators_1.arrayMinLength)(4)],
+                validationRule: orderItemsRule
             }
         };
         const newOrder1 = {
@@ -616,10 +616,10 @@ describe("Validator Test The Custom Validator", () => {
                 email: [(0, validators_1.required)(), (0, validators_1.emailAddress)()]
             },
             orderItems: {
-                validatorOfArray: [(0, validators_1.arrayMinLength)(4), (0, propertyValidator_1.propertyValidator)(function (value, object) {
+                validators: [(0, validators_1.arrayMinLength)(4), (0, propertyValidator_1.propertyValidator)(function (value, object) {
                         return true;
                     }, "Order item has error.")],
-                validationRuleOfArrayElement: orderItemsRule
+                validationRule: orderItemsRule
             }
         };
         const newOrder1 = {

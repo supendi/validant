@@ -16,8 +16,8 @@ const rule1 = {
 // ensure order items has the correct type check
 const rule2 = {
     orderItems: {
-        validatorOfArray: [(0, validators_1.arrayMinLength)(4)],
-        validationRuleOfArrayElement: {
+        validators: [(0, validators_1.arrayMinLength)(4)],
+        validationRule: {
             id: [(0, validators_1.required)()],
             productId: [],
         }
@@ -32,17 +32,17 @@ const orderItemsRule = {
 // Apply the predefined order item rules
 const rule3 = {
     orderItems: {
-        validatorOfArray: [(0, validators_1.arrayMinLength)(4)],
-        validationRuleOfArrayElement: orderItemsRule
+        validators: [(0, validators_1.arrayMinLength)(4)],
+        validationRule: orderItemsRule
     },
 };
 // Ensure deep type check on order items, see the customer properties
 const rule4 = {
     orderItems: {
-        validatorOfArray: [(0, validators_1.arrayMinLength)(4)],
-        validationRuleOfArrayElement: {
+        validators: [(0, validators_1.arrayMinLength)(4)],
+        validationRule: {
             customers: {
-                validationRuleOfArrayElement: {
+                validationRule: {
                     id: [(0, validators_1.required)(), (0, validators_1.elementOf)(customerIds)],
                     name: [(0, validators_1.required)()],
                     email: [(0, validators_1.required)(), (0, validators_1.emailAddress)()]

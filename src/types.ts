@@ -57,13 +57,13 @@ export type ErrorOfArray<T> = {
      * The error will be represented as:
      * { orderItems: { arrayErrors: ["The minimum order is 5 items"]}}
      */
-    errorOfArray?: string[],
+    errors?: string[],
 
     /**
      * If each element of array need to be validated.
-     * The indexedErrors represents the errors of the each element of the array.
+     * The errorsEach represents the errors of the each element of the array.
      */
-    errorOfArrayElements?: IndexedErrorOf<TypeOfArray<T>>[]
+    errorsEach?: IndexedErrorOf<TypeOfArray<T>>[]
 }
 
 /**
@@ -97,16 +97,17 @@ export type PropertyValidator<TValue, TObject> = {
  * Represents a collection of validation rules.
  * The validation schema should implement this type.
  */
-export type ValidationRule<T> = { [key in keyof T]?: T[key] extends Date ? PropertyValidator<T[key], T>[] : T[key] extends Array<any>
-    ? ValidationRuleForArrayOf<T, T[key]> : T[key] extends object
+export type ValidationRule<T> = { [key in keyof T]?: T[key] extends Date 
+    ? PropertyValidator<T[key], T>[] : T[key] extends Array<any>
+    ? ArrayValidationRule<T, T[key]> : T[key] extends object
     ? ValidationRule<T[key]> : PropertyValidator<T[key], T>[] }
 
 /**
  * Represents validation rule of array of T
  */
-export type ValidationRuleForArrayOf<TObject, TValue> = {
-    validatorOfArray?: PropertyValidator<TValue, TObject>[],
-    validationRuleOfArrayElement?: ValidationRule<TypeOfArray<TValue>>
+export type ArrayValidationRule<TObject, TValue> = {
+    validators?: PropertyValidator<TValue, TObject>[],
+    validationRule?: ValidationRule<TypeOfArray<TValue>>
 }
 
 /**

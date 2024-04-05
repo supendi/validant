@@ -164,7 +164,7 @@ describe("getErrorOf test with children array", () => {
         }
 
         rule.children = {
-            validationRuleOfArrayElement: rule
+            validationRule: rule
         }
 
         const person: Person = {
@@ -181,7 +181,7 @@ describe("getErrorOf test with children array", () => {
         const expected: ErrorOf<Person> = {
             name: ["This field is required."],
             children: {
-                errorOfArrayElements: [
+                errorsEach: [
                     {
                         index: 0,
                         errors: {
@@ -210,8 +210,8 @@ describe("getErrorOf test with children array", () => {
         }
 
         rule.children = {
-            validatorOfArray: [arrayMinLength(1, "Please add at least one child.")],
-            validationRuleOfArrayElement: rule
+            validators: [arrayMinLength(1, "Please add at least one child.")],
+            validationRule: rule
         }
 
         const person: Person = {
@@ -224,7 +224,7 @@ describe("getErrorOf test with children array", () => {
         const expected: ErrorOf<Person> = {
             name: ["This field is required."],
             children: {
-                errorOfArray: ["Please add at least one child."],
+                errors: ["Please add at least one child."],
             }
         }
 
@@ -259,8 +259,8 @@ describe("getErrorOf test with Order and Order item", () => {
             orderDate: [required()],
             orderNumber: [required()],
             orderItems: {
-                validatorOfArray: [arrayMinLength(1, "Please add at least one order item.")],
-                validationRuleOfArrayElement: {
+                validators: [arrayMinLength(1, "Please add at least one order item.")],
+                validationRule: {
                     productId: [required()],
                     quantity: [minNumber(1)],
                 }
@@ -279,7 +279,7 @@ describe("getErrorOf test with Order and Order item", () => {
             orderDate: ["This field is required."],
             orderNumber: ["This field is required."],
             orderItems: {
-                errorOfArray: ["Please add at least one order item."],
+                errors: ["Please add at least one order item."],
             }
         }
         expect(actual1).toEqual(expected1)
@@ -310,7 +310,7 @@ describe("getErrorOf test with Order and Order item", () => {
             orderDate: ["This field is required."],
             orderNumber: ["This field is required."],
             orderItems: {
-                errorOfArrayElements: [
+                errorsEach: [
                     {
                         index: 0,
                         errors: {
@@ -365,8 +365,8 @@ describe("getErrorOf test with Order and Order item", () => {
             orderDate: [required()],
             orderNumber: [required()],
             orderItems: {
-                validatorOfArray: [arrayMinLength(3)],
-                validationRuleOfArrayElement: orderItemsRule
+                validators: [arrayMinLength(3)],
+                validationRule: orderItemsRule
             }
         }
 
@@ -403,7 +403,7 @@ describe("getErrorOf test with Order and Order item", () => {
             orderDate: ["This field is required."],
             orderNumber: ["This field is required."],
             orderItems: {
-                errorOfArray: ["The minimum length for this field is 3."],
+                errors: ["The minimum length for this field is 3."],
             }
         }
         expect(actual1).toEqual(expected1)
@@ -413,8 +413,8 @@ describe("getErrorOf test with Order and Order item", () => {
             orderDate: ["This field is required."],
             orderNumber: ["This field is required."],
             orderItems: {
-                errorOfArray: ["The minimum length for this field is 3."],
-                errorOfArrayElements: [
+                errors: ["The minimum length for this field is 3."],
+                errorsEach: [
                     {
                         index: 0,
                         errors: {
@@ -484,8 +484,8 @@ describe("getErrorOf complex validations", () => {
                 email: [required(), emailAddress()]
             },
             orderItems: {
-                validatorOfArray: [arrayMinLength(4)],
-                validationRuleOfArrayElement: orderItemsRule
+                validators: [arrayMinLength(4)],
+                validationRule: orderItemsRule
             }
         }
 
@@ -511,7 +511,7 @@ describe("getErrorOf complex validations", () => {
                 name: ["This field is required."]
             },
             orderItems: {
-                errorOfArray: ["The minimum length for this field is 4."],
+                errors: ["The minimum length for this field is 4."],
             }
         }
 
@@ -557,8 +557,8 @@ describe("getErrorOf complex validations", () => {
                 name: ["This field is required."]
             },
             orderItems: {
-                errorOfArray: ["The minimum length for this field is 4."],
-                errorOfArrayElements: [
+                errors: ["The minimum length for this field is 4."],
+                errorsEach: [
                     {
                         index: 0,
                         errors: {
@@ -604,7 +604,7 @@ describe("getErrorOf complex validations", () => {
             name: [required(), alphabetOnly(), stringLengthMinimum(stringLenMin)],
             email: [required(), emailAddress()],
             address: {
-                validatorOfArray: []
+                validators: []
             }
         }
 

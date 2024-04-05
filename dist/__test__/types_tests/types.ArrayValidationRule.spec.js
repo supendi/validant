@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * Ensure all the code below compiled
  */
-describe("ValidationRuleArrayOf Simple Person Test", () => {
+describe("ArrayValidationRule Simple Person Test", () => {
     it("Should compile", () => {
         const requiredValidator = {
             description: "Required Validator",
@@ -24,13 +24,13 @@ describe("ValidationRuleArrayOf Simple Person Test", () => {
             age: [requiredValidator, minNumberValidator],
         };
         const arrayOfPersonRule = {
-            validatorOfArray: [requiredValidator],
-            validationRuleOfArrayElement: personRule,
+            validators: [requiredValidator],
+            validationRule: personRule,
         };
         expect(arrayOfPersonRule).not.toBeUndefined();
-        expect(arrayOfPersonRule.validatorOfArray).not.toBeUndefined();
-        expect(Array.isArray(arrayOfPersonRule.validatorOfArray)).toBeTruthy();
-        expect(arrayOfPersonRule.validatorOfArray.length).toEqual(1);
-        expect(arrayOfPersonRule.validatorOfArray[0]).toEqual(requiredValidator);
+        expect(arrayOfPersonRule.validators).not.toBeUndefined();
+        expect(Array.isArray(arrayOfPersonRule.validators)).toBeTruthy();
+        expect(arrayOfPersonRule.validators.length).toEqual(1);
+        expect(arrayOfPersonRule.validators[0]).toEqual(requiredValidator);
     });
 });

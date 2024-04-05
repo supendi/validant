@@ -1,5 +1,5 @@
 import validator from "./objectValidator";
-import { ErrorOf, ValidationRule, ValidationResult, ValidatorFunc, PropertyValidationResult, PropertyValidator, StringifiedErrorOf, StringifiedValidationResult, ValidationRuleForArrayOf, ErrorOfArray, IndexedErrorOf, TypeOfArray } from './types'
+import { ErrorOf, ValidationRule, ValidationResult, ValidatorFunc, PropertyValidationResult, PropertyValidator, StringifiedErrorOf, StringifiedValidationResult, ArrayValidationRule, ErrorOfArray, IndexedErrorOf, TypeOfArray } from './types'
 import { emailAddress, equalToPropertyValue, arrayMaxLength, arrayMinLength, maxNumber, minNumber, minSumOf, maxSumOf, regularExpression, required, elementOf, propertyValidator, alphabetOnly, stringLengthMaximum, stringLengthMinimum } from './validators/'
 
 export { validator }
@@ -33,6 +33,6 @@ export {
     PropertyValidator,
     StringifiedErrorOf,
     StringifiedValidationResult,
-    ValidationRuleForArrayOf,
+    ArrayValidationRule,
     TypeOfArray,
 } 

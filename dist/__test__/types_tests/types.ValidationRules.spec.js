@@ -72,8 +72,8 @@ describe("ValidationRules Complex Person Test", () => {
             }
         };
         personRules.children = {
-            validatorOfArray: [requiredValidator],
-            validationRuleOfArrayElement: {
+            validators: [requiredValidator],
+            validationRule: {
                 name: [requiredValidator],
                 age: [requiredValidator, minNumberValidator],
                 father: {
@@ -114,8 +114,8 @@ describe("ValidationRules Complex Person Test", () => {
         const childrenRules = personRules.children;
         expect(childrenRules).not.toBeUndefined();
         expect(childrenRules).toEqual({
-            validatorOfArray: [requiredValidator],
-            validationRuleOfArrayElement: {
+            validators: [requiredValidator],
+            validationRule: {
                 name: [requiredValidator],
                 age: [requiredValidator, minNumberValidator],
                 father: {
@@ -124,8 +124,8 @@ describe("ValidationRules Complex Person Test", () => {
                 }
             }
         });
-        expect(childrenRules.validatorOfArray.length).toEqual(1);
-        expect(childrenRules.validationRuleOfArrayElement).toEqual({
+        expect(childrenRules.validators.length).toEqual(1);
+        expect(childrenRules.validationRule).toEqual({
             name: [requiredValidator],
             age: [requiredValidator, minNumberValidator],
             father: {
@@ -133,7 +133,7 @@ describe("ValidationRules Complex Person Test", () => {
                 age: [maxNumberValidator],
             }
         });
-        const childrenValidationRule = childrenRules.validationRuleOfArrayElement;
+        const childrenValidationRule = childrenRules.validationRule;
         expect(childrenValidationRule.name).not.toBeUndefined();
         expect(childrenValidationRule.name).toEqual([requiredValidator]);
         expect(childrenValidationRule.age).not.toBeUndefined();

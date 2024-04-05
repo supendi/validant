@@ -72,9 +72,9 @@ const getErrorOf = (object, validationRule) => {
             if (valueIsArray) {
                 const childObject = object[key];
                 const childValidationRule = rule;
-                if (childValidationRule.validatorOfArray) {
-                    for (let index = 0; index < childValidationRule.validatorOfArray.length; index++) {
-                        const propValidator = childValidationRule.validatorOfArray[index];
+                if (childValidationRule.validators) {
+                    for (let index = 0; index < childValidationRule.validators.length; index++) {
+                        const propValidator = childValidationRule.validators[index];
                         if (!propValidator) {
                             continue;
                         }
@@ -91,17 +91,17 @@ const getErrorOf = (object, validationRule) => {
                             if (!errors[key]) {
                                 errors[key] = {};
                             }
-                            if (!errors[key].errorOfArray) {
-                                errors[key].errorOfArray = [];
+                            if (!errors[key].errors) {
+                                errors[key].errors = [];
                             }
-                            errors[key].errorOfArray.push(propValidationResult.errorMessage);
+                            errors[key].errors.push(propValidationResult.errorMessage);
                         }
                     }
                 }
-                if (childValidationRule.validationRuleOfArrayElement) {
+                if (childValidationRule.validationRule) {
                     for (let index = 0; index < value.length; index++) {
                         const element = value[index];
-                        const error = (0, exports.getErrorOf)(element, childValidationRule.validationRuleOfArrayElement);
+                        const error = (0, exports.getErrorOf)(element, childValidationRule.validationRule);
                         if (error) {
                             if (!errors) {
                                 errors = {};
@@ -109,10 +109,10 @@ const getErrorOf = (object, validationRule) => {
                             if (!errors[key]) {
                                 errors[key] = {};
                             }
-                            if (!errors[key].errorOfArrayElements) {
-                                errors[key].errorOfArrayElements = [];
+                            if (!errors[key].errorsEach) {
+                                errors[key].errorsEach = [];
                             }
-                            errors[key].errorOfArrayElements.push({
+                            errors[key].errorsEach.push({
                                 index: index,
                                 errors: error,
                                 validatedObject: element

@@ -1,4 +1,4 @@
-import { ErrorOf, PropertyValidationResult, PropertyValidator, ValidationResult, ValidationRule, ValidationRuleForArrayOf } from "./types";
+import { ErrorOf, PropertyValidationResult, PropertyValidator, ValidationResult, ValidationRule, ArrayValidationRule } from "./types";
 
 /**
  * Do a single validation against single property
@@ -84,10 +84,10 @@ export const getErrorOf = <T>(object: T, validationRule: ValidationRule<T>): Err
             if (valueIsArray) {
 
                 const childObject = object[key]
-                const childValidationRule = rule as ValidationRuleForArrayOf<T, typeof childObject>;
-                if (childValidationRule.validatorOfArray) {
-                    for (let index = 0; index < childValidationRule.validatorOfArray.length; index++) {
-                        const propValidator = childValidationRule.validatorOfArray[index];
+                const childValidationRule = rule as ArrayValidationRule<T, typeof childObject>;
+                if (childValidationRule.validators) {
+                    for (let index = 0; index < childValidationRule.validators.length; index++) {
+                        const propValidator = childValidationRule.validators[index];
 
                         if (!propValidator) {
                             continue
@@ -109,17 +109,17 @@ export const getErrorOf = <T>(object: T, validationRule: ValidationRule<T>): Err
                             if (!errors[key]) {
                                 errors[key as any] = {}
                             }
-                            if (!errors[key as any].errorOfArray) {
-                                errors[key as any].errorOfArray = []
+                            if (!errors[key as any].errors) {
+                                errors[key as any].errors = []
                             }
-                            errors[key as any].errorOfArray.push(propValidationResult.errorMessage)
+                            errors[key as any].errors.push(propValidationResult.errorMessage)
                         }
                     }
                 }
-                if (childValidationRule.validationRuleOfArrayElement) {
+                if (childValidationRule.validationRule) {
                     for (let index = 0; index < value.length; index++) {
                         const element = value[index];
-                        const error = getErrorOf(element, childValidationRule.validationRuleOfArrayElement)
+                        const error = getErrorOf(element, childValidationRule.validationRule)
                         if (error) {
                             if (!errors) {
                                 errors = {}
@@ -127,10 +127,10 @@ export const getErrorOf = <T>(object: T, validationRule: ValidationRule<T>): Err
                             if (!errors[key]) {
                                 errors[key as any] = {}
                             }
-                            if (!errors[key as any].errorOfArrayElements) {
-                                errors[key as any].errorOfArrayElements = []
+                            if (!errors[key as any].errorsEach) {
+                                errors[key as any].errorsEach = []
                             }
-                            errors[key as any].errorOfArrayElements.push({
+                            errors[key as any].errorsEach.push({
                                 index: index,
                                 errors: error,
                                 validatedObject: element
