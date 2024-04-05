@@ -1,7 +1,6 @@
 /**
  * Helps to get the original type of an array type.
- * Example if we have a type of T[],
- * then the TypeOfArray<T[]> is T.
+ * Example: if we have a type of T[], then the TypeOfArray<T[]> is T.
  * See: https://stackoverflow.com/questions/46376468/how-to-get-type-of-array-items
  */
 export declare type TypeOfArray<T> = T extends (infer U)[] ? U : never;
@@ -52,7 +51,7 @@ export declare type ErrorOfArray<T> = {
      * { orderItems: OrderItem[] }
      * If we need the minimum count of order items to be 5 items. Then such error will be exist here.
      * The error will be represented as:
-     * { orderItems: { arrayErrors: ["The minimum order is 5 items"]}}
+     * { orderItems: { errors: ["The minimum order is 5 items"]}}
      */
     errors?: string[];
     /**
@@ -92,9 +91,28 @@ export declare type ValidationRule<T> = {
 };
 /**
  * Represents validation rule of array of T
+ * Example:
+ * {
+        orderItems: {
+            validators: [arrayMinLength(3)],
+            validationRule: {
+                qty: [minNumber(5)]
+            }
+        }
+ * }
  */
 export declare type ArrayValidationRule<TObject, TValue> = {
+    /**
+    * The validator of property where its type is array.
+    * Example:
+    * { orderItems: { validators: [arrayMinLength(5)] }
+    */
     validators?: PropertyValidator<TValue, TObject>[];
+    /**
+     * The validation rule foreach element of an array.
+     * Example:
+     * { orderItems: { validationRule: { qty: [minNumber(5)] } }
+     */
     validationRule?: ValidationRule<TypeOfArray<TValue>>;
 };
 /**
