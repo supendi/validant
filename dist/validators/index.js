@@ -1,14 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.stringLengthMaximum = exports.stringLengthMinimum = exports.alphabetOnly = exports.propertyValidator = exports.maxSumOf = exports.minSumOf = exports.required = exports.regularExpression = exports.minNumber = exports.arrayMinLength = exports.maxNumber = exports.arrayMaxLength = exports.equalToPropertyValue = exports.emailAddress = exports.elementOf = void 0;
+exports.stringLengthMaximum = exports.stringLengthMinimum = exports.alphabetOnly = exports.propertyValidator = exports.maxSumOf = exports.minSumOf = exports.required = exports.regularExpression = exports.minNumber = exports.arrayMinLength = exports.maxNumber = exports.arrayMaxLen = exports.equalToPropertyValue = exports.emailAddress = exports.elementOf = void 0;
 const elementOf_1 = require("./elementOf");
 Object.defineProperty(exports, "elementOf", { enumerable: true, get: function () { return elementOf_1.elementOf; } });
 const emailAddress_1 = require("./emailAddress");
 Object.defineProperty(exports, "emailAddress", { enumerable: true, get: function () { return emailAddress_1.emailAddress; } });
 const equalToPropertyValue_1 = require("./equalToPropertyValue");
 Object.defineProperty(exports, "equalToPropertyValue", { enumerable: true, get: function () { return equalToPropertyValue_1.equalToPropertyValue; } });
-const arrayMaxLength_1 = require("./arrayMaxLength");
-Object.defineProperty(exports, "arrayMaxLength", { enumerable: true, get: function () { return arrayMaxLength_1.arrayMaxLength; } });
+const arrayMaxLen_1 = require("./arrayMaxLen");
+Object.defineProperty(exports, "arrayMaxLen", { enumerable: true, get: function () { return arrayMaxLen_1.arrayMaxLen; } });
 const maxNumber_1 = require("./maxNumber");
 Object.defineProperty(exports, "maxNumber", { enumerable: true, get: function () { return maxNumber_1.maxNumber; } });
 const arrayMinLength_1 = require("./arrayMinLength");

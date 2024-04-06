@@ -5,7 +5,7 @@ import { PropertyValidator, ValidatorFunc } from "../types";
  * @param errorMessage Custom error messages
  * @returns 
  */
-export const arrayMaxLength = <TValue, TObject>(max: number, errorMessage?: string,) => {
+export const arrayMaxLen = <TValue, TObject>(max: number, errorMessage?: string,) => {
 
     let msg = `The maximum length for this field is ${max}.`
     if (errorMessage) {
@@ -17,7 +17,7 @@ export const arrayMaxLength = <TValue, TObject>(max: number, errorMessage?: stri
             return false
         }
         if (max < 0) {
-            console.warn("arrayMaxLength: max length should be >= 0")
+            console.warn(`arrayMaxLen: max length should be >= 0`)
             return false
         }
         const valueIsArray = Array.isArray(value)

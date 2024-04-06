@@ -4,4 +4,4 @@ import { PropertyValidator } from "../types";
  * @param errorMessage Custom error messages
  * @returns
  */
-export declare const arrayMaxLength: <TValue, TObject>(max: number, errorMessage?: string) => PropertyValidator<TValue[], TObject>;
+export declare const arrayMaxLen: <TValue, TObject>(max: number, errorMessage?: string) => PropertyValidator<TValue[], TObject>;

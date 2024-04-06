@@ -1,9 +1,9 @@
-import { arrayMaxLength } from "../../validators/arrayMaxLength"
+import { arrayMaxLen } from "../../validators/arrayMaxLen"
 
-describe(`Test ${arrayMaxLength.name}`, () => {
+describe(`Test ${arrayMaxLen.name}`, () => {
     it("should return false and have default error message", () => {
         const maxValue = 2
-        const validator = arrayMaxLength<number, any>(maxValue)
+        const validator = arrayMaxLen<number, any>(maxValue)
         const myArray = [1, 2, 3]
         const defaultValidatorErrorMessage = `The maximum length for this field is ${maxValue}.`
 
@@ -17,11 +17,11 @@ describe(`Test ${arrayMaxLength.name}`, () => {
     })
 })
 
-describe(`Test ${arrayMaxLength.name}`, () => {
+describe(`Test ${arrayMaxLen.name}`, () => {
     it("should return false and have custom error message", () => {
         const maxValue = 1
         const customErrorMessage = `The maximum length for this field is ${maxValue}`
-        const validator = arrayMaxLength(maxValue, customErrorMessage)
+        const validator = arrayMaxLen(maxValue, customErrorMessage)
         const orderItems = [1, 2]
 
         expect(validator).not.toBeUndefined()
@@ -34,11 +34,11 @@ describe(`Test ${arrayMaxLength.name}`, () => {
     })
 })
 
-describe(`Test ${arrayMaxLength.name}`, () => {
+describe(`Test ${arrayMaxLen.name}`, () => {
     it("should return true and have custom error message", () => {
         const maxValue = 2
         const customErrorMessage = `The maximum length for this field is ${maxValue}`
-        const validator = arrayMaxLength(maxValue, customErrorMessage)
+        const validator = arrayMaxLen(maxValue, customErrorMessage)
         const orderItems = [
             101,
             10

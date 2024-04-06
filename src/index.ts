@@ -1,11 +1,11 @@
 import validator from "./objectValidator";
 import { ErrorOf, ValidationRule, ValidationResult, ValidatorFunc, PropertyValidationResult, PropertyValidator, StringifiedErrorOf, StringifiedValidationResult, ArrayValidationRule, ErrorOfArray, IndexedErrorOf, TypeOfArray } from './types'
-import { emailAddress, equalToPropertyValue, arrayMaxLength, arrayMinLength, maxNumber, minNumber, minSumOf, maxSumOf, regularExpression, required, elementOf, propertyValidator, alphabetOnly, stringLengthMaximum, stringLengthMinimum } from './validators/'
+import { emailAddress, equalToPropertyValue, arrayMaxLen, arrayMinLength, maxNumber, minNumber, minSumOf, maxSumOf, regularExpression, required, elementOf, propertyValidator, alphabetOnly, stringLengthMaximum, stringLengthMinimum } from './validators/'
 
 export { validator }
 
 export {
-    arrayMaxLength,
+    arrayMaxLen,
     arrayMinLength,
     elementOf,
     emailAddress,

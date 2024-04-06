@@ -1,7 +1,7 @@
 import { elementOf } from './elementOf'
 import { emailAddress } from './emailAddress'
 import { equalToPropertyValue } from './equalToPropertyValue'
-import { arrayMaxLength } from './arrayMaxLength'
+import { arrayMaxLen } from './arrayMaxLen'
 import { maxNumber } from './maxNumber'
 import { arrayMinLength } from './arrayMinLength'
 import { minNumber } from './minNumber'
@@ -18,7 +18,7 @@ export {
     elementOf,
     emailAddress,
     equalToPropertyValue,
-    arrayMaxLength,
+    arrayMaxLen,
     maxNumber,
     arrayMinLength,
     minNumber,

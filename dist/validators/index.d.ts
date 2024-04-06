@@ -1,7 +1,7 @@
 import { elementOf } from './elementOf';
 import { emailAddress } from './emailAddress';
 import { equalToPropertyValue } from './equalToPropertyValue';
-import { arrayMaxLength } from './arrayMaxLength';
+import { arrayMaxLen } from './arrayMaxLen';
 import { maxNumber } from './maxNumber';
 import { arrayMinLength } from './arrayMinLength';
 import { minNumber } from './minNumber';
@@ -13,4 +13,4 @@ import { propertyValidator } from './propertyValidator';
 import { alphabetOnly } from './alphabetOnly';
 import { stringLengthMinimum } from './stringLengthMinimum';
 import { stringLengthMaximum } from './stringLengthMaximum';
-export { elementOf, emailAddress, equalToPropertyValue, arrayMaxLength, maxNumber, arrayMinLength, minNumber, regularExpression, required, minSumOf, maxSumOf, propertyValidator, alphabetOnly, stringLengthMinimum, stringLengthMaximum };
+export { elementOf, emailAddress, equalToPropertyValue, arrayMaxLen, maxNumber, arrayMinLength, minNumber, regularExpression, required, minSumOf, maxSumOf, propertyValidator, alphabetOnly, stringLengthMinimum, stringLengthMaximum };
