@@ -1,5 +1,5 @@
 import { ValidateFunc } from "../../types"
-import { propertyValidator } from "../../validators/propertyValidator"
+import { propertyValidator } from "../../propertyValidators/propertyValidator"
 
 describe(`Test ${propertyValidator.name}`, () => {
     it("Test simple property validator", () => {

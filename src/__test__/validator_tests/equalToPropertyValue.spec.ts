@@ -1,4 +1,4 @@
-import { equalToPropertyValue } from "../../validators/equalToPropertyValue"
+import { equalToPropertyValue } from "../../propertyValidators/equalToPropertyValue"
 
 describe(`Test ${equalToPropertyValue.name}`, () => {
     it("should return false and have default error message", () => {

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const propertyValidator_1 = require("../../validators/propertyValidator");
+const propertyValidator_1 = require("../../propertyValidators/propertyValidator");
 describe(`Test ${propertyValidator_1.propertyValidator.name}`, () => {
     it("Test simple property validator", () => {
         function hoc() {

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const arrayMinLen_1 = require("../../validators/arrayMinLen");
+const arrayMinLen_1 = require("../../propertyValidators/arrayMinLen");
 describe(`Test ${arrayMinLen_1.arrayMinLen.name}`, () => {
     it("should return false and have default error message", () => {
         const minValue = 1;

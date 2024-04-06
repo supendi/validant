@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const equalToPropertyValue_1 = require("../../validators/equalToPropertyValue");
+const equalToPropertyValue_1 = require("../../propertyValidators/equalToPropertyValue");
 describe(`Test ${equalToPropertyValue_1.equalToPropertyValue.name}`, () => {
     it("should return false and have default error message", () => {
         const testValue = 'email';

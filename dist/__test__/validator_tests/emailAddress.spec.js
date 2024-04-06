@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const emailAddress_1 = require("../../validators/emailAddress");
+const emailAddress_1 = require("../../propertyValidators/emailAddress");
 describe(`Test ${emailAddress_1.emailAddress.name}`, () => {
     it("should return false and have default error message", () => {
         const testValue = "wrongemail@.com";

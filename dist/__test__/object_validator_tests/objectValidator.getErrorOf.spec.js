@@ -1,14 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const objectValidator_1 = require("../../objectValidator");
-const elementOf_1 = require("../../validators/elementOf");
-const emailAddress_1 = require("../../validators/emailAddress");
-const maxNumber_1 = require("../../validators/maxNumber");
-const arrayMinLen_1 = require("../../validators/arrayMinLen");
-const minNumber_1 = require("../../validators/minNumber");
-const required_1 = require("../../validators/required");
-const alphabetOnly_1 = require("../../validators/alphabetOnly");
-const stringMinLen_1 = require("../../validators/stringMinLen");
+const elementOf_1 = require("../../propertyValidators/elementOf");
+const emailAddress_1 = require("../../propertyValidators/emailAddress");
+const maxNumber_1 = require("../../propertyValidators/maxNumber");
+const arrayMinLen_1 = require("../../propertyValidators/arrayMinLen");
+const minNumber_1 = require("../../propertyValidators/minNumber");
+const required_1 = require("../../propertyValidators/required");
+const alphabetOnly_1 = require("../../propertyValidators/alphabetOnly");
+const stringMinLen_1 = require("../../propertyValidators/stringMinLen");
 describe("getErrorOf Simple Person Test", () => {
     it("Person name should return errors", () => {
         const rule = {

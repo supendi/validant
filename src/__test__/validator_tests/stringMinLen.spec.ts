@@ -1,4 +1,4 @@
-import { stringMinLen } from "../../validators/stringMinLen"
+import { stringMinLen } from "../../propertyValidators/stringMinLen"
 
 describe(`Test ${stringMinLen.name}`, () => {
     it("should return false and have default error message", () => {

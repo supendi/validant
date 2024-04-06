@@ -1,4 +1,4 @@
-import { emailAddress } from "../../validators/emailAddress"
+import { emailAddress } from "../../propertyValidators/emailAddress"
 
 describe(`Test ${emailAddress.name}`, () => {
     it("should return false and have default error message", () => {

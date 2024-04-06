@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const required_1 = require("../../validators/required");
+const required_1 = require("../../propertyValidators/required");
 describe(`Test ${required_1.required.name}`, () => {
     it("RequiredValidator should return false and have default error message", () => {
         const validator = (0, required_1.required)();

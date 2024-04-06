@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const regularExpression_1 = require("../../validators/regularExpression");
+const regularExpression_1 = require("../../propertyValidators/regularExpression");
 describe(`Test ${regularExpression_1.regularExpression.name}`, () => {
     it("should return false and have default error message", () => {
         const testValue = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d])([A-Za-z\d]|[^a-zA-Z\d]){8,}$/;

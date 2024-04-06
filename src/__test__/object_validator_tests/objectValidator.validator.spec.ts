@@ -1,8 +1,8 @@
 import { validator, maxSumOf } from "../../index"
 import { ValidationResult, ValidationRule } from "../../types"
-import { elementOf, emailAddress, maxNumber, arrayMinLen, required, minNumber } from "../../validators"
-import { propertyValidator } from "../../validators/propertyValidator"
-import { minSumOf } from "../../validators/minSumOf"
+import { elementOf, emailAddress, maxNumber, arrayMinLen, required, minNumber } from "../../propertyValidators"
+import { propertyValidator } from "../../propertyValidators/propertyValidator"
+import { minSumOf } from "../../propertyValidators/minSumOf"
 
 const defaultMessage = { okMessage: "Good to go.", errorMessage: "One or more validation errors occurred." }
 

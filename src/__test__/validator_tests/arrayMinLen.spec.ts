@@ -1,4 +1,4 @@
-import { arrayMinLen } from "../../validators/arrayMinLen"
+import { arrayMinLen } from "../../propertyValidators/arrayMinLen"
 
 describe(`Test ${arrayMinLen.name}`, () => {
     it("should return false and have default error message", () => {

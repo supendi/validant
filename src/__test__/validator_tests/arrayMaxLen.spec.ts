@@ -1,4 +1,4 @@
-import { arrayMaxLen } from "../../validators/arrayMaxLen"
+import { arrayMaxLen } from "../../propertyValidators/arrayMaxLen"
 
 describe(`Test ${arrayMaxLen.name}`, () => {
     it("should return false and have default error message", () => {

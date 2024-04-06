@@ -1,4 +1,4 @@
-import { alphabetOnly } from "../../validators/alphabetOnly"
+import { alphabetOnly } from "../../propertyValidators/alphabetOnly"
 
 
 describe(`Test ${alphabetOnly.name}`, () => {

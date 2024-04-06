@@ -1,4 +1,4 @@
-import { regularExpression } from "../../validators/regularExpression"
+import { regularExpression } from "../../propertyValidators/regularExpression"
 
 
 describe(`Test ${regularExpression.name}`, () => {

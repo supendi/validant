@@ -1,4 +1,4 @@
-import { minNumber } from "../../validators/minNumber"
+import { minNumber } from "../../propertyValidators/minNumber"
 
 describe(`Test ${minNumber.name}`, () => {
     it("should return false and have default error message", () => {

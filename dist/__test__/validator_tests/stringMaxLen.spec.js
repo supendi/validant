@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const stringMaxLen_1 = require("../../validators/stringMaxLen");
+const stringMaxLen_1 = require("../../propertyValidators/stringMaxLen");
 describe(`Test ${stringMaxLen_1.stringMaxLen.name}`, () => {
     it("should return false and have default error message", () => {
         const maxLength = 3;

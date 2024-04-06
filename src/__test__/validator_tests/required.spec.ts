@@ -1,4 +1,4 @@
-import { required } from "../../validators/required"
+import { required } from "../../propertyValidators/required"
 
 describe(`Test ${required.name}`, () => {
     it("RequiredValidator should return false and have default error message", () => {

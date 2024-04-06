@@ -1,4 +1,4 @@
-import { maxNumber } from "../../validators/maxNumber"
+import { maxNumber } from "../../propertyValidators/maxNumber"
 
 describe(`Test ${maxNumber.name}`, () => {
     it("should return false and have default error message", () => {

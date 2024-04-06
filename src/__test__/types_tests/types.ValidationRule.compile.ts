@@ -1,5 +1,5 @@
 import { ValidationRule } from "../../types"
-import { elementOf, emailAddress, maxNumber, arrayMinLen, minNumber, required } from "../../validators"
+import { elementOf, emailAddress, maxNumber, arrayMinLen, minNumber, required } from "../../propertyValidators"
 
 interface Product {
     id: string

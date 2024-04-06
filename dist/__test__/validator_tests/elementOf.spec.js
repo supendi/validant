@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const elementOf_1 = require("../../validators/elementOf");
+const elementOf_1 = require("../../propertyValidators/elementOf");
 describe(`Test ${elementOf_1.elementOf.name}`, () => {
     it("should return false and have default error message", () => {
         const testValue = [1, 2, 3];

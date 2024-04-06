@@ -1,4 +1,4 @@
-import { elementOf } from "../../validators/elementOf"
+import { elementOf } from "../../propertyValidators/elementOf"
 
 
 describe(`Test ${elementOf.name}`, () => {

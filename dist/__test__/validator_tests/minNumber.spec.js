@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const minNumber_1 = require("../../validators/minNumber");
+const minNumber_1 = require("../../propertyValidators/minNumber");
 describe(`Test ${minNumber_1.minNumber.name}`, () => {
     it("should return false and have default error message", () => {
         const minValue = 10;

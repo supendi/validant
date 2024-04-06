@@ -1,4 +1,4 @@
-import { stringMaxLen } from "../../validators/stringMaxLen"
+import { stringMaxLen } from "../../propertyValidators/stringMaxLen"
 
 describe(`Test ${stringMaxLen.name}`, () => {
     it("should return false and have default error message", () => {

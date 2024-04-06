@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const alphabetOnly_1 = require("../../validators/alphabetOnly");
+const alphabetOnly_1 = require("../../propertyValidators/alphabetOnly");
 describe(`Test ${alphabetOnly_1.alphabetOnly.name}`, () => {
     it("should return false and have default error message", () => {
         const defaultValidatorErrorMessage = "This field should not contain any numbers or symbols. Accept only A-Z a-z and spaces.";

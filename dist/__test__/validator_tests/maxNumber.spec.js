@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const maxNumber_1 = require("../../validators/maxNumber");
+const maxNumber_1 = require("../../propertyValidators/maxNumber");
 describe(`Test ${maxNumber_1.maxNumber.name}`, () => {
     it("should return false and have default error message", () => {
         const maxValue = 5;

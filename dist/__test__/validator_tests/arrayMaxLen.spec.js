@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const arrayMaxLen_1 = require("../../validators/arrayMaxLen");
+const arrayMaxLen_1 = require("../../propertyValidators/arrayMaxLen");
 describe(`Test ${arrayMaxLen_1.arrayMaxLen.name}`, () => {
     it("should return false and have default error message", () => {
         const maxValue = 2;

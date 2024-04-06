@@ -1,14 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const index_1 = require("../../index");
-const validators_1 = require("../../validators");
-const propertyValidator_1 = require("../../validators/propertyValidator");
-const minSumOf_1 = require("../../validators/minSumOf");
+const propertyValidators_1 = require("../../propertyValidators");
+const propertyValidator_1 = require("../../propertyValidators/propertyValidator");
+const minSumOf_1 = require("../../propertyValidators/minSumOf");
 const defaultMessage = { okMessage: "Good to go.", errorMessage: "One or more validation errors occurred." };
 describe("Validator Simple Person Test", () => {
     it("Person name should return errors", () => {
         const rule = {
-            name: [(0, validators_1.required)()]
+            name: [(0, propertyValidators_1.required)()]
         };
         const person = {
             name: "",
@@ -27,9 +27,9 @@ describe("Validator Simple Person Test", () => {
 describe("Validator Simple Person With Child Test", () => {
     it("Parent and child name should return errors", () => {
         const rule = {
-            name: [(0, validators_1.required)()],
+            name: [(0, propertyValidators_1.required)()],
             child: {
-                name: [(0, validators_1.required)()]
+                name: [(0, propertyValidators_1.required)()]
             }
         };
         const parent = {
@@ -55,21 +55,21 @@ describe("Validator Simple Person With Child Test", () => {
 describe("Validator Nested Object Test with nested address", () => {
     it("Nested object test should return errors", () => {
         const rule = {
-            name: [(0, validators_1.required)()],
+            name: [(0, propertyValidators_1.required)()],
             address: {
-                street: [(0, validators_1.required)()],
+                street: [(0, propertyValidators_1.required)()],
                 city: {
-                    name: [(0, validators_1.required)()],
+                    name: [(0, propertyValidators_1.required)()],
                     country: {
-                        name: [(0, validators_1.required)()],
+                        name: [(0, propertyValidators_1.required)()],
                         continent: {
-                            name: [(0, validators_1.required)()],
+                            name: [(0, propertyValidators_1.required)()],
                         }
                     }
                 }
             },
             child: {
-                name: [(0, validators_1.required)()]
+                name: [(0, propertyValidators_1.required)()]
             }
         };
         const parent = {
@@ -119,10 +119,10 @@ describe("Validator Nested Object Test with nested address", () => {
 describe("Validator test with children array", () => {
     it("Children has to contain elementErrors", () => {
         const rule = {
-            name: [(0, validators_1.required)()],
+            name: [(0, propertyValidators_1.required)()],
         };
         rule.children = {
-            validators: [(0, validators_1.arrayMinLen)(1)],
+            validators: [(0, propertyValidators_1.arrayMinLen)(1)],
             validationRule: rule
         };
         const person = {
@@ -158,10 +158,10 @@ describe("Validator test with children array", () => {
 describe("Validator test with children array", () => {
     it("Children has to contain errors", () => {
         const rule = {
-            name: [(0, validators_1.required)()],
+            name: [(0, propertyValidators_1.required)()],
         };
         rule.children = {
-            validators: [(0, validators_1.arrayMinLen)(1, "Please add at least one child.")],
+            validators: [(0, propertyValidators_1.arrayMinLen)(1, "Please add at least one child.")],
             validationRule: rule
         };
         const person = {
@@ -185,13 +185,13 @@ describe("Validator test with children array", () => {
 describe("Validator test with Order and Order item", () => {
     it("Validating order item approach 1", () => {
         const rule = {
-            orderDate: [(0, validators_1.required)()],
-            orderNumber: [(0, validators_1.required)()],
+            orderDate: [(0, propertyValidators_1.required)()],
+            orderNumber: [(0, propertyValidators_1.required)()],
             orderItems: {
-                validators: [(0, validators_1.arrayMinLen)(1, "Please add at least one order item.")],
+                validators: [(0, propertyValidators_1.arrayMinLen)(1, "Please add at least one order item.")],
                 validationRule: {
-                    productId: [(0, validators_1.required)()],
-                    quantity: [(0, validators_1.minNumber)(1)],
+                    productId: [(0, propertyValidators_1.required)()],
+                    quantity: [(0, propertyValidators_1.minNumber)(1)],
                 }
             }
         };
@@ -267,14 +267,14 @@ describe("Validator test with Order and Order item", () => {
 describe("Validator test with Order and Order item", () => {
     it("Validating order item approach 2, separate the validation rule", () => {
         const orderItemsRule = {
-            productId: [(0, validators_1.required)()],
-            quantity: [(0, validators_1.minNumber)(1)],
+            productId: [(0, propertyValidators_1.required)()],
+            quantity: [(0, propertyValidators_1.minNumber)(1)],
         };
         const rule = {
-            orderDate: [(0, validators_1.required)()],
-            orderNumber: [(0, validators_1.required)()],
+            orderDate: [(0, propertyValidators_1.required)()],
+            orderNumber: [(0, propertyValidators_1.required)()],
             orderItems: {
-                validators: [(0, validators_1.arrayMinLen)(3)],
+                validators: [(0, propertyValidators_1.arrayMinLen)(3)],
                 validationRule: orderItemsRule
             }
         };
@@ -353,19 +353,19 @@ describe("Validator complex validations", () => {
         const productIds = [1, 2, 3, 4, 5];
         const customerIds = [10, 11, 12, 13];
         const orderItemsRule = {
-            productId: [(0, validators_1.required)(), (0, validators_1.elementOf)(productIds)],
-            quantity: [(0, validators_1.minNumber)(1), (0, validators_1.maxNumber)(5)],
+            productId: [(0, propertyValidators_1.required)(), (0, propertyValidators_1.elementOf)(productIds)],
+            quantity: [(0, propertyValidators_1.minNumber)(1), (0, propertyValidators_1.maxNumber)(5)],
         };
         const rule = {
-            orderDate: [(0, validators_1.required)()],
-            orderNumber: [(0, validators_1.required)()],
+            orderDate: [(0, propertyValidators_1.required)()],
+            orderNumber: [(0, propertyValidators_1.required)()],
             customer: {
-                id: [(0, validators_1.required)(), (0, validators_1.elementOf)(customerIds)],
-                name: [(0, validators_1.required)()],
-                email: [(0, validators_1.required)(), (0, validators_1.emailAddress)()]
+                id: [(0, propertyValidators_1.required)(), (0, propertyValidators_1.elementOf)(customerIds)],
+                name: [(0, propertyValidators_1.required)()],
+                email: [(0, propertyValidators_1.required)(), (0, propertyValidators_1.emailAddress)()]
             },
             orderItems: {
-                validators: [(0, validators_1.arrayMinLen)(4), (0, minSumOf_1.minSumOf)("quantity", 100)],
+                validators: [(0, propertyValidators_1.arrayMinLen)(4), (0, minSumOf_1.minSumOf)("quantity", 100)],
                 validationRule: orderItemsRule
             }
         };
@@ -471,19 +471,19 @@ describe("Validator test maximum sum of", () => {
         const productIds = [1, 2, 3, 4, 5];
         const customerIds = [10, 11, 12, 13];
         const orderItemsRule = {
-            productId: [(0, validators_1.required)(), (0, validators_1.elementOf)(productIds)],
-            quantity: [(0, validators_1.minNumber)(1), (0, validators_1.maxNumber)(10)],
+            productId: [(0, propertyValidators_1.required)(), (0, propertyValidators_1.elementOf)(productIds)],
+            quantity: [(0, propertyValidators_1.minNumber)(1), (0, propertyValidators_1.maxNumber)(10)],
         };
         const rule = {
-            orderDate: [(0, validators_1.required)()],
-            orderNumber: [(0, validators_1.required)()],
+            orderDate: [(0, propertyValidators_1.required)()],
+            orderNumber: [(0, propertyValidators_1.required)()],
             customer: {
-                id: [(0, validators_1.required)(), (0, validators_1.elementOf)(customerIds)],
-                name: [(0, validators_1.required)()],
-                email: [(0, validators_1.required)(), (0, validators_1.emailAddress)()]
+                id: [(0, propertyValidators_1.required)(), (0, propertyValidators_1.elementOf)(customerIds)],
+                name: [(0, propertyValidators_1.required)()],
+                email: [(0, propertyValidators_1.required)(), (0, propertyValidators_1.emailAddress)()]
             },
             orderItems: {
-                validators: [(0, validators_1.arrayMinLen)(4), (0, index_1.maxSumOf)("quantity", 10)],
+                validators: [(0, propertyValidators_1.arrayMinLen)(4), (0, index_1.maxSumOf)("quantity", 10)],
                 validationRule: orderItemsRule
             }
         };
@@ -536,19 +536,19 @@ describe("Validator complex validations", () => {
         const productIds = [1, 2, 3, 4, 5];
         const customerIds = [10, 11, 12, 13];
         const orderItemsRule = {
-            productId: [(0, validators_1.required)(), (0, validators_1.elementOf)(productIds)],
-            quantity: [(0, validators_1.minNumber)(1), (0, validators_1.maxNumber)(5)],
+            productId: [(0, propertyValidators_1.required)(), (0, propertyValidators_1.elementOf)(productIds)],
+            quantity: [(0, propertyValidators_1.minNumber)(1), (0, propertyValidators_1.maxNumber)(5)],
         };
         const rule = {
-            orderDate: [(0, validators_1.required)()],
-            orderNumber: [(0, validators_1.required)()],
+            orderDate: [(0, propertyValidators_1.required)()],
+            orderNumber: [(0, propertyValidators_1.required)()],
             customer: {
-                id: [(0, validators_1.required)(), (0, validators_1.elementOf)(customerIds)],
-                name: [(0, validators_1.required)()],
-                email: [(0, validators_1.required)(), (0, validators_1.emailAddress)()]
+                id: [(0, propertyValidators_1.required)(), (0, propertyValidators_1.elementOf)(customerIds)],
+                name: [(0, propertyValidators_1.required)()],
+                email: [(0, propertyValidators_1.required)(), (0, propertyValidators_1.emailAddress)()]
             },
             orderItems: {
-                validators: [(0, validators_1.arrayMinLen)(4)],
+                validators: [(0, propertyValidators_1.arrayMinLen)(4)],
                 validationRule: orderItemsRule
             }
         };
@@ -602,21 +602,21 @@ describe("Validator Test The Custom Validator", () => {
         const productIds = [1, 2, 3, 4, 5];
         const customerIds = [10, 11, 12, 13];
         const orderItemsRule = {
-            productId: [(0, validators_1.required)(), (0, validators_1.elementOf)(productIds)],
-            quantity: [(0, validators_1.minNumber)(1), (0, validators_1.maxNumber)(5)],
+            productId: [(0, propertyValidators_1.required)(), (0, propertyValidators_1.elementOf)(productIds)],
+            quantity: [(0, propertyValidators_1.minNumber)(1), (0, propertyValidators_1.maxNumber)(5)],
         };
         const rule = {
-            orderDate: [(0, validators_1.required)()],
-            orderNumber: [(0, validators_1.required)()],
+            orderDate: [(0, propertyValidators_1.required)()],
+            orderNumber: [(0, propertyValidators_1.required)()],
             customer: {
-                id: [(0, validators_1.required)(), (0, validators_1.elementOf)(customerIds)],
-                name: [(0, validators_1.required)(), (0, propertyValidator_1.propertyValidator)(function (value, object) {
+                id: [(0, propertyValidators_1.required)(), (0, propertyValidators_1.elementOf)(customerIds)],
+                name: [(0, propertyValidators_1.required)(), (0, propertyValidator_1.propertyValidator)(function (value, object) {
                         return false;
                     }, "Error customer name")],
-                email: [(0, validators_1.required)(), (0, validators_1.emailAddress)()]
+                email: [(0, propertyValidators_1.required)(), (0, propertyValidators_1.emailAddress)()]
             },
             orderItems: {
-                validators: [(0, validators_1.arrayMinLen)(4), (0, propertyValidator_1.propertyValidator)(function (value, object) {
+                validators: [(0, propertyValidators_1.arrayMinLen)(4), (0, propertyValidator_1.propertyValidator)(function (value, object) {
                         return true;
                     }, "Order item has error.")],
                 validationRule: orderItemsRule
@@ -675,7 +675,7 @@ describe("Validator Test Date Test", () => {
     it("Test date value", () => {
         const product = {};
         const rule = {
-            expiredDate: [(0, validators_1.required)()],
+            expiredDate: [(0, propertyValidators_1.required)()],
         };
         const actual1 = index_1.validator.validate(product, rule);
         const expected1 = {
