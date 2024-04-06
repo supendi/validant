@@ -12,7 +12,7 @@ import { maxSumOf } from './maxSumOf'
 import { propertyValidator } from './propertyValidator'
 import { alphabetOnly } from './alphabetOnly'
 import { stringLengthMinimum } from './stringLengthMinimum'
-import { stringLengthMaximum } from './stringLengthMaximum'
+import { stringMaxLen } from './stringMaxLen'
 
 export {
     elementOf,
@@ -29,5 +29,5 @@ export {
     propertyValidator,
     alphabetOnly,
     stringLengthMinimum,
-    stringLengthMaximum
+    stringMaxLen
 }

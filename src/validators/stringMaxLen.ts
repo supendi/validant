@@ -6,18 +6,18 @@ import { propertyValidator } from "./propertyValidator"
  * @param errorMessage 
  * @returns 
  */
-export function stringLengthMaximum(maxLength: number, errorMessage?: string) {
+export function stringMaxLen(maxLength: number, errorMessage?: string) {
     return propertyValidator<string | number, unknown>((value, obj) => {
         if (!value) {
             return false
         }
 
         if (maxLength < 0) {
-            throw new Error(`${stringLengthMaximum}: The maximum length argument must be a positive number.`)
+            throw new Error(`${stringMaxLen}: The maximum length argument must be a positive number.`)
         }
 
         if (!value.toString) {
-            throw new Error(`${stringLengthMaximum}: The value is not string. The value was ${value}`)
+            throw new Error(`${stringMaxLen}: The value is not string. The value was ${value}`)
         }
         const stringLength = value.toString().length
         return stringLength <= maxLength
