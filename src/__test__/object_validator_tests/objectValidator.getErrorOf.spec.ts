@@ -7,7 +7,7 @@ import { arrayMinLen } from "../../validators/arrayMinLen"
 import { minNumber } from "../../validators/minNumber"
 import { required } from "../../validators/required"
 import { alphabetOnly } from "../../validators/alphabetOnly"
-import { stringLengthMinimum } from "../../validators/stringLengthMinimum"
+import { stringMinLen } from "../../validators/stringMinLen"
 
 describe("getErrorOf Simple Person Test", () => {
     it("Person name should return errors", () => {
@@ -601,7 +601,7 @@ describe("getErrorOf complex validations", () => {
         }
         const stringLenMin = 10
         const rule: ValidationRule<Customer> = {
-            name: [required(), alphabetOnly(), stringLengthMinimum(stringLenMin)],
+            name: [required(), alphabetOnly(), stringMinLen(stringLenMin)],
             email: [required(), emailAddress()],
             address: {
                 validators: []

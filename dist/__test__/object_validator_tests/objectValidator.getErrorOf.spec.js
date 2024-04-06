@@ -8,7 +8,7 @@ const arrayMinLen_1 = require("../../validators/arrayMinLen");
 const minNumber_1 = require("../../validators/minNumber");
 const required_1 = require("../../validators/required");
 const alphabetOnly_1 = require("../../validators/alphabetOnly");
-const stringLengthMinimum_1 = require("../../validators/stringLengthMinimum");
+const stringMinLen_1 = require("../../validators/stringMinLen");
 describe("getErrorOf Simple Person Test", () => {
     it("Person name should return errors", () => {
         const rule = {
@@ -437,7 +437,7 @@ describe("getErrorOf complex validations", () => {
     it("Should return errors", () => {
         const stringLenMin = 10;
         const rule = {
-            name: [(0, required_1.required)(), (0, alphabetOnly_1.alphabetOnly)(), (0, stringLengthMinimum_1.stringLengthMinimum)(stringLenMin)],
+            name: [(0, required_1.required)(), (0, alphabetOnly_1.alphabetOnly)(), (0, stringMinLen_1.stringMinLen)(stringLenMin)],
             email: [(0, required_1.required)(), (0, emailAddress_1.emailAddress)()],
             address: {
                 validators: []
