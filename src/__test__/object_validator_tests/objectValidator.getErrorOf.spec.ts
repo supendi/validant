@@ -3,7 +3,7 @@ import { ErrorOf, ValidationRule } from "../../types"
 import { elementOf } from "../../validators/elementOf"
 import { emailAddress } from "../../validators/emailAddress"
 import { maxNumber } from "../../validators/maxNumber"
-import { arrayMinLength } from "../../validators/arrayMinLength"
+import { arrayMinLen } from "../../validators/arrayMinLen"
 import { minNumber } from "../../validators/minNumber"
 import { required } from "../../validators/required"
 import { alphabetOnly } from "../../validators/alphabetOnly"
@@ -210,7 +210,7 @@ describe("getErrorOf test with children array", () => {
         }
 
         rule.children = {
-            validators: [arrayMinLength(1, "Please add at least one child.")],
+            validators: [arrayMinLen(1, "Please add at least one child.")],
             validationRule: rule
         }
 
@@ -259,7 +259,7 @@ describe("getErrorOf test with Order and Order item", () => {
             orderDate: [required()],
             orderNumber: [required()],
             orderItems: {
-                validators: [arrayMinLength(1, "Please add at least one order item.")],
+                validators: [arrayMinLen(1, "Please add at least one order item.")],
                 validationRule: {
                     productId: [required()],
                     quantity: [minNumber(1)],
@@ -365,7 +365,7 @@ describe("getErrorOf test with Order and Order item", () => {
             orderDate: [required()],
             orderNumber: [required()],
             orderItems: {
-                validators: [arrayMinLength(3)],
+                validators: [arrayMinLen(3)],
                 validationRule: orderItemsRule
             }
         }
@@ -484,7 +484,7 @@ describe("getErrorOf complex validations", () => {
                 email: [required(), emailAddress()]
             },
             orderItems: {
-                validators: [arrayMinLength(4)],
+                validators: [arrayMinLen(4)],
                 validationRule: orderItemsRule
             }
         }

@@ -1,9 +1,9 @@
-import { arrayMinLength } from "../../validators/arrayMinLength"
+import { arrayMinLen } from "../../validators/arrayMinLen"
 
-describe(`Test ${arrayMinLength.name}`, () => {
+describe(`Test ${arrayMinLen.name}`, () => {
     it("should return false and have default error message", () => {
         const minValue = 1
-        const validator = arrayMinLength(minValue)
+        const validator = arrayMinLen(minValue)
         const myArray = []
         const defaultValidatorErrorMessage = `The minimum length for this field is ${minValue}.`
 
@@ -17,11 +17,11 @@ describe(`Test ${arrayMinLength.name}`, () => {
     })
 })
 
-describe(`Test ${arrayMinLength.name}`, () => {
+describe(`Test ${arrayMinLen.name}`, () => {
     it("should return false and have custom error message", () => {
         const minValue = 2
         const customErrorMessage = "Please add at least one order item"
-        const validator = arrayMinLength(minValue, customErrorMessage)
+        const validator = arrayMinLen(minValue, customErrorMessage)
         const orderItems = []
 
         expect(validator).not.toBeUndefined()
@@ -34,11 +34,11 @@ describe(`Test ${arrayMinLength.name}`, () => {
     })
 })
 
-describe(`Test ${arrayMinLength.name}`, () => {
+describe(`Test ${arrayMinLen.name}`, () => {
     it("should return true and have custom error message", () => {
         const minValue = 2
         const customErrorMessage = "Please add at least one order item"
-        const validator = arrayMinLength(minValue, customErrorMessage)
+        const validator = arrayMinLen(minValue, customErrorMessage)
         const orderItems = [
             101,
             10

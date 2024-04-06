@@ -1,5 +1,5 @@
 import { ValidationRule } from "../../types"
-import { elementOf, emailAddress, maxNumber, arrayMinLength, minNumber, required } from "../../validators"
+import { elementOf, emailAddress, maxNumber, arrayMinLen, minNumber, required } from "../../validators"
 
 interface Product {
     id: string
@@ -48,7 +48,7 @@ const rule1: ValidationRule<Order> = {
 // ensure order items has the correct type check
 const rule2: ValidationRule<Order> = {
     orderItems: {
-        validators: [arrayMinLength(4)],
+        validators: [arrayMinLen(4)],
         validationRule: {
             id: [required()],
             productId: [],
@@ -67,7 +67,7 @@ const orderItemsRule: ValidationRule<OrderItem> = {
 // Apply the predefined order item rules
 const rule3: ValidationRule<Order> = {
     orderItems: {
-        validators: [arrayMinLength(4)],
+        validators: [arrayMinLen(4)],
         validationRule: orderItemsRule
     },
 }
@@ -75,7 +75,7 @@ const rule3: ValidationRule<Order> = {
 // Ensure deep type check on order items, see the customer properties
 const rule4: ValidationRule<Order> = {
     orderItems: {
-        validators: [arrayMinLength(4)],
+        validators: [arrayMinLen(4)],
         validationRule: {
             customers: {
                 validationRule: {

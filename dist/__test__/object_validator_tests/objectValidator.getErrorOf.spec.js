@@ -4,7 +4,7 @@ const objectValidator_1 = require("../../objectValidator");
 const elementOf_1 = require("../../validators/elementOf");
 const emailAddress_1 = require("../../validators/emailAddress");
 const maxNumber_1 = require("../../validators/maxNumber");
-const arrayMinLength_1 = require("../../validators/arrayMinLength");
+const arrayMinLen_1 = require("../../validators/arrayMinLen");
 const minNumber_1 = require("../../validators/minNumber");
 const required_1 = require("../../validators/required");
 const alphabetOnly_1 = require("../../validators/alphabetOnly");
@@ -148,7 +148,7 @@ describe("getErrorOf test with children array", () => {
             name: [(0, required_1.required)()],
         };
         rule.children = {
-            validators: [(0, arrayMinLength_1.arrayMinLength)(1, "Please add at least one child.")],
+            validators: [(0, arrayMinLen_1.arrayMinLen)(1, "Please add at least one child.")],
             validationRule: rule
         };
         const person = {
@@ -171,7 +171,7 @@ describe("getErrorOf test with Order and Order item", () => {
             orderDate: [(0, required_1.required)()],
             orderNumber: [(0, required_1.required)()],
             orderItems: {
-                validators: [(0, arrayMinLength_1.arrayMinLength)(1, "Please add at least one order item.")],
+                validators: [(0, arrayMinLen_1.arrayMinLen)(1, "Please add at least one order item.")],
                 validationRule: {
                     productId: [(0, required_1.required)()],
                     quantity: [(0, minNumber_1.minNumber)(1)],
@@ -249,7 +249,7 @@ describe("getErrorOf test with Order and Order item", () => {
             orderDate: [(0, required_1.required)()],
             orderNumber: [(0, required_1.required)()],
             orderItems: {
-                validators: [(0, arrayMinLength_1.arrayMinLength)(3)],
+                validators: [(0, arrayMinLen_1.arrayMinLen)(3)],
                 validationRule: orderItemsRule
             }
         };
@@ -332,7 +332,7 @@ describe("getErrorOf complex validations", () => {
                 email: [(0, required_1.required)(), (0, emailAddress_1.emailAddress)()]
             },
             orderItems: {
-                validators: [(0, arrayMinLength_1.arrayMinLength)(4)],
+                validators: [(0, arrayMinLen_1.arrayMinLen)(4)],
                 validationRule: orderItemsRule
             }
         };

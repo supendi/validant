@@ -3,7 +3,7 @@ import { emailAddress } from './emailAddress'
 import { equalToPropertyValue } from './equalToPropertyValue'
 import { arrayMaxLen } from './arrayMaxLen'
 import { maxNumber } from './maxNumber'
-import { arrayMinLength } from './arrayMinLength'
+import { arrayMinLen } from './arrayMinLen'
 import { minNumber } from './minNumber'
 import { regularExpression } from './regularExpression'
 import { required } from './required'
@@ -20,7 +20,7 @@ export {
     equalToPropertyValue,
     arrayMaxLen,
     maxNumber,
-    arrayMinLength,
+    arrayMinLen,
     minNumber,
     regularExpression,
     required,

@@ -4,4 +4,4 @@ import { PropertyValidator } from "../types";
  * @param errorMessage Custom error messages
  * @returns
  */
-export declare const arrayMinLength: <TValue, TObject>(min: number, errorMessage?: string) => PropertyValidator<TValue[], TObject>;
+export declare const arrayMinLen: <TValue, TObject>(min: number, errorMessage?: string) => PropertyValidator<TValue[], TObject>;

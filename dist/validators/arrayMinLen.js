@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.arrayMinLength = void 0;
+exports.arrayMinLen = void 0;
 /**
  * Specifies the minimum length of an array.
  * @param errorMessage Custom error messages
  * @returns
  */
-const arrayMinLength = (min, errorMessage) => {
+const arrayMinLen = (min, errorMessage) => {
     let msg = `The minimum length for this field is ${min}.`;
     if (errorMessage) {
         msg = errorMessage;
@@ -16,7 +16,7 @@ const arrayMinLength = (min, errorMessage) => {
             return false;
         }
         if (min < 1) {
-            console.warn("arrayMinLength: min length should be > 0");
+            console.warn("arrayMinLen: min length should be > 0");
             return false;
         }
         const valueIsArray = Array.isArray(value);
@@ -33,4 +33,4 @@ const arrayMinLength = (min, errorMessage) => {
     };
     return propValidator;
 };
-exports.arrayMinLength = arrayMinLength;
+exports.arrayMinLen = arrayMinLen;

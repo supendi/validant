@@ -5,7 +5,7 @@ import { PropertyValidator, ValidatorFunc } from "../types"
  * @param errorMessage Custom error messages
  * @returns 
  */
-export const arrayMinLength = <TValue, TObject>(min: number, errorMessage?: string) => {
+export const arrayMinLen = <TValue, TObject>(min: number, errorMessage?: string) => {
 
     let msg = `The minimum length for this field is ${min}.`
     if (errorMessage) {
@@ -18,7 +18,7 @@ export const arrayMinLength = <TValue, TObject>(min: number, errorMessage?: stri
             return false
         }
         if (min < 1) {
-            console.warn("arrayMinLength: min length should be > 0")
+            console.warn("arrayMinLen: min length should be > 0")
             return false
         }
         const valueIsArray = Array.isArray(value)

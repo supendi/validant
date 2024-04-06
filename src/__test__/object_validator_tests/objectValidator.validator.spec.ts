@@ -1,6 +1,6 @@
 import { validator, maxSumOf } from "../../index"
 import { ValidationResult, ValidationRule } from "../../types"
-import { elementOf, emailAddress, maxNumber, arrayMinLength, required, minNumber } from "../../validators"
+import { elementOf, emailAddress, maxNumber, arrayMinLen, required, minNumber } from "../../validators"
 import { propertyValidator } from "../../validators/propertyValidator"
 import { minSumOf } from "../../validators/minSumOf"
 
@@ -173,7 +173,7 @@ describe("Validator test with children array", () => {
         }
 
         rule.children = {
-            validators: [arrayMinLength(1)],
+            validators: [arrayMinLen(1)],
             validationRule: rule
         }
 
@@ -224,7 +224,7 @@ describe("Validator test with children array", () => {
         }
 
         rule.children = {
-            validators: [arrayMinLength(1, "Please add at least one child.")],
+            validators: [arrayMinLen(1, "Please add at least one child.")],
             validationRule: rule
         }
 
@@ -277,7 +277,7 @@ describe("Validator test with Order and Order item", () => {
             orderDate: [required()],
             orderNumber: [required()],
             orderItems: {
-                validators: [arrayMinLength(1, "Please add at least one order item.")],
+                validators: [arrayMinLen(1, "Please add at least one order item.")],
                 validationRule: {
                     productId: [required()],
                     quantity: [minNumber(1)],
@@ -391,7 +391,7 @@ describe("Validator test with Order and Order item", () => {
             orderDate: [required()],
             orderNumber: [required()],
             orderItems: {
-                validators: [arrayMinLength(3)],
+                validators: [arrayMinLen(3)],
                 validationRule: orderItemsRule
             }
         }
@@ -518,7 +518,7 @@ describe("Validator complex validations", () => {
                 email: [required(), emailAddress()]
             },
             orderItems: {
-                validators: [arrayMinLength(4), minSumOf("quantity", 100)],
+                validators: [arrayMinLen(4), minSumOf("quantity", 100)],
                 validationRule: orderItemsRule
             }
         }
@@ -673,7 +673,7 @@ describe("Validator test maximum sum of", () => {
                 email: [required(), emailAddress()]
             },
             orderItems: {
-                validators: [arrayMinLength(4), maxSumOf("quantity", 10,)],
+                validators: [arrayMinLen(4), maxSumOf("quantity", 10,)],
                 validationRule: orderItemsRule
             }
         }
@@ -773,7 +773,7 @@ describe("Validator complex validations", () => {
                 email: [required(), emailAddress()]
             },
             orderItems: {
-                validators: [arrayMinLength(4)],
+                validators: [arrayMinLen(4)],
                 validationRule: orderItemsRule
             }
         }
@@ -876,7 +876,7 @@ describe("Validator Test The Custom Validator", () => {
                 email: [required(), emailAddress()]
             },
             orderItems: {
-                validators: [arrayMinLength(4), propertyValidator(function (value, object) {
+                validators: [arrayMinLen(4), propertyValidator(function (value, object) {
                     return true
                 }, "Order item has error.")],
                 validationRule: orderItemsRule
