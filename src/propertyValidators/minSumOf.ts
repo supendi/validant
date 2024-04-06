@@ -1,4 +1,4 @@
-import { PropertyValidator, TypeOfArray, ValidateFunc } from "../types"
+import { PossiblyUndefined, PropertyValidator, TypeOfArray, ValidateFunc } from "../types"
 
 /**
  * Specifies the rule of minimum sum of the specified property name of an array.
@@ -44,7 +44,7 @@ export const minSumOf = <TValue, TObject>(propNameToBeSummed: keyof TypeOfArray<
         return minSum <= total
     }
 
-    const validator: PropertyValidator<TValue[], TObject> = {
+    const validator: PropertyValidator<PossiblyUndefined<TValue[]>, TObject> = {
         description: "Specifies the rule of minimum sum of the specified property name of an array.",
         validate: validateFunc,
         returningErrorMessage: msg

@@ -4,4 +4,4 @@ import { PropertyValidator, TypeOfArray } from "../types";
  * @param errorMessage Custom error messages
  * @returns
  */
-export declare const minSumOf: <TValue, TObject>(propNameToBeSummed: keyof TValue, minSum: number, errorMessage?: string) => PropertyValidator<TValue[], TObject>;
+export declare const minSumOf: <TValue, TObject>(propNameToBeSummed: keyof TypeOfArray<TValue[]>, minSum: number, errorMessage?: string) => PropertyValidator<TValue[], TObject>;

@@ -37,14 +37,14 @@ describe("ValidationRules Simple Person Test", () => {
         expect(Array.isArray(rules.name)).toBeTruthy()
         expect(Array.isArray(rules.age)).toBeTruthy()
 
-        expect(rules.name.length).toEqual(1)
-        expect(rules.age.length).toEqual(2)
+        expect(rules.name?.length).toEqual(1)
+        expect(rules.age?.length).toEqual(2)
 
-        const nameValidators = rules.name
+        const nameValidators = rules.name ? rules.name : []
         expect(nameValidators[0]).not.toBeUndefined()
         expect(nameValidators[0]).toEqual(requiredValidator)
 
-        const ageValidators = rules.age
+        const ageValidators = rules.age ? rules.age : []
         expect(ageValidators[0]).not.toBeUndefined()
         expect(ageValidators[0]).toEqual(requiredValidator)
 
@@ -113,14 +113,14 @@ describe("ValidationRules Complex Person Test", () => {
         expect(Array.isArray(personRules.name)).toBeTruthy()
         expect(Array.isArray(personRules.age)).toBeTruthy()
 
-        expect(personRules.name.length).toEqual(1)
-        expect(personRules.age.length).toEqual(2)
+        expect(personRules.name?.length).toEqual(1)
+        expect(personRules.age?.length).toEqual(2)
 
-        const nameValidators = personRules.name
+        const nameValidators = personRules.name ? personRules.name : []
         expect(nameValidators[0]).not.toBeUndefined()
         expect(nameValidators[0]).toEqual(requiredValidator)
 
-        const ageValidators = personRules.age
+        const ageValidators = personRules.age ? personRules.age : []
         expect(ageValidators[0]).not.toBeUndefined()
         expect(ageValidators[0]).toEqual(requiredValidator)
 
@@ -134,14 +134,14 @@ describe("ValidationRules Complex Person Test", () => {
             age: [maxNumberValidator],
         },)
 
-        expect(fatherRules.name.length).toEqual(1)
-        expect(fatherRules.age.length).toEqual(1)
+        expect(fatherRules?.name?.length).toEqual(1)
+        expect(fatherRules?.age?.length).toEqual(1)
 
-        const fatherNameValidators = fatherRules.name
+        const fatherNameValidators = fatherRules?.name ? fatherRules?.name : []
         expect(fatherNameValidators[0]).not.toBeUndefined()
         expect(fatherNameValidators[0]).toEqual(requiredValidator)
 
-        const fatherAgeValidators = fatherRules.age
+        const fatherAgeValidators = fatherRules?.age ? fatherRules?.age : []
         expect(fatherAgeValidators[0]).not.toBeUndefined()
         expect(fatherAgeValidators[0]).toEqual(maxNumberValidator)
 
@@ -160,7 +160,7 @@ describe("ValidationRules Complex Person Test", () => {
             }
         })
 
-        expect(childrenRules.validators.length).toEqual(1)
+        expect(childrenRules.validators?.length).toEqual(1)
         expect(childrenRules.validationRule).toEqual({
             name: [requiredValidator],
             age: [requiredValidator, minNumberValidator],
@@ -171,10 +171,10 @@ describe("ValidationRules Complex Person Test", () => {
         })
 
         const childrenValidationRule = childrenRules.validationRule
-        expect(childrenValidationRule.name).not.toBeUndefined()
-        expect(childrenValidationRule.name).toEqual([requiredValidator])
+        expect(childrenValidationRule?.name).not.toBeUndefined()
+        expect(childrenValidationRule?.name).toEqual([requiredValidator])
 
-        expect(childrenValidationRule.age).not.toBeUndefined()
-        expect(childrenValidationRule.age).toEqual([requiredValidator, minNumberValidator])
+        expect(childrenValidationRule?.age).not.toBeUndefined()
+        expect(childrenValidationRule?.age).toEqual([requiredValidator, minNumberValidator])
     })
 })

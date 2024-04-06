@@ -200,7 +200,7 @@ describe("Validator test with children array", () => {
                             errors: {
                                 name: ["This field is required."],
                             },
-                            validatedObject: person.children[0]
+                            validatedObject: person.children ? person.children[0] : undefined
                         }
                     ]
                 }

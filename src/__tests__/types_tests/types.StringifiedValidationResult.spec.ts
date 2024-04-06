@@ -99,19 +99,7 @@ describe("StringifiedValidationResult Test", () => {
                             product: {
                                 name: "name is required",
                                 price: "Price should be greater than 0",
-                                subProducts: {
-                                    errorMessage: "One or more validation error exist",
-                                    isValid: false,
-                                    subErrors: [
-                                        {
-                                            price: "The maximum price is 100",
-                                            subProducts: {
-                                                isValid: true,
-                                                errorMessage: ""
-                                            }
-                                        }
-                                    ]
-                                }
+                                subProducts: ""
                             },
                         }
                     ]

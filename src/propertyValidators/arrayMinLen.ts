@@ -1,4 +1,4 @@
-import { PropertyValidator, ValidateFunc } from "../types"
+import { PossiblyUndefined, PropertyValidator, ValidateFunc } from "../types"
 
 /**
  * Specifies the minimum length of an array.
@@ -29,7 +29,7 @@ export const arrayMinLen = <TValue, TObject>(min: number, errorMessage?: string)
         return actualLength >= min
     }
 
-    const propValidator: PropertyValidator<TValue[], TObject> = {
+    const propValidator: PropertyValidator<PossiblyUndefined<TValue[]>, TObject> = {
         description: "Specifies the minimum length of an array.",
         returningErrorMessage: msg,
         validate: validateFunc

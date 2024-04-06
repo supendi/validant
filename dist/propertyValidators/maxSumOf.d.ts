@@ -4,4 +4,4 @@ import { PropertyValidator, TypeOfArray } from "../types";
  * @param errorMessage Custom error messages
  * @returns
  */
-export declare const maxSumOf: <TValue, TObject>(propNameToBeSummed: keyof TValue, maxSum: number, errorMessage?: string) => PropertyValidator<TValue[], TObject>;
+export declare const maxSumOf: <TValue, TObject>(propNameToBeSummed: keyof TypeOfArray<TValue[]>, maxSum: number, errorMessage?: string) => PropertyValidator<TValue[], TObject>;

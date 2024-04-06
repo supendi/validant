@@ -187,7 +187,7 @@ describe("getErrorOf test with children array", () => {
                         errors: {
                             name: ["This field is required."],
                         },
-                        validatedObject: person.children[0]
+                        validatedObject: person.children ? person.children[0] : undefined
                     },
                 ]
             }
@@ -202,7 +202,7 @@ describe("getErrorOf test with children array", () => {
     it("Children has to contain errors", () => {
         interface Person {
             name?: string
-            children?: Person[]
+            children: Person[]
         }
 
         const rule: ValidationRule<Person> = {
@@ -631,7 +631,7 @@ describe("getErrorOf complex validations", () => {
         }
 
         const actual2 = getErrorOf(customer2, rule)
-        const expected2: ErrorOf<Customer> = undefined
+        const expected2: ErrorOf<Customer> | undefined = undefined
 
         expect(actual2).toEqual(expected2)
     })

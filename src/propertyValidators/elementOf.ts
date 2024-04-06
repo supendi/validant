@@ -1,4 +1,4 @@
-import { PropertyValidator, ValidateFunc } from "../types"
+import { PossiblyUndefined, PropertyValidator, ValidateFunc } from "../types"
 
 /**
  * Specifies the rule if a value is an element of the specified array.
@@ -22,7 +22,7 @@ export const elementOf = <TValue, TObject>(list: TValue[], errorMessage?: string
         return !!element
     }
 
-    const validator: PropertyValidator<TValue, TObject> = {
+    const validator: PropertyValidator<PossiblyUndefined<TValue>, TObject> = {
         description: "Specifies the rule if a value is an element of the specified array.",
         validate: validateFunc,
         returningErrorMessage: msg

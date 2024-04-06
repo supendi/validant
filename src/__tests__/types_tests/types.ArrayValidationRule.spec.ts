@@ -38,7 +38,7 @@ describe("ArrayValidationRule Simple Person Test", () => {
 
         expect(arrayOfPersonRule.validators).not.toBeUndefined()
         expect(Array.isArray(arrayOfPersonRule.validators)).toBeTruthy()
-        expect(arrayOfPersonRule.validators.length).toEqual(1)
-        expect(arrayOfPersonRule.validators[0]).toEqual(requiredValidator)
+        expect(arrayOfPersonRule.validators?.length).toEqual(1)
+        expect(arrayOfPersonRule.validators ? arrayOfPersonRule.validators[0] : undefined).toEqual(requiredValidator)
     })
 })
