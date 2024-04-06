@@ -80,7 +80,7 @@ export type ErrorOf<T> = { [key in keyof T]?: T[key] extends object
  * Specifies the contract of validator function.
  * See the PropertyValidator implementation of how the validator func being implemented.
  */
-export type ValidatorFunc<TValue, TObject> = (value: TValue, objRef?: TObject) => boolean
+export type ValidateFunc<TValue, TObject> = (value: TValue, objRef?: TObject) => boolean
 
 /**
  * Represents the object model of property validator.
@@ -88,7 +88,7 @@ export type ValidatorFunc<TValue, TObject> = (value: TValue, objRef?: TObject) =
  */
 export type PropertyValidator<TValue, TObject> = {
     description: string
-    validate: ValidatorFunc<TValue, TObject>
+    validate: ValidateFunc<TValue, TObject>
     returningErrorMessage: string
 }
 

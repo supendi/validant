@@ -11,12 +11,12 @@ const equalToPropertyValue = (equalToPropName, errorMessage) => {
     if (errorMessage) {
         msg = errorMessage;
     }
-    const validatorFunc = (value, object) => {
+    const validateFunc = (value, object) => {
         return value === object[equalToPropName];
     };
     const validator = {
         description: "Specifies a rule that a value should equal to the specified property value.",
-        validate: validatorFunc,
+        validate: validateFunc,
         returningErrorMessage: msg
     };
     return validator;

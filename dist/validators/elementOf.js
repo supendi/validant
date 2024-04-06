@@ -14,7 +14,7 @@ const elementOf = (list, errorMessage) => {
     if (errorMessage) {
         msg = errorMessage;
     }
-    const validatorFunc = (value, object) => {
+    const validateFunc = (value, object) => {
         if (!list) {
             return false;
         }
@@ -23,7 +23,7 @@ const elementOf = (list, errorMessage) => {
     };
     const validator = {
         description: "Specifies the rule if a value is an element of the specified array.",
-        validate: validatorFunc,
+        validate: validateFunc,
         returningErrorMessage: msg
     };
     return validator;

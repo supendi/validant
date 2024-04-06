@@ -1,4 +1,4 @@
-import { ValidatorFunc } from "../../types"
+import { ValidateFunc } from "../../types"
 
 /**
  * Ensure all the code below compiled
@@ -6,10 +6,10 @@ import { ValidatorFunc } from "../../types"
 
 describe("ValidatorFunc Test", () => {
     it("Should compile", () => {
-        const validatorFunc: ValidatorFunc<any, any> = function (value: any, objRef?: any) {
+        const validateFunc: ValidateFunc<any, any> = function (value: any, objRef?: any) {
             return true
         }
 
-        expect(validatorFunc).not.toBeNull()
+        expect(validateFunc).not.toBeNull()
     })
 })

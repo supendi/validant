@@ -11,7 +11,7 @@ const maxNumber = (max, errorMessage) => {
     if (errorMessage) {
         msg = errorMessage;
     }
-    const validatorFunc = (value, objRef) => {
+    const validateFunc = (value, objRef) => {
         if (!value) {
             return false;
         }
@@ -25,7 +25,7 @@ const maxNumber = (max, errorMessage) => {
     };
     const validator = {
         description: "Specifies the rule of maximum value of a number.",
-        validate: validatorFunc,
+        validate: validateFunc,
         returningErrorMessage: msg
     };
     return validator;

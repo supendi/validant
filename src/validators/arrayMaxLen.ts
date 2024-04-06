@@ -1,4 +1,4 @@
-import { PropertyValidator, ValidatorFunc } from "../types";
+import { PropertyValidator, ValidateFunc } from "../types";
 
 /**
  * Specifies the rule of the maximum number of element to exist in an array.
@@ -12,7 +12,7 @@ export const arrayMaxLen = <TValue, TObject>(max: number, errorMessage?: string,
         msg = errorMessage
     }
     
-    const validatorFunc: ValidatorFunc<TValue[], TObject> = (value, objRef): boolean => {
+    const validateFunc: ValidateFunc<TValue[], TObject> = (value, objRef): boolean => {
         if (!value) {
             return false
         }
@@ -30,7 +30,7 @@ export const arrayMaxLen = <TValue, TObject>(max: number, errorMessage?: string,
 
     const validator: PropertyValidator<TValue[], TObject> = {
         description: "Specifies the rule of the maximum number of element to exist in an array.",
-        validate: validatorFunc,
+        validate: validateFunc,
         returningErrorMessage: msg
     }
     return validator

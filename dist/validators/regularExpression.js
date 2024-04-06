@@ -13,12 +13,12 @@ const regularExpression = (regex, errorMessage, description) => {
     if (errorMessage) {
         msg = errorMessage;
     }
-    const validatorFunc = (value, objRef) => {
+    const validateFunc = (value, objRef) => {
         return regex.test(value);
     };
     const validator = {
         description: description ? description : "Specifies the rule if a value is match with the specified regular expression.",
-        validate: validatorFunc,
+        validate: validateFunc,
         returningErrorMessage: msg
     };
     return validator;

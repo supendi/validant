@@ -11,7 +11,7 @@ const maxSumOf = (propNameToBeSummed, maxSum, errorMessage) => {
     if (errorMessage) {
         msg = errorMessage;
     }
-    const validatorFunc = (value, objRef) => {
+    const validateFunc = (value, objRef) => {
         if (!value) {
             return false;
         }
@@ -41,7 +41,7 @@ const maxSumOf = (propNameToBeSummed, maxSum, errorMessage) => {
     };
     const validator = {
         description: "Specifies the rule of maximum sum of the spesified property name of an array.",
-        validate: validatorFunc,
+        validate: validateFunc,
         returningErrorMessage: msg
     };
     return validator;

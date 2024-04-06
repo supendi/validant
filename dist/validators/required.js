@@ -11,7 +11,7 @@ const required = (errorMessage) => {
     if (errorMessage) {
         msg = errorMessage;
     }
-    const validatorFunc = (value, objRef) => {
+    const validateFunc = (value, objRef) => {
         if (!value) {
             return false;
         }
@@ -20,7 +20,7 @@ const required = (errorMessage) => {
     const propValidator = {
         description: "Specifies the rule that the property is required.",
         returningErrorMessage: msg,
-        validate: validatorFunc
+        validate: validateFunc
     };
     return propValidator;
 };

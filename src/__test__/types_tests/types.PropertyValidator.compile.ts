@@ -1,4 +1,4 @@
-import { PropertyValidator, ValidatorFunc } from "../../types"
+import { PropertyValidator, ValidateFunc } from "../../types"
 
 /**
  * Ensure all the code below compiled
@@ -24,8 +24,8 @@ describe("PropertyValidator Test", () => {
         expect(validator.returningErrorMessage).toEqual("The value of :value is required")
 
         // Ensure ts compile this
-        const validatorFunction: ValidatorFunc<any, any> = validator.validate
-        expect(validatorFunction).not.toBeNull()
+        const validateFunction: ValidateFunc<any, any> = validator.validate
+        expect(validateFunction).not.toBeNull()
 
         const isValid = validator.validate(1)
         expect(isValid).toBeTruthy()

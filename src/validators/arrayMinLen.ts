@@ -1,4 +1,4 @@
-import { PropertyValidator, ValidatorFunc } from "../types"
+import { PropertyValidator, ValidateFunc } from "../types"
 
 /**
  * Specifies the minimum length of an array.
@@ -12,7 +12,7 @@ export const arrayMinLen = <TValue, TObject>(min: number, errorMessage?: string)
         msg = errorMessage
     }
 
-    const validateFunc: ValidatorFunc<TValue[], TObject> = (value, objRef): boolean => {
+    const validateFunc: ValidateFunc<TValue[], TObject> = (value, objRef): boolean => {
 
         if (!value) {
             return false

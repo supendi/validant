@@ -72,14 +72,14 @@ export declare type ErrorOf<T> = {
  * Specifies the contract of validator function.
  * See the PropertyValidator implementation of how the validator func being implemented.
  */
-export declare type ValidatorFunc<TValue, TObject> = (value: TValue, objRef?: TObject) => boolean;
+export declare type ValidateFunc<TValue, TObject> = (value: TValue, objRef?: TObject) => boolean;
 /**
  * Represents the object model of property validator.
  * See the validators implementation.
  */
 export declare type PropertyValidator<TValue, TObject> = {
     description: string;
-    validate: ValidatorFunc<TValue, TObject>;
+    validate: ValidateFunc<TValue, TObject>;
     returningErrorMessage: string;
 };
 /**

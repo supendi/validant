@@ -1,4 +1,4 @@
-import { PropertyValidator, ValidatorFunc } from "../types";
+import { PropertyValidator, ValidateFunc } from "../types";
 
 /**
  * Specifies the rule that the property is required.
@@ -11,7 +11,7 @@ export const required = <TValue, TObject>(errorMessage?: string) => {
         msg = errorMessage
     }
 
-    const validatorFunc: ValidatorFunc<TValue, TObject> = (value: TValue, objRef?: TObject): boolean => {
+    const validateFunc: ValidateFunc<TValue, TObject> = (value: TValue, objRef?: TObject): boolean => {
         if (!value) {
             return false
         }
@@ -21,7 +21,7 @@ export const required = <TValue, TObject>(errorMessage?: string) => {
     const propValidator: PropertyValidator<TValue, TObject> = {
         description: "Specifies the rule that the property is required.",
         returningErrorMessage: msg,
-        validate: validatorFunc
+        validate: validateFunc
     }
     return propValidator
 }

@@ -11,13 +11,13 @@ const propertyValidator = (func, errorMessage, validatorDescription) => {
     if (!errorMessage) {
         throw new Error(`You are calling the ${exports.propertyValidator.name}. The error message needs to be set. The assigned error message is '${errorMessage}'`);
     }
-    const validatorFunc = (value, object) => {
+    const validateFunc = (value, object) => {
         return func(value, object);
     };
     const propValidator = {
         description: validatorDescription ? validatorDescription : "The base property validator. Use this as a custom validator.",
         returningErrorMessage: errorMessage,
-        validate: validatorFunc
+        validate: validateFunc
     };
     return propValidator;
 };

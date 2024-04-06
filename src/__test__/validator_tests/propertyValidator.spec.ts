@@ -1,10 +1,10 @@
-import { ValidatorFunc } from "../../types"
+import { ValidateFunc } from "../../types"
 import { propertyValidator } from "../../validators/propertyValidator"
 
 describe(`Test ${propertyValidator.name}`, () => {
     it("Test simple property validator", () => {
         function hoc<T, U>() {
-            const maximumNumberIsOneValidator: ValidatorFunc<T, U> = (value, object) => {
+            const maximumNumberIsOneValidator: ValidateFunc<T, U> = (value, object) => {
                 if (value === undefined || value === null) {
                     return false
                 }
@@ -91,7 +91,7 @@ describe(`Test ${propertyValidator.name}`, () => {
             ]
         }
 
-        const positiveNumber: ValidatorFunc<unknown, Order> = (value, object) => {
+        const positiveNumber: ValidateFunc<unknown, Order> = (value, object) => {
             if (!object) {
                 return false
             }

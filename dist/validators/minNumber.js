@@ -11,7 +11,7 @@ const minNumber = (min, errorMessage) => {
     if (errorMessage) {
         msg = errorMessage;
     }
-    const validatorFunc = (value, objRef) => {
+    const validateFunc = (value, objRef) => {
         if (!value) {
             return false;
         }
@@ -25,7 +25,7 @@ const minNumber = (min, errorMessage) => {
     };
     const validator = {
         description: "Spesify the minimum value of number rule.",
-        validate: validatorFunc,
+        validate: validateFunc,
         returningErrorMessage: msg,
     };
     return validator;

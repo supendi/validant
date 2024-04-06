@@ -1,4 +1,4 @@
-import { PropertyValidator, ValidatorFunc } from "../types"
+import { PropertyValidator, ValidateFunc } from "../types"
 
 /**
  * Specifies the rule if a value is an element of the specified array.
@@ -14,7 +14,7 @@ export const elementOf = <TValue, TObject>(list: TValue[], errorMessage?: string
         msg = errorMessage
     }
 
-    const validatorFunc: ValidatorFunc<TValue, TObject> = (value, object): boolean => {
+    const validateFunc: ValidateFunc<TValue, TObject> = (value, object): boolean => {
         if (!list) {
             return false
         }
@@ -24,7 +24,7 @@ export const elementOf = <TValue, TObject>(list: TValue[], errorMessage?: string
 
     const validator: PropertyValidator<TValue, TObject> = {
         description: "Specifies the rule if a value is an element of the specified array.",
-        validate: validatorFunc,
+        validate: validateFunc,
         returningErrorMessage: msg
     }
     return validator

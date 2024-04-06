@@ -1,4 +1,4 @@
-import { PropertyValidator, ValidatorFunc } from "../types"
+import { PropertyValidator, ValidateFunc } from "../types"
 
 /**
  * Specifies the rule if a value is match with the specified regular expression.
@@ -13,13 +13,13 @@ export const regularExpression = <TValue, TObject>(regex: RegExp, errorMessage?:
         msg = errorMessage
     }
 
-    const validatorFunc: ValidatorFunc<TValue, TObject> = (value, objRef): boolean => {
+    const validateFunc: ValidateFunc<TValue, TObject> = (value, objRef): boolean => {
         return regex.test(value as unknown as string)
     }
 
     const validator: PropertyValidator<TValue, TObject> = {
         description: description ? description : "Specifies the rule if a value is match with the specified regular expression.",
-        validate: validatorFunc,
+        validate: validateFunc,
         returningErrorMessage: msg
     }
     return validator

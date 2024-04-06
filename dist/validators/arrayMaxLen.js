@@ -11,7 +11,7 @@ const arrayMaxLen = (max, errorMessage) => {
     if (errorMessage) {
         msg = errorMessage;
     }
-    const validatorFunc = (value, objRef) => {
+    const validateFunc = (value, objRef) => {
         if (!value) {
             return false;
         }
@@ -28,7 +28,7 @@ const arrayMaxLen = (max, errorMessage) => {
     };
     const validator = {
         description: "Specifies the rule of the maximum number of element to exist in an array.",
-        validate: validatorFunc,
+        validate: validateFunc,
         returningErrorMessage: msg
     };
     return validator;

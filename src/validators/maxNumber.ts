@@ -1,4 +1,4 @@
-import { PropertyValidator, ValidatorFunc } from "../types";
+import { PropertyValidator, ValidateFunc } from "../types";
 
 /**
  * Specifies the rule of maximum value of a number.
@@ -11,7 +11,7 @@ export const maxNumber = <TObject>(max: number, errorMessage?: string) => {
         msg = errorMessage
     }
 
-    const validatorFunc: ValidatorFunc<number, TObject> = (value, objRef): boolean => {
+    const validateFunc: ValidateFunc<number, TObject> = (value, objRef): boolean => {
         if (!value) {
             return false
         }
@@ -26,7 +26,7 @@ export const maxNumber = <TObject>(max: number, errorMessage?: string) => {
 
     const validator: PropertyValidator<number, TObject> = {
         description: "Specifies the rule of maximum value of a number.",
-        validate: validatorFunc,
+        validate: validateFunc,
         returningErrorMessage: msg
     }
     return validator

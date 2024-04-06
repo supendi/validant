@@ -19,8 +19,8 @@ describe("PropertyValidator Test", () => {
         expect(validator.description).toEqual("Required Validator");
         expect(validator.returningErrorMessage).toEqual("The value of :value is required");
         // Ensure ts compile this
-        const validatorFunction = validator.validate;
-        expect(validatorFunction).not.toBeNull();
+        const validateFunction = validator.validate;
+        expect(validateFunction).not.toBeNull();
         const isValid = validator.validate(1);
         expect(isValid).toBeTruthy();
     });

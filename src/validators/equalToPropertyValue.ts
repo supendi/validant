@@ -1,4 +1,4 @@
-import { PropertyValidator, ValidatorFunc } from "../types";
+import { PropertyValidator, ValidateFunc } from "../types";
 
 /**
  * Specifies a rule that a value should equal to the specified property value.
@@ -11,13 +11,13 @@ export const equalToPropertyValue = <TValue, TObject>(equalToPropName: keyof TOb
         msg = errorMessage
     }
 
-    const validatorFunc: ValidatorFunc<TValue, TObject> = (value, object): boolean => {
+    const validateFunc: ValidateFunc<TValue, TObject> = (value, object): boolean => {
         return (value as any) === object[equalToPropName]
     }
 
     const validator: PropertyValidator<TValue, TObject> = {
         description: "Specifies a rule that a value should equal to the specified property value.",
-        validate: validatorFunc,
+        validate: validateFunc,
         returningErrorMessage: msg
     }
     return validator

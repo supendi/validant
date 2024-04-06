@@ -11,7 +11,7 @@ const minSumOf = (propNameToBeSummed, minSum, errorMessage) => {
     if (errorMessage) {
         msg = errorMessage;
     }
-    const validatorFunc = (value, objRef) => {
+    const validateFunc = (value, objRef) => {
         if (!value) {
             return false;
         }
@@ -41,7 +41,7 @@ const minSumOf = (propNameToBeSummed, minSum, errorMessage) => {
     };
     const validator = {
         description: "Specifies the rule of minimum sum of the specified property name of an array.",
-        validate: validatorFunc,
+        validate: validateFunc,
         returningErrorMessage: msg
     };
     return validator;

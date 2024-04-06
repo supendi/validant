@@ -5,9 +5,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
  */
 describe("ValidatorFunc Test", () => {
     it("Should compile", () => {
-        const validatorFunc = function (value, objRef) {
+        const validateFunc = function (value, objRef) {
             return true;
         };
-        expect(validatorFunc).not.toBeNull();
+        expect(validateFunc).not.toBeNull();
     });
 });
