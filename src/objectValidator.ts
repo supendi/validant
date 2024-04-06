@@ -199,8 +199,8 @@ export const validateObject = <T>(object: T, validationRule: ValidationRule<T>, 
 }
 
 
-const validator = {
+const objectValidator = {
     validate: validateObject
 }
 
-export default validator
+export default objectValidator

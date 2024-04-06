@@ -1,45 +1,62 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const index_1 = require("../../index");
-const propertyValidators_1 = require("../../propertyValidators");
-const propertyValidator_1 = require("../../propertyValidators/propertyValidator");
-const minSumOf_1 = require("../../propertyValidators/minSumOf");
-const defaultMessage = { okMessage: "Good to go.", errorMessage: "One or more validation errors occurred." };
+import { objectValidator, maxSumOf } from "../../index"
+import { ValidationResult, ValidationRule } from "../../types"
+import { elementOf, emailAddress, maxNumber, arrayMinLen, required, minNumber } from "../../propertyValidators"
+import { propertyValidator } from "../../propertyValidators/propertyValidator"
+import { minSumOf } from "../../propertyValidators/minSumOf"
+
+const defaultMessage = { okMessage: "Good to go.", errorMessage: "One or more validation errors occurred." }
+
 describe("Validator Simple Person Test", () => {
     it("Person name should return errors", () => {
-        const rule = {
-            name: [(0, propertyValidators_1.required)()]
-        };
-        const person = {
+        interface SimplePerson {
+            name: string
+        }
+
+        const rule: ValidationRule<SimplePerson> = {
+            name: [required()]
+        }
+
+        const person: SimplePerson = {
             name: "",
-        };
-        const actual = index_1.validator.validate(person, rule);
-        const expected = {
+        }
+
+        const actual = objectValidator.validate(person, rule)
+
+        const expected: ValidationResult<SimplePerson> = {
             message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
                 name: ["This field is required."]
             }
-        };
-        expect(actual).toEqual(expected);
-    });
-});
+        }
+
+        expect(actual).toEqual(expected)
+    })
+})
+
 describe("Validator Simple Person With Child Test", () => {
     it("Parent and child name should return errors", () => {
-        const rule = {
-            name: [(0, propertyValidators_1.required)()],
+        interface SimplePerson {
+            name: string
+            child?: SimplePerson
+        }
+
+        const rule: ValidationRule<SimplePerson> = {
+            name: [required()],
             child: {
-                name: [(0, propertyValidators_1.required)()]
+                name: [required()]
             }
-        };
-        const parent = {
+        }
+        const parent: SimplePerson = {
             name: "",
             child: {
                 name: "",
             }
-        };
-        const actual = index_1.validator.validate(parent, rule);
-        const expected = {
+        }
+
+        const actual = objectValidator.validate(parent, rule)
+
+        const expected: ValidationResult<SimplePerson> = {
             message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
@@ -48,31 +65,54 @@ describe("Validator Simple Person With Child Test", () => {
                     name: ["This field is required."],
                 }
             }
-        };
-        expect(actual).toEqual(expected);
-    });
-});
+        }
+
+        expect(actual).toEqual(expected)
+    })
+})
+
 describe("Validator Nested Object Test with nested address", () => {
     it("Nested object test should return errors", () => {
-        const rule = {
-            name: [(0, propertyValidators_1.required)()],
+        interface Continent {
+            name: string
+        }
+        interface Country {
+            name: string
+            continent: Continent
+        }
+        interface City {
+            name: string
+            country: Country
+        }
+        interface Address {
+            street: string,
+            city: City
+        }
+        interface SimplePerson {
+            name: string
+            child?: SimplePerson
+            address?: Address
+        }
+
+        const rule: ValidationRule<SimplePerson> = {
+            name: [required()],
             address: {
-                street: [(0, propertyValidators_1.required)()],
+                street: [required()],
                 city: {
-                    name: [(0, propertyValidators_1.required)()],
+                    name: [required()],
                     country: {
-                        name: [(0, propertyValidators_1.required)()],
+                        name: [required()],
                         continent: {
-                            name: [(0, propertyValidators_1.required)()],
+                            name: [required()],
                         }
                     }
                 }
             },
             child: {
-                name: [(0, propertyValidators_1.required)()]
+                name: [required()]
             }
-        };
-        const parent = {
+        }
+        const parent: SimplePerson = {
             name: "",
             address: {
                 street: "",
@@ -89,9 +129,11 @@ describe("Validator Nested Object Test with nested address", () => {
             child: {
                 name: "",
             }
-        };
-        const actual = index_1.validator.validate(parent, rule);
-        const expected = {
+        }
+
+        const actual = objectValidator.validate(parent, rule)
+
+        const expected: ValidationResult<SimplePerson> = {
             message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
@@ -112,29 +154,41 @@ describe("Validator Nested Object Test with nested address", () => {
                     name: ["This field is required."],
                 }
             }
-        };
-        expect(actual).toEqual(expected);
-    });
-});
+        }
+
+        expect(actual).toEqual(expected)
+    })
+})
+
+
 describe("Validator test with children array", () => {
     it("Children has to contain elementErrors", () => {
-        const rule = {
-            name: [(0, propertyValidators_1.required)()],
-        };
+        interface Person {
+            name?: string
+            children?: Person[]
+        }
+
+        const rule: ValidationRule<Person> = {
+            name: [required()],
+        }
+
         rule.children = {
-            validators: [(0, propertyValidators_1.arrayMinLen)(1)],
+            validators: [arrayMinLen(1)],
             validationRule: rule
-        };
-        const person = {
+        }
+
+        const person: Person = {
             name: "",
             children: [
                 {
                     name: "",
                 },
             ]
-        };
-        const actual = index_1.validator.validate(person, rule);
-        const expected = {
+        }
+
+        const actual = objectValidator.validate(person, rule)
+
+        const expected: ValidationResult<Person> = {
             message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
@@ -151,25 +205,37 @@ describe("Validator test with children array", () => {
                     ]
                 }
             }
-        };
-        expect(actual).toEqual(expected);
-    });
-});
+        }
+
+        expect(actual).toEqual(expected)
+    })
+})
+
+
 describe("Validator test with children array", () => {
     it("Children has to contain errors", () => {
-        const rule = {
-            name: [(0, propertyValidators_1.required)()],
-        };
+        interface Person {
+            name?: string
+            children?: Person[]
+        }
+
+        const rule: ValidationRule<Person> = {
+            name: [required()],
+        }
+
         rule.children = {
-            validators: [(0, propertyValidators_1.arrayMinLen)(1, "Please add at least one child.")],
+            validators: [arrayMinLen(1, "Please add at least one child.")],
             validationRule: rule
-        };
-        const person = {
+        }
+
+        const person: Person = {
             name: "",
             children: []
-        };
-        const actual = index_1.validator.validate(person, rule);
-        const expected = {
+        }
+
+        const actual = objectValidator.validate(person, rule)
+
+        const expected: ValidationResult<Person> = {
             message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
@@ -178,31 +244,56 @@ describe("Validator test with children array", () => {
                     errors: ["Please add at least one child."],
                 }
             }
-        };
-        expect(actual).toEqual(expected);
-    });
-});
+        }
+
+        expect(actual).toEqual(expected)
+    })
+})
+
 describe("Validator test with Order and Order item", () => {
     it("Validating order item approach 1", () => {
-        const rule = {
-            orderDate: [(0, propertyValidators_1.required)()],
-            orderNumber: [(0, propertyValidators_1.required)()],
+        interface Product {
+            name: string
+            price: number
+            subProducts?: Product[]
+        }
+
+        interface Order {
+            id: string
+            orderNumber: string
+            orderDate: Date | null
+            orderItems: OrderItem[]
+        }
+
+        interface OrderItem {
+            id: string
+            orderId?: string
+            productId: number
+            product?: Product
+            quantity: number
+        }
+
+        const rule: ValidationRule<Order> = {
+            orderDate: [required()],
+            orderNumber: [required()],
             orderItems: {
-                validators: [(0, propertyValidators_1.arrayMinLen)(1, "Please add at least one order item.")],
+                validators: [arrayMinLen(1, "Please add at least one order item.")],
                 validationRule: {
-                    productId: [(0, propertyValidators_1.required)()],
-                    quantity: [(0, propertyValidators_1.minNumber)(1)],
+                    productId: [required()],
+                    quantity: [minNumber(1)],
                 }
             }
-        };
-        const newOrder1 = {
+        }
+
+        const newOrder1: Order = {
             id: "1",
             orderDate: null,
             orderNumber: "",
             orderItems: []
-        };
-        const actual1 = index_1.validator.validate(newOrder1, rule);
-        const expected1 = {
+        }
+
+        const actual1 = objectValidator.validate(newOrder1, rule)
+        const expected1: ValidationResult<Order> = {
             message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
@@ -212,9 +303,11 @@ describe("Validator test with Order and Order item", () => {
                     errors: ["Please add at least one order item."],
                 }
             }
-        };
-        expect(actual1).toEqual(expected1);
-        const newOrder2 = {
+        }
+        expect(actual1).toEqual(expected1)
+
+
+        const newOrder2: Order = {
             id: "1",
             orderDate: null,
             orderNumber: "",
@@ -232,9 +325,10 @@ describe("Validator test with Order and Order item", () => {
                     quantity: 1,
                 },
             ]
-        };
-        const actual2 = index_1.validator.validate(newOrder2, rule);
-        const expected2 = {
+        }
+
+        const actual2 = objectValidator.validate(newOrder2, rule)
+        const expected2: ValidationResult<Order> = {
             message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
@@ -260,31 +354,57 @@ describe("Validator test with Order and Order item", () => {
                     ]
                 }
             }
-        };
-        expect(actual2).toEqual(expected2);
-    });
-});
+        }
+        expect(actual2).toEqual(expected2)
+    })
+})
+
 describe("Validator test with Order and Order item", () => {
     it("Validating order item approach 2, separate the validation rule", () => {
-        const orderItemsRule = {
-            productId: [(0, propertyValidators_1.required)()],
-            quantity: [(0, propertyValidators_1.minNumber)(1)],
-        };
-        const rule = {
-            orderDate: [(0, propertyValidators_1.required)()],
-            orderNumber: [(0, propertyValidators_1.required)()],
+        interface Product {
+            name: string
+            price: number
+            subProducts?: Product[]
+        }
+
+        interface Order {
+            id: string
+            orderNumber: string
+            orderDate: Date | null
+            orderItems: OrderItem[]
+        }
+
+        interface OrderItem {
+            id: string
+            orderId?: string
+            productId: number
+            product?: Product
+            quantity: number
+        }
+
+        const orderItemsRule: ValidationRule<OrderItem> = {
+            productId: [required()],
+            quantity: [minNumber(1)],
+        }
+
+        const rule: ValidationRule<Order> = {
+            orderDate: [required()],
+            orderNumber: [required()],
             orderItems: {
-                validators: [(0, propertyValidators_1.arrayMinLen)(3)],
+                validators: [arrayMinLen(3)],
                 validationRule: orderItemsRule
             }
-        };
-        const newOrder1 = {
+        }
+
+        const newOrder1: Order = {
             id: "1",
             orderDate: null,
             orderNumber: "",
             orderItems: []
-        };
-        const newOrder2 = {
+        }
+
+
+        const newOrder2: Order = {
             id: "1",
             orderDate: null,
             orderNumber: "",
@@ -302,9 +422,10 @@ describe("Validator test with Order and Order item", () => {
                     quantity: 1,
                 },
             ]
-        };
-        const actual1 = index_1.validator.validate(newOrder1, rule);
-        const expected1 = {
+        }
+
+        const actual1 = objectValidator.validate(newOrder1, rule)
+        const expected1: ValidationResult<Order> = {
             message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
@@ -314,10 +435,11 @@ describe("Validator test with Order and Order item", () => {
                     errors: ["The minimum length for this field is 3."],
                 }
             }
-        };
-        expect(actual1).toEqual(expected1);
-        const actual2 = index_1.validator.validate(newOrder2, rule);
-        const expected2 = {
+        }
+        expect(actual1).toEqual(expected1)
+
+        const actual2 = objectValidator.validate(newOrder2, rule)
+        const expected2: ValidationResult<Order> = {
             message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
@@ -344,32 +466,64 @@ describe("Validator test with Order and Order item", () => {
                     ]
                 }
             }
-        };
-        expect(actual2).toEqual(expected2);
-    });
-});
+        }
+        expect(actual2).toEqual(expected2)
+    })
+})
+
 describe("Validator complex validations", () => {
     it("Should return errors", () => {
-        const productIds = [1, 2, 3, 4, 5];
-        const customerIds = [10, 11, 12, 13];
-        const orderItemsRule = {
-            productId: [(0, propertyValidators_1.required)(), (0, propertyValidators_1.elementOf)(productIds)],
-            quantity: [(0, propertyValidators_1.minNumber)(1), (0, propertyValidators_1.maxNumber)(5)],
-        };
-        const rule = {
-            orderDate: [(0, propertyValidators_1.required)()],
-            orderNumber: [(0, propertyValidators_1.required)()],
+        interface Product {
+            name: string
+            price: number
+            subProducts?: Product[]
+        }
+
+        interface Customer {
+            id: number
+            name: string
+            email: string
+        }
+
+        interface Order {
+            id: string
+            customer: Customer
+            orderNumber: string
+            orderDate: Date | null
+            orderItems: OrderItem[]
+        }
+
+        interface OrderItem {
+            id: string
+            orderId?: string
+            productId: number
+            product?: Product
+            quantity: number
+        }
+
+        const productIds = [1, 2, 3, 4, 5]
+        const customerIds = [10, 11, 12, 13]
+
+        const orderItemsRule: ValidationRule<OrderItem> = {
+            productId: [required(), elementOf(productIds)],
+            quantity: [minNumber(1), maxNumber(5)],
+        }
+
+        const rule: ValidationRule<Order> = {
+            orderDate: [required()],
+            orderNumber: [required()],
             customer: {
-                id: [(0, propertyValidators_1.required)(), (0, propertyValidators_1.elementOf)(customerIds)],
-                name: [(0, propertyValidators_1.required)()],
-                email: [(0, propertyValidators_1.required)(), (0, propertyValidators_1.emailAddress)()]
+                id: [required(), elementOf(customerIds)],
+                name: [required()],
+                email: [required(), emailAddress()]
             },
             orderItems: {
-                validators: [(0, propertyValidators_1.arrayMinLen)(4), (0, minSumOf_1.minSumOf)("quantity", 100)],
+                validators: [arrayMinLen(4), minSumOf("quantity", 100)],
                 validationRule: orderItemsRule
             }
-        };
-        const newOrder1 = {
+        }
+
+        const newOrder1: Order = {
             id: "1",
             orderDate: null,
             orderNumber: "",
@@ -379,9 +533,10 @@ describe("Validator complex validations", () => {
                 name: ""
             },
             orderItems: []
-        };
-        const actual1 = index_1.validator.validate(newOrder1, rule);
-        const expected1 = {
+        }
+
+        const actual1 = objectValidator.validate(newOrder1, rule)
+        const expected1: ValidationResult<Order> = {
             message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
@@ -396,9 +551,11 @@ describe("Validator complex validations", () => {
                     errors: ["The minimum length for this field is 4.", "The minimum sum of quantity is 100.",],
                 }
             }
-        };
-        expect(actual1).toEqual(expected1);
-        const newOrder2 = {
+        }
+
+        expect(actual1).toEqual(expected1)
+
+        const newOrder2: Order = {
             id: "1",
             orderDate: null,
             orderNumber: "",
@@ -427,9 +584,9 @@ describe("Validator complex validations", () => {
                     quantity: 12,
                 },
             ]
-        };
-        const actual2 = index_1.validator.validate(newOrder2, rule);
-        const expected2 = {
+        }
+        const actual2 = objectValidator.validate(newOrder2, rule)
+        const expected2: ValidationResult<Order> = {
             message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
@@ -462,32 +619,66 @@ describe("Validator complex validations", () => {
                     ]
                 }
             }
-        };
-        expect(actual2).toEqual(expected2);
-    });
-});
+        }
+        expect(actual2).toEqual(expected2)
+    })
+})
+
+
+
 describe("Validator test maximum sum of", () => {
     it("Should return errors", () => {
-        const productIds = [1, 2, 3, 4, 5];
-        const customerIds = [10, 11, 12, 13];
-        const orderItemsRule = {
-            productId: [(0, propertyValidators_1.required)(), (0, propertyValidators_1.elementOf)(productIds)],
-            quantity: [(0, propertyValidators_1.minNumber)(1), (0, propertyValidators_1.maxNumber)(10)],
-        };
-        const rule = {
-            orderDate: [(0, propertyValidators_1.required)()],
-            orderNumber: [(0, propertyValidators_1.required)()],
+        interface Product {
+            name: string
+            price: number
+            subProducts?: Product[]
+        }
+
+        interface Customer {
+            id: number
+            name: string
+            email: string
+        }
+
+        interface Order {
+            id: string
+            customer: Customer
+            orderNumber: string
+            orderDate: Date | null
+            orderItems: OrderItem[]
+        }
+
+        interface OrderItem {
+            id: string
+            orderId?: string
+            productId: number
+            product?: Product
+            quantity: number
+        }
+
+        const productIds = [1, 2, 3, 4, 5]
+        const customerIds = [10, 11, 12, 13]
+
+        const orderItemsRule: ValidationRule<OrderItem> = {
+            productId: [required(), elementOf(productIds)],
+            quantity: [minNumber(1), maxNumber(10)],
+        }
+
+        const rule: ValidationRule<Order> = {
+            orderDate: [required()],
+            orderNumber: [required()],
             customer: {
-                id: [(0, propertyValidators_1.required)(), (0, propertyValidators_1.elementOf)(customerIds)],
-                name: [(0, propertyValidators_1.required)()],
-                email: [(0, propertyValidators_1.required)(), (0, propertyValidators_1.emailAddress)()]
+                id: [required(), elementOf(customerIds)],
+                name: [required()],
+                email: [required(), emailAddress()]
             },
             orderItems: {
-                validators: [(0, propertyValidators_1.arrayMinLen)(4), (0, index_1.maxSumOf)("quantity", 10)],
+                validators: [arrayMinLen(4), maxSumOf("quantity", 10,)],
                 validationRule: orderItemsRule
             }
-        };
-        const newOrder1 = {
+        }
+
+        const newOrder1: Order = {
             id: "1",
             orderDate: null,
             orderNumber: "",
@@ -510,9 +701,10 @@ describe("Validator test maximum sum of", () => {
                     quantity: 5,
                 },
             ]
-        };
-        const actual1 = index_1.validator.validate(newOrder1, rule);
-        const expected1 = {
+        }
+
+        const actual1 = objectValidator.validate(newOrder1, rule)
+        const expected1: ValidationResult<Order> = {
             message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
@@ -527,32 +719,66 @@ describe("Validator test maximum sum of", () => {
                     errors: ["The minimum length for this field is 4.", "The maximum sum of quantity is 10.",],
                 }
             }
-        };
-        expect(actual1).toEqual(expected1);
-    });
-});
+        }
+
+        expect(actual1).toEqual(expected1)
+    })
+})
+
+
 describe("Validator complex validations", () => {
     it("Should return a valid validation result", () => {
-        const productIds = [1, 2, 3, 4, 5];
-        const customerIds = [10, 11, 12, 13];
-        const orderItemsRule = {
-            productId: [(0, propertyValidators_1.required)(), (0, propertyValidators_1.elementOf)(productIds)],
-            quantity: [(0, propertyValidators_1.minNumber)(1), (0, propertyValidators_1.maxNumber)(5)],
-        };
-        const rule = {
-            orderDate: [(0, propertyValidators_1.required)()],
-            orderNumber: [(0, propertyValidators_1.required)()],
+        interface Product {
+            name: string
+            price: number
+            subProducts?: Product[]
+        }
+
+        interface Customer {
+            id: number
+            name: string
+            email: string
+        }
+
+        interface Order {
+            id: string
+            customer: Customer
+            orderNumber: string
+            orderDate: Date | null
+            orderItems: OrderItem[]
+        }
+
+        interface OrderItem {
+            id: string
+            orderId?: string
+            productId: number
+            product?: Product
+            quantity: number
+        }
+
+        const productIds = [1, 2, 3, 4, 5]
+        const customerIds = [10, 11, 12, 13]
+
+        const orderItemsRule: ValidationRule<OrderItem> = {
+            productId: [required(), elementOf(productIds)],
+            quantity: [minNumber(1), maxNumber(5)],
+        }
+
+        const rule: ValidationRule<Order> = {
+            orderDate: [required()],
+            orderNumber: [required()],
             customer: {
-                id: [(0, propertyValidators_1.required)(), (0, propertyValidators_1.elementOf)(customerIds)],
-                name: [(0, propertyValidators_1.required)()],
-                email: [(0, propertyValidators_1.required)(), (0, propertyValidators_1.emailAddress)()]
+                id: [required(), elementOf(customerIds)],
+                name: [required()],
+                email: [required(), emailAddress()]
             },
             orderItems: {
-                validators: [(0, propertyValidators_1.arrayMinLen)(4)],
+                validators: [arrayMinLen(4)],
                 validationRule: orderItemsRule
             }
-        };
-        const newOrder1 = {
+        }
+
+        const newOrder1: Order = {
             id: "1",
             orderDate: new Date(),
             orderNumber: "ORD/0001",
@@ -587,48 +813,83 @@ describe("Validator complex validations", () => {
                     quantity: 5,
                 },
             ]
-        };
-        const actual1 = index_1.validator.validate(newOrder1, rule);
-        const expected1 = {
+        }
+
+        const actual1 = objectValidator.validate(newOrder1, rule)
+        const expected1: ValidationResult<Order> = {
             message: defaultMessage.okMessage,
             isValid: true,
             errors: undefined,
-        };
-        expect(actual1).toEqual(expected1);
-    });
-});
+        }
+
+        expect(actual1).toEqual(expected1)
+    })
+})
+
 describe("Validator Test The Custom Validator", () => {
     it("Custom validator test", () => {
-        const productIds = [1, 2, 3, 4, 5];
-        const customerIds = [10, 11, 12, 13];
-        const orderItemsRule = {
-            productId: [(0, propertyValidators_1.required)(), (0, propertyValidators_1.elementOf)(productIds)],
-            quantity: [(0, propertyValidators_1.minNumber)(1), (0, propertyValidators_1.maxNumber)(5)],
-        };
-        const rule = {
-            orderDate: [(0, propertyValidators_1.required)()],
-            orderNumber: [(0, propertyValidators_1.required)()],
+        interface Product {
+            name: string
+            price: number
+            subProducts?: Product[]
+        }
+
+        interface Customer {
+            id: number
+            name: string
+            email: string
+        }
+
+        interface Order {
+            id: string
+            customer: Customer
+            orderNumber: string
+            orderDate: Date | null
+            orderItems: OrderItem[]
+        }
+
+        interface OrderItem {
+            id: string
+            orderId?: string
+            productId: number
+            product?: Product
+            quantity: number
+        }
+
+        const productIds = [1, 2, 3, 4, 5]
+        const customerIds = [10, 11, 12, 13]
+
+        const orderItemsRule: ValidationRule<OrderItem> = {
+            productId: [required(), elementOf(productIds)],
+            quantity: [minNumber(1), maxNumber(5)],
+        }
+
+
+        const rule: ValidationRule<Order> = {
+            orderDate: [required()],
+            orderNumber: [required()],
             customer: {
-                id: [(0, propertyValidators_1.required)(), (0, propertyValidators_1.elementOf)(customerIds)],
-                name: [(0, propertyValidators_1.required)(), (0, propertyValidator_1.propertyValidator)(function (value, object) {
-                        return false;
-                    }, "Error customer name")],
-                email: [(0, propertyValidators_1.required)(), (0, propertyValidators_1.emailAddress)()]
+                id: [required(), elementOf(customerIds)],
+                name: [required(), propertyValidator(function (value, object) {
+                    return false
+                }, "Error customer name")],
+                email: [required(), emailAddress()]
             },
             orderItems: {
-                validators: [(0, propertyValidators_1.arrayMinLen)(4), (0, propertyValidator_1.propertyValidator)(function (value, object) {
-                        return true;
-                    }, "Order item has error.")],
+                validators: [arrayMinLen(4), propertyValidator(function (value, object) {
+                    return true
+                }, "Order item has error.")],
                 validationRule: orderItemsRule
             }
-        };
-        const newOrder1 = {
+        }
+
+        const newOrder1: Order = {
             id: "1",
             orderDate: new Date(),
             orderNumber: "ORD/0001",
             customer: {
                 id: 10,
-                email: "invalid@email.com",
+                email: "invalid@email.com", //this is not invalid one
                 name: "Agung"
             },
             orderItems: [
@@ -657,9 +918,10 @@ describe("Validator Test The Custom Validator", () => {
                     quantity: 5,
                 },
             ]
-        };
-        const actual1 = index_1.validator.validate(newOrder1, rule);
-        const expected1 = {
+        }
+
+        const actual1 = objectValidator.validate(newOrder1, rule)
+        const expected1: ValidationResult<Order> = {
             message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
@@ -667,33 +929,43 @@ describe("Validator Test The Custom Validator", () => {
                     name: ["Error customer name"]
                 }
             },
-        };
-        expect(actual1).toEqual(expected1);
-    });
-});
+        }
+
+        expect(actual1).toEqual(expected1)
+    })
+})
+
 describe("Validator Test Date Test", () => {
     it("Test date value", () => {
-        const product = {};
-        const rule = {
-            expiredDate: [(0, propertyValidators_1.required)()],
-        };
-        const actual1 = index_1.validator.validate(product, rule);
-        const expected1 = {
+        interface Product {
+            expiredDate?: Date
+        }
+        const product: Product = {
+        }
+        const rule: ValidationRule<Product> = {
+            expiredDate: [required()],
+        }
+
+        const actual1 = objectValidator.validate(product, rule)
+        const expected1: ValidationResult<Product> = {
             message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
                 expiredDate: ["This field is required."]
             },
-        };
-        expect(actual1).toEqual(expected1);
-        const actual2 = index_1.validator.validate({
+        }
+
+        expect(actual1).toEqual(expected1)
+
+        const actual2 = objectValidator.validate({
             expiredDate: new Date()
-        }, rule);
-        const expected2 = {
+        }, rule)
+        const expected2: ValidationResult<Product> = {
             message: defaultMessage.okMessage,
             isValid: true,
             errors: undefined
-        };
-        expect(actual2).toEqual(expected2);
-    });
-});
+        }
+
+        expect(actual2).toEqual(expected2)
+    })
+})

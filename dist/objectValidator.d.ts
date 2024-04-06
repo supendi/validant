@@ -20,7 +20,7 @@ export interface ValidationMessage {
  * @returns ValidationResult
  */
 export declare const validateObject: <T>(object: T, validationRule: ValidationRule<T>, validationMessage?: ValidationMessage) => ValidationResult<T>;
-declare const validator: {
+declare const objectValidator: {
     validate: <T>(object: T, validationRule: ValidationRule<T>, validationMessage?: ValidationMessage) => ValidationResult<T>;
 };
-export default validator;
+export default objectValidator;

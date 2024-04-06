@@ -168,7 +168,7 @@ const validateObject = (object, validationRule, validationMessage = { okMessage:
     };
 };
 exports.validateObject = validateObject;
-const validator = {
+const objectValidator = {
     validate: exports.validateObject
 };
-exports.default = validator;
+exports.default = objectValidator;
