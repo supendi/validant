@@ -1,4 +1,4 @@
-import { PropertyValidator, ValidateFunc } from "../types";
+import { PossiblyUndefined, PropertyValidator, ValidateFunc } from "../types";
 
 /**
  * Returns a minimum number validation rule
@@ -24,7 +24,7 @@ export const minNumber = <TObject>(min: number, errorMessage?: string) => {
         return value >= min
     }
 
-    const validator: PropertyValidator<number, TObject> = {
+    const validator: PropertyValidator<PossiblyUndefined<number>, TObject> = {
         description: "Spesify the minimum value of number rule.",
         validate: validateFunc,
         returningErrorMessage: msg,
