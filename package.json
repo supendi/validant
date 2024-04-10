@@ -37,12 +37,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/supendi/tsjson-validation.git"
+    "url": "git+https://github.com/supendi/ts-validity.git"
   },
   "author": "github.com/supendi",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/supendi/tsjson-validation/issues"
+    "url": "https://github.com/supendi/ts-validity/issues"
   },
-  "homepage": "https://github.com/supendi/tsjson-validation#readme"
+  "homepage": "https://github.com/supendi/ts-validity#readme"
 }
