@@ -9,11 +9,12 @@
   ],
   "scripts": {
     "test": "jest",
-    "clean": "rm -rf ./dist",
-    "clean-test": "yarn clean && yarn test",
-    "deep-clean": "yarn clean && rm -rf node_modules",
+    "clean-dist": "rm -rf ./dist",
+    "clean-test": "yarn clean-dist && yarn test",
+    "deep-clean": "yarn clean-dist && rm -rf node_modules",
     "deep-clean-test": "yarn deep-clean && yarn install && yarn test",
-    "build": "yarn deep-clean && yarn install && tsc && yarn test",
+    "build": "yarn clean-dist && yarn install && yarn test && tsc",
+    "release": "yarn deep-clean && yarn install && yarn test && tsc",
     "version-patch": "yarn build && npm version patch && git push"
   },
   "devDependencies": {

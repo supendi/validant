@@ -9,23 +9,6 @@ export type PossiblyUndefined<T> = T | undefined;
  */
 export type TypeOfArray<T> = T extends (infer U)[] ? U : never;
 /**
- * Represents the error of object which property data type is string.
- * Example: T = { name: string: age: number, birthDate: Date },
- * then the StringifiedErrorOf<T> =  { name: string: age: string, birthDate: string } (notice the type of its properties is all string).
- */
-export type StringifiedErrorOf<T> = {
-    [key in keyof T]?: T[key] extends object ? T[key] extends Array<any> ? StringifiedValidationResult<T[key]> : T[key] extends Date ? string : StringifiedErrorOf<T[key]> : string;
-};
-/**
- * Represents the model of validation result returned by the validateObject and the validationProperty method
- */
-export type StringifiedValidationResult<T> = {
-    isValid: boolean;
-    errorMessage: string | null;
-    errors?: StringifiedErrorOf<T> | null;
-    subErrors?: StringifiedErrorOf<T> | null;
-};
-/**
  * Represents the validation result.
  * This model is the return type of validate() function.
  * See validator.validate().

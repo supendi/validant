@@ -4,7 +4,7 @@ import { ErrorOf } from "../../types"
  * Ensure all the code below compiled
  */
 
-describe("ErrorOf Simple Person Test", () => {
+describe("ErrorOf Test", () => {
     it("Should compile", () => {
         interface SimplePerson {
             name: string
@@ -26,7 +26,7 @@ describe("ErrorOf Simple Person Test", () => {
 })
 
 
-describe("ErrorOf Complex Person Test", () => {
+describe("ErrorOf Test", () => {
     it("Should compile", () => {
         interface Address {
             street: string,
