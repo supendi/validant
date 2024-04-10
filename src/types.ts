@@ -108,7 +108,7 @@ export type ArrayValidationRule<TObject, TValue> = {
  * Represents a single validation result of property 
  */
 export interface PropertyValidationResult<T> {
-    object: any,
+    object: T,
     propertyName: keyof T,
     propertyValue: any
     isValid: boolean,
