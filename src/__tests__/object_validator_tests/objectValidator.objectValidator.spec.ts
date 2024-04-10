@@ -70,6 +70,43 @@ describe("Validator Account Object Test", () => {
     })
 })
 
+describe("Validator Using Custom Validator", () => {
+    it("Should return errors", () => {
+        interface Account {
+            name: string,
+        }
+
+        const validationRule: ValidationRule<Account> = {
+            name: [propertyValidator((value, object) => {
+
+                // value is the name value
+                // object is the object of Account
+
+                if (value.length < 3) {
+                    return false
+                }
+                return true
+            }, "Name length minimum is 3 chars.")],
+        }
+
+        const account: Account = {
+            name: "an",
+        }
+
+        const validationResult = objectValidator.validate(account, validationRule)
+
+        const expected = {
+            message: "One or more validation errors occurred.",
+            isValid: false,
+            errors: {
+                name: ["Name length minimum is 3 chars."]
+            }
+        }
+
+        expect(validationResult).toEqual(expected)
+    })
+})
+
 describe("Validator Simple Person With Child Test", () => {
     it("Parent and child name should return errors", () => {
         interface SimplePerson {
