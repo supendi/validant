@@ -401,6 +401,84 @@ describe("Validator test with children array", () => {
     })
 })
 
+
+describe("Validator array test", () => {
+    it("Has to contains errors", () => {
+        interface Product {
+            name?: string
+            units?: Unit[]
+        }
+
+        interface Unit {
+            name: string,
+            conversion: number,
+        }
+
+        const validationRule: ValidationRule<Product> = {
+            name: [required()],
+            units: {
+                validators: [arrayMinLen(3, "Product uom has to be at least 3 units.")],
+                validationRule: {
+                    name: [required()],
+                    conversion: [minNumber(1)]
+                }
+            }
+        }
+
+        const ironStick: Product = {
+            name: "",
+            units: [
+                {
+                    name: "",
+                    conversion: 0
+                },
+                {
+                    name: "cm",
+                    conversion: 0
+                }
+            ]
+        }
+
+        const validationResult = objectValidator.validate(ironStick, validationRule)
+
+        const expected: ValidationResult<Product> = {
+            message: defaultMessage.errorMessage,
+            isValid: false,
+            errors: {
+                name: ["This field is required."],
+                units: {
+                    errors: ["Product uom has to be at least 3 units."],
+                    errorsEach: [
+                        {
+                            index: 0,
+                            errors: {
+                                name: ["This field is required."],
+                                conversion: ["The minimum value for this field is 1."]
+                            },
+                            validatedObject: {
+                                name: "",
+                                conversion: 0
+                            }
+                        },
+                        {
+                            index: 1,
+                            errors: {
+                                conversion: ["The minimum value for this field is 1."]
+                            },
+                            validatedObject: {
+                                name: "cm",
+                                conversion: 0
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+
+        expect(validationResult).toEqual(expected)
+    })
+})
+
 describe("Validator test with Order and Order item", () => {
     it("Validating order item approach 1", () => {
         interface Product {
@@ -532,7 +610,7 @@ describe("Validator test with Order and Order item", () => {
             product?: Product
             quantity: number
         }
- 
+
         const rule: ValidationRule<Order> = {
             orderDate: [required()],
             orderNumber: [required()],
