@@ -1,9 +1,9 @@
-# tsjson-validation
+# ts-validity
 
 ## Installation
 ```
-npm install tsjson-validation       # npm
-yarn add tsjson-validation          # yarn
+npm install ts-validity       # npm
+yarn add ts-validity          # yarn
 ```
 
 ## Usage
@@ -19,7 +19,7 @@ interface Account {
 
 Create the validation rule and validate the object
 ```typescript
-import { ValidationRule, minNumber, required, emailAddress } from "tsjson-validation";
+import { ValidationRule, minNumber, required, emailAddress } from "ts-validity";
 
 const validationRule: ValidationRule<Account> = {
     name: [required("Account name is required.")],
@@ -51,7 +51,7 @@ Notice that the validationResult.errors property, has the same property names as
 
 ### Nested object validation
 ```typescript
-import { ValidationRule, minNumber, required, emailAddress } from "tsjson-validation";
+import { ValidationRule, minNumber, required, emailAddress } from "ts-validity";
 
 interface Person {
     name: string,
@@ -141,7 +141,7 @@ const validationResult = objectValidator.validate(john, rule)
 
 ### Validate array property
 ```typescript
-import { ValidationRule, minNumber, required, emailAddress, arrayMinLen } from "tsjson-validation";
+import { ValidationRule, minNumber, required, emailAddress, arrayMinLen } from "ts-validity";
 
 interface Product {
     name?: string
@@ -238,7 +238,7 @@ export type PropertyValidator<TValue, TObject> = {
 
 ### Usage
 ```typescript
-import { ValidationRule, propertyValidator } from "tsjson-validation";
+import { ValidationRule, propertyValidator } from "ts-validity";
 
 interface Account {
     name: string,
