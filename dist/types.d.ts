@@ -9,16 +9,6 @@ export type PossiblyUndefined<T> = T | undefined;
  */
 export type TypeOfArray<T> = T extends (infer U)[] ? U : never;
 /**
- * Represents the validation result.
- * This model is the return type of validate() function.
- * See validator.validate().
- */
-export interface ValidationResult<T> {
-    isValid: boolean;
-    message: string;
-    errors?: ErrorOf<T> | undefined;
-}
-/**
  * Represent the error that has index as one of its properties.
  */
 export type IndexedErrorOf<T> = {
@@ -111,4 +101,14 @@ export interface PropertyValidationResult<T> {
     propertyValue: any;
     isValid: boolean;
     errorMessage: string;
+}
+/**
+ * Represents the validation result.
+ * This model is the return type of validate() function.
+ * See validator.validate().
+ */
+export interface ValidationResult<T> {
+    isValid: boolean;
+    message: string;
+    errors?: ErrorOf<T> | undefined;
 }
