@@ -13,7 +13,7 @@
     "rm-node_modules": "rm -rf node_modules",
     "build": "yarn test && tsc",
     "release": "yarn rm-node_modules && yarn install && yarn test && tsc",
-    "npm-version-patch": "yarn release && npm version patch && git push"
+    "version-patch": "yarn release && npm version patch && git push"
   },
   "devDependencies": {
     "@babel/core": "^7.13.16",
