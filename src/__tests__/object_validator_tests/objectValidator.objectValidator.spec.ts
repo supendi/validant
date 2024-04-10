@@ -34,6 +34,42 @@ describe("Validator Simple Person Test", () => {
     })
 })
 
+describe("Validator Account Object Test", () => {
+    it("Should return errors", () => {
+        interface Account {
+            name: string,
+            age: number,
+            email: string
+        }
+
+        const validationRule: ValidationRule<Account> = {
+            name: [required("Account name is required.")],
+            age: [required(), minNumber(17, "Should be at least 17 years old.")],
+            email: [required(), emailAddress("Invalid email address")]
+        }
+
+        const account: Account = {
+            name: "",
+            age: 0,
+            email: ""
+        }
+
+        const actual = objectValidator.validate(account, validationRule)
+
+        var expected = {
+            message: "One or more validation errors occurred.",
+            isValid: false,
+            errors: {
+                name: ["Account name is required."],
+                age: ["This field is required.", "Should be at least 17 years old."],
+                email: ["This field is required.", "Invalid email address"],
+            }
+        }
+
+        expect(actual).toEqual(expected)
+    })
+})
+
 describe("Validator Simple Person With Child Test", () => {
     it("Parent and child name should return errors", () => {
         interface SimplePerson {
@@ -88,14 +124,16 @@ describe("Validator Nested Object Test with nested address", () => {
             street: string,
             city: City
         }
-        interface SimplePerson {
-            name: string
-            child?: SimplePerson
+        interface Person {
+            name: string,
+            age: number,
+            child?: Person
             address?: Address
         }
 
-        const rule: ValidationRule<SimplePerson> = {
+        const rule: ValidationRule<Person> = {
             name: [required()],
+            age: [minNumber(20)],
             address: {
                 street: [required()],
                 city: {
@@ -112,8 +150,9 @@ describe("Validator Nested Object Test with nested address", () => {
                 name: [required()]
             }
         }
-        const parent: SimplePerson = {
+        const john: Person = {
             name: "",
+            age: 0,
             address: {
                 street: "",
                 city: {
@@ -128,16 +167,18 @@ describe("Validator Nested Object Test with nested address", () => {
             },
             child: {
                 name: "",
+                age: 0,
             }
         }
 
-        const actual = objectValidator.validate(parent, rule)
+        const actual = objectValidator.validate(john, rule)
 
-        const expected: ValidationResult<SimplePerson> = {
+        const expected: ValidationResult<Person> = {
             message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
                 name: ["This field is required."],
+                age: ["The minimum value for this field is 20."],
                 address: {
                     street: ["This field is required."],
                     city: {
@@ -157,6 +198,96 @@ describe("Validator Nested Object Test with nested address", () => {
         }
 
         expect(actual).toEqual(expected)
+    })
+})
+
+describe("Validator Nested Object Test with nested address", () => {
+    it("Nested object test should return errors", () => {
+        interface Person {
+            name: string,
+            age: number,
+            child?: Person
+            address?: {
+                street: string,
+                city: {
+                    name: string
+                    country: {
+                        name: string
+                        continent: {
+                            name: string
+                        }
+                    }
+                }
+            }
+        }
+
+        const rule: ValidationRule<Person> = {
+            name: [required()],
+            age: [minNumber(20)],
+            address: {
+                street: [required()],
+                city: {
+                    name: [required()],
+                    country: {
+                        name: [required()],
+                        continent: {
+                            name: [required()],
+                        }
+                    }
+                }
+            },
+            child: {
+                name: [required()]
+            }
+        }
+        const john: Person = {
+            name: "",
+            age: 0,
+            address: {
+                street: "",
+                city: {
+                    name: "",
+                    country: {
+                        name: "",
+                        continent: {
+                            name: ""
+                        }
+                    }
+                }
+            },
+            child: {
+                name: "",
+                age: 0,
+            }
+        }
+
+        const validationResult = objectValidator.validate(john, rule)
+
+        const expected: ValidationResult<Person> = {
+            message: defaultMessage.errorMessage,
+            isValid: false,
+            errors: {
+                name: ["This field is required."],
+                age: ["The minimum value for this field is 20."],
+                address: {
+                    street: ["This field is required."],
+                    city: {
+                        name: ["This field is required."],
+                        country: {
+                            name: ["This field is required."],
+                            continent: {
+                                name: ["This field is required."],
+                            }
+                        }
+                    }
+                },
+                child: {
+                    name: ["This field is required."],
+                }
+            }
+        }
+
+        expect(validationResult).toEqual(expected)
     })
 })
 
@@ -224,13 +355,18 @@ describe("Validator test with children array", () => {
         }
 
         rule.children = {
-            validators: [arrayMinLen(1, "Please add at least one child.")],
+            validators: [arrayMinLen(2, "The minimum children is 2.")],
             validationRule: rule
         }
 
         const person: Person = {
             name: "",
-            children: []
+            children: [
+                {
+                    name: "",
+                    children: []
+                }
+            ]
         }
 
         const actual = objectValidator.validate(person, rule)
@@ -241,7 +377,22 @@ describe("Validator test with children array", () => {
             errors: {
                 name: ["This field is required."],
                 children: {
-                    errors: ["Please add at least one child."],
+                    errors: ["The minimum children is 2."],
+                    errorsEach: [
+                        {
+                            index: 0,
+                            errors: {
+                                name: ["This field is required."],
+                                children: {
+                                    errors: ["The minimum children is 2."]
+                                }
+                            },
+                            validatedObject: {
+                                name: "",
+                                children: []
+                            }
+                        }
+                    ]
                 }
             }
         }
@@ -381,18 +532,16 @@ describe("Validator test with Order and Order item", () => {
             product?: Product
             quantity: number
         }
-
-        const orderItemsRule: ValidationRule<OrderItem> = {
-            productId: [required()],
-            quantity: [minNumber(1)],
-        }
-
+ 
         const rule: ValidationRule<Order> = {
             orderDate: [required()],
             orderNumber: [required()],
             orderItems: {
                 validators: [arrayMinLen(3)],
-                validationRule: orderItemsRule
+                validationRule: {
+                    productId: [required()],
+                    quantity: [minNumber(1)],
+                }
             }
         }
 
@@ -402,7 +551,6 @@ describe("Validator test with Order and Order item", () => {
             orderNumber: "",
             orderItems: []
         }
-
 
         const newOrder2: Order = {
             id: "1",
