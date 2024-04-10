@@ -1,6 +1,6 @@
 {
   "name": "tsjson-validation",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "description": "Simple json validator by using user-defined validation rules",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -8,9 +8,9 @@
     "/dist"
   ],
   "scripts": {
-    "rm-dist": "rm -rf ./dist", 
+    "rm-dist": "rm -rf ./dist",
     "test": "yarn rm-dist && jest",
-    "rm-node_modules": "rm -rf node_modules", 
+    "rm-node_modules": "rm -rf node_modules",
     "build": "yarn test && tsc",
     "release": "yarn rm-node_modules && yarn install && yarn test && tsc",
     "npm-version-patch": "yarn release && npm version patch && git push"
