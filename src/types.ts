@@ -12,6 +12,17 @@ export type PossiblyUndefined<T> = T | undefined
 export type TypeOfArray<T> = T extends (infer U)[] ? U : never;
 
 /**
+ * Represents an error of T.
+ * Example: If T is { name: string }
+ * Then ErrorOf<T> is { name: string[] } 
+ */
+export type ErrorOf<T> = { [key in keyof T]?:
+    T[key] extends Date ? string[]
+    : T[key] extends PossiblyUndefined<Array<any>> ? ErrorOfArray<T[key]>
+    : T[key] extends PossiblyUndefined<object> ? ErrorOf<T[key]>
+    : string[] }
+
+/**
  * Represent the error that has index as one of its properties.
  */
 export type IndexedErrorOf<T> = { index: number, errors: ErrorOf<T>, validatedObject: T | null | undefined }
@@ -21,7 +32,7 @@ export type IndexedErrorOf<T> = { index: number, errors: ErrorOf<T>, validatedOb
  * Example: If T { name: string, children: T[]}
  * Then ErrorOfArray<T> will be  { name: string[], children: { propertyErrors: string[], indexedErrors: { index: number, errors: ErrorOf<T>, validatedObject: T | null | undefined }}}
  */
-export type ErrorOfArray<T> = {
+export type ErrorOfArray<TArray> = {
     /**
      * Represents the error of the array as whole (or a single property that is validated).
      * Example: 
@@ -36,19 +47,8 @@ export type ErrorOfArray<T> = {
      * If each element of array need to be validated.
      * The errorsEach represents the errors of the each element of the array.
      */
-    errorsEach?: IndexedErrorOf<TypeOfArray<T>>[]
+    errorsEach?: IndexedErrorOf<TypeOfArray<TArray>>[]
 }
-
-/**
- * Represents an error of T.
- * Example: If T is { name: string }
- * Then ErrorOf<T> is { name: string[] } 
- */
-export type ErrorOf<T> = { [key in keyof T]?:
-    T[key] extends Date ? string[]
-    : T[key] extends PossiblyUndefined<Array<any>> ? ErrorOfArray<T[key]>
-    : T[key] extends PossiblyUndefined<object> ? ErrorOf<T[key]>
-    : string[] }
 
 /**
  * Specifies the contract of validator function.
