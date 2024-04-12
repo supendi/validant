@@ -245,16 +245,17 @@ interface Account {
 }
 
 const validationRule: ValidationRule<Account> = {
-    name: [propertyValidator((value, object) => {
+    name: [
+        // Name length minimum is 3 char
+        propertyValidator((value, object) => {
+            return value.length >= 5
+        }, "Name length minimum is 5 chars."),
 
-        // value is the name value
-        // object is the object of Account
-
-        if (value.length < 3) {
-            return false
-        }
-        return true
-    }, "Name length minimum is 3 chars.")],
+        // Must contain A letter
+        propertyValidator((value, object) => {
+            return value.toLocaleLowerCase().includes("a")
+        }, "The name must contain the 'A' letter."),
+    ],
 }
 
 const account: Account = {
@@ -267,7 +268,7 @@ const validationResult = objectValidator.validate(account, validationRule)
 //     message: "One or more validation errors occurred.",
 //     isValid: false,
 //     errors: {
-//         name: ["Name length minimum is 3 chars."]
+//         name: ["Name length minimum is 5 chars.", "The name must contain the 'A' letter."]
 //     }
 // }
 ```
