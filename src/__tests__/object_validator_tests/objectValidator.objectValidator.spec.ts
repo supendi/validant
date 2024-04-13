@@ -86,7 +86,7 @@ describe("Validator Using Custom Validator", () => {
                 // Must contain A letter
                 propertyValidator((value, object) => {
                     return value.toLocaleLowerCase().includes("a")
-                }, "The name must contain the 'A' letter."),
+                }, "Name must contain 'A' letter."),
             ],
         }
 
@@ -100,7 +100,7 @@ describe("Validator Using Custom Validator", () => {
             message: "One or more validation errors occurred.",
             isValid: false,
             errors: {
-                name: ["Name length minimum is 5 chars.", "The name must contain the 'A' letter."]
+                name: ["Name length minimum is 5 chars.", "Name must contain 'A' letter."]
             }
         }
 
