@@ -341,3 +341,24 @@ const validationResult = objectValidator.validate(account, validationRule)
 //     }
 // }
 ```
+
+## Available Built-in Property Validators
+```typescript
+export {
+    alphabetOnly,
+    arrayMaxLen,
+    arrayMinLen,
+    elementOf,
+    emailAddress,
+    equalToPropertyValue,
+    maxNumber,
+    minNumber,
+    maxSumOf,
+    minSumOf,
+    propertyValidator,
+    regularExpression,
+    required,
+    stringMaxLen,
+    stringMinLen,
+}
+```
