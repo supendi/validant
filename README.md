@@ -280,6 +280,7 @@ We can use and combine the existing popular validator from npm. In this example 
 Installation
 ```typescript
 npm install validator
+npm install -D @types/validator // if typescript
 ```
 
 ```typescript
