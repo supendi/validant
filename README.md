@@ -259,7 +259,7 @@ const validationRule: ValidationRule<Account> = {
 }
 
 const account: Account = {
-    name: "an",
+    name: "John",
 }
 
 const validationResult = objectValidator.validate(account, validationRule)
