@@ -246,7 +246,7 @@ interface Account {
 
 const validationRule: ValidationRule<Account> = {
     name: [
-        // Name length minimum is 3 char
+        // Name length minimum is 5 char
         propertyValidator((value, object) => {
             return value.length >= 5
         }, "Name length minimum is 5 chars."),
