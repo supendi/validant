@@ -222,7 +222,7 @@ The following is the signature of **propertyValidator** function:
 export declare const propertyValidator: <TValue, TObject>(func: ValidateFunc<TValue, TObject>, errorMessage: string, validatorDescription?: string) => PropertyValidator<TValue, TObject>;
 ```
 
-The propertyValidator is actually a closure that returns a validate function, which is called by the objectValidator. The following is the signature of the **ValidateFunc**:
+The existing built-in property validators, including the propertyValidator actually is a closure that returns a validate function, which is called by the objectValidator. The following is the signature of the **ValidateFunc**:
 ```typescript
 export type ValidateFunc<TValue, TObject> = (value: TValue, objRef?: TObject) => boolean
 ```
