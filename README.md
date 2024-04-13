@@ -272,3 +272,70 @@ const validationResult = objectValidator.validate(account, validationRule)
 //     }
 // }
 ```
+
+## Use existing npm validator package as custom validator
+
+We can use and combine the existing popular validator from npm. In this example I use the validator package (https://www.npmjs.com/package/validator).
+
+Installation
+```typescript
+npm install validator
+```
+
+```typescript
+import { objectValidator, ValidationRule, propertyValidator } from "ts-validity";
+import validator from 'validator';
+
+interface Account {
+    name: string,
+    email: string,
+    phone: string,
+    password: string
+}
+
+const validationRule: ValidationRule<Account> = {
+    name: [required()],
+    // Combine the built-in validator and the 'validator' package
+    email: [
+        required(),
+        propertyValidator((value, object) => {
+            return validator.isEmail(value) // the 'validator' package
+        }, "Not a valid email."),
+    ],
+    phone: [
+        required(),
+        propertyValidator((value, object) => {
+            return validator.isMobilePhone(value, "en-AU") // the 'validator' package
+        }, "Should be an AU mobile phone number format"),
+    ],
+    password: [
+        required(),
+        propertyValidator((value, object) => {
+            // the 'validator' package
+            return validator.isStrongPassword(value, {
+                minLength: 8,
+                minUppercase: 2
+            })
+        }, "Password should be 8 chars minimum, and has to contain at least 2 upper case."),
+    ],
+}
+
+const account: Account = {
+    name: "John",
+    email: "valid@@email.com",
+    phone: "123123123",
+    password: "strongpassword"
+}
+
+const validationResult = objectValidator.validate(account, validationRule)
+
+// validationResult = {
+//     message: "One or more validation errors occurred.",
+//     isValid: false,
+//     errors: {
+//         email: ["Not a valid email."],
+//         phone: ["Should be an AU mobile phone number format"],
+//         password: ["Password should be 8 chars minimum, and has to contain at least 2 upper case."]
+//     }
+// }
+```
