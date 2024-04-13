@@ -277,12 +277,13 @@ const validationResult = objectValidator.validate(account, validationRule)
 
 We can use and combine the existing popular validator from npm. In this example I use the validator package (https://www.npmjs.com/package/validator).
 
-Installation
+### Installation
 ```typescript
 npm install validator
 npm install -D @types/validator // if typescript
 ```
 
+### Usage
 ```typescript
 import { objectValidator, ValidationRule, propertyValidator } from "ts-validity";
 import validator from 'validator';
