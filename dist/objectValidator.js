@@ -126,6 +126,18 @@ const getErrorOf = (object, validationRule) => {
             const typeofValue = typeof (value);
             if (typeofValue === "object") {
                 const childObject = object[key];
+                if (!childObject) {
+                    if (!errors) {
+                        errors = {};
+                    }
+                    if (!errors[key]) {
+                        errors[key] = {};
+                    }
+                    errors[key] = {
+                        errors: [`Could not validate property '${key}', the value is ${value}`],
+                    };
+                    continue;
+                }
                 const childValidationRule = rule;
                 const error = (0, exports.getErrorOf)(childObject, childValidationRule);
                 if (error) {

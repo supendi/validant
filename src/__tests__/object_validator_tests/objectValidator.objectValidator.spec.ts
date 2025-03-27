@@ -1090,6 +1090,51 @@ describe("Validator complex validations", () => {
     })
 })
 
+describe("Validate null property", () => {
+    it("Should return a valid validation result", () => {
+        interface Order {
+            id: string
+            orderItems: OrderItem[]
+        }
+
+        interface OrderItem {
+            productId: number
+            quantity: number
+        }
+
+        const productIds = [1, 2, 3, 4, 5]
+
+        const orderItemsRule: ValidationRule<OrderItem> = {
+            productId: [required(), elementOf(productIds)],
+            quantity: [minNumber(1), maxNumber(5)],
+        }
+
+        const rule: ValidationRule<Order> = {
+            orderItems: {
+                validationRule: orderItemsRule
+            }
+        }
+
+        const newOrder1: Order = {
+            id: "1",
+            orderItems: null
+        }
+
+        const actual1 = objectValidator.validate(newOrder1, rule)
+        const expected1: ValidationResult<Order> = {
+            message: defaultMessage.errorMessage,
+            isValid: false,
+            errors: {
+                orderItems: {
+                    errors: ["Could not validate property 'orderItems', the value is null"]
+                }
+            },
+        }
+
+        expect(actual1).toEqual(expected1)
+    })
+})
+
 describe("Validator Test The Custom Validator", () => {
     it("Custom validator test", () => {
         interface Product {
