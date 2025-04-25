@@ -106,7 +106,7 @@ export type ArrayValidationRule<TValue, TObject> = {
     validationRule?: ValidationRule<PossiblyUndefined<TypeOfArray<TValue>>> | ArrayPropertyValidationRuleBuilder<TValue, TObject>
 }
 
-type ArrayPropertyValidationRuleBuilder<TValue, TObject> = (a: TValue, b: TObject) => ValidationRule<PossiblyUndefined<TypeOfArray<TValue>>>
+type ArrayPropertyValidationRuleBuilder<TValue, TObject> = (a: TypeOfArray<TValue>, b: TObject) => ValidationRule<PossiblyUndefined<TypeOfArray<TValue>>>
 
 /**
  * Represents a single validation result of property 

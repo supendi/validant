@@ -113,7 +113,7 @@ function validateArrayField<T>(key: Extract<keyof T, string>, object: T, rule: V
             const element = value[index];
             let error: ErrorOf<any> = undefined
             if (typeof arrayValidationRule.validationRule === "function") {
-                const validationRule = arrayValidationRule.validationRule(value, object)
+                const validationRule = arrayValidationRule.validationRule(element, object)
                 error = validateStruct(element, validationRule);
             }
             else {
