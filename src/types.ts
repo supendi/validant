@@ -66,13 +66,15 @@ export type PropertyValidator<TValue, TObject> = {
     returningErrorMessage: string
 }
 
+export type ArrayPropertyRuleBuilder<TValue, TObject> = (value: TValue, objRef?: TObject) => ArrayValidationRule<TValue, TObject>
+
 /**
  * Represents a collection of validation rules.
  * The validation schema should implement this type.
  */
 export type ValidationRule<T> = { [key in keyof T]?
     : T[key] extends Date ? PropertyValidator<T[key], T>[]
-    : T[key] extends PossiblyUndefined<Array<any>> ? ArrayValidationRule<T, T[key]>
+    : T[key] extends PossiblyUndefined<Array<any>> ? ArrayValidationRule<T[key], T> | ArrayPropertyRuleBuilder<T[key], T>
     : T[key] extends PossiblyUndefined<object> ? ValidationRule<T[key]>
     : PropertyValidator<T[key], T>[] }
 
@@ -88,7 +90,7 @@ export type ValidationRule<T> = { [key in keyof T]?
         }
  * }
  */
-export type ArrayValidationRule<TObject, TValue> = {
+export type ArrayValidationRule<TValue, TObject> = {
     /**
     * The validator of property where its type is array.
     * Example:

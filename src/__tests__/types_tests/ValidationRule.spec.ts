@@ -1,5 +1,5 @@
-import { PropertyValidator, ValidationRule, ArrayValidationRule  } from "../../types"
-import { elementOf, emailAddress, maxNumber, arrayMinLen, minNumber, required } from "../../propertyValidators" 
+import { PropertyValidator, ValidationRule, ArrayValidationRule } from "../../types"
+import { elementOf, emailAddress, maxNumber, arrayMinLen, minNumber, required } from "../../propertyValidators"
 
 /**
  * Ensure all the code below are compiled
@@ -246,7 +246,7 @@ describe("ValidationRules Complex Person Test", () => {
 
         const childrenRules = personRules.children
         expect(childrenRules).not.toBeUndefined()
-        expect(childrenRules).toEqual<ArrayValidationRule<Person, Person[]>>({
+        expect(childrenRules).toEqual<ArrayValidationRule<Person[], Person>>({
             validators: [requiredValidator],
             validationRule: {
                 name: [requiredValidator],

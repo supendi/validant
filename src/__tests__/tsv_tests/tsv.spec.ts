@@ -1277,3 +1277,72 @@ describe("Validator Test Date Test", () => {
         expect(actual2).toEqual(expected2)
     })
 })
+
+
+
+describe("Validator Test The Custom Validator", () => {
+    it("Custom validator test", () => {
+        interface Product {
+            name: string
+            price: number
+            subProducts?: Product[]
+        }
+
+        interface Order {
+            orderItems: OrderItem[]
+        }
+
+        interface OrderItem {
+            id: string
+            orderId?: string
+            productId: number
+            product?: Product
+            quantity: number
+        }
+
+        const rule: ValidationRule<Order> = {
+            orderItems: function build() {
+                return {
+                    validationRule: {
+                        orderId: [required("required")]
+                    }
+                }
+            }
+        }
+
+        const newOrder1: Order = {
+            orderItems: [
+                {
+                    id: "1",
+                    productId: 1,
+                    quantity: 2,
+                },
+            ]
+        }
+
+        const actual1 = tsv.validate(newOrder1, rule)
+        const expected1: ValidationResult<Order> = {
+            message: defaultMessage.errorMessage,
+            isValid: false,
+            errors: {
+                orderItems: {
+                    errorsEach: [
+                        {
+                            index: 0,
+                            validatedObject: {
+                                id: '1',
+                                productId: 1,
+                                quantity: 2
+                            },
+                            errors: {
+                                orderId: ["required"]
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+
+        expect(actual1).toEqual(expected1)
+    })
+})

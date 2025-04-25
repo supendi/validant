@@ -1,4 +1,5 @@
-import { ValidationRule, ArrayValidationRule, PropertyValidator } from "../../types" 
+import { required } from "../../propertyValidators"
+import { ValidationRule, ArrayValidationRule, PropertyValidator, ArrayPropertyRuleBuilder } from "../../types"
 
 const requiredValidator: PropertyValidator<any, any> = {
     description: "Required Validator",
@@ -24,13 +25,13 @@ describe("ArrayValidationRule Compile Test", () => {
             name: string
             age: number
         }
-        
+
         const personRule: ValidationRule<Person> = {
             name: [requiredValidator],
             age: [requiredValidator, minNumberValidator],
         }
 
-        const arrayOfPersonValidationRule: ArrayValidationRule<Person, Person[]> = {
+        const arrayOfPersonValidationRule: ArrayValidationRule<Person[], Person> = {
             validators: [requiredValidator],
             validationRule: personRule,
         }
@@ -56,7 +57,7 @@ describe("ArrayValidationRule Compile Test", () => {
             age: [requiredValidator, minNumberValidator],
         }
 
-        const arrayOfPersonValidationRule: ArrayValidationRule<Person, Person[]> = {
+        const arrayOfPersonValidationRule: ArrayValidationRule<Person[], Person> = {
             validators: [requiredValidator],
             validationRule: personRule,
         }
@@ -67,5 +68,28 @@ describe("ArrayValidationRule Compile Test", () => {
         expect(Array.isArray(arrayOfPersonValidationRule.validators)).toBeTruthy()
         expect(arrayOfPersonValidationRule.validators?.length).toEqual(1)
         expect(arrayOfPersonValidationRule.validators ? arrayOfPersonValidationRule.validators[0] : undefined).toEqual(requiredValidator)
+    })
+})
+
+describe("ArrayValidationRule Compile Test", () => {
+    it("Should compile", () => {
+        interface Order {
+            orderItems: OrderItem[]
+        }
+
+        interface OrderItem {
+            productId: number
+        }
+
+        var rule: ValidationRule<Order> = {
+            orderItems: function build(y: OrderItem[], x: Order) {
+                return {
+                    validators: [required("")],
+                    validationRule: {
+                        productId: []
+                    }
+                }
+            }
+        }
     })
 })
