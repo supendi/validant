@@ -1,4 +1,4 @@
-import { getErrorOf } from "../../objectValidator"
+import { validateStruct } from "../../tsv/validateStruct"
 import { ErrorOf, ValidationRule } from "../../types"
 import { elementOf } from "../../propertyValidators/elementOf"
 import { emailAddress } from "../../propertyValidators/emailAddress"
@@ -23,7 +23,7 @@ describe("getErrorOf Simple Person Test", () => {
             name: "",
         }
 
-        const actual = getErrorOf(person, rule)
+        const actual = validateStruct(person, rule)
 
         const expected: ErrorOf<SimplePerson> = {
             name: ["This field is required."]
@@ -53,7 +53,7 @@ describe("getErrorOf Simple Person With Child Test", () => {
             }
         }
 
-        const actual = getErrorOf(parent, rule)
+        const actual = validateStruct(parent, rule)
 
         const expected: ErrorOf<SimplePerson> = {
             name: ["This field is required."],
@@ -126,7 +126,7 @@ describe("getErrorOf Nested Object Test with nested address", () => {
             }
         }
 
-        const actual = getErrorOf(parent, rule)
+        const actual = validateStruct(parent, rule)
 
         const expected: ErrorOf<SimplePerson> = {
             name: ["This field is required."],
@@ -176,7 +176,7 @@ describe("getErrorOf test with children array", () => {
             ]
         }
 
-        const actual = getErrorOf(person, rule)
+        const actual = validateStruct(person, rule)
 
         const expected: ErrorOf<Person> = {
             name: ["This field is required."],
@@ -219,7 +219,7 @@ describe("getErrorOf test with children array", () => {
             children: []
         }
 
-        const actual = getErrorOf(person, rule)
+        const actual = validateStruct(person, rule)
 
         const expected: ErrorOf<Person> = {
             name: ["This field is required."],
@@ -274,7 +274,7 @@ describe("getErrorOf test with Order and Order item", () => {
             orderItems: []
         }
 
-        const actual1 = getErrorOf(newOrder1, rule)
+        const actual1 = validateStruct(newOrder1, rule)
         const expected1: ErrorOf<Order> = {
             orderDate: ["This field is required."],
             orderNumber: ["This field is required."],
@@ -305,7 +305,7 @@ describe("getErrorOf test with Order and Order item", () => {
             ]
         }
 
-        const actual2 = getErrorOf(newOrder2, rule)
+        const actual2 = validateStruct(newOrder2, rule)
         const expected2: ErrorOf<Order> = {
             orderDate: ["This field is required."],
             orderNumber: ["This field is required."],
@@ -398,7 +398,7 @@ describe("getErrorOf test with Order and Order item", () => {
             ]
         }
 
-        const actual1 = getErrorOf(newOrder1, rule)
+        const actual1 = validateStruct(newOrder1, rule)
         const expected1: ErrorOf<Order> = {
             orderDate: ["This field is required."],
             orderNumber: ["This field is required."],
@@ -408,7 +408,7 @@ describe("getErrorOf test with Order and Order item", () => {
         }
         expect(actual1).toEqual(expected1)
 
-        const actual2 = getErrorOf(newOrder2, rule)
+        const actual2 = validateStruct(newOrder2, rule)
         const expected2: ErrorOf<Order> = {
             orderDate: ["This field is required."],
             orderNumber: ["This field is required."],
@@ -501,7 +501,7 @@ describe("getErrorOf complex validations", () => {
             orderItems: []
         }
 
-        const actual1 = getErrorOf(newOrder1, rule)
+        const actual1 = validateStruct(newOrder1, rule)
         const expected1: ErrorOf<Order> = {
             orderDate: ["This field is required."],
             orderNumber: ["This field is required."],
@@ -547,7 +547,7 @@ describe("getErrorOf complex validations", () => {
                 },
             ]
         }
-        const actual2 = getErrorOf(newOrder2, rule)
+        const actual2 = validateStruct(newOrder2, rule)
         const expected2: ErrorOf<Order> = {
             orderDate: ["This field is required."],
             orderNumber: ["This field is required."],
@@ -615,7 +615,7 @@ describe("getErrorOf complex validations", () => {
             address: []
         }
 
-        const actual1 = getErrorOf(customer, rule)
+        const actual1 = validateStruct(customer, rule)
         const expected1: ErrorOf<Customer> = {
             name: ["This field should not contain any numbers or symbols. Accept only A-Z a-z and spaces.", `The minimum length string is ${stringLenMin}.`],
             email: ["Invalid email address. The valid email example: john.doe@example.com."],
@@ -630,7 +630,7 @@ describe("getErrorOf complex validations", () => {
             address: []
         }
 
-        const actual2 = getErrorOf(customer2, rule)
+        const actual2 = validateStruct(customer2, rule)
         const expected2: ErrorOf<Customer> | undefined = undefined
 
         expect(actual2).toEqual(expected2)

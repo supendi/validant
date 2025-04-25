@@ -1,8 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.stringMinLen = exports.stringMaxLen = exports.alphabetOnly = exports.propertyValidator = exports.maxSumOf = exports.minSumOf = exports.required = exports.regularExpression = exports.minNumber = exports.maxNumber = exports.equalToPropertyValue = exports.emailAddress = exports.elementOf = exports.arrayMinLen = exports.arrayMaxLen = exports.objectValidator = void 0;
-const objectValidator_1 = require("./objectValidator");
-exports.objectValidator = objectValidator_1.default;
+exports.stringMinLen = exports.stringMaxLen = exports.alphabetOnly = exports.propertyValidator = exports.maxSumOf = exports.minSumOf = exports.required = exports.regularExpression = exports.minNumber = exports.maxNumber = exports.equalToPropertyValue = exports.emailAddress = exports.elementOf = exports.arrayMinLen = exports.arrayMaxLen = exports.objectValidator = exports.tsv = void 0;
+const tsv_1 = require("./tsv");
+exports.tsv = tsv_1.default;
+exports.objectValidator = tsv_1.default;
 const propertyValidators_1 = require("./propertyValidators");
 Object.defineProperty(exports, "emailAddress", { enumerable: true, get: function () { return propertyValidators_1.emailAddress; } });
 Object.defineProperty(exports, "equalToPropertyValue", { enumerable: true, get: function () { return propertyValidators_1.equalToPropertyValue; } });

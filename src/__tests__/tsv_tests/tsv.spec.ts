@@ -1,10 +1,16 @@
-import { objectValidator, maxSumOf } from "../../index"
+import { tsv, maxSumOf } from "../../index"
 import { ValidationResult, ValidationRule } from "../../types"
 import { elementOf, emailAddress, maxNumber, arrayMinLen, required, minNumber } from "../../propertyValidators"
 import { propertyValidator } from "../../propertyValidators/propertyValidator"
 import { minSumOf } from "../../propertyValidators/minSumOf"
 
 const defaultMessage = { okMessage: "Good to go.", errorMessage: "One or more validation errors occurred." }
+
+const goodValidationResult = {
+    message: defaultMessage.okMessage,
+    isValid: true,
+    errors: undefined,
+}
 
 describe("Validator Simple Person Test", () => {
     it("Person name should return errors", () => {
@@ -20,7 +26,7 @@ describe("Validator Simple Person Test", () => {
             name: "",
         }
 
-        const actual = objectValidator.validate(person, rule)
+        const actual = tsv.validate(person, rule)
 
         const expected: ValidationResult<SimplePerson> = {
             message: defaultMessage.errorMessage,
@@ -54,7 +60,7 @@ describe("Validator Account Object Test", () => {
             email: ""
         }
 
-        const actual = objectValidator.validate(account, validationRule)
+        const actual = tsv.validate(account, validationRule)
 
         var expected = {
             message: "One or more validation errors occurred.",
@@ -94,7 +100,7 @@ describe("Validator Using Custom Validator", () => {
             name: "John",
         }
 
-        const validationResult = objectValidator.validate(account, validationRule)
+        const validationResult = tsv.validate(account, validationRule)
 
         const expected = {
             message: "One or more validation errors occurred.",
@@ -128,7 +134,7 @@ describe("Validator Simple Person With Child Test", () => {
             }
         }
 
-        const actual = objectValidator.validate(parent, rule)
+        const actual = tsv.validate(parent, rule)
 
         const expected: ValidationResult<SimplePerson> = {
             message: defaultMessage.errorMessage,
@@ -209,7 +215,7 @@ describe("Validator Nested Object Test with nested address", () => {
             }
         }
 
-        const actual = objectValidator.validate(john, rule)
+        const actual = tsv.validate(john, rule)
 
         const expected: ValidationResult<Person> = {
             message: defaultMessage.errorMessage,
@@ -299,7 +305,7 @@ describe("Validator Nested Object Test with nested address", () => {
             }
         }
 
-        const validationResult = objectValidator.validate(john, rule)
+        const validationResult = tsv.validate(john, rule)
 
         const expected: ValidationResult<Person> = {
             message: defaultMessage.errorMessage,
@@ -355,7 +361,7 @@ describe("Validator test with children array", () => {
             ]
         }
 
-        const actual = objectValidator.validate(person, rule)
+        const actual = tsv.validate(person, rule)
 
         const expected: ValidationResult<Person> = {
             message: defaultMessage.errorMessage,
@@ -407,7 +413,7 @@ describe("Validator test with children array", () => {
             ]
         }
 
-        const actual = objectValidator.validate(person, rule)
+        const actual = tsv.validate(person, rule)
 
         const expected: ValidationResult<Person> = {
             message: defaultMessage.errorMessage,
@@ -477,7 +483,7 @@ describe("Validator array test", () => {
             ]
         }
 
-        const validationResult = objectValidator.validate(ironStick, validationRule)
+        const validationResult = tsv.validate(ironStick, validationRule)
 
         const expected: ValidationResult<Product> = {
             message: defaultMessage.errorMessage,
@@ -559,7 +565,7 @@ describe("Validator test with Order and Order item", () => {
             orderItems: []
         }
 
-        const actual1 = objectValidator.validate(newOrder1, rule)
+        const actual1 = tsv.validate(newOrder1, rule)
         const expected1: ValidationResult<Order> = {
             message: defaultMessage.errorMessage,
             isValid: false,
@@ -594,7 +600,7 @@ describe("Validator test with Order and Order item", () => {
             ]
         }
 
-        const actual2 = objectValidator.validate(newOrder2, rule)
+        const actual2 = tsv.validate(newOrder2, rule)
         const expected2: ValidationResult<Order> = {
             message: defaultMessage.errorMessage,
             isValid: false,
@@ -688,7 +694,7 @@ describe("Validator test with Order and Order item", () => {
             ]
         }
 
-        const actual1 = objectValidator.validate(newOrder1, rule)
+        const actual1 = tsv.validate(newOrder1, rule)
         const expected1: ValidationResult<Order> = {
             message: defaultMessage.errorMessage,
             isValid: false,
@@ -702,7 +708,7 @@ describe("Validator test with Order and Order item", () => {
         }
         expect(actual1).toEqual(expected1)
 
-        const actual2 = objectValidator.validate(newOrder2, rule)
+        const actual2 = tsv.validate(newOrder2, rule)
         const expected2: ValidationResult<Order> = {
             message: defaultMessage.errorMessage,
             isValid: false,
@@ -799,7 +805,7 @@ describe("Validator complex validations", () => {
             orderItems: []
         }
 
-        const actual1 = objectValidator.validate(newOrder1, rule)
+        const actual1 = tsv.validate(newOrder1, rule)
         const expected1: ValidationResult<Order> = {
             message: defaultMessage.errorMessage,
             isValid: false,
@@ -849,7 +855,7 @@ describe("Validator complex validations", () => {
                 },
             ]
         }
-        const actual2 = objectValidator.validate(newOrder2, rule)
+        const actual2 = tsv.validate(newOrder2, rule)
         const expected2: ValidationResult<Order> = {
             message: defaultMessage.errorMessage,
             isValid: false,
@@ -967,7 +973,7 @@ describe("Validator test maximum sum of", () => {
             ]
         }
 
-        const actual1 = objectValidator.validate(newOrder1, rule)
+        const actual1 = tsv.validate(newOrder1, rule)
         const expected1: ValidationResult<Order> = {
             message: defaultMessage.errorMessage,
             isValid: false,
@@ -1079,7 +1085,7 @@ describe("Validator complex validations", () => {
             ]
         }
 
-        const actual1 = objectValidator.validate(newOrder1, rule)
+        const actual1 = tsv.validate(newOrder1, rule)
         const expected1: ValidationResult<Order> = {
             message: defaultMessage.okMessage,
             isValid: true,
@@ -1111,6 +1117,7 @@ describe("Validate null property", () => {
 
         const rule: ValidationRule<Order> = {
             orderItems: {
+                validators: [arrayMinLen(1)],
                 validationRule: orderItemsRule
             }
         }
@@ -1120,16 +1127,8 @@ describe("Validate null property", () => {
             orderItems: null
         }
 
-        const actual1 = objectValidator.validate(newOrder1, rule)
-        const expected1: ValidationResult<Order> = {
-            message: defaultMessage.errorMessage,
-            isValid: false,
-            errors: {
-                orderItems: {
-                    errors: ["Could not validate property 'orderItems', the value is null"]
-                }
-            },
-        }
+        const actual1 = tsv.validate(newOrder1, rule)
+        const expected1: ValidationResult<Order> = goodValidationResult
 
         expect(actual1).toEqual(expected1)
     })
@@ -1229,7 +1228,7 @@ describe("Validator Test The Custom Validator", () => {
             ]
         }
 
-        const actual1 = objectValidator.validate(newOrder1, rule)
+        const actual1 = tsv.validate(newOrder1, rule)
         const expected1: ValidationResult<Order> = {
             message: defaultMessage.errorMessage,
             isValid: false,
@@ -1255,7 +1254,7 @@ describe("Validator Test Date Test", () => {
             expiredDate: [required()],
         }
 
-        const actual1 = objectValidator.validate(product, rule)
+        const actual1 = tsv.validate(product, rule)
         const expected1: ValidationResult<Product> = {
             message: defaultMessage.errorMessage,
             isValid: false,
@@ -1266,7 +1265,7 @@ describe("Validator Test Date Test", () => {
 
         expect(actual1).toEqual(expected1)
 
-        const actual2 = objectValidator.validate({
+        const actual2 = tsv.validate({
             expiredDate: new Date()
         }, rule)
         const expected2: ValidationResult<Product> = {

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.stringMaxLen = void 0;
+exports.stringMaxLen = stringMaxLen;
 const propertyValidator_1 = require("./propertyValidator");
 /**
  * Specifies the maximum length of a string.
@@ -23,4 +23,3 @@ function stringMaxLen(maxLength, errorMessage) {
         return stringLength <= maxLength;
     }, errorMessage ? errorMessage : `The maximum string length is ${maxLength}.`, "Specifies the maximum length of a string.");
 }
-exports.stringMaxLen = stringMaxLen;

@@ -1,11 +1,4 @@
-import { ErrorOf, ValidationResult, ValidationRule } from "./types";
-/**
- * Validates and collects errors of each property as array of string
- * @param object
- * @param validationRule
- * @returns
- */
-export declare const getErrorOf: <T>(object: T, validationRule: ValidationRule<T>) => ErrorOf<T>;
+import { ValidationResult, ValidationRule } from "../types";
 /**
  * Represents the validation message when the validation process is done.
  */
@@ -20,7 +13,7 @@ export interface ValidationMessage {
  * @returns ValidationResult
  */
 export declare const validateObject: <T>(object: T, validationRule: ValidationRule<T>, validationMessage?: ValidationMessage) => ValidationResult<T>;
-declare const objectValidator: {
+declare const tsv: {
     validate: <T>(object: T, validationRule: ValidationRule<T>, validationMessage?: ValidationMessage) => ValidationResult<T>;
 };
-export default objectValidator;
+export default tsv;

@@ -19,7 +19,7 @@ interface Account {
 
 Create the validation rule and validate the object
 ```typescript
-import { objectValidator, ValidationRule, minNumber, required, emailAddress } from "ts-validity";
+import { tsv, ValidationRule, minNumber, required, emailAddress } from "ts-validity";
 
 const validationRule: ValidationRule<Account> = {
     name: [required("Account name is required.")],
@@ -33,7 +33,7 @@ const account: Account = {
     email: ""
 }
 
-const validationResult = objectValidator.validate(account, validationRule)
+const validationResult = tsv.validate(account, validationRule)
 
 // The above validationResult value:
 // {
@@ -51,7 +51,7 @@ Notice that the validationResult.errors property, has the same property names as
 
 ### Nested object validation
 ```typescript
-import { objectValidator, ValidationRule, minNumber, required, emailAddress } from "ts-validity";
+import { tsv, ValidationRule, minNumber, required, emailAddress } from "ts-validity";
 
 interface Person {
     name: string,
@@ -112,7 +112,7 @@ const john: Person = {
     }
 }
 
-const validationResult = objectValidator.validate(john, rule)
+const validationResult = tsv.validate(john, rule)
 
 // validationResult = {
 //     message: defaultMessage.errorMessage,
@@ -141,7 +141,7 @@ const validationResult = objectValidator.validate(john, rule)
 
 ### Validate array property
 ```typescript
-import { objectValidator, ValidationRule, minNumber, required, emailAddress, arrayMinLen } from "ts-validity";
+import { tsv, ValidationRule, minNumber, required, emailAddress, arrayMinLen } from "ts-validity";
 
 interface Product {
     name?: string
@@ -178,7 +178,7 @@ const ironStick: Product = {
     ]
 }
 
-const validationResult = objectValidator.validate(ironStick, validationRule)
+const validationResult = tsv.validate(ironStick, validationRule)
 
 // validationResult = {
 //     message: defaultMessage.errorMessage,
@@ -222,7 +222,7 @@ The following is the signature of **propertyValidator** function:
 export declare const propertyValidator: <TValue, TObject>(func: ValidateFunc<TValue, TObject>, errorMessage: string, validatorDescription?: string) => PropertyValidator<TValue, TObject>;
 ```
 
-The existing built-in property validators, including the propertyValidator actually is a closure that returns a validate function, which is called by the objectValidator. The following is the signature of the **ValidateFunc**:
+The existing built-in property validators, including the propertyValidator actually is a closure that returns a validate function, which is called by the tsv. The following is the signature of the **ValidateFunc**:
 ```typescript
 export type ValidateFunc<TValue, TObject> = (value: TValue, objRef?: TObject) => boolean
 ```
@@ -238,7 +238,7 @@ export type PropertyValidator<TValue, TObject> = {
 
 ### Usage
 ```typescript
-import { objectValidator, ValidationRule, propertyValidator } from "ts-validity";
+import { tsv, ValidationRule, propertyValidator } from "ts-validity";
 
 interface Account {
     name: string,
@@ -262,7 +262,7 @@ const account: Account = {
     name: "John",
 }
 
-const validationResult = objectValidator.validate(account, validationRule)
+const validationResult = tsv.validate(account, validationRule)
 
 // validationResult = {
 //     message: "One or more validation errors occurred.",
@@ -285,7 +285,7 @@ npm install -D @types/validator // if typescript
 
 ### Usage
 ```typescript
-import { objectValidator, ValidationRule, propertyValidator } from "ts-validity";
+import { tsv, ValidationRule, propertyValidator } from "ts-validity";
 import validator from 'validator';
 
 interface Account {
@@ -329,7 +329,7 @@ const account: Account = {
     password: "strongpassword"
 }
 
-const validationResult = objectValidator.validate(account, validationRule)
+const validationResult = tsv.validate(account, validationRule)
 
 // validationResult = {
 //     message: "One or more validation errors occurred.",

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.alphabetOnly = void 0;
+exports.alphabetOnly = alphabetOnly;
 const regularExpression_1 = require("./regularExpression");
 const alphabetOnlyRegex = /^[a-zA-Z ]*$/;
 /**
@@ -12,4 +12,3 @@ const alphabetOnlyRegex = /^[a-zA-Z ]*$/;
 function alphabetOnly(errorMessage) {
     return (0, regularExpression_1.regularExpression)(alphabetOnlyRegex, errorMessage ? errorMessage : "This field should not contain any numbers or symbols. Accept only A-Z a-z and spaces.");
 }
-exports.alphabetOnly = alphabetOnly;

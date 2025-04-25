@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.stringMinLen = void 0;
+exports.stringMinLen = stringMinLen;
 const propertyValidator_1 = require("./propertyValidator");
 /**
  * Specifies the minimum length of a string.
@@ -22,4 +22,3 @@ function stringMinLen(minLen, errorMessage) {
         return value.toString().length >= minLen;
     }, errorMessage ? errorMessage : `The minimum length string is ${minLen}.`, "Specifies the minimum length of a string.");
 }
-exports.stringMinLen = stringMinLen;
