@@ -111,7 +111,14 @@ function validateArrayField<T>(key: Extract<keyof T, string>, object: T, rule: V
     if (arrayValidationRule.validationRule && Array.isArray(value)) {
         for (let index = 0; index < value.length; index++) {
             const element = value[index];
-            const error = validateStruct(element, arrayValidationRule.validationRule);
+            let error: ErrorOf<any> = undefined
+            if (typeof arrayValidationRule.validationRule === "function") {
+                const validationRule = arrayValidationRule.validationRule(value, object)
+                error = validateStruct(element, validationRule);
+            }
+            else {
+                error = validateStruct(element, arrayValidationRule.validationRule);
+            }
             if (error) {
                 if (!arrayFieldErrors.errorsEach) {
                     arrayFieldErrors.errorsEach = []

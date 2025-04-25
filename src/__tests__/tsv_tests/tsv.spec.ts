@@ -1292,19 +1292,37 @@ describe("Validator Test The Custom Validator", () => {
             orderItems: OrderItem[]
         }
 
+        interface City {
+            name: string
+        }
+        interface DeliveryAddress {
+            street: string
+            cities: City[]
+        }
         interface OrderItem {
             id: string
             orderId?: string
             productId: number
             product?: Product
             quantity: number
+            deliveryAddress: DeliveryAddress[]
+
         }
 
         const rule: ValidationRule<Order> = {
-            orderItems: function build() {
+            orderItems: function build(orderItems, order) {
                 return {
                     validationRule: {
-                        orderId: [required("required")]
+                        orderId: [required("required")],
+                        deliveryAddress: {
+                            validationRule: function test(a, b) {
+                                return {
+                                    cities: {
+                                        validators: [arrayMinLen(1)]
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -1316,6 +1334,12 @@ describe("Validator Test The Custom Validator", () => {
                     id: "1",
                     productId: 1,
                     quantity: 2,
+                    deliveryAddress: [
+                        {
+                            street: "",
+                            cities: []
+                        }
+                    ]
                 },
             ]
         }
@@ -1332,10 +1356,32 @@ describe("Validator Test The Custom Validator", () => {
                             validatedObject: {
                                 id: '1',
                                 productId: 1,
-                                quantity: 2
+                                quantity: 2,
+                                deliveryAddress: [
+                                    {
+                                        street: "",
+                                        cities: []
+                                    }
+                                ]
                             },
                             errors: {
-                                orderId: ["required"]
+                                orderId: ["required"],
+                                deliveryAddress: {
+                                    errorsEach: [
+                                        {
+                                            errors: {
+                                                cities: {
+                                                    errors: ["The minimum length for this field is 1."]
+                                                }
+                                            },
+                                            index: 0,
+                                            validatedObject: {
+                                                cities: [],
+                                                street: ""
+                                            }
+                                        }
+                                    ]
+                                }
                             }
                         }
                     ]
