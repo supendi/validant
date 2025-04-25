@@ -1,5 +1,5 @@
 import { required } from "../../propertyValidators"
-import { ValidationRule, ArrayValidationRule, PropertyValidator, ArrayPropertyRuleBuilder } from "../../types"
+import { ValidationRule, ArrayValidationRule, PropertyValidator, } from "../../types"
 
 const requiredValidator: PropertyValidator<any, any> = {
     description: "Required Validator",

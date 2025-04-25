@@ -66,7 +66,8 @@ export type PropertyValidator<TValue, TObject> = {
     returningErrorMessage: string
 }
 
-export type ArrayPropertyRuleBuilder<TValue, TObject> = (value: TValue, objRef?: TObject) => ArrayValidationRule<TValue, TObject>
+// export type ArrayPropertyRuleBuilder<TValue, TObject> = (value: TValue, objRef?: TObject) => ArrayValidationRule<TValue, TObject>
+// export type ArrayPropertyValidationRuleBuilder<TValue, TObject> = (a: TValue, b: TObject) => ValidationRule<TValue>
 
 /**
  * Represents a collection of validation rules.
@@ -74,7 +75,7 @@ export type ArrayPropertyRuleBuilder<TValue, TObject> = (value: TValue, objRef?:
  */
 export type ValidationRule<T> = { [key in keyof T]?
     : T[key] extends Date ? PropertyValidator<T[key], T>[]
-    : T[key] extends PossiblyUndefined<Array<any>> ? ArrayValidationRule<T[key], T> | ArrayPropertyRuleBuilder<T[key], T>
+    : T[key] extends PossiblyUndefined<Array<any>> ? ArrayValidationRule<T[key], T> | ((value: T[key], objRef?: T) => ArrayValidationRule<T[key], T>)
     : T[key] extends PossiblyUndefined<object> ? ValidationRule<T[key]>
     : PropertyValidator<T[key], T>[] }
 
@@ -103,10 +104,8 @@ export type ArrayValidationRule<TValue, TObject> = {
      * Example:
      * { orderItems: { validationRule: { qty: [minNumber(5)] } }
      */
-    validationRule?: ValidationRule<PossiblyUndefined<TypeOfArray<TValue>>> | ArrayPropertyValidationRuleBuilder<TypeOfArray<TValue>, TObject>
+    validationRule?: ValidationRule<PossiblyUndefined<TypeOfArray<TValue>>> | ((a: TypeOfArray<TValue>, b: TObject) => ValidationRule<TypeOfArray<TValue>>)
 }
-
-type ArrayPropertyValidationRuleBuilder<TValue, TObject> = (a: TValue, b: TObject) => ValidationRule<TValue>
 
 /**
  * Represents a single validation result of property 
