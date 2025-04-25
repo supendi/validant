@@ -1315,10 +1315,15 @@ describe("Validator Test The Custom Validator", () => {
                     validationRule: {
                         orderId: [required("required")],
                         deliveryAddress: {
-                            validationRule: function test(a, b) {
+                            validationRule: function test(deliveryAddress, orderitem) {
                                 return {
                                     cities: {
-                                        validators: [arrayMinLen(1)]
+                                        validators: [arrayMinLen(1)],
+                                        validationRule: function test(city, deliveryAddress) {
+                                            return {
+                                                name: []
+                                            }
+                                        }
                                     }
                                 }
                             }
