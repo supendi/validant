@@ -1,6 +1,6 @@
 {
   "name": "ts-validity",
-  "version": "0.0.37",
+  "version": "0.0.38",
   "description": "Simple json validator by using user-defined validation rules",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -13,7 +13,7 @@
     "rm-node_modules": "rm -rf node_modules",
     "build": "yarn test && tsc",
     "prepare-publish": "yarn rm-node_modules && yarn install && yarn test && tsc",
-    "publish": "yarn prepare-publish && npm version patch && git push"
+    "publish": "yarn prepare-publish && npm version patch && git add . && git push"
   },
   "devDependencies": {
     "@babel/core": "^7.13.16",
