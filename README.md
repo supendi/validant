@@ -9,7 +9,128 @@ yarn add ts-validity          # yarn
 
 ## Usage
 
-### Let's start with simple validation
+### Real World Validation
+
+Given Order Interface
+```typescript
+
+interface Customer {
+    fullName: string
+    email: string
+}
+
+interface OrderItem {
+    productId: number
+    quantity: number
+}
+
+interface OrderRequest {
+    orderNumber: string
+    orderDate?: Date
+    customer: Customer
+    orderItems: OrderItem[]
+} 
+```
+
+Validation Scema : Nested and Array Validation with custom validate function.
+
+```typescript 
+const orderRule: ValidationRule<OrderRequest> = {
+    orderNumber: [required("Order number is required.")],
+    orderDate: [required("Please enter order date.")],
+    customer: {
+        fullName: [required()],
+        email: [
+            required(),
+            emailAddress()
+        ],
+    },
+    orderItems: {
+        arrayRules: [arrayMinLen(1, "Please add at least one product.")],
+        arrayItemRule: {
+            productId: [required("Please enter product.")],
+            quantity: [
+                minNumber(1, "Minimum quantity is 1."),
+                function (quantity, order) {
+
+                    // Case:
+                    // When customer first 3 letters contains : Jac ignore invariant
+                    // Then Max Quantity = 100
+                    // So  Jack, Jacob, Jacky, Jacka will get this special max quantity
+                    // 
+                    // Other than that
+                    // Max quantity = 10
+ 
+                    // Accessing other properties via order
+                    const customerName = order.customer.fullName
+                    const isJac = order.customer.fullName.toLowerCase().startsWith("jac");
+
+                    const maxQuantityForJac = 100
+                    const maxQuantityForOthers = 10
+
+                    if (isJac) {
+                        return {
+                            isValid: quantity <= maxQuantityForJac,
+                            errorMessage: `You are special ${customerName}, other's max quantity is limited to ${maxQuantityForOthers}. Yours is limited to, but ${maxQuantityForJac} pcs.`
+                        }
+                    }
+                    return {
+                        isValid: quantity <= maxQuantityForOthers,
+                        errorMessage: `You only allowed to order ${maxQuantityForOthers} product at once.`
+                    }
+                }
+            ]
+        }
+    }
+}
+```
+ 
+Validation and Result
+```typescript
+const orderRequest: OrderRequest = {
+    orderNumber: "",
+    customer: {
+        email: "",
+        fullName: "JaCkY chan"
+    },
+    orderItems: [
+        {
+            productId: 0,
+            quantity: 120
+        }
+    ]
+}
+
+const actual = tsValidity.validate(orderRequest, orderRule)
+
+
+// Validation result
+const expected: ValidationResult<OrderRequest> = {
+    message: defaultMessage.errorMessage,
+    isValid: false,
+    errors: {
+        orderNumber: ["Order number is required."],
+        orderDate: ["Please enter order date."],
+        customer: {
+            email: ["This field is required.", "Invalid email address. The valid email example: john.doe@example.com."]
+        },
+        orderItems: {
+            errorsEach: [
+                {
+                    index: 0,
+                    validatedObject: orderRequest.orderItems[0],
+                    errors: {
+                        productId: ["Please enter product."],
+                        quantity: ["You are special JaCkY chan, other's max quantity is limited to 10. Yours is limited to, but 100 pcs."]
+                    }
+                }
+            ]
+        }
+    }
+}
+```
+
+### Simple validation
 
 Given interface
 
@@ -51,7 +172,6 @@ const validationResult = tsValidity.validate(account, validationRule)
 //     }
 // }
 
-Notice that the validationResult.errors property, has the same property names as the account object, but its dataype is array of string.
 ```
 
 ### Nested object validation
