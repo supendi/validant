@@ -1,23 +1,28 @@
 # ts-validity
 
 ## Installation
+
 ```
 npm install ts-validity       # npm
 yarn add ts-validity          # yarn
 ```
 
 ## Usage
+
 ### Let's start with simple validation
+
 Given interface
+
 ```typescript
 interface Account {
-    name: string,
-    age: number,
-    email: string
+    name: string;
+    age: number;
+    email: string;
 }
 ```
 
 Create the validation rule and validate the object
+
 ```typescript
 import { tsValidity, ValidationRule, minNumber, required, emailAddress } from "ts-validity";
 
@@ -46,29 +51,36 @@ const validationResult = tsValidity.validate(account, validationRule)
 //     }
 // }
 
-Notice that the validationResult.errors property, has the same property names as the account object, but its dataype is array of string. 
+Notice that the validationResult.errors property, has the same property names as the account object, but its dataype is array of string.
 ```
 
 ### Nested object validation
+
 ```typescript
-import { tsValidity, ValidationRule, minNumber, required, emailAddress } from "ts-validity";
+import {
+    tsValidity,
+    ValidationRule,
+    minNumber,
+    required,
+    emailAddress,
+} from "ts-validity";
 
 interface Person {
-    name: string,
-    age: number,
-    child?: Person
+    name: string;
+    age: number;
+    child?: Person;
     address?: {
-        street: string,
+        street: string;
         city: {
-            name: string
+            name: string;
             country: {
-                name: string
+                name: string;
                 continent: {
-                    name: string
-                }
-            }
-        }
-    }
+                    name: string;
+                };
+            };
+        };
+    };
 }
 
 const rule: ValidationRule<Person> = {
@@ -82,14 +94,14 @@ const rule: ValidationRule<Person> = {
                 name: [required()],
                 continent: {
                     name: [required()],
-                }
-            }
-        }
+                },
+            },
+        },
     },
     child: {
-        name: [required()]
-    }
-}
+        name: [required()],
+    },
+};
 
 const john: Person = {
     name: "",
@@ -101,18 +113,18 @@ const john: Person = {
             country: {
                 name: "",
                 continent: {
-                    name: ""
-                }
-            }
-        }
+                    name: "",
+                },
+            },
+        },
     },
     child: {
         name: "",
         age: 0,
-    }
-}
+    },
+};
 
-const validationResult = tsValidity.validate(john, rule)
+const validationResult = tsValidity.validate(john, rule);
 
 // validationResult = {
 //     message: defaultMessage.errorMessage,
@@ -140,45 +152,53 @@ const validationResult = tsValidity.validate(john, rule)
 ```
 
 ### Validate array property
+
 ```typescript
-import { tsValidity, ValidationRule, minNumber, required, emailAddress, arrayMinLen } from "ts-validity";
+import {
+    tsValidity,
+    ValidationRule,
+    minNumber,
+    required,
+    emailAddress,
+    arrayMinLen,
+} from "ts-validity";
 
 interface Product {
-    name?: string
-    units?: Unit[]
+    name?: string;
+    units?: Unit[];
 }
 
 interface Unit {
-    name: string,
-    conversion: number,
+    name: string;
+    conversion: number;
 }
 
 const validationRule: ValidationRule<Product> = {
     name: [required()],
     units: {
-        validators: [arrayMinLen(3, "Product uom has to be at least 3 units.")],
-        validationRule: {
+        arrayRules: [arrayMinLen(3, "Product uom has to be at least 3 units.")],
+        arrayItemRule: {
             name: [required()],
-            conversion: [minNumber(1)]
-        }
-    }
-}
+            conversion: [minNumber(1)],
+        },
+    },
+};
 
 const ironStick: Product = {
     name: "",
     units: [
         {
             name: "",
-            conversion: 0
+            conversion: 0,
         },
         {
             name: "cm",
-            conversion: 0
-        }
-    ]
-}
+            conversion: 0,
+        },
+    ],
+};
 
-const validationResult = tsValidity.validate(ironStick, validationRule)
+const validationResult = tsValidity.validate(ironStick, validationRule);
 
 // validationResult = {
 //     message: defaultMessage.errorMessage,
@@ -216,124 +236,113 @@ const validationResult = tsValidity.validate(ironStick, validationRule)
 ```
 
 ## Custom Property Validator
-To use your own validator, you can use the propertyRule function.
-The following is the signature of **propertyRule** function:
-```typescript
-export declare const propertyRule: <TValue, TObject>(func: ValidateFunc<TValue, TObject>, errorMessage: string, validatorDescription?: string) => PropertyRule<TValue, TObject>;
+
+You can define your own validator function by matching the `PropertyRuleFunc` type:
+
+```ts
+export type PropertyRuleFunc<TValue, TObject> = (value: TValue, objRef?: TObject) => {
+    isValid: boolean;
+    errorMessage?: string;
+}
 ```
 
-The existing built-in property rules, including the propertyRule actually is a closure that returns a validate function, which is called by the tsValidity. The following is the signature of the **ValidateFunc**:
-```typescript
-export type ValidateFunc<TValue, TObject> = (value: TValue, objRef?: TObject) => boolean
-```
+### Example
 
-And this is the **PropertyRule** type:
-```typescript
-export type PropertyRule<TValue, TObject> = {
-    description: string;
-    validate: ValidateFunc<TValue, TObject>;
-    returningErrorMessage: string;
-};
-```
-
-### Usage
-```typescript
-import { tsValidity, ValidationRule, propertyRule } from "ts-validity";
+```ts
+import { tsValidity, ValidationRule, PropertyRuleFunc } from "ts-validity";
 
 interface Account {
-    name: string,
+    name: string;
 }
+
+const nameMinLengthRule: PropertyRuleFunc<string, Account> = (value) => ({
+    isValid: value.length >= 5,
+    errorMessage: "Name length minimum is 5 chars.",
+});
+
+const mustContainALetterRule: PropertyRuleFunc<string, Account> = (value) => ({
+    isValid: value.toLocaleLowerCase().includes("a"),
+    errorMessage: "Name must contain 'A' letter.",
+});
 
 const validationRule: ValidationRule<Account> = {
-    name: [
-        // Name length minimum is 5 char
-        propertyRule((value, object) => {
-            return value.length >= 5
-        }, "Name length minimum is 5 chars."),
-
-        // Must contain A letter
-        propertyRule((value, object) => {
-            return value.toLocaleLowerCase().includes("a")
-        }, "Name must contain 'A' letter."),
-    ],
-}
+    name: [nameMinLengthRule, mustContainALetterRule],
+};
 
 const account: Account = {
     name: "John",
-}
+};
 
-const validationResult = tsValidity.validate(account, validationRule)
+const validationResult = tsValidity.validate(account, validationRule);
 
 // validationResult = {
-//     message: "One or more validation errors occurred.",
 //     isValid: false,
+//     message: "One or more validation errors occurred.",
 //     errors: {
 //         name: ["Name length minimum is 5 chars.", "Name must contain 'A' letter."]
 //     }
 // }
 ```
 
-## Use existing npm validator package as custom validator
+## Use Existing npm Validator Package
 
-We can use and combine the existing popular validator from npm. In this example I use the validator package (https://www.npmjs.com/package/validator).
+You can integrate third-party validator libraries like [validator](https://www.npmjs.com/package/validator).
 
-### Installation
-```typescript
+### Install
+
+```bash
 npm install validator
-npm install -D @types/validator // if typescript
+npm install -D @types/validator
 ```
 
 ### Usage
-```typescript
-import { tsValidity, ValidationRule, propertyRule } from "ts-validity";
-import validator from 'validator';
+
+```ts
+import { tsValidity, required, ValidationRule, } from "ts-validity";
+import { PropertyRuleFunc } from "ts-validity/dist/types";
+
 
 interface Account {
-    name: string,
-    email: string,
-    phone: string,
-    password: string
+    name: string;
+    email: string;
+    phone: string;
+    password: string;
 }
+
+const isValidEmail: PropertyRuleFunc<string, Account> = (value) => ({
+    isValid: validator.isEmail(value),
+    errorMessage: "Not a valid email.",
+});
+
+const isMobileAU: PropertyRuleFunc<string, Account> = (value) => ({
+    isValid: validator.isMobilePhone(value, "en-AU"),
+    errorMessage: "Should be an AU mobile phone number format",
+});
+
+const isStrongPassword: PropertyRuleFunc<string, Account> = (value) => ({
+    isValid: validator.isStrongPassword(value, { minLength: 8, minUppercase: 2 }),
+    errorMessage: "Password should be 8 chars minimum, and has to contain at least 2 upper case.",
+});
 
 const validationRule: ValidationRule<Account> = {
     name: [required()],
-    // Combine the built-in validator and the 'validator' package
-    email: [
-        required(),
-        propertyRule((value, object) => {
-            return validator.isEmail(value) // the 'validator' package
-        }, "Not a valid email."),
-    ],
-    phone: [
-        required(),
-        propertyRule((value, object) => {
-            return validator.isMobilePhone(value, "en-AU") // the 'validator' package
-        }, "Should be an AU mobile phone number format"),
-    ],
-    password: [
-        required(),
-        propertyRule((value, object) => {
-            // the 'validator' package
-            return validator.isStrongPassword(value, {
-                minLength: 8,
-                minUppercase: 2
-            })
-        }, "Password should be 8 chars minimum, and has to contain at least 2 upper case."),
-    ],
-}
+    email: [required(), isValidEmail],
+    phone: [required(), isMobileAU],
+    password: [required(), isStrongPassword],
+};
 
 const account: Account = {
     name: "John",
     email: "valid@@email.com",
     phone: "123123123",
-    password: "strongpassword"
-}
+    password: "strongpassword",
+};
 
-const validationResult = tsValidity.validate(account, validationRule)
+const validationResult = tsValidity.validate(account, validationRule);
 
 // validationResult = {
-//     message: "One or more validation errors occurred.",
 //     isValid: false,
+//     message: "One or more validation errors occurred.",
 //     errors: {
 //         email: ["Not a valid email."],
 //         phone: ["Should be an AU mobile phone number format"],
@@ -342,23 +351,20 @@ const validationResult = tsValidity.validate(account, validationRule)
 // }
 ```
 
-## Available Built-in Property Validators
-```typescript
-export {
-    alphabetOnly,
-    arrayMaxLen,
-    arrayMinLen,
-    elementOf,
-    emailAddress,
-    equalToPropertyValue,
-    maxNumber,
-    minNumber,
-    maxSumOf,
-    minSumOf,
-    propertyRule,
-    regularExpression,
-    required,
-    stringMaxLen,
-    stringMinLen,
-}
+## API Summary
+
+```ts
+required()
+requiredIf(predicate: (objRef: T) => boolean)
+requiredIfAny<T>(...props: Array<keyof T>)
+requiredIfAll<T>(...props: Array<keyof T>)
+requiredIfNone<T>(...props: Array<keyof T>)
+regex(pattern: RegExp, message: string)
+minLength(min: number, message: string)
+maxLength(max: number, message: string)
+exactLength(len: number, message: string)
+minValue(min: number, message: string)
+maxValue(max: number, message: string)
+exactValue(val: number, message: string)
+oneOf(choices: unknown[], message: string)
 ```

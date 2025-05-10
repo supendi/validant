@@ -1,6 +1,6 @@
 {
   "name": "ts-validity",
-  "version": "0.0.35",
+  "version": "0.0.36",
   "description": "Simple json validator by using user-defined validation rules",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
