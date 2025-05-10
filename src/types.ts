@@ -1,4 +1,3 @@
-
 /**
  * Represents a generic type that is possibly undefined
  */
@@ -52,32 +51,28 @@ export type ErrorOfArray<TArray> = {
 
 /**
  * Specifies the contract of validator function.
- * See the PropertyValidator implementation of how the validator func being implemented.
+ * See the PropertyRule implementation of how the validator func being implemented.
  */
 export type ValidateFunc<TValue, TObject> = (value: TValue, objRef?: TObject) => boolean
 
 /**
- * Represents the object model of property validator.
+ * Represents the object model of property rule.
  * See the validators implementation.
  */
-export type PropertyValidator<TValue, TObject> = {
-    description: string
-    validate: ValidateFunc<TValue, TObject>
-    returningErrorMessage: string
+export type PropertyRuleFunc<TValue, TObject> = (value: TValue, objRef?: TObject) => {
+    isValid: boolean;
+    errorMessage?: string
 }
-
-// export type ArrayPropertyRuleBuilder<TValue, TObject> = (value: TValue, objRef?: TObject) => ArrayValidationRule<TValue, TObject>
-// export type ArrayPropertyValidationRuleBuilder<TValue, TObject> = (a: TValue, b: TObject) => ValidationRule<TValue>
 
 /**
  * Represents a collection of validation rules.
  * The validation schema should implement this type.
  */
 export type ValidationRule<T> = { [key in keyof T]?
-    : T[key] extends Date ? PropertyValidator<T[key], T>[]
+    : T[key] extends Date ? PropertyRuleFunc<T[key], T>[]
     : T[key] extends PossiblyUndefined<Array<any>> ? ArrayValidationRule<T[key], T> | ((value: T[key], objRef?: T) => ArrayValidationRule<T[key], T>)
     : T[key] extends PossiblyUndefined<object> ? ValidationRule<T[key]>
-    : PropertyValidator<T[key], T>[] }
+    : PropertyRuleFunc<T[key], T>[] }
 
 /**
  * Represents validation rule of array of T
@@ -97,34 +92,14 @@ export type ArrayValidationRule<TValue, TObject> = {
     * Example:
     * { orderItems: { validators: [arrayMinLength(5)] }
     */
-    validators?: PropertyValidator<TValue, TObject>[],
+    arrayRules?: PropertyRuleFunc<TValue, TObject>[],
 
     /**
      * The validation rule foreach element of an array.
      * Example:
      * { orderItems: { validationRule: { qty: [minNumber(5)] } }
      */
-    validationRule?: ValidationRule<PossiblyUndefined<TypeOfArray<TValue>>> | ((a: TypeOfArray<TValue>, b: TObject) => ValidationRule<TypeOfArray<TValue>>)
+    arrayItemRule?: ValidationRule<PossiblyUndefined<TypeOfArray<TValue>>> | ((a: TypeOfArray<TValue>, b: TObject) => ValidationRule<TypeOfArray<TValue>>)
 }
 
-/**
- * Represents a single validation result of property 
- */
-export interface PropertyValidationResult<T> {
-    object: T,
-    propertyName: keyof T,
-    propertyValue: any
-    isValid: boolean,
-    errorMessage: string
-}
 
-/**
- * Represents the validation result.
- * This model is the return type of validate() function. 
- * See validator.validate().
- */
-export interface ValidationResult<T> {
-    isValid: boolean
-    message: string
-    errors?: ErrorOf<T> | undefined
-}

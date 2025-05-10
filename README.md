@@ -19,7 +19,7 @@ interface Account {
 
 Create the validation rule and validate the object
 ```typescript
-import { tsv, ValidationRule, minNumber, required, emailAddress } from "ts-validity";
+import { tsValidity, ValidationRule, minNumber, required, emailAddress } from "ts-validity";
 
 const validationRule: ValidationRule<Account> = {
     name: [required("Account name is required.")],
@@ -33,7 +33,7 @@ const account: Account = {
     email: ""
 }
 
-const validationResult = tsv.validate(account, validationRule)
+const validationResult = tsValidity.validate(account, validationRule)
 
 // The above validationResult value:
 // {
@@ -51,7 +51,7 @@ Notice that the validationResult.errors property, has the same property names as
 
 ### Nested object validation
 ```typescript
-import { tsv, ValidationRule, minNumber, required, emailAddress } from "ts-validity";
+import { tsValidity, ValidationRule, minNumber, required, emailAddress } from "ts-validity";
 
 interface Person {
     name: string,
@@ -112,7 +112,7 @@ const john: Person = {
     }
 }
 
-const validationResult = tsv.validate(john, rule)
+const validationResult = tsValidity.validate(john, rule)
 
 // validationResult = {
 //     message: defaultMessage.errorMessage,
@@ -141,7 +141,7 @@ const validationResult = tsv.validate(john, rule)
 
 ### Validate array property
 ```typescript
-import { tsv, ValidationRule, minNumber, required, emailAddress, arrayMinLen } from "ts-validity";
+import { tsValidity, ValidationRule, minNumber, required, emailAddress, arrayMinLen } from "ts-validity";
 
 interface Product {
     name?: string
@@ -178,7 +178,7 @@ const ironStick: Product = {
     ]
 }
 
-const validationResult = tsv.validate(ironStick, validationRule)
+const validationResult = tsValidity.validate(ironStick, validationRule)
 
 // validationResult = {
 //     message: defaultMessage.errorMessage,
@@ -216,20 +216,20 @@ const validationResult = tsv.validate(ironStick, validationRule)
 ```
 
 ## Custom Property Validator
-To use your own validator, you can use the propertyValidator function.
-The following is the signature of **propertyValidator** function:
+To use your own validator, you can use the propertyRule function.
+The following is the signature of **propertyRule** function:
 ```typescript
-export declare const propertyValidator: <TValue, TObject>(func: ValidateFunc<TValue, TObject>, errorMessage: string, validatorDescription?: string) => PropertyValidator<TValue, TObject>;
+export declare const propertyRule: <TValue, TObject>(func: ValidateFunc<TValue, TObject>, errorMessage: string, validatorDescription?: string) => PropertyRule<TValue, TObject>;
 ```
 
-The existing built-in property validators, including the propertyValidator actually is a closure that returns a validate function, which is called by the tsv. The following is the signature of the **ValidateFunc**:
+The existing built-in property rules, including the propertyRule actually is a closure that returns a validate function, which is called by the tsValidity. The following is the signature of the **ValidateFunc**:
 ```typescript
 export type ValidateFunc<TValue, TObject> = (value: TValue, objRef?: TObject) => boolean
 ```
 
-And this is the **PropertyValidator** type:
+And this is the **PropertyRule** type:
 ```typescript
-export type PropertyValidator<TValue, TObject> = {
+export type PropertyRule<TValue, TObject> = {
     description: string;
     validate: ValidateFunc<TValue, TObject>;
     returningErrorMessage: string;
@@ -238,7 +238,7 @@ export type PropertyValidator<TValue, TObject> = {
 
 ### Usage
 ```typescript
-import { tsv, ValidationRule, propertyValidator } from "ts-validity";
+import { tsValidity, ValidationRule, propertyRule } from "ts-validity";
 
 interface Account {
     name: string,
@@ -247,12 +247,12 @@ interface Account {
 const validationRule: ValidationRule<Account> = {
     name: [
         // Name length minimum is 5 char
-        propertyValidator((value, object) => {
+        propertyRule((value, object) => {
             return value.length >= 5
         }, "Name length minimum is 5 chars."),
 
         // Must contain A letter
-        propertyValidator((value, object) => {
+        propertyRule((value, object) => {
             return value.toLocaleLowerCase().includes("a")
         }, "Name must contain 'A' letter."),
     ],
@@ -262,7 +262,7 @@ const account: Account = {
     name: "John",
 }
 
-const validationResult = tsv.validate(account, validationRule)
+const validationResult = tsValidity.validate(account, validationRule)
 
 // validationResult = {
 //     message: "One or more validation errors occurred.",
@@ -285,7 +285,7 @@ npm install -D @types/validator // if typescript
 
 ### Usage
 ```typescript
-import { tsv, ValidationRule, propertyValidator } from "ts-validity";
+import { tsValidity, ValidationRule, propertyRule } from "ts-validity";
 import validator from 'validator';
 
 interface Account {
@@ -300,19 +300,19 @@ const validationRule: ValidationRule<Account> = {
     // Combine the built-in validator and the 'validator' package
     email: [
         required(),
-        propertyValidator((value, object) => {
+        propertyRule((value, object) => {
             return validator.isEmail(value) // the 'validator' package
         }, "Not a valid email."),
     ],
     phone: [
         required(),
-        propertyValidator((value, object) => {
+        propertyRule((value, object) => {
             return validator.isMobilePhone(value, "en-AU") // the 'validator' package
         }, "Should be an AU mobile phone number format"),
     ],
     password: [
         required(),
-        propertyValidator((value, object) => {
+        propertyRule((value, object) => {
             // the 'validator' package
             return validator.isStrongPassword(value, {
                 minLength: 8,
@@ -329,7 +329,7 @@ const account: Account = {
     password: "strongpassword"
 }
 
-const validationResult = tsv.validate(account, validationRule)
+const validationResult = tsValidity.validate(account, validationRule)
 
 // validationResult = {
 //     message: "One or more validation errors occurred.",
@@ -355,7 +355,7 @@ export {
     minNumber,
     maxSumOf,
     minSumOf,
-    propertyValidator,
+    propertyRule,
     regularExpression,
     required,
     stringMaxLen,

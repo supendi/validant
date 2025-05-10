@@ -1,18 +1,17 @@
-import { elementOf } from "../../propertyValidators/elementOf"
+import { elementOf } from "../../propertyRules/elementOf"
 
 
 describe(`Test ${elementOf.name}`, () => {
     it("should return false and have default error message", () => {
         const testValue = [1, 2, 3]
-        const validator = elementOf(testValue)
+        const ruleFunc = elementOf(testValue)
         const defaultValidatorErrorMessage = `The value ':value' is not the element of [${testValue.join(", ")}].`
         const inputValue = 4
 
-        expect(validator).not.toBeUndefined()
-        expect(validator.validate).not.toBeUndefined()
-        expect(validator.returningErrorMessage).toEqual(defaultValidatorErrorMessage)
-
-        var isValid = validator.validate(inputValue)
+        var {
+            isValid,
+            errorMessage
+        } = ruleFunc(inputValue)
 
         expect(isValid).toEqual(false)
     })
@@ -25,11 +24,10 @@ describe(`Test ${elementOf.name}`, () => {
         const validator = elementOf(testValue, customerErrorMessage)
         const inputValue = 4
 
-        expect(validator).not.toBeUndefined()
-        expect(validator.validate).not.toBeUndefined()
-        expect(validator.returningErrorMessage).toEqual(customerErrorMessage)
-
-        var isValid = validator.validate(inputValue)
+        var {
+            isValid,
+            errorMessage
+        } = validator(inputValue)
 
         expect(isValid).toEqual(false)
     })
@@ -42,11 +40,10 @@ describe(`Test ${elementOf.name}`, () => {
         const validator = elementOf(testValue, customerErrorMessage)
         const inputValue = 3
 
-        expect(validator).not.toBeUndefined()
-        expect(validator.validate).not.toBeUndefined()
-        expect(validator.returningErrorMessage).toEqual(customerErrorMessage)
-
-        var isValid = validator.validate(inputValue)
+        var {
+            isValid,
+            errorMessage
+        } = validator(inputValue)
 
         expect(isValid).toEqual(true)
     })
@@ -59,11 +56,10 @@ describe(`Test ${elementOf.name}`, () => {
         const validator = elementOf(testValue, customerErrorMessage)
         const inputValue = "Indonesia"
 
-        expect(validator).not.toBeUndefined()
-        expect(validator.validate).not.toBeUndefined()
-        expect(validator.returningErrorMessage).toEqual(customerErrorMessage)
-
-        var isValid = validator.validate(inputValue)
+        var {
+            isValid,
+            errorMessage
+        } = validator(inputValue)
 
         expect(isValid).toEqual(true)
     })
@@ -90,11 +86,10 @@ describe(`Test ${elementOf.name}`, () => {
             id: 1,
         }
 
-        expect(validator).not.toBeUndefined()
-        expect(validator.validate).not.toBeUndefined()
-        expect(validator.returningErrorMessage).toEqual(customerErrorMessage)
-
-        var isValid = validator.validate(inputValue)
+        var {
+            isValid,
+            errorMessage
+        } = validator(inputValue)
 
         expect(isValid).toEqual(false)
     })
@@ -118,11 +113,10 @@ describe(`Test ${elementOf.name}`, () => {
         //The following IS the reference element of the above array.
         const inputValue = testValue.find(x => x.id === 1)
 
-        expect(validator).not.toBeUndefined()
-        expect(validator.validate).not.toBeUndefined()
-        expect(validator.returningErrorMessage).toEqual(customerErrorMessage)
-
-        var isValid = validator.validate(inputValue)
+        var {
+            isValid,
+            errorMessage
+        } = validator(inputValue)
 
         expect(isValid).toEqual(true)
     })

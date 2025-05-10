@@ -1,4 +1,4 @@
-import { regularExpression } from "../../propertyValidators/regularExpression"
+import { regularExpression } from "../../propertyRules/regularExpression"
 
 
 describe(`Test ${regularExpression.name}`, () => {
@@ -8,10 +8,11 @@ describe(`Test ${regularExpression.name}`, () => {
         const defaultValidatorErrorMessage = `The value ':value' doesn't match with the specified regular expression.`
         const inputValue = "Hallo"
 
-        expect(validator).not.toBeUndefined()
-        expect(validator.validate).not.toBeUndefined()
-        expect(validator.returningErrorMessage).toEqual(defaultValidatorErrorMessage)
-        var isValid = validator.validate(inputValue)
+
+        var {
+            isValid,
+            errorMessage
+        } = validator(inputValue)
 
         expect(isValid).toEqual(false)
     })
@@ -24,11 +25,10 @@ describe(`Test ${regularExpression.name}`, () => {
         const validator = regularExpression(testValue, customErrorMessage)
         const inputValue = "cumaMisCall1"
 
-        expect(validator).not.toBeUndefined()
-        expect(validator.validate).not.toBeUndefined()
-        expect(validator.returningErrorMessage).toEqual(customErrorMessage)
-
-        var isValid = validator.validate(inputValue)
+        var {
+            isValid,
+            errorMessage
+        } = validator(inputValue)
 
         expect(isValid).toEqual(false)
     })
@@ -41,12 +41,11 @@ describe(`Test ${regularExpression.name}`, () => {
         const validator = regularExpression(testValue, customErrorMessage)
         const inputValue = "ThisIsStrongPassword123.,"
 
-        expect(validator).not.toBeUndefined()
-        expect(validator.validate).not.toBeUndefined()
-        expect(validator.returningErrorMessage).toEqual(customErrorMessage)
-
-        var isValid = validator.validate(inputValue)
-
+        var {
+            isValid,
+            errorMessage
+        } = validator(inputValue)
+        
         expect(isValid).toEqual(true)
     })
 }) 

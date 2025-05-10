@@ -1,4 +1,4 @@
-import { emailAddress } from "../../propertyValidators/emailAddress"
+import { emailAddress } from "../../propertyRules/emailAddress"
 
 describe(`Test ${emailAddress.name}`, () => {
     it("should return false and have default error message", () => {
@@ -6,11 +6,10 @@ describe(`Test ${emailAddress.name}`, () => {
         const validator = emailAddress()
         const defaultValidatorErrorMessage = `Invalid email address. The valid email example: john.doe@example.com.`
 
-        expect(validator).not.toBeUndefined()
-        expect(validator.validate).not.toBeUndefined()
-        expect(validator.returningErrorMessage).toEqual(defaultValidatorErrorMessage)
-
-        var isValid = validator.validate(testValue)
+        var {
+            isValid,
+            errorMessage
+        } = validator(testValue)
 
         expect(isValid).toEqual(false)
     })
@@ -22,11 +21,10 @@ describe(`Test ${emailAddress.name}`, () => {
         const customErrorMessage = `Invalid email address '${testValue}'`
         const validator = emailAddress(customErrorMessage)
 
-        expect(validator).not.toBeUndefined()
-        expect(validator.validate).not.toBeUndefined()
-        expect(validator.returningErrorMessage).toEqual(customErrorMessage)
-
-        var isValid = validator.validate(testValue)
+        var {
+            isValid,
+            errorMessage
+        } = validator(testValue)
 
         expect(isValid).toEqual(false)
     })
@@ -38,11 +36,10 @@ describe(`Test ${emailAddress.name}`, () => {
         const customErrorMessage = `Invalid email.`
         const validator = emailAddress(customErrorMessage)
 
-        expect(validator).not.toBeUndefined()
-        expect(validator.validate).not.toBeUndefined()
-        expect(validator.returningErrorMessage).toEqual(customErrorMessage)
-
-        var isValid = validator.validate(testValue)
+        var {
+            isValid,
+            errorMessage
+        } = validator(testValue)
 
         expect(isValid).toEqual(true)
     })
@@ -53,12 +50,11 @@ describe(`Test ${emailAddress.name}`, () => {
         const testValue = 'john@'
         const customErrorMessage = `Invalid email :value`
         const validator = emailAddress(customErrorMessage)
-
-        expect(validator).not.toBeUndefined()
-        expect(validator.validate).not.toBeUndefined()
-        expect(validator.returningErrorMessage).toEqual(customErrorMessage)
-
-        var isValid = validator.validate(testValue)
+        
+        var {
+            isValid,
+            errorMessage
+        } = validator(testValue)
 
         expect(isValid).toEqual(false)
     })

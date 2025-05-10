@@ -1,4 +1,4 @@
-import { stringMaxLen } from "../../propertyValidators/stringMaxLen"
+import { stringMaxLen } from "../../propertyRules/stringMaxLen"
 
 describe(`Test ${stringMaxLen.name}`, () => {
     it("should return false and have default error message", () => {
@@ -6,11 +6,11 @@ describe(`Test ${stringMaxLen.name}`, () => {
         const defaultValidatorErrorMessage = `The max string is ${maxLength}.`
         const validator = stringMaxLen(maxLength, defaultValidatorErrorMessage)
 
-        expect(validator).not.toBeUndefined()
-        expect(validator.validate).not.toBeUndefined()
-        expect(validator.returningErrorMessage).toEqual(defaultValidatorErrorMessage)
+        var {
+            isValid,
+            errorMessage
+        } = validator("abcd")
 
-        var isValid = validator.validate("abcd")
 
         expect(isValid).toEqual(false)
     })
@@ -22,11 +22,11 @@ describe(`Test ${stringMaxLen.name}`, () => {
         const defaultValidatorErrorMessage = `Hey we want a string with minimum length = 10.`
         const validator = stringMaxLen(maxLength, defaultValidatorErrorMessage)
 
-        expect(validator).not.toBeUndefined()
-        expect(validator.validate).not.toBeUndefined()
-        expect(validator.returningErrorMessage).toEqual(defaultValidatorErrorMessage)
+        var {
+            isValid,
+            errorMessage
+        } = validator("12345601")
 
-        var isValid = validator.validate("12345601")
 
         expect(isValid).toEqual(false)
     })
@@ -38,11 +38,12 @@ describe(`Test ${stringMaxLen.name}`, () => {
         const defaultValidatorErrorMessage = `The max length string is ${maxLength}.`
         const validator = stringMaxLen(maxLength, defaultValidatorErrorMessage)
 
-        expect(validator).not.toBeUndefined()
-        expect(validator.validate).not.toBeUndefined()
-        expect(validator.returningErrorMessage).toEqual(defaultValidatorErrorMessage)
 
-        var isValid = validator.validate("abcde")
+        var {
+            isValid,
+            errorMessage
+        } = validator("abcde")
+
 
         expect(isValid).toEqual(true)
     })
@@ -54,11 +55,12 @@ describe(`Test ${stringMaxLen.name}`, () => {
         const defaultValidatorErrorMessage = `The max length string is ${maxLength}.`
         const validator = stringMaxLen(maxLength, defaultValidatorErrorMessage)
 
-        expect(validator).not.toBeUndefined()
-        expect(validator.validate).not.toBeUndefined()
-        expect(validator.returningErrorMessage).toEqual(defaultValidatorErrorMessage)
 
-        var isValid = validator.validate("asdfasdfasdf")
+        var {
+            isValid,
+            errorMessage
+        } = validator("asdfasdfasdf")
+
 
         expect(isValid).toEqual(false)
     })
@@ -70,11 +72,11 @@ describe(`Test ${stringMaxLen.name}`, () => {
         const defaultValidatorErrorMessage = `The max length string is ${maxLength}.`
         const validator = stringMaxLen(maxLength, defaultValidatorErrorMessage)
 
-        expect(validator).not.toBeUndefined()
-        expect(validator.validate).not.toBeUndefined()
-        expect(validator.returningErrorMessage).toEqual(defaultValidatorErrorMessage)
+        var {
+            isValid,
+            errorMessage
+        } = validator("12345")
 
-        var isValid = validator.validate(12345)
 
         expect(isValid).toEqual(true)
     })

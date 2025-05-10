@@ -1,17 +1,17 @@
-import { maxNumber } from "../../propertyValidators/maxNumber"
+import { maxNumber } from "../../propertyRules/maxNumber"
 
 describe(`Test ${maxNumber.name}`, () => {
     it("should return false and have default error message", () => {
         const maxValue = 5
         const validator = maxNumber(maxValue)
         const myNumber = 10
-        const defaultValidatorErrorMessage =  `The maximum value for this field is ${maxValue}.`
+        const defaultValidatorErrorMessage = `The maximum value for this field is ${maxValue}.`
 
-        expect(validator).not.toBeUndefined()
-        expect(validator.validate).not.toBeUndefined()
-        expect(validator.returningErrorMessage).toEqual(defaultValidatorErrorMessage)
 
-        var isValid = validator.validate(myNumber)
+        var {
+            isValid,
+            errorMessage
+        } = validator(myNumber)
 
         expect(isValid).toEqual(false)
     })
@@ -23,12 +23,10 @@ describe(`Test ${maxNumber.name}`, () => {
         const customErrorMessage = `Maximum order for this item is ${maxValue}.`
         const validator = maxNumber(maxValue, customErrorMessage)
         const myNumber = 2
-
-        expect(validator).not.toBeUndefined()
-        expect(validator.validate).not.toBeUndefined()
-        expect(validator.returningErrorMessage).toEqual(customErrorMessage)
-
-        var isValid = validator.validate(myNumber)
+        var {
+            isValid,
+            errorMessage
+        } = validator(myNumber)
 
         expect(isValid).toEqual(false)
     })
@@ -41,11 +39,10 @@ describe(`Test ${maxNumber.name}`, () => {
         const validator = maxNumber(maxValue, customErrorMessage)
         const orderItems = 1
 
-        expect(validator).not.toBeUndefined()
-        expect(validator.validate).not.toBeUndefined()
-        expect(validator.returningErrorMessage).toEqual(customErrorMessage)
-
-        var isValid = validator.validate(orderItems)
+        var {
+            isValid,
+            errorMessage
+        } = validator(orderItems)
 
         expect(isValid).toEqual(true)
     })

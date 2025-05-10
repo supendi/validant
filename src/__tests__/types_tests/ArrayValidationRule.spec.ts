@@ -1,18 +1,16 @@
-import { required } from "../../propertyValidators"
-import { ValidationRule, ArrayValidationRule, PropertyValidator, } from "../../types"
+import { required } from "../../propertyRules"
+import { ValidationRule, ArrayValidationRule, PropertyRuleFunc, } from "../../types"
 
-const requiredValidator: PropertyValidator<any, any> = {
-    description: "Required Validator",
-    returningErrorMessage: "This field is required",
-    validate: (value: any, obj?: any) => {
-        return !!value
+const requiredRule: PropertyRuleFunc<any, any> = (value: any, obj?: any) => {
+    return {
+        isValid: !!value,
+        errorMessage: "This field is required"
     }
 }
-const minNumberValidator: PropertyValidator<any, any> = {
-    description: "Minimum Number Validator",
-    returningErrorMessage: "Minimum number is",
-    validate: (value: any, obj?: any) => {
-        return false
+const minNumberValidator: PropertyRuleFunc<any, any> = (value: any, obj?: any) => {
+    return {
+        isValid: false,
+        errorMessage: "Minimum number is"
     }
 }
 
@@ -27,21 +25,21 @@ describe("ArrayValidationRule Compile Test", () => {
         }
 
         const personRule: ValidationRule<Person> = {
-            name: [requiredValidator],
-            age: [requiredValidator, minNumberValidator],
+            name: [requiredRule],
+            age: [requiredRule, minNumberValidator],
         }
 
         const arrayOfPersonValidationRule: ArrayValidationRule<Person[], Person> = {
-            validators: [requiredValidator],
-            validationRule: personRule,
+            arrayRules: [requiredRule],
+            arrayItemRule: personRule,
         }
 
         expect(arrayOfPersonValidationRule).not.toBeUndefined()
 
-        expect(arrayOfPersonValidationRule.validators).not.toBeUndefined()
-        expect(Array.isArray(arrayOfPersonValidationRule.validators)).toBeTruthy()
-        expect(arrayOfPersonValidationRule.validators?.length).toEqual(1)
-        expect(arrayOfPersonValidationRule.validators ? arrayOfPersonValidationRule.validators[0] : undefined).toEqual(requiredValidator)
+        expect(arrayOfPersonValidationRule.arrayRules).not.toBeUndefined()
+        expect(Array.isArray(arrayOfPersonValidationRule.arrayRules)).toBeTruthy()
+        expect(arrayOfPersonValidationRule.arrayRules?.length).toEqual(1)
+        expect(arrayOfPersonValidationRule.arrayRules ? arrayOfPersonValidationRule.arrayRules[0] : undefined).toEqual(requiredRule)
     })
 })
 
@@ -53,21 +51,21 @@ describe("ArrayValidationRule Compile Test", () => {
         }
 
         const personRule: ValidationRule<Person> = {
-            name: [requiredValidator],
-            age: [requiredValidator, minNumberValidator],
+            name: [requiredRule],
+            age: [requiredRule, minNumberValidator],
         }
 
         const arrayOfPersonValidationRule: ArrayValidationRule<Person[], Person> = {
-            validators: [requiredValidator],
-            validationRule: personRule,
+            arrayRules: [requiredRule],
+            arrayItemRule: personRule,
         }
 
         expect(arrayOfPersonValidationRule).not.toBeUndefined()
 
-        expect(arrayOfPersonValidationRule.validators).not.toBeUndefined()
-        expect(Array.isArray(arrayOfPersonValidationRule.validators)).toBeTruthy()
-        expect(arrayOfPersonValidationRule.validators?.length).toEqual(1)
-        expect(arrayOfPersonValidationRule.validators ? arrayOfPersonValidationRule.validators[0] : undefined).toEqual(requiredValidator)
+        expect(arrayOfPersonValidationRule.arrayRules).not.toBeUndefined()
+        expect(Array.isArray(arrayOfPersonValidationRule.arrayRules)).toBeTruthy()
+        expect(arrayOfPersonValidationRule.arrayRules?.length).toEqual(1)
+        expect(arrayOfPersonValidationRule.arrayRules ? arrayOfPersonValidationRule.arrayRules[0] : undefined).toEqual(requiredRule)
     })
 })
 
@@ -84,8 +82,8 @@ describe("ArrayValidationRule Compile Test", () => {
         var rule: ValidationRule<Order> = {
             orderItems: function build(y: OrderItem[], x: Order) {
                 return {
-                    validators: [required("")],
-                    validationRule: {
+                    arrayRules: [required("")],
+                    arrayItemRule: {
                         productId: []
                     }
                 }

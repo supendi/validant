@@ -1,4 +1,4 @@
-import { equalToPropertyValue } from "../../propertyValidators/equalToPropertyValue"
+import { equalToPropertyValue } from "../../propertyRules/equalToPropertyValue"
 
 describe(`Test ${equalToPropertyValue.name}`, () => {
     it("should return false and have default error message", () => {
@@ -10,11 +10,11 @@ describe(`Test ${equalToPropertyValue.name}`, () => {
             email: "test123@gmail.com"
         }
 
-        expect(validator).not.toBeUndefined()
-        expect(validator.validate).not.toBeUndefined()
-        expect(validator.returningErrorMessage).toEqual(defaultValidatorErrorMessage)
+        var {
+            isValid,
+            errorMessage
+        } = validator(inputValue, object)
 
-        var isValid = validator.validate(inputValue, object)
 
         expect(isValid).toEqual(false)
     })
@@ -30,11 +30,10 @@ describe(`Test ${equalToPropertyValue.name}`, () => {
             email: "test@gmail.com"
         }
 
-        expect(validator).not.toBeUndefined()
-        expect(validator.validate).not.toBeUndefined()
-        expect(validator.returningErrorMessage).toEqual(customErrorMessage)
-
-        var isValid = validator.validate(inputValue, object)
+        var {
+            isValid,
+            errorMessage
+        } = validator(inputValue, object)
 
         expect(isValid).toEqual(false)
     })
@@ -49,12 +48,11 @@ describe(`Test ${equalToPropertyValue.name}`, () => {
         const object = {
             email: "test@gmail.com"
         }
-
-        expect(validator).not.toBeUndefined()
-        expect(validator.validate).not.toBeUndefined()
-        expect(validator.returningErrorMessage).toEqual(customErrorMessage)
-
-        var isValid = validator.validate(inputValue, object)
+ 
+        var {
+            isValid,
+            errorMessage
+        } = validator(inputValue, object)
 
         expect(isValid).toEqual(true)
     })

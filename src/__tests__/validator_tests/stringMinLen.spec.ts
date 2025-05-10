@@ -1,4 +1,4 @@
-import { stringMinLen } from "../../propertyValidators/stringMinLen"
+import { stringMinLen } from "../../propertyRules/stringMinLen"
 
 describe(`Test ${stringMinLen.name}`, () => {
     it("should return false and have default error message", () => {
@@ -6,11 +6,12 @@ describe(`Test ${stringMinLen.name}`, () => {
         const defaultValidatorErrorMessage = `The minimum string is ${minLen}.`
         const validator = stringMinLen(minLen, defaultValidatorErrorMessage)
 
-        expect(validator).not.toBeUndefined()
-        expect(validator.validate).not.toBeUndefined()
-        expect(validator.returningErrorMessage).toEqual(defaultValidatorErrorMessage)
 
-        var isValid = validator.validate("abcd")
+        var {
+            isValid,
+            errorMessage
+        } = validator("abcd")
+
 
         expect(isValid).toEqual(false)
     })
@@ -22,11 +23,11 @@ describe(`Test ${stringMinLen.name}`, () => {
         const defaultValidatorErrorMessage = `Hey we want a string with minimum length = 10.`
         const validator = stringMinLen(minLen, defaultValidatorErrorMessage)
 
-        expect(validator).not.toBeUndefined()
-        expect(validator.validate).not.toBeUndefined()
-        expect(validator.returningErrorMessage).toEqual(defaultValidatorErrorMessage)
+        var {
+            isValid,
+            errorMessage
+        } = validator("12345601")
 
-        var isValid = validator.validate("12345601")
 
         expect(isValid).toEqual(false)
     })
@@ -38,27 +39,11 @@ describe(`Test ${stringMinLen.name}`, () => {
         const defaultValidatorErrorMessage = `The minimum length string is ${minLen}.`
         const validator = stringMinLen(1, defaultValidatorErrorMessage)
 
-        expect(validator).not.toBeUndefined()
-        expect(validator.validate).not.toBeUndefined()
-        expect(validator.returningErrorMessage).toEqual(defaultValidatorErrorMessage)
+        var {
+            isValid,
+            errorMessage
+        } = validator("abcde")
 
-        var isValid = validator.validate("abcde")
-
-        expect(isValid).toEqual(true)
-    })
-})
-
-describe(`Test ${stringMinLen.name}`, () => {
-    it("should return true and have custom error message", () => {
-        const minLen = 5
-        const defaultValidatorErrorMessage = `The minimum length string is ${minLen}.`
-        const validator = stringMinLen(1, defaultValidatorErrorMessage)
-
-        expect(validator).not.toBeUndefined()
-        expect(validator.validate).not.toBeUndefined()
-        expect(validator.returningErrorMessage).toEqual(defaultValidatorErrorMessage)
-
-        var isValid = validator.validate("asdfasdfasdf")
 
         expect(isValid).toEqual(true)
     })
@@ -70,11 +55,26 @@ describe(`Test ${stringMinLen.name}`, () => {
         const defaultValidatorErrorMessage = `The minimum length string is ${minLen}.`
         const validator = stringMinLen(1, defaultValidatorErrorMessage)
 
-        expect(validator).not.toBeUndefined()
-        expect(validator.validate).not.toBeUndefined()
-        expect(validator.returningErrorMessage).toEqual(defaultValidatorErrorMessage)
+        var {
+            isValid,
+            errorMessage
+        } = validator("asdfasdfasdf")
 
-        var isValid = validator.validate(12345)
+
+        expect(isValid).toEqual(true)
+    })
+})
+
+describe(`Test ${stringMinLen.name}`, () => {
+    it("should return true and have custom error message", () => {
+        const minLen = 5
+        const defaultValidatorErrorMessage = `The minimum length string is ${minLen}.`
+        const validator = stringMinLen(1, defaultValidatorErrorMessage)
+
+        var {
+            isValid,
+            errorMessage
+        } = validator("12345")
 
         expect(isValid).toEqual(true)
     })

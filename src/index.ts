@@ -1,9 +1,11 @@
-import tsv from "./tsv";
-import { ErrorOf, ValidationRule, ValidationResult, ValidateFunc, PropertyValidationResult, PropertyValidator, ArrayValidationRule, ErrorOfArray, IndexedErrorOf, TypeOfArray } from './types'
-import { emailAddress, equalToPropertyValue, arrayMaxLen, arrayMinLen, maxNumber, minNumber, minSumOf, maxSumOf, regularExpression, required, elementOf, propertyValidator, alphabetOnly, stringMaxLen, stringMinLen } from './propertyValidators'
+import tsValidity from "./tsValidity";
+import { ErrorOf, ValidationRule, ValidateFunc, PropertyRuleFunc, ArrayValidationRule, ErrorOfArray, IndexedErrorOf, TypeOfArray } from './types'
+import { ValidationResult } from "./tsValidity";
+import { PropertyValidationResult } from "./tsValidity/validateField";
+import { emailAddress, equalToPropertyValue, arrayMaxLen, arrayMinLen, maxNumber, minNumber, minSumOf, maxSumOf, regularExpression, required, elementOf, alphabetOnly, stringMaxLen, stringMinLen } from './propertyRules'
 
-export { tsv }
-export { tsv as objectValidator } // avoid breaking changes
+export { tsValidity }
+export { tsValidity as objectValidator } // avoid breaking changes
 
 export {
     arrayMaxLen,
@@ -17,7 +19,6 @@ export {
     required,
     minSumOf,
     maxSumOf,
-    propertyValidator,
     alphabetOnly,
     stringMaxLen,
     stringMinLen
@@ -31,7 +32,7 @@ export {
     ValidationResult,
     ValidateFunc,
     PropertyValidationResult,
-    PropertyValidator,
+    PropertyRuleFunc as PropertyRule,
     ArrayValidationRule,
     TypeOfArray,
 } 

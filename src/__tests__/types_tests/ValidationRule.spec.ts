@@ -1,5 +1,5 @@
-import { PropertyValidator, ValidationRule, ArrayValidationRule } from "../../types"
-import { elementOf, emailAddress, maxNumber, arrayMinLen, minNumber, required } from "../../propertyValidators"
+import { PropertyRuleFunc, ValidationRule, ArrayValidationRule } from "../../types"
+import { elementOf, emailAddress, maxNumber, arrayMinLen, minNumber, required } from "../../propertyRules"
 
 /**
  * Ensure all the code below are compiled
@@ -55,8 +55,8 @@ describe("ValidationRule Compile Test", () => {
         // ensure order items has the correct type check
         const rule2: ValidationRule<Order> = {
             orderItems: {
-                validators: [arrayMinLen(4)],
-                validationRule: {
+                arrayRules: [arrayMinLen(4)],
+                arrayItemRule: {
                     id: [required()],
                     productId: [],
                 }
@@ -74,18 +74,18 @@ describe("ValidationRule Compile Test", () => {
         // Apply the predefined order item rules
         const rule3: ValidationRule<Order> = {
             orderItems: {
-                validators: [arrayMinLen(4)],
-                validationRule: orderItemsRule
+                arrayRules: [arrayMinLen(4)],
+                arrayItemRule: orderItemsRule
             },
         }
 
         // Ensure deep type check on order items, see the customer properties
         const rule4: ValidationRule<Order> = {
             orderItems: {
-                validators: [arrayMinLen(4)],
-                validationRule: {
+                arrayRules: [arrayMinLen(4)],
+                arrayItemRule: {
                     customers: {
-                        validationRule: {
+                        arrayItemRule: {
                             id: [required(), elementOf(customerIds)],
                             name: [required()],
                             email: [required(), emailAddress()]
@@ -108,20 +108,19 @@ describe("ValidationRules Simple Person Test", () => {
             name: string
             age: number
         }
-        const requiredValidator: PropertyValidator<any, any> = {
-            description: "Required Validator",
-            returningErrorMessage: "This field is required",
-            validate: (value: any, obj?: any) => {
-                return !!value
+        const requiredValidator: PropertyRuleFunc<any, any> = (value: any, obj?: any) => {
+            return {
+                isValid: !!value,
+                errorMessage: "This field is required"
             }
         }
-        const minNumberValidator: PropertyValidator<any, any> = {
-            description: "Minimum Number Validator",
-            returningErrorMessage: "Minimum number is",
-            validate: (value: any, obj?: any) => {
-                return false
+        const minNumberValidator: PropertyRuleFunc<any, any> = (value: any, obj?: any) => {
+            return {
+                isValid: false,
+                errorMessage: "Minimum number is"
             }
         }
+
         const rules: ValidationRule<Person> = {
             name: [requiredValidator],
             age: [requiredValidator, minNumberValidator],
@@ -160,25 +159,22 @@ describe("ValidationRules Complex Person Test", () => {
             father: Person
             children: Person[]
         }
-        const requiredValidator: PropertyValidator<any, any> = {
-            description: "Required Validator",
-            returningErrorMessage: "This field is required",
-            validate: (value: any, obj?: any) => {
-                return !!value
+        const requiredValidator: PropertyRuleFunc<any, any> = (value: any, obj?: any) => {
+            return {
+                isValid: !!value,
+                errorMessage: "This field is required"
             }
         }
-        const minNumberValidator: PropertyValidator<any, any> = {
-            description: "Minimum Number Validator",
-            returningErrorMessage: "Minimum number is",
-            validate: (value: any, obj?: any) => {
-                return false
+        const minNumberValidator: PropertyRuleFunc<any, any> = (value: any, obj?: any) => {
+            return {
+                isValid: false,
+                errorMessage: "Minimum number is"
             }
         }
-        const maxNumberValidator: PropertyValidator<any, any> = {
-            description: "Max Number Validator",
-            returningErrorMessage: "Maximum number is",
-            validate: (value: any, obj?: any) => {
-                return false
+        const maxNumberValidator: PropertyRuleFunc<any, any> = (value: any, obj?: any) => {
+            return {
+                isValid: false,
+                errorMessage: "Maximum number is"
             }
         }
 
@@ -192,8 +188,8 @@ describe("ValidationRules Complex Person Test", () => {
         }
 
         personRules.children = {
-            validators: [requiredValidator],
-            validationRule: {
+            arrayRules: [requiredValidator],
+            arrayItemRule: {
                 name: [requiredValidator],
                 age: [requiredValidator, minNumberValidator],
                 father: {
@@ -247,8 +243,8 @@ describe("ValidationRules Complex Person Test", () => {
         const childrenRules = personRules.children
         expect(childrenRules).not.toBeUndefined()
         expect(childrenRules).toEqual<ArrayValidationRule<Person[], Person>>({
-            validators: [requiredValidator],
-            validationRule: {
+            arrayRules: [requiredValidator],
+            arrayItemRule: {
                 name: [requiredValidator],
                 age: [requiredValidator, minNumberValidator],
                 father: {
@@ -258,8 +254,8 @@ describe("ValidationRules Complex Person Test", () => {
             }
         })
 
-        expect(childrenRules.validators?.length).toEqual(1)
-        expect(childrenRules.validationRule).toEqual({
+        expect(childrenRules.arrayRules?.length).toEqual(1)
+        expect(childrenRules.arrayItemRule).toEqual({
             name: [requiredValidator],
             age: [requiredValidator, minNumberValidator],
             father: {
@@ -268,7 +264,7 @@ describe("ValidationRules Complex Person Test", () => {
             }
         })
 
-        const childrenValidationRule = childrenRules.validationRule
+        const childrenValidationRule = childrenRules.arrayItemRule
         expect(childrenValidationRule?.name).not.toBeUndefined()
         expect(childrenValidationRule?.name).toEqual([requiredValidator])
 
