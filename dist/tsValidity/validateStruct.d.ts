@@ -5,4 +5,4 @@ import { ValidationRule, ErrorOf } from "../types";
  * @param validationRule
  * @returns
  */
-export declare const validateStruct: <T>(object: T, validationRule: ValidationRule<T>) => ErrorOf<T>;
+export declare const validateStruct: <T, TRoot>(object: T, rootObject: TRoot, validationRule: ValidationRule<T, TRoot>) => ErrorOf<T>;

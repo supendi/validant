@@ -8,9 +8,9 @@ exports.validateField = void 0;
  * @param propertyRuleFunc
  * @returns
  */
-const validateField = (propName, object, propertyRuleFunc) => {
+const validateField = (propName, object, root, propertyRuleFunc) => {
     const value = object[propName];
-    const { isValid, errorMessage } = propertyRuleFunc(value, object);
+    const { isValid, errorMessage } = propertyRuleFunc(value, root);
     let resolvedErrorMessage = errorMessage;
     if (resolvedErrorMessage) {
         resolvedErrorMessage = resolvedErrorMessage.replace(":value", value);

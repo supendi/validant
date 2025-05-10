@@ -20,8 +20,8 @@ export interface ValidationMessage {
  * @param validationRule
  * @returns ValidationResult
  */
-export declare const validate: <T>(object: T, validationRule: ValidationRule<T>, validationMessage?: ValidationMessage) => ValidationResult<T>;
+export declare const validate: <T, TRoot>(object: T, validationRule: ValidationRule<T>, validationMessage?: ValidationMessage) => ValidationResult<T>;
 declare const tsValidity: {
-    validate: <T>(object: T, validationRule: ValidationRule<T>, validationMessage?: ValidationMessage) => ValidationResult<T>;
+    validate: <T, TRoot>(object: T, validationRule: ValidationRule<T>, validationMessage?: ValidationMessage) => ValidationResult<T>;
 };
 export default tsValidity;

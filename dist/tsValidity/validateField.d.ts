@@ -16,4 +16,4 @@ export interface PropertyValidationResult<T> {
  * @param propertyRuleFunc
  * @returns
  */
-export declare const validateField: <TValue, TObject>(propName: keyof TObject, object: TObject, propertyRuleFunc: PropertyRuleFunc<TValue, TObject>) => PropertyValidationResult<TObject>;
+export declare const validateField: <TValue, TObject, TRoot>(propName: keyof TObject, object: TObject, root: TRoot, propertyRuleFunc: PropertyRuleFunc<TValue, TRoot>) => PropertyValidationResult<TObject>;

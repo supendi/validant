@@ -66,7 +66,7 @@ describe("ValidationRule Compile Test", () => {
         // ensure order items has the correct type check and can use predefined rules
 
         // Predefined rules
-        const orderItemsRule: ValidationRule<OrderItem> = {
+        const orderItemsRule: ValidationRule<OrderItem, Order> = {
             productId: [required(), elementOf(productIds)],
             quantity: [minNumber(1), maxNumber(5)],
         }
@@ -242,7 +242,7 @@ describe("ValidationRules Complex Person Test", () => {
 
         const childrenRules = personRules.children
         expect(childrenRules).not.toBeUndefined()
-        expect(childrenRules).toEqual<ArrayValidationRule<Person[], Person>>({
+        expect(childrenRules).toEqual<ArrayValidationRule<Person[], Person, Person>>({
             arrayRules: [requiredValidator],
             arrayItemRule: {
                 name: [requiredValidator],

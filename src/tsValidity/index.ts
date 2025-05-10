@@ -25,8 +25,8 @@ export interface ValidationMessage {
  * @param validationRule 
  * @returns ValidationResult
  */
-export const validate = <T>(object: T, validationRule: ValidationRule<T>, validationMessage: ValidationMessage = { okMessage: "Good to go.", errorMessage: "One or more validation errors occurred." }): ValidationResult<T> => {
-    const errors = validateStruct(object, validationRule)
+export const validate = <T, TRoot>(object: T, validationRule: ValidationRule<T>, validationMessage: ValidationMessage = { okMessage: "Good to go.", errorMessage: "One or more validation errors occurred." }): ValidationResult<T> => {
+    const errors = validateStruct(object, object, validationRule)
     let isValid = true
 
     for (const key in errors) {

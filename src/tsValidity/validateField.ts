@@ -20,13 +20,13 @@ export interface PropertyValidationResult<T> {
  * @returns
  */
 
-export const validateField = <TValue, TObject>(propName: keyof TObject, object: TObject, propertyRuleFunc: PropertyRuleFunc<TValue, TObject>): PropertyValidationResult<TObject> => {
+export const validateField = <TValue, TObject, TRoot>(propName: keyof TObject, object: TObject, root: TRoot, propertyRuleFunc: PropertyRuleFunc<TValue, TRoot>): PropertyValidationResult<TObject> => {
     const value = object[propName];
 
     const {
         isValid,
         errorMessage
-    } = propertyRuleFunc(value as unknown as TValue, object);
+    } = propertyRuleFunc(value as unknown as TValue, root);
 
     let resolvedErrorMessage = errorMessage
     if (resolvedErrorMessage) {

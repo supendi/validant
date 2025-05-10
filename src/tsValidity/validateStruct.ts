@@ -3,7 +3,7 @@ import { validateField } from "./validateField";
 
 type PropertyType = "array" | "object" | "primitive" | "undefined"
 
-type PrimitiveRule<T> = PropertyRuleFunc<T[Extract<keyof T, string>], T>[]
+type PrimitiveRule<T, TRoot> = PropertyRuleFunc<T[Extract<keyof T, string>], TRoot>[]
 
 type FieldErrors = string[]
 
@@ -17,7 +17,7 @@ type ObjectFieldValidationResult<T> = {
     errors?: ErrorOf<T> | FieldErrors
 }
 
-function isArrayValidationRule<T>(rule: ValidationRule<T>[Extract<keyof T, string>] | ArrayValidationRule<T[Extract<keyof T, string>], T>) {
+function isArrayValidationRule<T, TRoot>(rule: ValidationRule<T, TRoot>[Extract<keyof T, string>] | ArrayValidationRule<T[Extract<keyof T, string>], T, TRoot>) {
     const allowedKeys = new Set(["arrayRules", "arrayItemRule"]);
     const keys = Object.keys(rule);
 
@@ -25,14 +25,14 @@ function isArrayValidationRule<T>(rule: ValidationRule<T>[Extract<keyof T, strin
     return isArrayRule
 }
 
-function ruleHasPrimitiveValidators<T>(rule: ValidationRule<T>[Extract<keyof T, string>]) {
+function ruleHasPrimitiveValidators<T, TRoot>(rule: ValidationRule<T, TRoot>[Extract<keyof T, string>]) {
     const keys = Object.keys(rule);
 
     const isArrayRule = keys.includes("arrayRules");
     return isArrayRule
 }
 
-function getPropertyTypeBasedOnItsRule<T>(rule: ValidationRule<T>[Extract<keyof T, string>]): PropertyType {
+function getPropertyTypeBasedOnItsRule<T, TRoot>(rule: ValidationRule<T, TRoot>[Extract<keyof T, string>]): PropertyType {
     if (!rule) {
         return "undefined"
     }
@@ -53,7 +53,7 @@ function getPropertyTypeBasedOnItsRule<T>(rule: ValidationRule<T>[Extract<keyof 
     return "object"
 }
 
-function validatePrimitiveField<T>(key: Extract<keyof T, string>, object: T, rule: PrimitiveRule<T>): PrimitiveFieldValidationResult {
+function validatePrimitiveField<T, TRoot>(key: Extract<keyof T, string>, object: T, root: TRoot, rule: PrimitiveRule<T, TRoot>): PrimitiveFieldValidationResult {
     var fieldErrors: FieldErrors = [];
     for (let index = 0; index < rule.length; index++) {
         const propertyRuleFunc = rule[index];
@@ -67,7 +67,7 @@ function validatePrimitiveField<T>(key: Extract<keyof T, string>, object: T, rul
             // continue;
         }
 
-        const propValidationResult = validateField(key, object, propertyRuleFunc);
+        const propValidationResult = validateField(key, object, root, propertyRuleFunc);
 
         const isValid = propValidationResult.isValid;
 
@@ -82,14 +82,14 @@ function validatePrimitiveField<T>(key: Extract<keyof T, string>, object: T, rul
     return validationResult
 }
 
-function validateArrayField<T>(key: Extract<keyof T, string>, object: T, rule: ValidationRule<T>[Extract<keyof T, string>] | ArrayValidationRule<T[Extract<keyof T, string>], T>) {
+function validateArrayField<T, TRoot>(key: Extract<keyof T, string>, object: T, root: TRoot, rule: ValidationRule<T, TRoot>[Extract<keyof T, string>] | ArrayValidationRule<T[Extract<keyof T, string>], T, TRoot>) {
 
     const value = object[key];
 
     // Support dynamic rule builder function
     if (typeof rule === "function") {
-        const builtRule = rule(value, object)
-        return validateArrayField(key, object, builtRule) // Recurse into built rule
+        const builtRule = rule(value, root)
+        return validateArrayField(key, object, root, builtRule) // Recurse into built rule
     }
 
     const isArrayRule = isArrayValidationRule(rule)
@@ -98,11 +98,11 @@ function validateArrayField<T>(key: Extract<keyof T, string>, object: T, rule: V
     }
     var arrayFieldErrors: ErrorOfArray<T> = {};
 
-    const arrayValidationRule = rule as ArrayValidationRule<typeof value, T>;
+    const arrayValidationRule = rule as ArrayValidationRule<typeof value, T, TRoot>;
 
     if (arrayValidationRule.arrayRules) {
         for (let index = 0; index < arrayValidationRule.arrayRules.length; index++) {
-            const primitiveFieldValidationResult = validatePrimitiveField(key, object, arrayValidationRule.arrayRules)
+            const primitiveFieldValidationResult = validatePrimitiveField(key, object, root, arrayValidationRule.arrayRules)
             if (!primitiveFieldValidationResult.isValid) {
                 arrayFieldErrors.errors = primitiveFieldValidationResult.errors
             }
@@ -114,11 +114,11 @@ function validateArrayField<T>(key: Extract<keyof T, string>, object: T, rule: V
             const element = value[index];
             let error: ErrorOf<any> = undefined
             if (typeof arrayValidationRule.arrayItemRule === "function") {
-                const validationRule = arrayValidationRule.arrayItemRule(element, object)
-                error = validateStruct(element, validationRule);
+                const validationRule = arrayValidationRule.arrayItemRule(element, root)
+                error = validateStruct(element, root, validationRule);
             }
             else {
-                error = validateStruct(element, arrayValidationRule.arrayItemRule);
+                error = validateStruct(element, root, arrayValidationRule.arrayItemRule);
             }
             if (error) {
                 if (!arrayFieldErrors.errorsEach) {
@@ -139,7 +139,7 @@ function validateArrayField<T>(key: Extract<keyof T, string>, object: T, rule: V
 }
 
 
-function validateObjectField<T>(key: Extract<keyof T, string>, object: T, rule: ValidationRule<T>[Extract<keyof T, string>]): ObjectFieldValidationResult<T[Extract<keyof T, string>]> {
+function validateObjectField<T, TRoot>(key: Extract<keyof T, string>, object: T, root: TRoot, rule: ValidationRule<T, TRoot>[Extract<keyof T, string>]): ObjectFieldValidationResult<T[Extract<keyof T, string>]> {
     var fieldErrors: FieldErrors = [];
     const value = object[key];
 
@@ -168,8 +168,8 @@ function validateObjectField<T>(key: Extract<keyof T, string>, object: T, rule: 
         // };
     }
 
-    const childValidationRule = rule as ValidationRule<typeof value>;
-    const error = validateStruct(value, childValidationRule);
+    const childValidationRule = rule as ValidationRule<typeof value, TRoot>;
+    const error = validateStruct(value, root, childValidationRule);
     const validationResult: ObjectFieldValidationResult<T[Extract<keyof T, string>]> = {
         errors: error,
         isValid: fieldErrors.length === 0 && !error
@@ -183,7 +183,7 @@ function validateObjectField<T>(key: Extract<keyof T, string>, object: T, rule: 
  * @param validationRule
  * @returns
  */
-export const validateStruct = <T>(object: T, validationRule: ValidationRule<T>): ErrorOf<T> => {
+export const validateStruct = <T, TRoot>(object: T, rootObject: TRoot, validationRule: ValidationRule<T, TRoot>): ErrorOf<T> => {
     var errors: ErrorOf<T> = undefined;
 
     function assignErrorsIfAny(key: any, fieldErrors: FieldErrors | ErrorOfArray<T> | ErrorOf<T[Extract<keyof T, string>]>) {
@@ -211,7 +211,7 @@ export const validateStruct = <T>(object: T, validationRule: ValidationRule<T>):
             switch (typeOfProperty) {
                 case "primitive":
                     if (Array.isArray(rule)) {
-                        const validationResult = validatePrimitiveField(key, object, rule)
+                        const validationResult = validatePrimitiveField(key, object, rootObject, rule)
                         if (!validationResult.isValid) {
                             assignErrorsIfAny(key, validationResult.errors)
                         }
@@ -219,21 +219,21 @@ export const validateStruct = <T>(object: T, validationRule: ValidationRule<T>):
                     break;
                 case "array":
                     if (!value) {
-                        const error = validateObjectField(key, object, rule)
+                        const error = validateObjectField(key, object, rootObject, rule)
                         if (error && !error.isValid) {
                             assignErrorsIfAny(key, error.errors)
                         }
                         break;
                     }
                     if (Array.isArray(value)) {
-                        const result = validateArrayField(key, object, rule)
+                        const result = validateArrayField(key, object, rootObject, rule)
                         if (result?.errors || result?.errorsEach) {
                             assignErrorsIfAny(key, result)
                         }
                     }
                     break;
                 case "object":
-                    const error = validateObjectField(key, object, rule)
+                    const error = validateObjectField(key, object, rootObject, rule)
                     if (error && !error.isValid) {
                         assignErrorsIfAny(key, error.errors)
                     }

@@ -29,7 +29,7 @@ function getPropertyTypeBasedOnItsRule(rule) {
     }
     return "object";
 }
-function validatePrimitiveField(key, object, rule) {
+function validatePrimitiveField(key, object, root, rule) {
     var fieldErrors = [];
     for (let index = 0; index < rule.length; index++) {
         const propertyRuleFunc = rule[index];
@@ -41,7 +41,7 @@ function validatePrimitiveField(key, object, rule) {
             throw Error("propertyRuleFunc is not a function");
             // continue;
         }
-        const propValidationResult = (0, validateField_1.validateField)(key, object, propertyRuleFunc);
+        const propValidationResult = (0, validateField_1.validateField)(key, object, root, propertyRuleFunc);
         const isValid = propValidationResult.isValid;
         if (!isValid) {
             fieldErrors.push(propValidationResult.errorMessage);
@@ -53,12 +53,12 @@ function validatePrimitiveField(key, object, rule) {
     };
     return validationResult;
 }
-function validateArrayField(key, object, rule) {
+function validateArrayField(key, object, root, rule) {
     const value = object[key];
     // Support dynamic rule builder function
     if (typeof rule === "function") {
-        const builtRule = rule(value, object);
-        return validateArrayField(key, object, builtRule); // Recurse into built rule
+        const builtRule = rule(value, root);
+        return validateArrayField(key, object, root, builtRule); // Recurse into built rule
     }
     const isArrayRule = isArrayValidationRule(rule);
     if (!isArrayRule) {
@@ -68,7 +68,7 @@ function validateArrayField(key, object, rule) {
     const arrayValidationRule = rule;
     if (arrayValidationRule.arrayRules) {
         for (let index = 0; index < arrayValidationRule.arrayRules.length; index++) {
-            const primitiveFieldValidationResult = validatePrimitiveField(key, object, arrayValidationRule.arrayRules);
+            const primitiveFieldValidationResult = validatePrimitiveField(key, object, root, arrayValidationRule.arrayRules);
             if (!primitiveFieldValidationResult.isValid) {
                 arrayFieldErrors.errors = primitiveFieldValidationResult.errors;
             }
@@ -79,11 +79,11 @@ function validateArrayField(key, object, rule) {
             const element = value[index];
             let error = undefined;
             if (typeof arrayValidationRule.arrayItemRule === "function") {
-                const validationRule = arrayValidationRule.arrayItemRule(element, object);
-                error = (0, exports.validateStruct)(element, validationRule);
+                const validationRule = arrayValidationRule.arrayItemRule(element, root);
+                error = (0, exports.validateStruct)(element, root, validationRule);
             }
             else {
-                error = (0, exports.validateStruct)(element, arrayValidationRule.arrayItemRule);
+                error = (0, exports.validateStruct)(element, root, arrayValidationRule.arrayItemRule);
             }
             if (error) {
                 if (!arrayFieldErrors.errorsEach) {
@@ -100,7 +100,7 @@ function validateArrayField(key, object, rule) {
     }
     return arrayFieldErrors;
 }
-function validateObjectField(key, object, rule) {
+function validateObjectField(key, object, root, rule) {
     var fieldErrors = [];
     const value = object[key];
     // Example case
@@ -124,7 +124,7 @@ function validateObjectField(key, object, rule) {
         // };
     }
     const childValidationRule = rule;
-    const error = (0, exports.validateStruct)(value, childValidationRule);
+    const error = (0, exports.validateStruct)(value, root, childValidationRule);
     const validationResult = {
         errors: error,
         isValid: fieldErrors.length === 0 && !error
@@ -137,7 +137,7 @@ function validateObjectField(key, object, rule) {
  * @param validationRule
  * @returns
  */
-const validateStruct = (object, validationRule) => {
+const validateStruct = (object, rootObject, validationRule) => {
     var errors = undefined;
     function assignErrorsIfAny(key, fieldErrors) {
         if (!fieldErrors) {
@@ -161,7 +161,7 @@ const validateStruct = (object, validationRule) => {
             switch (typeOfProperty) {
                 case "primitive":
                     if (Array.isArray(rule)) {
-                        const validationResult = validatePrimitiveField(key, object, rule);
+                        const validationResult = validatePrimitiveField(key, object, rootObject, rule);
                         if (!validationResult.isValid) {
                             assignErrorsIfAny(key, validationResult.errors);
                         }
@@ -169,21 +169,21 @@ const validateStruct = (object, validationRule) => {
                     break;
                 case "array":
                     if (!value) {
-                        const error = validateObjectField(key, object, rule);
+                        const error = validateObjectField(key, object, rootObject, rule);
                         if (error && !error.isValid) {
                             assignErrorsIfAny(key, error.errors);
                         }
                         break;
                     }
                     if (Array.isArray(value)) {
-                        const result = validateArrayField(key, object, rule);
+                        const result = validateArrayField(key, object, rootObject, rule);
                         if ((result === null || result === void 0 ? void 0 : result.errors) || (result === null || result === void 0 ? void 0 : result.errorsEach)) {
                             assignErrorsIfAny(key, result);
                         }
                     }
                     break;
                 case "object":
-                    const error = validateObjectField(key, object, rule);
+                    const error = validateObjectField(key, object, rootObject, rule);
                     if (error && !error.isValid) {
                         assignErrorsIfAny(key, error.errors);
                     }

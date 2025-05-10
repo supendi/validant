@@ -9,7 +9,7 @@ const validateStruct_1 = require("./validateStruct");
  * @returns ValidationResult
  */
 const validate = (object, validationRule, validationMessage = { okMessage: "Good to go.", errorMessage: "One or more validation errors occurred." }) => {
-    const errors = (0, validateStruct_1.validateStruct)(object, validationRule);
+    const errors = (0, validateStruct_1.validateStruct)(object, object, validationRule);
     let isValid = true;
     for (const key in errors) {
         if (Object.prototype.hasOwnProperty.call(errors, key)) {

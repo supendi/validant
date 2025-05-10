@@ -776,7 +776,7 @@ describe("Validator complex validations", () => {
         const productIds = [1, 2, 3, 4, 5]
         const customerIds = [10, 11, 12, 13]
 
-        const orderItemsRule: ValidationRule<OrderItem> = {
+        const orderItemsRule: ValidationRule<OrderItem, Order> = {
             productId: [required(), elementOf(productIds)],
             quantity: [minNumber(1), maxNumber(5)],
         }
@@ -931,7 +931,7 @@ describe("Validator test maximum sum of", () => {
         const productIds = [1, 2, 3, 4, 5]
         const customerIds = [10, 11, 12, 13]
 
-        const orderItemsRule: ValidationRule<OrderItem> = {
+        const orderItemsRule: ValidationRule<OrderItem, Order> = {
             productId: [required(), elementOf(productIds)],
             quantity: [minNumber(1), maxNumber(10)],
         }
@@ -1031,7 +1031,7 @@ describe("Validator complex validations", () => {
         const productIds = [1, 2, 3, 4, 5]
         const customerIds = [10, 11, 12, 13]
 
-        const orderItemsRule: ValidationRule<OrderItem> = {
+        const orderItemsRule: ValidationRule<OrderItem, Order> = {
             productId: [required(), elementOf(productIds)],
             quantity: [minNumber(1), maxNumber(5)],
         }
@@ -1112,7 +1112,7 @@ describe("Validate null property", () => {
 
         const productIds = [1, 2, 3, 4, 5]
 
-        const orderItemsRule: ValidationRule<OrderItem> = {
+        const orderItemsRule: ValidationRule<OrderItem, Order> = {
             productId: [required(), elementOf(productIds)],
             quantity: [minNumber(1), maxNumber(5)],
         }
@@ -1169,7 +1169,7 @@ describe("Validator Test The Custom Validator", () => {
         const productIds = [1, 2, 3, 4, 5]
         const customerIds = [10, 11, 12, 13]
 
-        const orderItemsRule: ValidationRule<OrderItem> = {
+        const orderItemsRule: ValidationRule<OrderItem, Order> = {
             productId: [required(), elementOf(productIds)],
             quantity: [minNumber(1), maxNumber(5)],
         }
@@ -1323,13 +1323,15 @@ describe("Validator Test The Custom Validator", () => {
                     arrayItemRule: {
                         orderId: [required("required")],
                         deliveryAddress: {
-                            arrayItemRule: function test(deliveryAddress, orderitem) {
+                            arrayItemRule: function test(deliveryAddress, order) {
                                 return {
-                                    cities: {
-                                        arrayRules: [arrayMinLen(1)],
-                                        arrayItemRule: function test(city, deliveryAddress) {
-                                            return {
-                                                name: []
+                                    cities: function () {
+                                        return {
+                                            arrayRules: [arrayMinLen(1)],
+                                            arrayItemRule: function test(city, order1) {
+                                                return {
+                                                    name: []
+                                                }
                                             }
                                         }
                                     }
