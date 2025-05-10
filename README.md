@@ -328,7 +328,12 @@ const validationRule: ValidationRule<Account> = {
     name: [required()],
     email: [required(), isValidEmail],
     phone: [required(), isMobileAU],
-    password: [required(), isStrongPassword],
+    password: [required(), isStrongPassword, (value, account) => { // OR INLINE That align with the PropertyRuleFunc signature
+        return {
+            isValid: value != "password123",
+            errorMessage: "Thats a very bad password"
+        }
+    }],
 };
 
 const account: Account = {
@@ -353,18 +358,21 @@ const validationResult = tsValidity.validate(account, validationRule);
 
 ## API Summary
 
-```ts
-required()
-requiredIf(predicate: (objRef: T) => boolean)
-requiredIfAny<T>(...props: Array<keyof T>)
-requiredIfAll<T>(...props: Array<keyof T>)
-requiredIfNone<T>(...props: Array<keyof T>)
-regex(pattern: RegExp, message: string)
-minLength(min: number, message: string)
-maxLength(max: number, message: string)
-exactLength(len: number, message: string)
-minValue(min: number, message: string)
-maxValue(max: number, message: string)
-exactValue(val: number, message: string)
-oneOf(choices: unknown[], message: string)
+```typescript
+export {
+    alphabetOnly,
+    arrayMaxLen,
+    arrayMinLen,
+    elementOf,
+    emailAddress,
+    equalToPropertyValue,
+    maxNumber,
+    minNumber,
+    maxSumOf,
+    minSumOf,
+    regularExpression,
+    required,
+    stringMaxLen,
+    stringMinLen,
+};
 ```
