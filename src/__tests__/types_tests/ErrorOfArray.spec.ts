@@ -1,4 +1,4 @@
-import { ErrorOfArray } from "../../types";
+import { ErrorOfArray } from "../../valty/types";
 
 
 /**

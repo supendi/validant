@@ -1,4 +1,4 @@
-import { PossiblyUndefined } from "../../types";
+import { PossiblyUndefined } from "../../valty/types";
 
 
 /**

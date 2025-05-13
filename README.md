@@ -1,10 +1,10 @@
-# ts-validity
+# valty
 
 ## Installation
 
 ```
-npm install ts-validity       # npm
-yarn add ts-validity          # yarn
+npm install valty       # npm
+yarn add valty          # yarn
 ```
 
 ## Usage
@@ -101,7 +101,7 @@ const orderRequest: OrderRequest = {
     ]
 }
 
-const actual = tsValidity.validate(orderRequest, orderRule)
+const actual = valty.validate(orderRequest, orderRule)
 
 
 // Validation result
@@ -145,7 +145,7 @@ interface Account {
 Create the validation rule and validate the object
 
 ```typescript
-import { tsValidity, ValidationRule, minNumber, required, emailAddress } from "ts-validity";
+import { valty, ValidationRule, minNumber, required, emailAddress } from "valty";
 
 const validationRule: ValidationRule<Account> = {
     name: [required("Account name is required.")],
@@ -159,7 +159,7 @@ const account: Account = {
     email: ""
 }
 
-const validationResult = tsValidity.validate(account, validationRule)
+const validationResult = valty.validate(account, validationRule)
 
 // The above validationResult value:
 // {
@@ -178,12 +178,12 @@ const validationResult = tsValidity.validate(account, validationRule)
 
 ```typescript
 import {
-    tsValidity,
+    valty,
     ValidationRule,
     minNumber,
     required,
     emailAddress,
-} from "ts-validity";
+} from "valty";
 
 interface Person {
     name: string;
@@ -244,7 +244,7 @@ const john: Person = {
     },
 };
 
-const validationResult = tsValidity.validate(john, rule);
+const validationResult = valty.validate(john, rule);
 
 // validationResult = {
 //     message: defaultMessage.errorMessage,
@@ -275,13 +275,13 @@ const validationResult = tsValidity.validate(john, rule);
 
 ```typescript
 import {
-    tsValidity,
+    valty,
     ValidationRule,
     minNumber,
     required,
     emailAddress,
     arrayMinLen,
-} from "ts-validity";
+} from "valty";
 
 interface Product {
     name?: string;
@@ -318,7 +318,7 @@ const ironStick: Product = {
     ],
 };
 
-const validationResult = tsValidity.validate(ironStick, validationRule);
+const validationResult = valty.validate(ironStick, validationRule);
 
 // validationResult = {
 //     message: defaultMessage.errorMessage,
@@ -369,7 +369,7 @@ export type PropertyRuleFunc<TValue, TObject> = (value: TValue, objRef?: TObject
 ### Example
 
 ```ts
-import { tsValidity, ValidationRule, PropertyRuleFunc } from "ts-validity";
+import { valty, ValidationRule, PropertyRuleFunc } from "valty";
 
 interface Account {
     name: string;
@@ -393,7 +393,7 @@ const account: Account = {
     name: "John",
 };
 
-const validationResult = tsValidity.validate(account, validationRule);
+const validationResult = valty.validate(account, validationRule);
 
 // validationResult = {
 //     isValid: false,
@@ -418,8 +418,8 @@ npm install -D @types/validator
 ### Usage
 
 ```ts
-import { tsValidity, required, ValidationRule, } from "ts-validity";
-import { PropertyRuleFunc } from "ts-validity/dist/types";
+import { valty, required, ValidationRule, } from "valty";
+import { PropertyRuleFunc } from "valty/dist/types";
 
 
 interface Account {
@@ -463,7 +463,7 @@ const account: Account = {
     password: "strongpassword",
 };
 
-const validationResult = tsValidity.validate(account, validationRule);
+const validationResult = valty.validate(account, validationRule);
 
 // validationResult = {
 //     isValid: false,

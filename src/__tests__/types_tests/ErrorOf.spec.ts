@@ -1,4 +1,4 @@
-import { ErrorOf } from "../../types"
+import { ErrorOf } from "../../valty/types"
 
 /**
  * Ensure all the code below compiled

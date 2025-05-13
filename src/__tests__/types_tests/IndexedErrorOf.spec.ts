@@ -1,4 +1,4 @@
-import { IndexedErrorOf } from "../../types";
+import { IndexedErrorOf } from "../../valty/types";
 
 
 /**

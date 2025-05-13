@@ -1,5 +1,5 @@
 import { PropertyRuleFunc, ValidationRule, ArrayValidationRule } from "../../types"
-import { elementOf, emailAddress, maxNumber, arrayMinLen, minNumber, required } from "../../propertyRules"
+import { elementOf, emailAddress, maxNumber, arrayMinLen, minNumber, required } from "../../rules"
 
 /**
  * Ensure all the code below are compiled

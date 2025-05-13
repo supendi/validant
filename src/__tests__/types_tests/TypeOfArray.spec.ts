@@ -1,4 +1,4 @@
-import { TypeOfArray } from "../../types";
+import { TypeOfArray } from "../../valty/types";
 
 
 /**

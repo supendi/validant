@@ -1,4 +1,4 @@
-import { PropertyValidationResult } from "../../tsValidity/validateField";
+import { PropertyValidationResult } from "../../valty/validators/validateField";
 
 
 /**

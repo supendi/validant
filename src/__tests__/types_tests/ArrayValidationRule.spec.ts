@@ -1,4 +1,4 @@
-import { required } from "../../propertyRules"
+import { required } from "../../rules"
 import { ValidationRule, ArrayValidationRule, PropertyRuleFunc, } from "../../types"
 
 const requiredRule: PropertyRuleFunc<any, any> = (value: any, obj?: any) => {

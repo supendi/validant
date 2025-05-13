@@ -1,11 +1,11 @@
-import tsValidity from "./tsValidity";
+import valty from "./valty";
 import { ErrorOf, ValidationRule, ValidateFunc, PropertyRuleFunc, ArrayValidationRule, ErrorOfArray, IndexedErrorOf, TypeOfArray } from './types'
-import { ValidationResult } from "./tsValidity";
-import { PropertyValidationResult } from "./tsValidity/validateField";
-import { emailAddress, equalToPropertyValue, arrayMaxLen, arrayMinLen, maxNumber, minNumber, minSumOf, maxSumOf, regularExpression, required, elementOf, alphabetOnly, stringMaxLen, stringMinLen } from './propertyRules'
+import { ValidationResult } from "./valty";
+import { PropertyValidationResult } from "./validators/validateField";
+import { emailAddress, equalToPropertyValue, arrayMaxLen, arrayMinLen, maxNumber, minNumber, minSumOf, maxSumOf, regularExpression, required, elementOf, alphabetOnly, stringMaxLen, stringMinLen } from './rules'
 
-export { tsValidity }
-export { tsValidity as objectValidator } // avoid breaking changes
+export { valty }
+export { valty as objectValidator } // avoid breaking changes
 
 export {
     arrayMaxLen,

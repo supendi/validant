@@ -1,4 +1,4 @@
-import { ValidateFunc } from "../../types"
+import { ValidateFunc } from "../../valty/types"
 
 /**
  * Ensure all the code below compiled

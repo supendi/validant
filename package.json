@@ -1,11 +1,12 @@
 {
-  "name": "ts-validity",
+  "name": "valty",
   "version": "0.0.38",
-  "description": "Simple json validator by using user-defined validation rules",
+  "description": "TypeScript validation with no DSL, just pure function. You take full control.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "/dist"
+    "dist",
+    "README.md"
   ],
   "scripts": {
     "rm-dist": "rm -rf ./dist",
@@ -37,12 +38,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/supendi/ts-validity.git"
+    "url": "git+https://github.com/supendi/valty.git"
   },
   "author": "github.com/supendi",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/supendi/ts-validity/issues"
+    "url": "https://github.com/supendi/valty/issues"
   },
-  "homepage": "https://github.com/supendi/ts-validity#readme"
+  "homepage": "https://github.com/supendi/valty#readme"
 }

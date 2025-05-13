@@ -1,4 +1,4 @@
-import { ValidationResult } from "../../tsValidity";
+import { ValidationResult } from "../../valty";
 
 
 /**
