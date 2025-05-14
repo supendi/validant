@@ -12,6 +12,18 @@ export interface PropertyValidationResult<T> {
     errorMessage: string;
 }
 
+function stringifyValue<TValue>(value: TValue): string {
+    if (value === undefined) return "undefined"
+    if (value === null) return "null"
+
+    if (typeof value === "string") return value
+    if (typeof value === "object") return JSON.stringify(value)
+    if ((value as any).toString) {
+        return value.toString()
+    }
+    return `failed to stringify value, type of value was: ${typeof value}.`
+}
+
 /**
  * Do a single validation against single property
  * @param propName
@@ -19,18 +31,18 @@ export interface PropertyValidationResult<T> {
  * @param propertyRuleFunc
  * @returns
  */
-
-export const validateField = <TValue, TObject, TRoot>(propName: keyof TObject, object: TObject, root: TRoot, propertyRuleFunc: PropertyRuleFunc<TValue, TRoot>): PropertyValidationResult<TObject> => {
+export const validateField = <TObject, TRoot>(propName: keyof TObject, object: TObject, root: TRoot, propertyRuleFunc: PropertyRuleFunc<TObject[keyof TObject], TRoot>): PropertyValidationResult<TObject> => {
     const value = object[propName];
 
     const {
         isValid,
         errorMessage
-    } = propertyRuleFunc(value as unknown as TValue, root);
+    } = propertyRuleFunc(value, root);
 
     let resolvedErrorMessage = errorMessage
     if (resolvedErrorMessage) {
-        resolvedErrorMessage = resolvedErrorMessage.replace(":value", value as any);
+
+        resolvedErrorMessage = resolvedErrorMessage.replace(":value", stringifyValue(value));
     }
 
     const validationResult: PropertyValidationResult<TObject> = {
