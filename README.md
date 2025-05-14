@@ -1579,7 +1579,12 @@ const validationRule = {
 
 This ensures that username is at least 5 characters long.
 
-### 📊 BENCHMARK
+## MORE EXAMPLE
+Please visit:
+
+https://github.com/supendi/valty/tree/main/src/__tests__/valty_tests
+
+## 📊 BENCHMARK
 Chat GPT give me this code to benchmark, I dont even understand if its fair or not:
 ```js
 const { Bench } = require("tinybench");
