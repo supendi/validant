@@ -20,6 +20,162 @@ yarn add valty
 ## 🏁 Getting Started
 
 ### 🛠️ Schema Declaration
+
+### While **Zod** do
+
+```ts
+import { z } from "zod";
+
+const User = z.object({
+    username: z.string(),
+});
+
+User.parse({ username: "Ludwig" });
+
+// extract the inferred type
+type User = z.infer<typeof User>;
+```
+
+### and **superstruct**
+
+```ts
+import { create, object, number, string, defaulted } from "superstruct";
+
+let i = 0;
+
+const User = object({
+    id: defaulted(number(), () => i++),
+    name: string(),
+});
+```
+
+### and yup
+
+```ts
+import { object, string, number, date, InferType } from "yup";
+
+let userSchema = object({
+    name: string().required(),
+    age: number().required().positive().integer(),
+    email: string().email(),
+    website: string().url().nullable(),
+    createdOn: date().default(() => new Date()),
+});
+```
+
+### ✅ Valty: NO SHAPE CEREMONY, NO TYPE DUPLICATION
+
+Your model is your source of truth. Why would we have to do
+`name: string()` or `username: z.string()`
+when your model already have that?
+
+Given you already have a model:
+
+```ts
+class Account {
+    name: string;
+    age: number;
+    email: string;
+}
+```
+
+Then you simply just declare your validation rule:
+
+```ts
+import { minNumber, required, emailAddress, ValidationRule } from "valty";
+
+const validationRule: ValidationRule<Account> = {
+    name: [required("Account name is required.")],
+    age: [required(), minNumber(17, "Should be at least 17 years old.")],
+    email: [required(), emailAddress("Invalid email address")],
+};
+```
+
+### ✅ Intellisense
+The above validation looks not difference with other shaping schema? Not at all. See this intellisense:
+
+![image](https://github.com/user-attachments/assets/542e0b46-bb7f-4329-9fe1-8a78031b145c)
+
+Means, the rule know your property model so well from your existing model.
+
+### ✅ TYPE SAFE
+
+No mismatch property name and rule at compile time.
+
+![image](https://github.com/user-attachments/assets/177dc1de-4c3a-4886-824d-515d6b9716f0)
+
+Account doesnt have creditCardNumber. Typescript will tell you immediately. 
+
+This is benefits when you change your model, the rule will also break and tell you.
+
+Rule is type-safe as well, it knows what is the type it tries to validate against and you can make your own.
+
+![image](https://github.com/user-attachments/assets/22eb3d49-afe3-4e4c-ba4a-d862f920038d)
+
+Even it type-safe from inferred literal object.
+
+![image](https://github.com/user-attachments/assets/8660febc-9722-4165-9a4a-e5f902045964)
+
+But if you really want to guard it at runtime, there is built-in rule to that
+
+```ts
+import {
+    emailAddress,
+    isString,
+    minNumber,
+    required,
+    ValidationRule,
+    valty,
+} from "valty";
+
+const validationRule: ValidationRule<Account> = {
+    name: [isString("Name should be string")],
+    age: [required()],
+};
+```
+
+or you can do it your own way:
+
+```ts
+import {
+    emailAddress,
+    isString,
+    minNumber,
+    required,
+    ValidationRule,
+    valty,
+} from "valty";
+
+const validationRule: ValidationRule<Account> = {
+    name: [
+        (name, account) => {
+            const isString = typeof name === "string"; // check your own, either return error or throw
+            return {
+                isValid: isString,
+                errorMessage: isString
+                    ? ""
+                    : "Please enter then name with string",
+            };
+        },
+    ],
+    age: [required()],
+};
+```
+
+You are not enforced to define all properties, you can set partially set validation for age only:
+
+```ts
+import { minNumber, required, emailAddress, ValidationRule } from "valty";
+
+const validationRule: ValidationRule<Account> = {
+    age: [required(), minNumber(17, "Should be at least 17 years old.")],
+};
+```
+
+No model duplication, your model is your single source of truth.
+
+### 🛠️ Type Freedom
+
 Valty works seamlessly with any kind of TypeScript structure — whether you're using `interface`, `type`, `class`, or even inferring types from objects.
 
 ### Using a `class`
@@ -592,6 +748,152 @@ This error object follows the shape of `ErrorOf<Product>`, meaning it mirrors th
 Because of this, it's type-safe—if the Product model changes (e.g., a field is renamed or removed), TypeScript will catch the mismatch. No need to manually update your error structure. You get auto-synced validation typing for free.
 **It handles the discipline for you, so you can just focus on writing the logic and the types, and the rest stays in sync without extra work.**
 
+## 🧬 Complex Validation
+Sometimes/often you will need to do sibling check to do the validation.
+
+**Sibling Validation Example**
+```ts
+
+interface Customer {
+    fullName: string
+    email: string
+}
+
+interface OrderItem {
+    productId: number
+    quantity: number
+}
+
+interface OrderRequest {
+    orderNumber: string
+    orderDate?: Date
+    customer: Customer
+    orderItems: OrderItem[]
+}
+
+const orderRule: ValidationRule<OrderRequest> = {
+    orderNumber: [required("Order number is required.")],
+    orderDate: [required("Please enter order date.")],
+    customer: {
+        fullName: [required()],
+        email: [
+            required(),
+            emailAddress()
+        ],
+    },
+    orderItems: {
+        arrayRules: [arrayMinLen(1, "Please add at least one product.")],
+        arrayItemRule: {
+            productId: [required("Please enter product.")],
+            quantity: [
+                minNumber(1, "Minimum quantity is 1."),
+                function (quantity, order) {
+
+                    // Case:
+                    // When customer first 3 letters contains : Jac ignore invariant
+                    // Then Max Quantity = 100
+                    // So  Jack, Jacob, Jacky, Jacka will get this special max quantity
+                    // 
+                    // Other than that
+                    // Max quantity = 10
+
+                    // CROSS PROPERTY OR SIBLING: Accessing other properties via order
+                    const customerName = order.customer.fullName
+                    const isJac = order.customer.fullName.toLowerCase().startsWith("jac");
+
+                    const maxQuantityForJac = 100
+                    const maxQuantityForOthers = 10
+
+                    if (isJac) {
+                        return {
+                            isValid: quantity <= maxQuantityForJac,
+                            errorMessage: `You are special ${customerName}, other's max quantity is limited to ${maxQuantityForOthers}. Yours is limited to, but ${maxQuantityForJac} pcs.`
+                        }
+                    }
+                    return {
+                        isValid: quantity <= maxQuantityForOthers,
+                        errorMessage: `You only allowed to order ${maxQuantityForOthers} product at once.`
+                    }
+                }
+            ]
+        }
+    }
+}
+```
+You always have the root object as context during validation.
+
+**Nested Example**
+```ts
+
+interface Continent {
+    name: string
+}
+interface Country {
+    name: string
+    continent: Continent
+}
+interface City {
+    name: string
+    country: Country
+}
+interface Address {
+    street: string,
+    city: City
+}
+interface Person {
+    name: string,
+    age: number,
+    child?: Person
+    address?: Address
+}
+
+const rule: ValidationRule<Person> = {
+    name: [required()],
+    age: [minNumber(20)],
+    address: {
+        street: [required()],
+        city: {
+            name: [required()],
+            country: {
+                name: [required()],
+                continent: {
+                    name: [required()],
+                }
+            }
+        }
+    },
+    child: {
+        name: [required()]
+    }
+}
+```
+And the validation result :
+```ts
+{
+    message: "One or more validation errors occurred.",
+        isValid: false,
+            errors: {
+        name: ["This field is required."],
+            age: ["The minimum value for this field is 20."],
+                address: {
+            street: ["This field is required."],
+                city: {
+                name: ["This field is required."],
+                    country: {
+                    name: ["This field is required."],
+                        continent: {
+                        name: ["This field is required."],
+                    }
+                }
+            }
+        },
+        child: {
+            name: ["This field is required."],
+        }
+    }
+}
+```
+
 ## 🧩 Schema Composition
 
 As your data grows in complexity, Valty makes it easy to split validation logic into smaller, reusable pieces.
@@ -640,9 +942,11 @@ Whether you're validating a single nested object or a list of them, Valty keeps 
 ### TYPES
 
 ### `ValidationRule<T, TRoot extends Object = T>`
+
 This type represents a set of validation rules for an object model. It defines how each property in the model should be validated.
 
 Usage:
+
 ```ts
 import { minNumber, required, emailAddress, ValidationRule } from "valty";
 
@@ -659,9 +963,10 @@ const validationRule: ValidationRule<Account> = {
 };
 ```
 
-
 ### `ValidationResult<T>`
+
 Represents the result of validating a model. It tells you if the validation passed, provides a general message, and optionally includes detailed field-level errors.
+
 ```ts
 export interface ValidationResult<T> {
     isValid: boolean;
@@ -671,6 +976,7 @@ export interface ValidationResult<T> {
 ```
 
 Example:
+
 ```ts
 const validationResult: ValidationResult<Account> = {
     isValid: false,
@@ -680,13 +986,14 @@ const validationResult: ValidationResult<Account> = {
         age: ["Must be at least 17"],
     },
 };
-
 ```
 
 ### `ErrorOf<T extends Object>`
+
 Represents the error structure for a given object model. Each property in the model is mapped to an array of error messages.
 
 Usage:
+
 ```ts
 import { ErrorOf } from "valty";
 
@@ -696,12 +1003,15 @@ type Account = {
     email: string;
 };
 
-const errors : ErrorOf<Account> = validationResult.errors
+const errors: ErrorOf<Account> = validationResult.errors;
 ```
+
 This allows you to bind the errors directly to your UI without manual mapping.
 
 ### `IndexedErrorOf<T extends Object>`
+
 Represents the validation error for a specific item in an array. It includes the index of the item, its validation errors, and the original value.
+
 ```ts
 export type IndexedErrorOf<T extends Object> = {
     index: number;
@@ -713,6 +1023,7 @@ export type IndexedErrorOf<T extends Object> = {
 **Use case**
 
 When validating arrays, this type helps track which item failed and why.
+
 ```ts
 {
     index: 0,
@@ -728,10 +1039,11 @@ When validating arrays, this type helps track which item failed and why.
 ```
 
 ### `ErrorOfArray<TArray>`
+
 Represents the error structure for array fields in a model. It distinguishes between:
 
-- Array-level errors (e.g., not enough items)
-- Item-level errors (validation errors on each element)
+-   Array-level errors (e.g., not enough items)
+-   Item-level errors (validation errors on each element)
 
 ```ts
 export type ErrorOfArray<TArray> = {
@@ -739,15 +1051,19 @@ export type ErrorOfArray<TArray> = {
     errorsEach?: IndexedErrorOf<ArrayElementType<TArray>>[];
 };
 ```
+
 **Example**
 
 If the model is:
+
 ```ts
 type Order = {
     orderItems: OrderItem[];
 };
 ```
+
 And you have a rule like "Minimum 5 items required", the error might look like:
+
 ```ts
 {
     orderItems: {
@@ -765,62 +1081,88 @@ And you have a rule like "Minimum 5 items required", the error might look like:
     }
 }
 ```
+
 Use this structure to display detailed and indexed feedback per array element — and at the same time handle overall constraints at the array level.
 
 ### Custom Property Validator
+
 These types let you define your own custom validation rules for individual properties in a type-safe way.
 
 ### **`PropertyRuleValidationResult`**
 
 Represents the result of a single property validation.
+
 ```ts
 export interface PropertyRuleValidationResult {
     isValid: boolean;
     errorMessage?: string;
 }
 ```
-- isValid: Whether the value is valid.
-- errorMessage: Leave empty/undefined when is valid. Set your custom validation message is not valid.
+
+-   isValid: Whether the value is valid.
+-   errorMessage: Leave empty/undefined when is valid. Set your custom validation message is not valid.
 
 ### **`PropertyRuleFunc<TValue, TRoot>`**
+
 Defines the signature of a property validator function. Used to write custom validation logic.
+
 ```ts
-export type PropertyRuleFunc<TValue, TRoot extends Object> = (value: TValue, root: TRoot) => PropertyRuleValidationResult;
+export type PropertyRuleFunc<TValue, TRoot extends Object> = (
+    value: TValue,
+    root: TRoot
+) => PropertyRuleValidationResult;
 ```
-- TValue: Type of the property being validated.
-- TRoot: Type of the whole object, useful for cross-field validations.
+
+-   TValue: Type of the property being validated.
+-   TRoot: Type of the whole object, useful for cross-field validations.
 
 **Example**
+
 ```ts
 const noSpecialChars: PropertyRuleFunc<string, Account> = (value, root) => {
     if (/[^a-zA-Z0-9 ]/.test(value)) {
-        return { isValid: false, errorMessage: "Special characters are not allowed." };
+        return {
+            isValid: false,
+            errorMessage: "Special characters are not allowed.",
+        };
     }
     return { isValid: true };
 };
 ```
+
 You can use this to define fully custom rules, whether for simple checks or complex conditions involving other fields.
 
-
 ### `ArrayValidationRule<TArrayValue, TRoot extends Object>`
+
 Defines how to validate both the array itself and its individual elements.
+
 ```ts
 export type ArrayValidationRule<TArrayValue, TRoot extends Object> = {
     arrayRules?: PropertyRuleFunc<TArrayValue, TRoot>[];
-    arrayItemRule?: ValidationRule<PossiblyUndefined<ArrayElementType<TArrayValue>>, TRoot> 
-                 | ((arrayItem: ArrayElementType<TArrayValue>, root: TRoot) => ValidationRule<ArrayElementType<TArrayValue>, TRoot>);
-}
+    arrayItemRule?:
+        | ValidationRule<
+              PossiblyUndefined<ArrayElementType<TArrayValue>>,
+              TRoot
+          >
+        | ((
+              arrayItem: ArrayElementType<TArrayValue>,
+              root: TRoot
+          ) => ValidationRule<ArrayElementType<TArrayValue>, TRoot>);
+};
 ```
+
 **arrayRules**
 
 Validation rules for the array as a whole.
 
 Example:
+
 ```ts
 orderItems: {
-    arrayRules: [arrayMinLength(3)]
+    arrayRules: [arrayMinLength(3)];
 }
 ```
+
 This ensures the array (e.g. orderItems) has at least 3 items.
 
 **arrayItemRule**
@@ -828,29 +1170,33 @@ This ensures the array (e.g. orderItems) has at least 3 items.
 Validation rules for each element inside the array.
 
 Example
+
 ```ts
 orderItems: {
     arrayItemRule: {
-        qty: [minNumber(5)]
+        qty: [minNumber(5)];
     }
 }
 ```
 
 Or for dynamic rules per item (**function style**):
+
 ```ts
 orderItems: {
     arrayItemRule: (item, root) => ({
-        qty: item.type === "bulk" ? [minNumber(10)] : []
-    })
+        qty: item.type === "bulk" ? [minNumber(10)] : [],
+    });
 }
 ```
 
 ## BUILT IN RULES
+
 ### `alphabetOnly<T extends Object>(errorMessage?: string)`
 
 Ensures that a string contains only alphabetic characters.
 
 Usage:
+
 ```ts
 import { alphabetOnly } from "valty";
 
@@ -859,7 +1205,7 @@ type User = {
 };
 
 const validationRule = {
-    name: [alphabetOnly("Name can only contain letters.")]
+    name: [alphabetOnly("Name can only contain letters.")],
 };
 ```
 
@@ -868,6 +1214,7 @@ const validationRule = {
 Validates that the array length is less than or equal to the specified maxLen.
 
 Usage:
+
 ```ts
 import { arrayMaxLen } from "valty";
 
@@ -876,7 +1223,7 @@ type Order = {
 };
 
 const validationRule = {
-    orderItems: [arrayMaxLen(5, "Order items cannot exceed 5.")]
+    orderItems: [arrayMaxLen(5, "Order items cannot exceed 5.")],
 };
 ```
 
@@ -885,6 +1232,7 @@ const validationRule = {
 Validates that the array has at least the specified minimum length.
 
 Usage:
+
 ```ts
 import { arrayMinLen } from "valty";
 
@@ -893,7 +1241,7 @@ type Order = {
 };
 
 const validationRule = {
-    orderItems: [arrayMinLen(3, "You need to select at least 3 items.")]
+    orderItems: [arrayMinLen(3, "You need to select at least 3 items.")],
 };
 ```
 
@@ -902,6 +1250,7 @@ const validationRule = {
 Validates that the value is one of the elements in the provided array.
 
 Usage:
+
 ```ts
 import { elementOf } from "valty";
 
@@ -910,7 +1259,12 @@ type User = {
 };
 
 const validationRule = {
-    status: [elementOf(["active", "inactive"], "Status must be either 'active' or 'inactive'.")]
+    status: [
+        elementOf(
+            ["active", "inactive"],
+            "Status must be either 'active' or 'inactive'."
+        ),
+    ],
 };
 ```
 
@@ -919,6 +1273,7 @@ const validationRule = {
 Validates that the value is a valid email address.
 
 Usage:
+
 ```ts
 import { emailAddress } from "valty";
 
@@ -927,7 +1282,7 @@ type User = {
 };
 
 const validationRule = {
-    email: [emailAddress("Please enter a valid email address.")]
+    email: [emailAddress("Please enter a valid email address.")],
 };
 ```
 
@@ -936,6 +1291,7 @@ const validationRule = {
 Validates that a property's value is equal to the value of another property in the same object.
 
 Usage:
+
 ```ts
 import { equalToPropertyValue } from "valty";
 
@@ -945,17 +1301,20 @@ type PasswordForm = {
 };
 
 const validationRule = {
-    confirmPassword: [equalToPropertyValue("password", "Passwords do not match.")]
+    confirmPassword: [
+        equalToPropertyValue("password", "Passwords do not match."),
+    ],
 };
 ```
-This ensures confirmPassword is equal to password.
 
+This ensures confirmPassword is equal to password.
 
 ### `isBool<TValue, TObject extends Object>(errorMessage?: string)`
 
 Validates that the value is a boolean (true or false).
 
 Usage:
+
 ```ts
 import { isBool } from "valty";
 
@@ -964,9 +1323,10 @@ type Settings = {
 };
 
 const validationRule = {
-    subscribed: [isBool("Must be true or false.")]
+    subscribed: [isBool("Must be true or false.")],
 };
 ```
+
 This ensures the subscribed field is explicitly a boolean value.
 
 ### `isBool<TValue, TObject extends Object>(errorMessage?: string)`
@@ -974,6 +1334,7 @@ This ensures the subscribed field is explicitly a boolean value.
 Validates that the value is a boolean (true or false).
 
 Usage:
+
 ```ts
 import { isBool } from "valty";
 
@@ -982,26 +1343,28 @@ type Settings = {
 };
 
 const validationRule = {
-    subscribed: [isBool("Must be true or false.")]
+    subscribed: [isBool("Must be true or false.")],
 };
 ```
+
 This ensures the subscribed field is explicitly a boolean value.
 
 ### `isDateObject<TValue, TObject extends Object>(errorMessage?: string)`
 
 Validates that the value is a valid JavaScript Date object (i.e., value instanceof Date and not an invalid date).
- Date strings and epoch numbers will be treated as invalid.
-| Value         | Result    |
+Date strings and epoch numbers will be treated as invalid.
+| Value | Result |
 | ------------- | --------- |
-| `undefined`   | ❌ Invalid |
-| `null`        | ❌ Invalid |
-| `""`          | ❌ Invalid |
+| `undefined` | ❌ Invalid |
+| `null` | ❌ Invalid |
+| `""` | ❌ Invalid |
 | `"Invalid Date"` | ❌ Invalid |
-| `"   "`       | ❌ Invalid |
-| `new Date()`  | ✅ Valid   |
+| `"   "` | ❌ Invalid |
+| `new Date()` | ✅ Valid |
 | `new Date('bad')` | ❌ Invalid |
 
 Usage:
+
 ```ts
 import { isDateObject } from "valty";
 
@@ -1010,31 +1373,32 @@ type Booking = {
 };
 
 const validationRule = {
-    startDate: [isDateObject("Start date must be a valid date.")]
+    startDate: [isDateObject("Start date must be a valid date.")],
 };
 ```
-This ensures the startDate is a valid Date instance, not just a string or an invalid date.
 
+This ensures the startDate is a valid Date instance, not just a string or an invalid date.
 
 ### `isNumber<TValue, TObject extends Object>(errorMessage?: string)`
 
 Validates that the value is a number (typeof value === "number" and not NaN).
 
-| Value       | Result    |
-| ----------- | --------- |
-| `undefined` | ❌ Invalid |
-| `null`      | ❌ Invalid |
-| `""`        | ❌ Invalid |
-| `"   "`     | ❌ Invalid white space | 
-|   0         | ✅ Valid   |
-| `NaN`       | ❌ Invalid |
-| `false`     | ❌ Invalid |
-| `[]`        | ❌ Invalid |
-| `[1]`       | ❌ Invalid |
-| `{}`        | ❌ Invalid |
-| `{ a: 1 }`  | ❌ Invalid |
+| Value       | Result                 |
+| ----------- | ---------------------- |
+| `undefined` | ❌ Invalid             |
+| `null`      | ❌ Invalid             |
+| `""`        | ❌ Invalid             |
+| `"   "`     | ❌ Invalid white space |
+| 0           | ✅ Valid               |
+| `NaN`       | ❌ Invalid             |
+| `false`     | ❌ Invalid             |
+| `[]`        | ❌ Invalid             |
+| `[1]`       | ❌ Invalid             |
+| `{}`        | ❌ Invalid             |
+| `{ a: 1 }`  | ❌ Invalid             |
 
 Usage:
+
 ```ts
 import { isNumber } from "valty";
 
@@ -1043,27 +1407,28 @@ type Invoice = {
 };
 
 const validationRule = {
-    totalAmount: [isNumber("Total amount must be a valid number.")]
+    totalAmount: [isNumber("Total amount must be a valid number.")],
 };
 ```
-This ensures that totalAmount is a valid number type, not a string or NaN.
 
+This ensures that totalAmount is a valid number type, not a string or NaN.
 
 ### `isString<TValue, TObject extends Object>(errorMessage?: string)`
 
 Validates that the value is a string (typeof value === "string").
 
-| Value        | Result    |
-| ------------ | --------- |
-| `"hello"`    | ✅ Valid  |
-| `""`         | ✅ Valid  |
-| `"   "`      | ✅ Valid  |
-| `123`        | ❌ Invalid |
-| `null`       | ❌ Invalid |
-| `undefined`  | ❌ Invalid |
-| `{}`         | ❌ Invalid | 
+| Value       | Result     |
+| ----------- | ---------- |
+| `"hello"`   | ✅ Valid   |
+| `""`        | ✅ Valid   |
+| `"   "`     | ✅ Valid   |
+| `123`       | ❌ Invalid |
+| `null`      | ❌ Invalid |
+| `undefined` | ❌ Invalid |
+| `{}`        | ❌ Invalid |
 
 Usage:
+
 ```ts
 import { isString } from "valty";
 
@@ -1072,17 +1437,18 @@ type Product = {
 };
 
 const validationRule = {
-    name: [isString("Product name must be a string.")]
+    name: [isString("Product name must be a string.")],
 };
 ```
-This ensures that name is a valid string type.
 
+This ensures that name is a valid string type.
 
 ### `maxNumber<TObject extends Object>(max: number, errorMessage?: string)`
 
 Validates that a number is less than or equal to the specified maximum value.
 
 Usage:
+
 ```ts
 import { maxNumber } from "valty";
 
@@ -1091,10 +1457,10 @@ type Product = {
 };
 
 const validationRule = {
-    price: [maxNumber(1000, "Price must not exceed 1000.")]
+    price: [maxNumber(1000, "Price must not exceed 1000.")],
 };
-
 ```
+
 This ensures the price does not go over the defined max value.
 
 ### `minNumber<TObject extends Object>(min: number, errorMessage?: string)`
@@ -1102,6 +1468,7 @@ This ensures the price does not go over the defined max value.
 Validates that a number is greater than or equal to the specified minimum value.
 
 Usage:
+
 ```ts
 import { minNumber } from "valty";
 
@@ -1110,17 +1477,18 @@ type Product = {
 };
 
 const validationRule = {
-    price: [minNumber(10, "Price must be at least 10.")]
+    price: [minNumber(10, "Price must be at least 10.")],
 };
 ```
-This ensures the price is not below the defined min value.
 
+This ensures the price is not below the defined min value.
 
 ### `regularExpression<TObject extends Object>(regex: RegExp, errorMessage?: string)`
 
 Validates that a string matches the provided regular expression.
 
 Usage:
+
 ```ts
 import { regularExpression } from "valty";
 
@@ -1129,27 +1497,34 @@ type User = {
 };
 
 const validationRule = {
-    username: [regularExpression(/^[a-zA-Z0-9_]+$/, "Username can only contain letters, numbers, and underscores.")]
+    username: [
+        regularExpression(
+            /^[a-zA-Z0-9_]+$/,
+            "Username can only contain letters, numbers, and underscores."
+        ),
+    ],
 };
 ```
+
 This ensures the username matches the specified pattern.
 
 ### `required<TValue, TObject extends Object>(errorMessage?: string)`
 
 Validates that a value is not null, undefined, or an empty string/array.
-| Value       | Result    |
+| Value | Result |
 | ----------- | --------- |
 | `undefined` | ❌ Invalid |
-| `null`      | ❌ Invalid |
-| `""`        | ❌ Invalid |
-| `"   "`     | ❌ Invalid white space | 
-| `0`         | ✅ Valid   |
-| `false`     | ✅ Valid   |
-| `[]`        | ❌ Invalid |
-| `[1]`       | ✅ Valid   |
-| `{}`        | ❌ Invalid |
-| `{ a: 1 }`  | ✅ Valid   |
+| `null` | ❌ Invalid |
+| `""` | ❌ Invalid |
+| `"   "` | ❌ Invalid white space |
+| `0` | ✅ Valid |
+| `false` | ✅ Valid |
+| `[]` | ❌ Invalid |
+| `[1]` | ✅ Valid |
+| `{}` | ❌ Invalid |
+| `{ a: 1 }` | ✅ Valid |
 Usage:
+
 ```ts
 import { required } from "valty";
 
@@ -1158,9 +1533,10 @@ type User = {
 };
 
 const validationRule = {
-    name: [required("Name is required.")]
+    name: [required("Name is required.")],
 };
 ```
+
 This ensures that name is provided and not empty.
 
 ### `stringMaxLen<TObject extends Object>(maxLength: number, errorMessage?: string)`
@@ -1168,6 +1544,7 @@ This ensures that name is provided and not empty.
 Validates that a string is less than or equal to the specified maximum length.
 
 Usage:
+
 ```ts
 import { stringMaxLen } from "valty";
 
@@ -1176,9 +1553,10 @@ type User = {
 };
 
 const validationRule = {
-    username: [stringMaxLen(20, "Username must be 20 characters or fewer.")]
+    username: [stringMaxLen(20, "Username must be 20 characters or fewer.")],
 };
 ```
+
 This ensures that username does not exceed 20 characters in length.
 
 ### `stringMinLen<TObject>(minLen: number, errorMessage?: string)`
@@ -1186,6 +1564,7 @@ This ensures that username does not exceed 20 characters in length.
 Validates that a string is at least the specified minimum length.
 
 Usage:
+
 ```ts
 import { stringMinLen } from "valty";
 
@@ -1194,7 +1573,243 @@ type User = {
 };
 
 const validationRule = {
-    username: [stringMinLen(5, "Username must be at least 5 characters long.")]
+    username: [stringMinLen(5, "Username must be at least 5 characters long.")],
 };
 ```
+
 This ensures that username is at least 5 characters long.
+
+### 📊 BENCHMARK
+Chat GPT give me this code to benchmark, I dont even understand if its fair or not:
+```js
+const { Bench } = require("tinybench");
+const { z } = require("zod");
+const Joi = require("joi");
+const { valty, required } = require("valty");
+const yup = require("yup");
+const { struct, string, number, array, lazy } = require("superstruct");
+
+// ========================
+// 1. Generate Test Data (500 records, 3 levels deep)
+// ========================
+const generateData = (depth = 0) => ({
+    id: `id-${Math.random().toString(36).slice(2)}`,
+    value: Math.floor(Math.random() * 100),
+    children:
+        depth < 3
+            ? Array(3)
+                  .fill(null)
+                  .map(() => generateData(depth + 1))
+            : [],
+});
+
+const testData = Array(500)
+    .fill(null)
+    .map(() => generateData());
+
+// ========================
+// 2. Define Validators
+// ========================
+
+// valty
+const valtyRule = {
+    id: [required()],
+    value: [required()],
+    children: {
+        arrayItemRule: {
+            id: [required()],
+            value: [required()],
+            children: {
+                arrayItemRule: {
+                    id: [required()],
+                    value: [required()],
+                    children: {
+                        arrayItemRule: {
+                            id: [required()],
+                            value: [required()],
+                            children: {
+                                arrayItemRule: {
+                                    id: [required()],
+                                    value: [required()],
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    },
+};
+// Zod
+const zodSchema = z.object({
+    id: z.string(),
+    value: z.number(),
+    children: z.array(
+        z.object({
+            id: z.string(),
+            value: z.number(),
+            children: z.array(
+                z.object({
+                    id: z.string(),
+                    value: z.number(),
+                    children: z.array(
+                        z.object({
+                            id: z.string(),
+                            value: z.number(),
+                            children: z.array(
+                                z.object({
+                                    id: z.string(),
+                                    value: z.number(),
+                                })
+                            ),
+                        })
+                    ),
+                })
+            ),
+        })
+    ),
+});
+
+// Joi
+const joiSchema = Joi.object({
+    id: Joi.string().required(),
+    value: Joi.number().required(),
+    children: Joi.array().items(
+        Joi.object({
+            id: Joi.string().required(),
+            value: Joi.number().required(),
+            children: Joi.array().items(
+                Joi.object({
+                    id: Joi.string().required(),
+                    value: Joi.number().required(),
+                    children: Joi.array().items(
+                        Joi.object({
+                            id: Joi.string().required(),
+                            value: Joi.number().required(),
+                            children: Joi.array().items(
+                                Joi.object({
+                                    id: Joi.string().required(),
+                                    value: Joi.number().required(),
+                                })
+                            ),
+                        })
+                    ),
+                })
+            ),
+        })
+    ),
+});
+
+// Yup
+const yupSchema = yup.object({
+    id: yup.string().required(),
+    value: yup.number().required(),
+    children: yup.array().of(
+        yup.object({
+            id: yup.string().required(),
+            value: yup.number().required(),
+            children: yup.array().of(
+                yup.object({
+                    id: yup.string().required(),
+                    value: yup.number().required(),
+                    children: yup.array().of(
+                        yup.object({
+                            id: yup.string().required(),
+                            value: yup.number().required(),
+                            children: yup.array().of(
+                                yup.object({
+                                    id: yup.string().required(),
+                                    value: yup.number().required(),
+                                })
+                            ),
+                        })
+                    ),
+                })
+            ),
+        })
+    ),
+});
+
+// Superstruct
+const SuperstructSchema = lazy(() =>
+    struct({
+        id: string(),
+        value: number(),
+        children: array(SuperstructSchema),
+    })
+);
+
+// ========================
+// 3. Run Benchmarks
+// ========================
+const bench = new Bench();
+
+function runValidation(validator, data) {
+    for (const item of data) {
+        try {
+            switch (validator) {
+                case "valty":
+                    valty.validate(valtyRule, item);
+                    break;
+                case "zod":
+                    zodSchema.parse(item);
+                    break;
+                case "joi":
+                    joiSchema.validate(item, { abortEarly: false });
+                    break;
+                case "yup":
+                    yupSchema.validateSync(item);
+                    break;
+                case "superstruct":
+                    SuperstructSchema(item);
+                    break;
+            }
+        } catch (_) {}
+    }
+}
+
+bench
+    .add("valty", () => runValidation("valty", testData))
+    .add("Zod", () => runValidation("zod", testData))
+    .add("Joi", () => runValidation("joi", testData))
+    .add("Yup", () => runValidation("yup", testData))
+    .add("Superstruct", () => runValidation("superstruct", testData));
+
+// ========================
+// 4. Run Benchmark
+// ========================
+(async () => {
+    console.log("Warming up...");
+    runValidation("valty", testData.slice(0, 10));
+    runValidation("zod", testData.slice(0, 10));
+    runValidation("joi", testData.slice(0, 10));
+    runValidation("yup", testData.slice(0, 10));
+    runValidation("superstruct", testData.slice(0, 10));
+
+    console.log("Running benchmark...\n");
+    await bench.run();
+
+    for (const task of bench.tasks) {
+        console.log(
+            `${task.name.padEnd(12)}: ${task.result.hz.toFixed(2)} ops/sec`
+        );
+    }
+})();
+```
+Here's the result
+
+![image](https://github.com/user-attachments/assets/17ccc4af-0e22-4a7f-a4ef-713b798983df)
+```bash
+$ node --max-old-space-size=4096 benchmark.js --records=2000 --depth=5
+Warming up...
+Running benchmark...
+
+valty       : 120.35 ops/sec
+Zod         : 75.93 ops/sec
+Joi         : 32.09 ops/sec
+Yup         : 8.18 ops/sec
+Superstruct : 102.61 ops/sec
+```
+
+But there is no such 10k of validation at a time!!!!
+FOR THE SAKE OF MARKETING 😁
