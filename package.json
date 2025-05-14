@@ -1,12 +1,11 @@
 {
   "name": "valty",
-  "version": "0.0.39",
+  "version": "0.0.40",
   "description": "Valty is a lightweight, composable validation library built in TypeScript. No schemas. No DSLs. Just pure functions — you take full control.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "dist",
-    "README.md"
+    "dist"
   ],
   "scripts": {
     "rm-node_modules": "rm -rf node_modules",
