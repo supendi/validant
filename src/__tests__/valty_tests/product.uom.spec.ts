@@ -1,6 +1,6 @@
 import { arrayMinLen, minNumber, required } from "../../rules"
 import { ValidationRule } from "../../types"
-import valty, { ValidationResult } from "../../valty"
+import saferval, { ValidationResult } from "../../saferval"
 
 interface Product {
     name?: string
@@ -39,7 +39,7 @@ describe("Validate test with product", () => {
             ]
         }
 
-        const validationResult = valty.validate(ironStick, validationRule)
+        const validationResult = saferval.validate(ironStick, validationRule)
 
         const expected: ValidationResult<Product> = {
             message: "One or more validation errors occurred.",

@@ -1,4 +1,4 @@
-import { ValidationResult } from "../../valty";
+import { ValidationResult } from "../../saferval";
 
 
 /**

@@ -1,6 +1,6 @@
-import { valty, } from "../../index"
+import { saferval, } from "../../index"
 import { ValidationRule } from "../../types"
-import { ValidationResult } from "../../valty"
+import { ValidationResult } from "../../saferval"
 import { emailAddress, required, minNumber } from "../../rules"
 
 const defaultMessage = { okMessage: "Good to go.", errorMessage: "One or more validation errors occurred." }
@@ -42,7 +42,7 @@ describe("Validate customer with empty address", () => {
             addresses: []
         }
 
-        const actual = valty.validate(customer, customerRule)
+        const actual = saferval.validate(customer, customerRule)
 
         const expected: ValidationResult<Customer> = {
             message: defaultMessage.errorMessage,
@@ -79,7 +79,7 @@ describe("Validate customer with address items", () => {
             ]
         }
 
-        const actual = valty.validate(customer, customerRule)
+        const actual = saferval.validate(customer, customerRule)
 
         const expected: ValidationResult<Customer> = {
             message: defaultMessage.errorMessage,

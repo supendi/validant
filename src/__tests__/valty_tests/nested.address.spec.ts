@@ -1,6 +1,6 @@
 import { minNumber, required } from "../../rules"
 import { ValidationRule } from "../../types"
-import valty, { ValidationResult } from "../../valty"
+import saferval, { ValidationResult } from "../../saferval"
 
 interface Continent {
     name: string
@@ -67,7 +67,7 @@ describe("Nested Object Test with nested address", () => {
             }
         }
 
-        const actual = valty.validate(john, rule)
+        const actual = saferval.validate(john, rule)
 
         const expected: ValidationResult<Person> = {
             message: "One or more validation errors occurred.",

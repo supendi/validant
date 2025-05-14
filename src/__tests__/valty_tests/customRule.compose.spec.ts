@@ -1,6 +1,6 @@
-import { valty, } from "../../index"
+import { saferval, } from "../../index"
 import { PropertyRuleFunc, ValidationRule } from "../../types"
-import { ValidationResult } from "../../valty"
+import { ValidationResult } from "../../saferval"
 
 const defaultMessage = { okMessage: "Good to go.", errorMessage: "One or more validation errors occurred." }
 
@@ -69,7 +69,7 @@ describe("validate login request", () => {
             password: ""
         }
 
-        const actual = valty.validate(loginRequest, loginRule)
+        const actual = saferval.validate(loginRequest, loginRule)
 
         const expected: ValidationResult<LoginRequest> = {
             message: defaultMessage.errorMessage,
@@ -92,7 +92,7 @@ describe("validate login request", () => {
             password: ""
         }
 
-        const actual = valty.validate(loginRequest, loginRule)
+        const actual = saferval.validate(loginRequest, loginRule)
 
         const expected: ValidationResult<LoginRequest> = {
             message: defaultMessage.errorMessage,

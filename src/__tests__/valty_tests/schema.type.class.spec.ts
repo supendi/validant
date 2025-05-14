@@ -1,4 +1,4 @@
-import { valty, } from "../../index"
+import { saferval, } from "../../index"
 import { ValidationRule } from "../../types"
 import { emailAddress, required, minNumber } from "../../rules"
 
@@ -23,7 +23,7 @@ describe("Simple Object Test", () => {
             email: ""
         }
 
-        const actual = valty.validate(account, validationRule)
+        const actual = saferval.validate(account, validationRule)
 
         var expected = {
             message: "One or more validation errors occurred.",

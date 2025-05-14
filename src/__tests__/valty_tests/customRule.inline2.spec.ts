@@ -1,4 +1,4 @@
-import { valty, } from "../../index"
+import { saferval, } from "../../index"
 import { ValidationRule } from "../../types"
 
 interface Account {
@@ -29,7 +29,7 @@ describe("Test Inline Custom Rule", () => {
             name: "John",
         }
 
-        const validationResult = valty.validate(account, validationRule)
+        const validationResult = saferval.validate(account, validationRule)
 
         const expected = {
             message: "One or more validation errors occurred.",

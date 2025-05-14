@@ -1,7 +1,7 @@
 {
-  "name": "valty",
+  "name": "saferval",
   "version": "0.0.41",
-  "description": "Valty is a lightweight, composable validation library built in TypeScript. No schemas. No DSLs. Just pure functions — you take full control.",
+  "description": "Saferval is a lightweight, composable validation library built in TypeScript. No schemas. No DSLs. Just pure functions — you take full control.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -39,12 +39,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/supendi/valty.git"
+    "url": "git+https://github.com/supendi/saferval.git"
   },
   "author": "github.com/supendi",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/supendi/valty/issues"
+    "url": "https://github.com/supendi/saferval/issues"
   },
-  "homepage": "https://github.com/supendi/valty#readme"
+  "homepage": "https://github.com/supendi/saferval#readme"
 }

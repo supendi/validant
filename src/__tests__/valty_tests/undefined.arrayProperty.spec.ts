@@ -1,6 +1,6 @@
-import { valty, } from "../../index"
+import { saferval, } from "../../index"
 import { ValidationRule } from "../../types"
-import { ValidationResult } from "../../valty"
+import { ValidationResult } from "../../saferval"
 import { required } from "../../rules"
 
 interface Person {
@@ -21,7 +21,7 @@ describe("Test undefined array properties", () => {
     it("All properties should return errors", () => {
         const person: Person = {} // empty object
 
-        const actual = valty.validate(person, personRule)
+        const actual = saferval.validate(person, personRule)
 
         const expected: ValidationResult<Person> = {
             message: "One or more validation errors occurred.",
@@ -50,7 +50,7 @@ describe("Test undefined array properties", () => {
             ]
         }
 
-        const actual = valty.validate(person, personRule)
+        const actual = saferval.validate(person, personRule)
 
         const expected: ValidationResult<Person> = {
             message: "One or more validation errors occurred.",
