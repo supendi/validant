@@ -1,6 +1,6 @@
 {
   "name": "saferval",
-  "version": "0.0.41",
+  "version": "0.0.42",
   "description": "Saferval is a lightweight, composable validation library built in TypeScript. No schemas. No DSLs. Just pure functions — you take full control.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

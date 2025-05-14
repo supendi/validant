@@ -1802,19 +1802,18 @@ bench
 })();
 ```
 Here's the result
-
-![image](https://github.com/user-attachments/assets/17ccc4af-0e22-4a7f-a4ef-713b798983df)
 ```bash
 $ node --max-old-space-size=4096 benchmark.js --records=2000 --depth=5
 Warming up...
 Running benchmark...
 
-saferval       : 120.35 ops/sec
-Zod         : 75.93 ops/sec
-Joi         : 32.09 ops/sec
-Yup         : 8.18 ops/sec
-Superstruct : 102.61 ops/sec
+saferval    : 123.04 ops/sec
+Zod         : 73.96 ops/sec
+Joi         : 30.41 ops/sec
+Yup         : 7.81 ops/sec
+Superstruct : 101.38 ops/sec
 ```
 
 But there is no such 10k of validation at a time!!!!
-FOR THE SAKE OF MARKETING 😁
+
+IT'S FOR THE SAKE OF MARKETING 
