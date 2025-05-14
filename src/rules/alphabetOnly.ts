@@ -3,11 +3,10 @@ import { regularExpression } from "./regularExpression";
 const alphabetOnlyRegex = /^[a-zA-Z ]*$/;
 
 /**
- * Only alphabet validator
- * @param minLen 
- * @param errorMessage 
+ * Alphabet only rule
+ * @param errorMessage custom error message or default returned
  * @returns 
  */
-export function alphabetOnly(errorMessage?: string) {
-    return regularExpression<string, unknown>(alphabetOnlyRegex, errorMessage ? errorMessage : "This field should not contain any numbers or symbols. Accept only A-Z a-z and spaces.")
+export function alphabetOnly<T extends Object>(errorMessage?: string) {
+    return regularExpression<T>(alphabetOnlyRegex, errorMessage ? errorMessage : "This field should not contain any numbers or symbols. Accept only A-Z a-z and spaces.")
 }

@@ -8,24 +8,28 @@ import { PropertyRuleFunc } from "../types";
  */
 export function stringMinLen<TObject>(minLen: number, errorMessage?: string): PropertyRuleFunc<string, TObject> {
     if (minLen < 0) {
-        throw new Error(`${stringMinLen.name}: The maximum length argument must be a non-negative number.`);
+        throw new Error(`${stringMinLen.name}: The minimum length argument must be a non-negative number.`);
     }
 
     const message = errorMessage ?? `The min length allowed is ${minLen} characters.`;
 
     const ruleFunc: PropertyRuleFunc<string, TObject> = (value: string, objRef?: TObject) => {
-        if (typeof value !== "string") {
-            console.warn(`${stringMinLen.name}: Expected a string but received ${typeof value}.`);
-            return {
-                isValid: false,
-                errorMessage: `${stringMinLen.name}: Expected a string but received ${typeof value}.`
-            };
+        const valueIsString = typeof value === "string"
+        if (!valueIsString) {
+            throw new Error(`${stringMinLen.name}: Expected a string but received ${typeof value}.`)
         }
+
         const isValid = value.length >= minLen;
 
+        if (!isValid) {
+            return {
+                isValid,
+                errorMessage: message
+            };
+        }
+
         return {
-            isValid,
-            errorMessage: isValid ? "" : message
+            isValid
         };
     };
 

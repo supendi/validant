@@ -29,7 +29,7 @@ describe("ArrayValidationRule Compile Test", () => {
             age: [requiredRule, minNumberValidator],
         }
 
-        const arrayOfPersonValidationRule: ArrayValidationRule<Person[], Person, Person> = {
+        const arrayOfPersonValidationRule: ArrayValidationRule<Person[], Person> = {
             arrayRules: [requiredRule],
             arrayItemRule: personRule,
         }
@@ -55,7 +55,7 @@ describe("ArrayValidationRule Compile Test", () => {
             age: [requiredRule, minNumberValidator],
         }
 
-        const arrayOfPersonValidationRule: ArrayValidationRule<Person[], Person, Person> = {
+        const arrayOfPersonValidationRule: ArrayValidationRule<Person[], Person> = {
             arrayRules: [requiredRule],
             arrayItemRule: personRule,
         }

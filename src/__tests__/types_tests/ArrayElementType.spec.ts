@@ -1,15 +1,14 @@
-import { TypeOfArray } from "../../valty/types";
-
 
 /**
  * Ensure all the code below are compiled
  */
+import { ArrayElementType } from "../../types"
 
-describe("TypeOfArray Test", () => {
+describe("ArrayElementType Test", () => {
     it("Should compile", () => {
         interface Person {
-            name: TypeOfArray<string[]>,
-            age: TypeOfArray<number[]>
+            name: ArrayElementType<string[]>,
+            age: ArrayElementType<number[]>
         }
 
         let person: Person = {

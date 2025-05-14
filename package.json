@@ -1,7 +1,7 @@
 {
   "name": "valty",
   "version": "0.0.38",
-  "description": "TypeScript validation with no DSL, just pure function. You take full control.",
+  "description": "Valty is a lightweight, composable validation library built in TypeScript. No schemas. No DSLs. Just pure functions — you take full control.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -9,12 +9,14 @@
     "README.md"
   ],
   "scripts": {
-    "rm-dist": "rm -rf ./dist",
-    "test": "yarn rm-dist && jest",
     "rm-node_modules": "rm -rf node_modules",
-    "build": "yarn test && tsc",
-    "prepare-publish": "yarn rm-node_modules && yarn install && yarn test && tsc",
-    "publish": "yarn prepare-publish && npm version patch && git add . && git push"
+    "rm-dist": "rm -rf ./dist",
+    "test": "yarn rm-dist && tsc --noEmit && jest --coverage",
+    "build": "yarn rm-dist && tsc",
+    "build-prod": "yarn rm-dist && tsc -p tsconfig.production.json",
+    "prepare-publish": "yarn rm-node_modules && yarn install && yarn test && yarn build-prod && yarn bundle-check",
+    "bundle-check": "npm pack --dry-run",
+    "publish": "yarn prepare-publish && npm version patch"
   },
   "devDependencies": {
     "@babel/core": "^7.13.16",

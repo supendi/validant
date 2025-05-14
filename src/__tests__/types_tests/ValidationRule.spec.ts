@@ -242,7 +242,7 @@ describe("ValidationRules Complex Person Test", () => {
 
         const childrenRules = personRules.children
         expect(childrenRules).not.toBeUndefined()
-        expect(childrenRules).toEqual<ArrayValidationRule<Person[], Person, Person>>({
+        expect(childrenRules).toEqual<ArrayValidationRule<Person[], Person>>({
             arrayRules: [requiredValidator],
             arrayItemRule: {
                 name: [requiredValidator],
@@ -267,8 +267,5 @@ describe("ValidationRules Complex Person Test", () => {
         const childrenValidationRule = childrenRules.arrayItemRule
         expect(childrenValidationRule?.name).not.toBeUndefined()
         expect(childrenValidationRule?.name).toEqual([requiredValidator])
-
-        // expect(childrenValidationRule?.age).not.toBeUndefined()
-        // expect(childrenValidationRule?.age).toEqual([requiredValidator, minNumberValidator])
     })
 })

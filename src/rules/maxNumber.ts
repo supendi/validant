@@ -5,29 +5,27 @@ import { PropertyRuleFunc } from "../types";
  * @param max The maximum allowed value.
  * @param errorMessage Optional custom error message.
  */
-export const maxNumber = <TObject>(
-    max: number,
-    errorMessage?: string
-): PropertyRuleFunc<number, TObject> => {
-    const msg = errorMessage ?? `The maximum value for this field is ${max}.`;
+export const maxNumber = <TObject extends Object>(max: number, errorMessage?: string): PropertyRuleFunc<number, TObject> => {
+    const finalErrorMessage = errorMessage ?? `The maximum value for this field is ${max}.`;
 
-    const ruleFunc: PropertyRuleFunc<number, TObject> = (value: number) => {
+    return (value) => {
         const valueIsNumber = typeof value === "number" || typeof value === "bigint";
 
         if (!valueIsNumber) {
-            return {
-                isValid: false,
-                errorMessage: `value is not a number. The value was: ${value} and type of value was '${typeof value}'`,
-            };
+            throw new Error(`${maxNumber.name}: Value is not a number. The value was: ${value} (type: '${typeof value}')`)
         }
 
         const isValid = value <= max
 
+        if (!isValid) {
+            return {
+                isValid: isValid,
+                errorMessage: finalErrorMessage
+            }
+        }
+
         return {
-            isValid: isValid,
-            errorMessage: isValid ? "" : msg
+            isValid: true
         }
     };
-
-    return ruleFunc;
 };

@@ -1,37 +1,43 @@
 import { PossiblyUndefined, PropertyRuleFunc } from "../types";
 
 /**
- * Specifies the rule of the maximum number of elements allowed in an array.
+ * Maximum length of array rule.
+ * @param maxLen the maximum length of array
+ * @param errorMessage custome error message or default returned.
+ * @returns 
  */
-export const arrayMaxLen = <TValue, TObject>(
-  max: number,
-  errorMessage?: string
-): PropertyRuleFunc<PossiblyUndefined<TValue[]>, TObject> => {
-  const msg = errorMessage ?? `The maximum length for this field is ${max}.`;
+export function arrayMaxLen<TValue, TObject extends Object>(maxLen: number, errorMessage?: string): PropertyRuleFunc<PossiblyUndefined<TValue[]>, TObject> {
 
+  if (maxLen < 0) {
+    throw new Error(`${arrayMaxLen.name}: The maximum length should be non negative and positive number. Your input was: ${maxLen}`)
+  }
+  
+  return (array, object) => {
 
-  const ruleFunc: PropertyRuleFunc<PossiblyUndefined<TValue[]>, TObject> = (value: TValue[], object: TObject) => {
-    if (!value || !Array.isArray(value)) {
+    const finalErrorMessage = errorMessage ?? `The maximum length for this field is ${maxLen}.`;
+
+    if (!array) {
       return {
         isValid: false,
-        errorMessage: msg
+        errorMessage: finalErrorMessage
       }
     }
 
-    if (max < 0) {
-      console.warn(`arrayMaxLen: max length should be >= 0`);
+    if (!Array.isArray(array)) {
+      throw new Error(`${arrayMaxLen.name}: Expected an array but received ${typeof array}.`)
+    }
+
+    const isValid = array.length <= maxLen;
+
+    if (!isValid) {
       return {
-        isValid: false,
-        errorMessage: msg
+        isValid,
+        errorMessage: finalErrorMessage
       };
     }
 
-    const isValid = value.length <= max;
     return {
-      isValid,
-      errorMessage: isValid ? "" : msg
-    };
+      isValid
+    }
   }
-
-  return ruleFunc
 };

@@ -1,9 +1,9 @@
-import { IndexedErrorOf } from "../../valty/types";
-
-
+ 
 /**
  * Ensure all the code below are compiled
  */
+
+import { IndexedErrorOf } from "../../types"
 
 describe("IndexedErrorOf Test", () => {
     it("Should compile", () => {

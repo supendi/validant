@@ -1,61 +1,66 @@
 import { emailAddress } from "../../rules/emailAddress"
+import { PropertyRuleValidationResult } from "../../types"
 
 describe(`Test ${emailAddress.name}`, () => {
     it("should return false and have default error message", () => {
-        const testValue = "wrongemail@.com"
-        const validator = emailAddress()
-        const defaultValidatorErrorMessage = `Invalid email address. The valid email example: john.doe@example.com.`
+        const input = "wrongemail@.com"
+        const defaultErrorMessage = `Invalid email address. The valid email example: john.doe@example.com.`
 
-        var {
-            isValid,
-            errorMessage
-        } = validator(testValue)
+        const ruleFunc = emailAddress()
 
-        expect(isValid).toEqual(false)
+        const actual = ruleFunc(input, {})
+        const expected: PropertyRuleValidationResult = {
+            isValid: false,
+            errorMessage: defaultErrorMessage
+        }
+
+        expect(actual).toEqual(expected)
     })
 })
 
 describe(`Test ${emailAddress.name}`, () => {
     it("should return false and have custom error message", () => {
-        const testValue = "another@wrong@email.com"
-        const customErrorMessage = `Invalid email address '${testValue}'`
-        const validator = emailAddress(customErrorMessage)
+        const input = "another@wrong@email.com"
+        const customErrorMessage = `Invalid email address '${input}'`
+        const ruleFunc = emailAddress(customErrorMessage)
 
-        var {
-            isValid,
-            errorMessage
-        } = validator(testValue)
+        const actual = ruleFunc(input, {})
+        const expected: PropertyRuleValidationResult = {
+            isValid: false,
+            errorMessage: customErrorMessage
+        }
 
-        expect(isValid).toEqual(false)
+        expect(actual).toEqual(expected)
     })
 })
 
 describe(`Test ${emailAddress.name}`, () => {
-    it("should return true and have custom error message", () => {
-        const testValue = 'john@doe.com'
+    it("should return true and empty error", () => {
+        const input = 'john@doe.com'
         const customErrorMessage = `Invalid email.`
-        const validator = emailAddress(customErrorMessage)
+        const ruleFunc = emailAddress(customErrorMessage)
 
-        var {
-            isValid,
-            errorMessage
-        } = validator(testValue)
+        const actual = ruleFunc(input, {})
+        const expected: PropertyRuleValidationResult = {
+            isValid: true
+        }
 
-        expect(isValid).toEqual(true)
+        expect(actual).toEqual(expected)
     })
 })
 
 describe(`Test ${emailAddress.name}`, () => {
     it("should return false and have custom error message", () => {
-        const testValue = 'john@'
+        const input = 'john@'
         const customErrorMessage = `Invalid email :value`
-        const validator = emailAddress(customErrorMessage)
-        
-        var {
-            isValid,
-            errorMessage
-        } = validator(testValue)
+        const ruleFunc = emailAddress(customErrorMessage)
 
-        expect(isValid).toEqual(false)
+        const actual = ruleFunc(input, {})
+        const expected: PropertyRuleValidationResult = {
+            isValid: false,
+            errorMessage: customErrorMessage
+        }
+
+        expect(actual).toEqual(expected)
     })
 }) 

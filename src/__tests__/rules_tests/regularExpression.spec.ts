@@ -1,51 +1,51 @@
 import { regularExpression } from "../../rules/regularExpression"
+import { PropertyRuleValidationResult } from "../../types"
 
+const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d])([A-Za-z\d]|[^a-zA-Z\d]){8,}$/
 
 describe(`Test ${regularExpression.name}`, () => {
     it("should return false and have default error message", () => {
-        const testValue = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d])([A-Za-z\d]|[^a-zA-Z\d]){8,}$/
-        const validator = regularExpression(testValue)
-        const defaultValidatorErrorMessage = `The value ':value' doesn't match with the specified regular expression.`
+        const ruleFunc = regularExpression(strongPasswordRegex)
+        const defaultErrorMessage = `The value ':value' doesn't match with the specified regular expression.`
         const inputValue = "Hallo"
 
+        const actual = ruleFunc(inputValue, {})
+        const expected: PropertyRuleValidationResult = {
+            isValid: false,
+            errorMessage: defaultErrorMessage
+        }
 
-        var {
-            isValid,
-            errorMessage
-        } = validator(inputValue)
-
-        expect(isValid).toEqual(false)
+        expect(actual).toEqual(expected)
     })
 })
 
 describe(`Test ${regularExpression.name}`, () => {
     it("should return false and have custom error message", () => {
-        const testValue = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d])([A-Za-z\d]|[^a-zA-Z\d]){8,}$/
         const customErrorMessage = `Invalid value`
-        const validator = regularExpression(testValue, customErrorMessage)
+        const ruleFunc = regularExpression(strongPasswordRegex, customErrorMessage)
         const inputValue = "cumaMisCall1"
 
-        var {
-            isValid,
-            errorMessage
-        } = validator(inputValue)
+        const actual = ruleFunc(inputValue, {})
+        const expected: PropertyRuleValidationResult = {
+            isValid: false,
+            errorMessage: customErrorMessage
+        }
 
-        expect(isValid).toEqual(false)
+        expect(actual).toEqual(expected)
     })
 })
 
 describe(`Test ${regularExpression.name}`, () => {
-    it("should return true and have custom error message", () => {
-        const testValue = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d])([A-Za-z\d]|[^a-zA-Z\d]){8,}$/
+    it("should return true and emtpy error", () => {
         const customErrorMessage = `Invalid value`
-        const validator = regularExpression(testValue, customErrorMessage)
+        const ruleFunc = regularExpression(strongPasswordRegex, customErrorMessage)
         const inputValue = "ThisIsStrongPassword123.,"
 
-        var {
-            isValid,
-            errorMessage
-        } = validator(inputValue)
-        
-        expect(isValid).toEqual(true)
+        const actual = ruleFunc(inputValue, {})
+        const expected: PropertyRuleValidationResult = {
+            isValid: true
+        }
+
+        expect(actual).toEqual(expected)
     })
 }) 

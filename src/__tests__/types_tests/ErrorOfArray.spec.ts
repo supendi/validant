@@ -1,9 +1,9 @@
-import { ErrorOfArray } from "../../valty/types";
-
-
+ 
 /**
  * Ensure all the code below are compiled
  */
+
+import { ErrorOfArray } from "../../types"
 
 describe("ErrorOfArray Test", () => {
     it("Should compile", () => {

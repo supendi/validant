@@ -1,50 +1,49 @@
-import { alphabetOnly } from "../../valty/rules/alphabetOnly"
-
+import { alphabetOnly } from "../../rules"
+import { PropertyRuleValidationResult } from "../../types"
 
 describe(`Test ${alphabetOnly.name}`, () => {
     it("should return false and have default error message", () => {
-        const defaultValidatorErrorMessage = "This field should not contain any numbers or symbols. Accept only A-Z a-z and spaces."
-        const ruleFunc = alphabetOnly(defaultValidatorErrorMessage)
-        const testValue = "abcdD1unseenA number"
+        const errorMessage = "This field should not contain any numbers or symbols. Accept only A-Z a-z and spaces."
+        const ruleFunc = alphabetOnly()
+        const testValue = "abcdD1unseenA number" // Contains number: 1
 
-        var {
-            isValid,
+        const actual = ruleFunc(testValue, {})
+        const expected: PropertyRuleValidationResult = {
+            isValid: false,
             errorMessage
-        } = ruleFunc(testValue)
+        }
 
-        expect(isValid).toEqual(false)
+        expect(actual).toEqual(expected)
     })
 })
 
 describe(`Test ${alphabetOnly.name}`, () => {
     it("should return false and have custom error message", () => {
-        const customeMessage = "Hey be good bro."
-        const ruleFunc = alphabetOnly(customeMessage)
-
+        const errorMessage = "Hey be good bro."
+        const ruleFunc = alphabetOnly(errorMessage)
         const testValue = "abcd*,.asdf|'asd!@#$%^&*()"
 
-        var {
-            isValid,
+        const actual = ruleFunc(testValue, {})
+        const expected: PropertyRuleValidationResult = {
+            isValid: false,
             errorMessage
-        } = ruleFunc(testValue)
+        }
 
-
-        expect(isValid).toEqual(false)
+        expect(actual).toEqual(expected)
     })
 })
 
 describe(`Test ${alphabetOnly.name}`, () => {
     it("should return true and have custom error message", () => {
-        const customeMessage = "Hey be good bro."
-        const ruleFunc = alphabetOnly(customeMessage) 
+        const errorMessage = "Hey be good bro."
+        const ruleFunc = alphabetOnly(errorMessage)
         const testValue = "Here I am having space but not dot or comma"
- 
-        var {
-            isValid,
-            errorMessage
-        } = ruleFunc(testValue)
 
+        const actual = ruleFunc(testValue, {})
+        const expected: PropertyRuleValidationResult = {
+            isValid: true,
+        }
 
-        expect(isValid).toEqual(true)
+        expect(actual).toEqual(expected)
     })
 })

@@ -7,11 +7,13 @@ import { arrayMinLen } from './arrayMinLen'
 import { minNumber } from './minNumber'
 import { regularExpression } from './regularExpression'
 import { required } from './required'
-import { minSumOf } from './minSumOf'
-import { maxSumOf } from './maxSumOf'
 import { alphabetOnly } from './alphabetOnly'
 import { stringMinLen } from './stringMinLen'
 import { stringMaxLen } from './stringMaxLen'
+import { isDateObject } from './isDateObject'
+import { isNumber } from './isNumber'
+import { isString } from './isString'
+import { isBool } from './isBool'
 
 export {
     elementOf,
@@ -23,9 +25,11 @@ export {
     minNumber,
     regularExpression,
     required,
-    minSumOf,
-    maxSumOf,
     alphabetOnly,
     stringMinLen,
-    stringMaxLen
-}
+    stringMaxLen,
+    isDateObject,
+    isNumber,
+    isString,
+    isBool
+} 

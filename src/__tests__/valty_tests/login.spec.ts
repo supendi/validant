@@ -1,4 +1,4 @@
-import { valty, maxSumOf } from "../../index"
+import { valty, } from "../../index"
 import { ValidationRule } from "../../types"
 import { ValidationResult } from "../../valty"
 import { required, } from "../../rules"

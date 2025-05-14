@@ -17,7 +17,7 @@ type ObjectFieldValidationResult<T> = {
     errors?: ErrorOf<T> | FieldErrors
 }
 
-function isArrayValidationRule<T, TRoot>(rule: ValidationRule<T, TRoot>[Extract<keyof T, string>] | ArrayValidationRule<T[Extract<keyof T, string>], T, TRoot>) {
+function isArrayValidationRule<T, TRoot>(rule: ValidationRule<T, TRoot>[Extract<keyof T, string>] | ArrayValidationRule<T[Extract<keyof T, string>], TRoot>) {
     const allowedKeys = new Set(["arrayRules", "arrayItemRule"]);
     const keys = Object.keys(rule);
 
@@ -75,7 +75,7 @@ function validatePrimitiveField<T, TRoot>(key: Extract<keyof T, string>, object:
     return validationResult
 }
 
-function validateArrayField<T, TRoot>(key: Extract<keyof T, string>, object: T, root: TRoot, rule: ValidationRule<T, TRoot>[Extract<keyof T, string>] | ArrayValidationRule<T[Extract<keyof T, string>], T, TRoot>) {
+function validateArrayField<T, TRoot>(key: Extract<keyof T, string>, object: T, root: TRoot, rule: ValidationRule<T, TRoot>[Extract<keyof T, string>] | ArrayValidationRule<T[Extract<keyof T, string>], TRoot>) {
 
     const value = object[key];
 
@@ -91,7 +91,7 @@ function validateArrayField<T, TRoot>(key: Extract<keyof T, string>, object: T, 
     }
     var arrayFieldErrors: ErrorOfArray<T> = {};
 
-    const arrayValidationRule = rule as ArrayValidationRule<typeof value, T, TRoot>;
+    const arrayValidationRule = rule as ArrayValidationRule<typeof value, TRoot>;
 
     if (arrayValidationRule.arrayRules) {
         for (let index = 0; index < arrayValidationRule.arrayRules.length; index++) {
@@ -148,7 +148,8 @@ function validateObjectField<T, TRoot>(key: Extract<keyof T, string>, object: T,
     // }
 
     if (!value) {
-        // I am gonna leave this silently not be validated for now.
+        // validateArrayField(key, object, root, rule)
+        // I am gonna leave this silently not be validated for now. 
         return {
             isValid: true
         };
@@ -177,6 +178,12 @@ function validateObjectField<T, TRoot>(key: Extract<keyof T, string>, object: T,
  * @returns
  */
 export const validateObject = <T, TRoot>(object: T, rootObject: TRoot, validationRule: ValidationRule<T, TRoot>): ErrorOf<T> => {
+    if (!object) {
+        throw new Error(`valty: object is null or undefined during validation.`)
+    }
+    if (!validationRule) {
+        throw new Error(`valty: validation rule is null or undefined.`)
+    }
     var errors: ErrorOf<T> = undefined;
 
     function assignErrorsIfAny(key: any, fieldErrors: FieldErrors | ErrorOfArray<T> | ErrorOf<T[Extract<keyof T, string>]>) {
@@ -211,10 +218,10 @@ export const validateObject = <T, TRoot>(object: T, rootObject: TRoot, validatio
                     }
                     break;
                 case "array":
-                    if (!value) {
-                        const error = validateObjectField(key, object, rootObject, rule)
-                        if (error && !error.isValid) {
-                            assignErrorsIfAny(key, error.errors)
+                    if (!value && isArrayValidationRule(rule)) {
+                        const result = validateArrayField(key, object, rootObject, rule)
+                        if (result?.errors || result?.errorsEach) {
+                            assignErrorsIfAny(key, result)
                         }
                         break;
                     }

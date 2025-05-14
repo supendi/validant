@@ -1,9 +1,9 @@
-import { ErrorOf } from "../../valty/types"
+
+import { ErrorOf } from "../../types" 
 
 /**
  * Ensure all the code below compiled
  */
-
 describe("ErrorOf Test", () => {
     it("Should compile", () => {
         interface SimplePerson {

@@ -1,35 +1,43 @@
 import { PossiblyUndefined, PropertyRuleFunc } from "../types";
 
 /**
- * Specifies the minimum length of an array.
- * @param min The minimum number of elements required.
- * @param errorMessage Optional custom error message.
+ * Array minimum length rule.
+ * @param minLen the min lenght of array
+ * @param errorMessage custom error message or default returned.
+ * @returns 
  */
-export const arrayMinLen = <TValue, TObject>(
-    min: number,
-    errorMessage?: string
-): PropertyRuleFunc<PossiblyUndefined<TValue[]>, TObject> => {
-    const msg = errorMessage ?? `The minimum length for this field is ${min}.`;
+export const arrayMinLen = <TValue, TObject extends Object>(minLen: number, errorMessage?: string): PropertyRuleFunc<PossiblyUndefined<TValue[]>, TObject> => {
 
-    return (value) => {
-        if (!value || !Array.isArray(value)) {
+    if (minLen < 0) {
+        throw new Error(`${arrayMinLen.name}: The minimum length should be non negative or positive number. Your input was: ${minLen}`)
+    }
+
+    return (array) => {
+
+        const finalErrorMessage = errorMessage ?? `The minimum length for this field is ${minLen}.`;
+
+        if (!array) {
             return {
                 isValid: false,
-                errorMessage: msg,
+                errorMessage: finalErrorMessage,
             };
         }
 
-        if (min < 1) {
-            console.warn("arrayMinLen: min length should be > 0");
+        if (!Array.isArray(array)) {
+            throw new Error(`${arrayMinLen.name}: Expected an array but received ${typeof array}.`)
+        }
+
+        const isValid = array.length >= minLen
+        if (!isValid) {
             return {
-                isValid: false,
-                errorMessage: msg,
+                isValid,
+                errorMessage: finalErrorMessage,
             };
         }
 
         return {
-            isValid: value.length >= min,
-            errorMessage: msg,
-        };
+            isValid
+        }
+
     };
 };

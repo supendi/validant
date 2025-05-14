@@ -1,27 +1,28 @@
 import valty from "./valty";
-import { ErrorOf, ValidationRule, ValidateFunc, PropertyRuleFunc, ArrayValidationRule, ErrorOfArray, IndexedErrorOf, TypeOfArray } from './types'
+import { ErrorOf, ValidationRule, PropertyRuleFunc, ArrayValidationRule, ErrorOfArray, IndexedErrorOf, ArrayElementType } from './types'
 import { ValidationResult } from "./valty";
 import { PropertyValidationResult } from "./validators/validateField";
-import { emailAddress, equalToPropertyValue, arrayMaxLen, arrayMinLen, maxNumber, minNumber, minSumOf, maxSumOf, regularExpression, required, elementOf, alphabetOnly, stringMaxLen, stringMinLen } from './rules'
+import { emailAddress, equalToPropertyValue, arrayMaxLen, arrayMinLen, maxNumber, minNumber, regularExpression, required, elementOf, alphabetOnly, stringMaxLen, stringMinLen, isDateObject, isNumber, isString, isBool } from './rules'
 
 export { valty }
-export { valty as objectValidator } // avoid breaking changes
 
 export {
-    arrayMaxLen,
-    arrayMinLen,
     elementOf,
     emailAddress,
     equalToPropertyValue,
+    arrayMaxLen,
     maxNumber,
+    arrayMinLen,
     minNumber,
     regularExpression,
     required,
-    minSumOf,
-    maxSumOf,
     alphabetOnly,
+    stringMinLen,
     stringMaxLen,
-    stringMinLen
+    isDateObject,
+    isNumber,
+    isString,
+    isBool
 }
 
 export {
@@ -30,9 +31,8 @@ export {
     IndexedErrorOf,
     ValidationRule,
     ValidationResult,
-    ValidateFunc,
     PropertyValidationResult,
-    PropertyRuleFunc as PropertyRule,
+    PropertyRuleFunc,
     ArrayValidationRule,
-    TypeOfArray,
+    ArrayElementType,
 } 

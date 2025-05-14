@@ -5,19 +5,24 @@ import { PropertyRuleFunc } from "../types";
  * @param errorMessage Custom error messages
  * @returns 
  */
-export const equalToPropertyValue = <TValue, TObject>(propertyNameToCompare: keyof TObject, errorMessage?: string) => {
-    let msg = `The value should be equal to the value of '${propertyNameToCompare.toString()}'.`
+export const equalToPropertyValue = <TObject extends Object>(propertyNameToCompare: keyof TObject, errorMessage?: string): PropertyRuleFunc<TObject[keyof TObject], TObject> => {
+    let finalErrorMessage = `The value should be equal to the value of '${propertyNameToCompare.toString()}'.`
     if (errorMessage) {
-        msg = errorMessage
+        finalErrorMessage = errorMessage
     }
 
-    const ruleFunc: PropertyRuleFunc<TValue, TObject> = (value: TValue, object: TObject) => {
-        const isValid = (value as any) === object[propertyNameToCompare]
+    return (value, object) => {
+        const isValid = value === object[propertyNameToCompare]
+
+        if (!isValid) {
+            return {
+                isValid,
+                errorMessage: finalErrorMessage
+            };
+        }
+
         return {
-            isValid,
-            errorMessage: isValid ? "" : msg
+            isValid: true
         };
     }
-
-    return ruleFunc
 }

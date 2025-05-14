@@ -6,29 +6,30 @@ import { PropertyRuleFunc } from "../types";
  * @param errorMessage Custom error message.
  * @returns A property rule function.
  */
-export function stringMaxLen<TObject>(maxLength: number, errorMessage?: string): PropertyRuleFunc<string, TObject> {
+export function stringMaxLen<TObject extends Object>(maxLength: number, errorMessage?: string): PropertyRuleFunc<string, TObject> {
     if (maxLength < 0) {
         throw new Error(`${stringMaxLen.name}: The maximum length argument must be a non-negative number.`);
     }
 
     const message = errorMessage ?? `The maximum length allowed is ${maxLength} characters.`;
 
-    const ruleFunc: PropertyRuleFunc<string, TObject> = (value: string, objRef?: TObject) => {
-        if (typeof value !== "string") {
-            console.warn(`${stringMaxLen.name}: Expected a string but received ${typeof value}.`);
-            return {
-                isValid: false,
-                errorMessage: message
-            };
+    return (value: string) => {
+        const valueIsString = typeof value === "string"
+        if (!valueIsString) {
+            throw new Error(`${stringMaxLen.name}: Expected a string but received ${typeof value}.`)
         }
 
         const isValid = value.length <= maxLength;
 
+        if (!isValid) {
+            return {
+                isValid,
+                errorMessage: message
+            };
+        }
+
         return {
-            isValid,
-            errorMessage: isValid ? "" : message
+            isValid
         };
     };
-
-    return ruleFunc;
 }

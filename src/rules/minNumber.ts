@@ -6,27 +6,29 @@ import { PropertyRuleFunc } from "../types";
  * @param errorMessage Custom error message.
  * @returns The validation rule.
  */
-export const minNumber = <TObject>(
-    min: number,
-    errorMessage?: string
-): PropertyRuleFunc<number, TObject> => {
-    const msg = errorMessage ?? `The minimum value for this field is ${min}.`;
+export const minNumber = <TObject extends Object>(min: number, errorMessage?: string): PropertyRuleFunc<number, TObject> => {
+    const finalErrorMessage = errorMessage ?? `The minimum value for this field is ${min}.`;
 
-    const ruleFunc: PropertyRuleFunc<number, TObject> = (value: number) => {
+    return (value: number) => {
         const typeOfValue = typeof value;
         const valueIsNumber = typeOfValue === "bigint" || typeOfValue === "number";
 
         if (!valueIsNumber) {
-            console.warn(`minNumber: value is not a number. The type of value was '${typeOfValue}'`);
-            return { isValid: false, errorMessage: msg };
+            throw new Error(`${minNumber.name}: Value is not a number. The value was: ${value} (type: '${typeof value}')`)
         }
+
         const isValid = value >= min
 
+        if (!isValid) {
+            return {
+                isValid: isValid,
+                errorMessage: finalErrorMessage
+            }
+        }
+
         return {
-            isValid: isValid,
-            errorMessage: isValid ? "" : msg
+            isValid: true
         }
     };
 
-    return ruleFunc;
 };
