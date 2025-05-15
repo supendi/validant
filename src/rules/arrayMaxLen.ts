@@ -1,4 +1,5 @@
-import { PossiblyUndefined, PropertyRuleFunc } from "../types";
+import { PossiblyUndefined } from "../types/ErrorOf";
+import { PropertyRuleFunc } from "../types/ValidationRule";
 
 /**
  * Maximum length of array rule.

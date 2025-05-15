@@ -1,4 +1,4 @@
-import { PropertyRuleFunc } from "../types";
+import { PropertyRuleFunc } from "../types/ValidationRule";
 
 /**
  * Returns a minimum number validation rule.

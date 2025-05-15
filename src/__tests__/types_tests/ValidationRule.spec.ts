@@ -1,4 +1,6 @@
-import { PropertyRuleFunc, ValidationRule, ArrayValidationRule } from "../../types"
+import { ArrayValidationRule } from "../../types/ValidationRule"
+import { PropertyRuleFunc } from "../../types/ValidationRule"
+import { ValidationRule } from "../../types/ValidationRule"
 import { elementOf, emailAddress, maxNumber, arrayMinLen, minNumber, required } from "../../rules"
 
 /**

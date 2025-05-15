@@ -1,5 +1,5 @@
 import { isDateObject } from "../../rules/isDateObject"
-import { PropertyRuleValidationResult } from "../../types"
+import { PropertyRuleValidationResult } from "../../types/ValidationRule"
 
 
 /**

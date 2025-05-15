@@ -1,4 +1,4 @@
-import { PropertyRuleFunc } from "../types";
+import { PropertyRuleFunc } from "../types/ValidationRule";
 
 /**
  * Represents a single validation result of property
@@ -12,7 +12,7 @@ export interface PropertyValidationResult<T> {
     errorMessage: string;
 }
 
-function stringifyValue<TValue>(value: TValue): string {
+export function stringifyValue<TValue>(value: TValue): string {
     if (value === undefined) return "undefined"
     if (value === null) return "null"
 

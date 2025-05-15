@@ -2,7 +2,7 @@
 /**
  * Ensure all the code below are compiled
  */
-import { ArrayElementType } from "../../types"
+import { ArrayElementType } from "../../types/ErrorOf"
 
 describe("ArrayElementType Test", () => {
     it("Should compile", () => {

@@ -1,4 +1,4 @@
-import { PropertyRuleFunc } from "../types";
+import { PropertyRuleFunc } from "../types/ValidationRule";
 
 /**
  * Specifies the maximum length of a string.

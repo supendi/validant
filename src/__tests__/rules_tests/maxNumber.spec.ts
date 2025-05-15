@@ -1,5 +1,5 @@
 import { maxNumber } from "../../rules/maxNumber"
-import { PropertyRuleValidationResult } from "../../types"
+import { PropertyRuleValidationResult } from "../../types/ValidationRule"
 
 describe(`Test ${maxNumber.name}`, () => {
     it("should return false and have default error message", () => {

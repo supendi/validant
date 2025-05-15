@@ -1,5 +1,5 @@
 import { required } from "../../rules/required"
-import { PropertyRuleValidationResult } from "../../types"
+import { PropertyRuleValidationResult } from "../../types/ValidationRule"
 
 const defaultErrorMessage = "This field is required."
 

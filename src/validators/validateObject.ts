@@ -1,18 +1,21 @@
-import { ValidationRule, ErrorOf, ArrayValidationRule, PropertyRuleFunc, ErrorOfArray } from "../types";
+import { ErrorOf, ErrorOfArray } from "../types/ErrorOf";
+import { ArrayValidationRule } from "../types/ValidationRule";
+import { PropertyRuleFunc } from "../types/ValidationRule";
+import { ValidationRule } from "../types/ValidationRule";
 import { validateField } from "./validateField";
 
-type PropertyType = "array" | "object" | "primitive" | "undefined"
+export type PropertyType = "array" | "object" | "primitive" | "undefined"
 
 type PrimitiveRule<T, TRoot> = PropertyRuleFunc<T[Extract<keyof T, string>], TRoot>[]
 
-type FieldErrors = string[]
+export type FieldErrors = string[]
 
-type PrimitiveFieldValidationResult = {
+export type PrimitiveFieldValidationResult = {
     isValid: boolean
     errors: FieldErrors
 }
 
-type ObjectFieldValidationResult<T> = {
+export type ObjectFieldValidationResult<T> = {
     isValid: boolean
     errors?: ErrorOf<T> | FieldErrors
 }

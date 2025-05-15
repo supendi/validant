@@ -1,5 +1,5 @@
 import { stringMaxLen } from "../../rules/stringMaxLen"
-import { PropertyRuleValidationResult } from "../../types"
+import { PropertyRuleValidationResult } from "../../types/ValidationRule"
 
 describe(`Test ${stringMaxLen.name}`, () => {
     it("should return false and have default error message", () => {

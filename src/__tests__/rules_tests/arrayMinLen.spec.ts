@@ -1,5 +1,5 @@
 import { arrayMinLen } from "../../rules/arrayMinLen"
-import { PropertyRuleValidationResult } from "../../types"
+import { PropertyRuleValidationResult } from "../../types/ValidationRule"
 
 describe(`Test ${arrayMinLen.name}`, () => {
     it("should return false and have default error message", () => {

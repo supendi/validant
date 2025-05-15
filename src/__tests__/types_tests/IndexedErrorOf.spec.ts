@@ -3,7 +3,7 @@
  * Ensure all the code below are compiled
  */
 
-import { IndexedErrorOf } from "../../types"
+import { IndexedErrorOf } from "../../types/ErrorOf"
 
 describe("IndexedErrorOf Test", () => {
     it("Should compile", () => {

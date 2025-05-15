@@ -1,5 +1,5 @@
 import { alphabetOnly } from "../../rules"
-import { PropertyRuleValidationResult } from "../../types"
+import { PropertyRuleValidationResult } from "../../types/ValidationRule"
 
 describe(`Test ${alphabetOnly.name}`, () => {
     it("should return false and have default error message", () => {

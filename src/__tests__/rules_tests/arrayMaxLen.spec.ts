@@ -1,5 +1,5 @@
 import { arrayMaxLen } from "../../rules/arrayMaxLen"
-import { PropertyRuleValidationResult } from "../../types"
+import { PropertyRuleValidationResult } from "../../types/ValidationRule"
 
 describe(`Test ${arrayMaxLen.name}`, () => {
     it("should return false and have default error message", () => {

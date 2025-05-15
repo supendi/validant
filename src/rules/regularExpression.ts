@@ -1,4 +1,4 @@
-import { PropertyRuleFunc } from "../types"
+import { PropertyRuleFunc } from "../types/ValidationRule"
 
 /**
  * Specifies the rule if a value is match with the specified regular expression.

@@ -3,7 +3,7 @@
  * Ensure all the code below are compiled
  */
 
-import { PossiblyUndefined } from "../../types"
+import { PossiblyUndefined } from "../../types/ErrorOf"
 
 describe(`PossiblyUndefined Test`, () => {
     it("Should compile", () => {

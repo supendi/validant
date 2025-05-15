@@ -1,5 +1,5 @@
 import { elementOf } from "../../rules/elementOf"
-import { PropertyRuleValidationResult } from "../../types"
+import { PropertyRuleValidationResult } from "../../types/ValidationRule"
 
 describe(`Test ${elementOf.name}`, () => {
     it("should return false and have default error message", () => {

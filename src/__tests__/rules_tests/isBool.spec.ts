@@ -1,5 +1,5 @@
 import { isBool } from "../../rules/isBool"
-import { PropertyRuleValidationResult } from "../../types"
+import { PropertyRuleValidationResult } from "../../types/ValidationRule"
 
 
 /**

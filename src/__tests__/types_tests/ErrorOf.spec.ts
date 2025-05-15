@@ -1,5 +1,5 @@
 
-import { ErrorOf } from "../../types" 
+import { ErrorOf } from "../../types/ErrorOf" 
 
 /**
  * Ensure all the code below compiled

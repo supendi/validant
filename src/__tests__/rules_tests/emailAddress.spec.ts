@@ -1,5 +1,5 @@
 import { emailAddress } from "../../rules/emailAddress"
-import { PropertyRuleValidationResult } from "../../types"
+import { PropertyRuleValidationResult } from "../../types/ValidationRule"
 
 describe(`Test ${emailAddress.name}`, () => {
     it("should return false and have default error message", () => {

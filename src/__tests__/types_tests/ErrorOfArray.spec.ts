@@ -3,7 +3,7 @@
  * Ensure all the code below are compiled
  */
 
-import { ErrorOfArray } from "../../types"
+import { ErrorOfArray } from "../../types/ErrorOf"
 
 describe("ErrorOfArray Test", () => {
     it("Should compile", () => {

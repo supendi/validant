@@ -1,5 +1,8 @@
-import { ErrorOf, ValidationRule } from "./types";
+import { AsyncValidationRule } from "./types/AsyncValidationRule";
+import { ErrorOf } from "./types/ErrorOf";
+import { ValidationRule } from "./types/ValidationRule";
 import { validateObject } from "./validators/validateObject";
+import { validateObjectAsync } from "./validators/validateObjectAsync";
 
 /**
  * Represents the final validation result. 
@@ -45,8 +48,37 @@ export const validate = <T, TRoot>(object: T, validationRule: ValidationRule<T>,
     }
 }
 
-const validant = {
-    validate: validate
+
+/**
+ * Validates an object with the specified validation rule
+ * @param object 
+ * @param validationRule 
+ * @returns ValidationResult
+ */
+export const validateAsync = async <T, TRoot>(object: T, validationRule: AsyncValidationRule<T>, validationMessage: ValidationMessage = { okMessage: "Good to go.", errorMessage: "One or more validation errors occurred." }): Promise<ValidationResult<T>> => {
+    const errors = await validateObjectAsync(object, object, validationRule)
+    let isValid = true
+
+    for (const key in errors) {
+        if (Object.prototype.hasOwnProperty.call(errors, key)) {
+            const error = errors[key];
+            if (error) {
+                isValid = false
+                break
+            }
+        }
+    }
+
+    return {
+        message: isValid ? validationMessage.okMessage : validationMessage.errorMessage,
+        isValid: isValid,
+        errors: errors,
+    }
 }
 
-export default validant
+const saferval = {
+    validate,
+    validateAsync
+}
+
+export default saferval

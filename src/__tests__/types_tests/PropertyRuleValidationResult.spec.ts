@@ -1,4 +1,4 @@
-import { PropertyRuleValidationResult } from "../../types"
+import { PropertyRuleValidationResult } from "../../types/ValidationRule"
 
 
 describe("PropertyRuleValidationResult Test", () => {

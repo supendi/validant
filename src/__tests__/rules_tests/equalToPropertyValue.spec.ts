@@ -1,5 +1,5 @@
 import { equalToPropertyValue } from "../../rules/equalToPropertyValue"
-import { PropertyRuleValidationResult } from "../../types"
+import { PropertyRuleValidationResult } from "../../types/ValidationRule"
 
 describe(`Test ${equalToPropertyValue.name}`, () => {
     it("should return false and have default error message", () => {

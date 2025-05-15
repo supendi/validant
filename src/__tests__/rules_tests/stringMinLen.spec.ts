@@ -1,5 +1,5 @@
 import { stringMinLen } from "../../rules/stringMinLen"
-import { PropertyRuleValidationResult } from "../../types"
+import { PropertyRuleValidationResult } from "../../types/ValidationRule"
 
 describe(`Test ${stringMinLen.name}`, () => {
     it("should return false and have default error message", () => {

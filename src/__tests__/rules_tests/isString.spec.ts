@@ -1,5 +1,5 @@
 import { isString } from "../../rules/isString"
-import { PropertyRuleValidationResult } from "../../types"
+import { PropertyRuleValidationResult } from "../../types/ValidationRule"
 
 
 /**
