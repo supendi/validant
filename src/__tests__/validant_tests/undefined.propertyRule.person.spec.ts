@@ -1,6 +1,6 @@
 import { required } from "../../rules"
 import { ValidationRule } from "../../types"
-import saferval, { ValidationResult } from "../../saferval"
+import validant, { ValidationResult } from "../../validant"
 
 interface Person {
     name: string
@@ -19,7 +19,7 @@ const person: Person = {
 
 describe("Test Simple Object", () => {
     it("return true", () => {
-        const actual = saferval.validate(person, rule)
+        const actual = validant.validate(person, rule)
 
         const expected: ValidationResult<Person> = {
             message: "Good to go.",

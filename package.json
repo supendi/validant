@@ -1,7 +1,7 @@
 {
-  "name": "saferval",
+  "name": "validant",
   "version": "0.0.43",
-  "description": "Saferval is a lightweight, composable validation library built in TypeScript. No schemas. No DSLs. Just pure functions — you take full control.",
+  "description": "Validant is a lightweight, composable validation library built in TypeScript. No schemas. No DSLs. Just pure functions — you take full control.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -39,12 +39,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/supendi/saferval.git"
+    "url": "git+https://github.com/supendi/validant.git"
   },
   "author": "github.com/supendi",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/supendi/saferval/issues"
+    "url": "https://github.com/supendi/validant/issues"
   },
-  "homepage": "https://github.com/supendi/saferval#readme"
+  "homepage": "https://github.com/supendi/validant#readme"
 }

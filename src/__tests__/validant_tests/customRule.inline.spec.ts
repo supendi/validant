@@ -1,6 +1,6 @@
-import { saferval, } from "../../index"
+import { validant, } from "../../index"
 import { ValidationRule } from "../../types"
-import { ValidationResult } from "../../saferval"
+import { ValidationResult } from "../../validant"
 
 interface LoginRequest {
     userName: string
@@ -55,7 +55,7 @@ describe("validate login request", () => {
             password: ""
         }
 
-        const actual = saferval.validate(loginRequest, loginRule)
+        const actual = validant.validate(loginRequest, loginRule)
 
         const expected: ValidationResult<LoginRequest> = {
             message: "One or more validation errors occurred.",
@@ -78,7 +78,7 @@ describe("validate login request", () => {
             password: ""
         }
 
-        const actual = saferval.validate(loginRequest, loginRule)
+        const actual = validant.validate(loginRequest, loginRule)
 
         const expected: ValidationResult<LoginRequest> = {
             message: "One or more validation errors occurred.",

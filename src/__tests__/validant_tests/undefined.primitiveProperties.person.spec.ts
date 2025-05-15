@@ -1,6 +1,6 @@
 import { required } from "../../rules"
 import { ValidationRule } from "../../types"
-import saferval, { ValidationResult } from "../../saferval"
+import validant, { ValidationResult } from "../../validant"
 
 interface Person {
     name?: string
@@ -17,7 +17,7 @@ describe("Test Against undefined properties with undefined rules", () => {
 
         const person: Person = {}
 
-        const actual = saferval.validate(person, rule)
+        const actual = validant.validate(person, rule)
 
         const expected: ValidationResult<Person> = {
             message: "Good to go.",
@@ -37,7 +37,7 @@ describe("Test Simple Object", () => {
             age: [required()]
         }
         const person: Person = {}
-        const actual = saferval.validate(person, rule)
+        const actual = validant.validate(person, rule)
 
         const expected: ValidationResult<Person> = {
             message: "One or more validation errors occurred.",

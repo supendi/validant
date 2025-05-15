@@ -1,6 +1,6 @@
-import { saferval, } from "../../index"
+import { validant, } from "../../index"
 import { ValidationRule } from "../../types"
-import { ValidationResult } from "../../saferval"
+import { ValidationResult } from "../../validant"
 import { arrayMinLen, required } from "../../rules"
 
 interface Product {
@@ -76,7 +76,7 @@ describe("Validator Test The Custom Validator", () => {
             ]
         }
 
-        const actual = saferval.validate(order, orderRule)
+        const actual = validant.validate(order, orderRule)
         const expected: ValidationResult<Order> = {
             message: "One or more validation errors occurred.",
             isValid: false,

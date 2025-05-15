@@ -1,6 +1,6 @@
-import { saferval, } from "../../index"
+import { validant, } from "../../index"
 import { ValidationRule } from "../../types"
-import { ValidationResult } from "../../saferval"
+import { ValidationResult } from "../../validant"
 import { arrayMinLen, required } from "../../rules"
 
 interface Person {
@@ -29,7 +29,7 @@ describe("Validator test with children array", () => {
             ]
         }
 
-        const actual = saferval.validate(person, rule)
+        const actual = validant.validate(person, rule)
 
         const expected: ValidationResult<Person> = {
             message: "One or more validation errors occurred.",

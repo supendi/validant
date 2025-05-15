@@ -45,8 +45,8 @@ export const validate = <T, TRoot>(object: T, validationRule: ValidationRule<T>,
     }
 }
 
-const saferval = {
+const validant = {
     validate: validate
 }
 
-export default saferval
+export default validant

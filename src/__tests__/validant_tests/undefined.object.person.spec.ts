@@ -1,5 +1,5 @@
 import { ValidationRule } from "../../types"
-import saferval from "../../saferval"
+import validant from "../../validant"
 
 interface Person {
     name: string
@@ -15,9 +15,9 @@ describe("Test Validate Against Undefined", () => {
     it("throw error", () => {
         const person: Person | undefined = undefined
 
-        const actual = () => saferval.validate(person, rule)
+        const actual = () => validant.validate(person, rule)
 
-        const expected = new Error(`saferval: object is null or undefined during validation.`)
+        const expected = new Error(`validant: object is null or undefined during validation.`)
 
         expect(actual).toThrow(expected)
     })
@@ -27,9 +27,9 @@ describe("Test Validate Against null", () => {
     it("throw error", () => {
         const person: Person | undefined | null = null
 
-        const actual = () => saferval.validate(person, rule)
+        const actual = () => validant.validate(person, rule)
 
-        const expected = new Error(`saferval: object is null or undefined during validation.`)
+        const expected = new Error(`validant: object is null or undefined during validation.`)
 
         expect(actual).toThrow(expected)
     })

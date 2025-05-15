@@ -1,6 +1,6 @@
 import { required } from "../../rules"
 import { ValidationRule } from "../../types"
-import saferval, { ValidationResult } from "../../saferval"
+import validant, { ValidationResult } from "../../validant"
 
 interface Product {
     expiredDate?: Date
@@ -14,7 +14,7 @@ describe("Test", () => {
     it("return error empty Date", () => {
         const product: Product = {} // date undefined
 
-        const actual = saferval.validate(product, rule)
+        const actual = validant.validate(product, rule)
         const expected: ValidationResult<Product> = {
             message: "One or more validation errors occurred.",
             isValid: false,
@@ -32,7 +32,7 @@ describe("Test non empty date", () => {
         const product = {
             expiredDate: new Date()
         }
-        const actual2 = saferval.validate(product, rule)
+        const actual2 = validant.validate(product, rule)
 
         const expected2: ValidationResult<Product> = {
             message: "Good to go.",

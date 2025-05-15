@@ -1,10 +1,10 @@
-import { saferval, } from "../../index"
+import { validant, } from "../../index"
 import { ValidationRule } from "../../types"
 import { emailAddress, required, minNumber } from "../../rules"
 
 interface Account {
-    name: string
-    age: number
+    name: string,
+    age: number,
     email: string
 }
 
@@ -23,7 +23,7 @@ describe("Simple Object Test", () => {
             email: ""
         }
 
-        const actual = saferval.validate(account, validationRule)
+        const actual = validant.validate(account, validationRule)
 
         var expected = {
             message: "One or more validation errors occurred.",

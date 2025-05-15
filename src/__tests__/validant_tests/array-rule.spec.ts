@@ -1,6 +1,6 @@
-import { saferval, } from "../../index"
+import { validant, } from "../../index"
 import { ValidationRule } from "../../types"
-import { ValidationResult } from "../../saferval"
+import { ValidationResult } from "../../validant"
 import { arrayMinLen, maxNumber, minNumber, required } from "../../rules"
 
 interface Order {
@@ -36,7 +36,7 @@ describe("Validate null property", () => {
             orderItems: []
         }
 
-        const actual = saferval.validate(order, rule)
+        const actual = validant.validate(order, rule)
         const expected: ValidationResult<Order> = {
             message: "One or more validation errors occurred.",
             isValid: false,
@@ -64,7 +64,7 @@ describe("Validate null property", () => {
             ]
         }
 
-        const actual = saferval.validate(order, rule)
+        const actual = validant.validate(order, rule)
         const expected: ValidationResult<Order> = {
             message: "One or more validation errors occurred.",
             isValid: false,

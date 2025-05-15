@@ -1,4 +1,4 @@
-import { ValidationResult } from "../../saferval";
+import { ValidationResult } from "../../validant";
 
 
 /**

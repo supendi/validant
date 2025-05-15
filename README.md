@@ -1,21 +1,21 @@
-# Saferval
+# Validant
 
-**Saferval** is a lightweight, composable validation library built in TypeScript. Type first. No DSLs. Just pure functions — you take full control.
+**Validant** is a lightweight, composable validation library built in TypeScript. Type first. No DSLs. Just pure functions — you take full control.
 
-## ✨ Why Saferval?
+## ✨ Why Validant?
 
 - ✅ Type-safe: Built entirely with TypeScript — types flow naturally from your rules to your results.
-- 🔄 TYPE-FIRST, NOT SCHEMA-FIRST: Unlike other libraries like Zod that generate types from schemas (creating tight coupling between forms and validation), Saferval starts from your own types — allowing you to decouple your app from any validation library, including this one. You stay in control of your models, your logic, and your architecture.
+- 🔄 TYPE-FIRST, NOT SCHEMA-FIRST: Unlike other libraries like Zod that generate types from schemas (creating tight coupling between forms and validation), Validant starts from your own types — allowing you to decouple your app from any validation library, including this one. You stay in control of your models, your logic, and your architecture.
 - 🧠 No magic: No special syntax. Just plain functions.
 - 🧩 Composable: Easily combine validations and reuse them across your codebase.
 - 🪶 Lightweight: Zero dependencies. Minimal API. Maximum control. 
-- 🧪 Made for TypeScript first: Saferval is written in and only tested with TypeScript. It’s built for modern TypeScript-first projects. It might work in JavaScript — but it’s never been tested there.
+- 🧪 Made for TypeScript first: Validant is written in and only tested with TypeScript. It’s built for modern TypeScript-first projects. It might work in JavaScript — but it’s never been tested there.
 ## 📦 Installation
 
 ```
-npm install saferval
+npm install validant
 # or
-yarn add saferval
+yarn add validant
 ```
 
 ## 🏁 Getting Started
@@ -64,13 +64,13 @@ let userSchema = object({
 });
 ```
 
-### ✅ Saferval: NO SHAPE CEREMONY, NO TYPE DUPLICATION
+### ✅ Validant: NO SHAPE CEREMONY, NO TYPE DUPLICATION
 
 Your model is your source of truth. Why would we have to do
 `name: string()` or `username: z.string()`
 when your model already have that?
 
-Given you already have a model (and you should), Saferval wraps validations around it — **not the other way around**:
+Given you already have a model (and you should), Validant wraps validations around it — **not the other way around**:
 ```ts
 class Account {
     name: string;
@@ -82,7 +82,7 @@ class Account {
 Then you simply just declare your validation rule:
 
 ```ts
-import { minNumber, required, emailAddress, ValidationRule } from "saferval";
+import { minNumber, required, emailAddress, ValidationRule } from "validant";
 
 const validationRule: ValidationRule<Account> = {
     name: [required("Account name is required.")],
@@ -125,8 +125,8 @@ import {
     minNumber,
     required,
     ValidationRule,
-    saferval,
-} from "saferval";
+    validant,
+} from "validant";
 
 const validationRule: ValidationRule<Account> = {
     name: [isString("Name should be string")],
@@ -143,8 +143,8 @@ import {
     minNumber,
     required,
     ValidationRule,
-    saferval,
-} from "saferval";
+    validant,
+} from "validant";
 
 const validationRule: ValidationRule<Account> = {
     name: [
@@ -165,7 +165,7 @@ const validationRule: ValidationRule<Account> = {
 You are not enforced to define all properties, you can set partially set validation for age only:
 
 ```ts
-import { minNumber, required, emailAddress, ValidationRule } from "saferval";
+import { minNumber, required, emailAddress, ValidationRule } from "validant";
 
 const validationRule: ValidationRule<Account> = {
     age: [required(), minNumber(17, "Should be at least 17 years old.")],
@@ -176,12 +176,12 @@ No model duplication, your model is your single source of truth.
 
 ### 🛠️ Type Freedom
 
-Saferval works seamlessly with any kind of TypeScript structure — whether you're using `interface`, `type`, `class`, or even inferring types from objects.
+Validant works seamlessly with any kind of TypeScript structure — whether you're using `interface`, `type`, `class`, or even inferring types from objects.
 
 ### Using a `class`
 
 ```ts
-import { minNumber, required, emailAddress, ValidationRule } from "saferval";
+import { minNumber, required, emailAddress, ValidationRule } from "validant";
 
 class Account {
     name: string;
@@ -199,7 +199,7 @@ const validationRule: ValidationRule<Account> = {
 ### Using a `interface`
 
 ```ts
-import { minNumber, required, emailAddress, ValidationRule } from "saferval";
+import { minNumber, required, emailAddress, ValidationRule } from "validant";
 
 interface Account {
     name: string;
@@ -217,7 +217,7 @@ const validationRule: ValidationRule<Account> = {
 ### Using a `type`
 
 ```ts
-import { minNumber, required, emailAddress, ValidationRule } from "saferval";
+import { minNumber, required, emailAddress, ValidationRule } from "validant";
 
 type Account = {
     name: string;
@@ -235,7 +235,7 @@ const validationRule: ValidationRule<Account> = {
 ### Inferring from an `object`
 
 ```ts
-import { minNumber, required, emailAddress, ValidationRule } from "saferval";
+import { minNumber, required, emailAddress, ValidationRule } from "validant";
 
 type Account = {
     name: string;
@@ -256,7 +256,7 @@ const validationRule: ValidationRule<typeof account> = {
 };
 ```
 
-Use what fits your project best — Saferval adapts to your TypeScript style.
+Use what fits your project best — Validant adapts to your TypeScript style.
 
 ### 🛠️ Validation
 
@@ -265,7 +265,7 @@ Once installed, you can start validating data.
 #### 1. Define your schema and validation rules
 
 ```ts
-import { saferval, required, minNumber, emailAddress } from "saferval";
+import { validant, required, minNumber, emailAddress } from "validant";
 
 // Given your data model:
 interface Account {
@@ -284,7 +284,7 @@ const validationRule: ValidationRule<Account> = {
 
 #### 2. Validate
 
-Use saferval.validate() to validate your data and get the result:
+Use validant.validate() to validate your data and get the result:
 
 ```ts
 const account: Account = {
@@ -294,7 +294,7 @@ const account: Account = {
 };
 
 // validate
-const validationResult = saferval.validate(account, validationRule);
+const validationResult = validant.validate(account, validationRule);
 
 // The validationResult above is equivalent to the following:
 const expected = {
@@ -313,7 +313,7 @@ const expected = {
 As you can see the above validationResult.errors **mirrors the shape** of your original object — field by field.
 There’s no guesswork, no opaque path strings ("user[0].email"), and no nested issues[] array to parse.
 
-Saferval gives you direct, predictable access to error messages using the same property keys as your data model.
+Validant gives you direct, predictable access to error messages using the same property keys as your data model.
 
 #### You already know how to access your errors:
 
@@ -328,7 +328,7 @@ if (validationResult.errors.email) {
 
 ## 🔧 Custom Validation
 
-Saferval provides complete control through custom validation functions with strict type signatures.
+Validant provides complete control through custom validation functions with strict type signatures.
 
 ### Validation Function Signature
 
@@ -420,7 +420,7 @@ const loginRequest: LoginRequest = {
     password: "",
 };
 
-const result = saferval.validate(loginRequest, loginRule);
+const result = validant.validate(loginRequest, loginRule);
 ```
 
 **Result Structure**
@@ -497,7 +497,7 @@ const loginRule: ValidationRule<LoginRequest> = {
 
 ## 🧮 Array Validation
 
-Validating arrays in Saferval is simple yet powerful. You can apply rules both to the array itself (e.g. length checks) and to each individual item in the array.
+Validating arrays in Validant is simple yet powerful. You can apply rules both to the array itself (e.g. length checks) and to each individual item in the array.
 
 ### Schema Example
 
@@ -537,7 +537,7 @@ const emptyOrder: Order = {
     orderItems: [], // Fails arrayMinLen
 };
 
-const result = saferval.validate(emptyOrder, orderRule);
+const result = validant.validate(emptyOrder, orderRule);
 ```
 
 The above validation results error structure:
@@ -896,7 +896,7 @@ And the validation result :
 
 ## 🧩 Schema Composition
 
-As your data grows in complexity, Saferval makes it easy to split validation logic into smaller, reusable pieces.
+As your data grows in complexity, Validant makes it easy to split validation logic into smaller, reusable pieces.
 
 You can compose validation schemas by defining rules for nested objects or array items separately and plugging them into your main schema.
 
@@ -935,7 +935,7 @@ const customerRule: ValidationRule<Customer> = {
 -   ✅ Reuse rules across multiple schemas
 -   ✅ Maintain readability and scalability
 
-Whether you're validating a single nested object or a list of them, Saferval keeps your schema clear and modular.
+Whether you're validating a single nested object or a list of them, Validant keeps your schema clear and modular.
 
 ## 📚 API Reference
 
@@ -948,7 +948,7 @@ This type represents a set of validation rules for an object model. It defines h
 Usage:
 
 ```ts
-import { minNumber, required, emailAddress, ValidationRule } from "saferval";
+import { minNumber, required, emailAddress, ValidationRule } from "validant";
 
 type Account = {
     name: string;
@@ -995,7 +995,7 @@ Represents the error structure for a given object model. Each property in the mo
 Usage:
 
 ```ts
-import { ErrorOf } from "saferval";
+import { ErrorOf } from "validant";
 
 type Account = {
     name: string;
@@ -1198,7 +1198,7 @@ Ensures that a string contains only alphabetic characters.
 Usage:
 
 ```ts
-import { alphabetOnly } from "saferval";
+import { alphabetOnly } from "validant";
 
 type User = {
     name: string;
@@ -1216,7 +1216,7 @@ Validates that the array length is less than or equal to the specified maxLen.
 Usage:
 
 ```ts
-import { arrayMaxLen } from "saferval";
+import { arrayMaxLen } from "validant";
 
 type Order = {
     orderItems: string[];
@@ -1234,7 +1234,7 @@ Validates that the array has at least the specified minimum length.
 Usage:
 
 ```ts
-import { arrayMinLen } from "saferval";
+import { arrayMinLen } from "validant";
 
 type Order = {
     orderItems: string[];
@@ -1252,7 +1252,7 @@ Validates that the value is one of the elements in the provided array.
 Usage:
 
 ```ts
-import { elementOf } from "saferval";
+import { elementOf } from "validant";
 
 type User = {
     status: string;
@@ -1275,7 +1275,7 @@ Validates that the value is a valid email address.
 Usage:
 
 ```ts
-import { emailAddress } from "saferval";
+import { emailAddress } from "validant";
 
 type User = {
     email: string;
@@ -1293,7 +1293,7 @@ Validates that a property's value is equal to the value of another property in t
 Usage:
 
 ```ts
-import { equalToPropertyValue } from "saferval";
+import { equalToPropertyValue } from "validant";
 
 type PasswordForm = {
     password: string;
@@ -1316,7 +1316,7 @@ Validates that the value is a boolean (true or false).
 Usage:
 
 ```ts
-import { isBool } from "saferval";
+import { isBool } from "validant";
 
 type Settings = {
     subscribed: boolean;
@@ -1336,7 +1336,7 @@ Validates that the value is a boolean (true or false).
 Usage:
 
 ```ts
-import { isBool } from "saferval";
+import { isBool } from "validant";
 
 type Settings = {
     subscribed: boolean;
@@ -1366,7 +1366,7 @@ Date strings and epoch numbers will be treated as invalid.
 Usage:
 
 ```ts
-import { isDateObject } from "saferval";
+import { isDateObject } from "validant";
 
 type Booking = {
     startDate: Date;
@@ -1400,7 +1400,7 @@ Validates that the value is a number (typeof value === "number" and not NaN).
 Usage:
 
 ```ts
-import { isNumber } from "saferval";
+import { isNumber } from "validant";
 
 type Invoice = {
     totalAmount: number;
@@ -1430,7 +1430,7 @@ Validates that the value is a string (typeof value === "string").
 Usage:
 
 ```ts
-import { isString } from "saferval";
+import { isString } from "validant";
 
 type Product = {
     name: string;
@@ -1450,7 +1450,7 @@ Validates that a number is less than or equal to the specified maximum value.
 Usage:
 
 ```ts
-import { maxNumber } from "saferval";
+import { maxNumber } from "validant";
 
 type Product = {
     price: number;
@@ -1470,7 +1470,7 @@ Validates that a number is greater than or equal to the specified minimum value.
 Usage:
 
 ```ts
-import { minNumber } from "saferval";
+import { minNumber } from "validant";
 
 type Product = {
     price: number;
@@ -1490,7 +1490,7 @@ Validates that a string matches the provided regular expression.
 Usage:
 
 ```ts
-import { regularExpression } from "saferval";
+import { regularExpression } from "validant";
 
 type User = {
     username: string;
@@ -1526,7 +1526,7 @@ Validates that a value is not null, undefined, or an empty string/array.
 Usage:
 
 ```ts
-import { required } from "saferval";
+import { required } from "validant";
 
 type User = {
     name: string;
@@ -1546,7 +1546,7 @@ Validates that a string is less than or equal to the specified maximum length.
 Usage:
 
 ```ts
-import { stringMaxLen } from "saferval";
+import { stringMaxLen } from "validant";
 
 type User = {
     username: string;
@@ -1566,7 +1566,7 @@ Validates that a string is at least the specified minimum length.
 Usage:
 
 ```ts
-import { stringMinLen } from "saferval";
+import { stringMinLen } from "validant";
 
 type User = {
     username: string;
@@ -1582,7 +1582,7 @@ This ensures that username is at least 5 characters long.
 ## MORE EXAMPLE
 Please visit:
 
-https://github.com/supendi/saferval/tree/main/src/__tests__/saferval_tests
+https://github.com/supendi/validant/tree/main/src/__tests__/validant_tests
 
 ## 📊 BENCHMARK
 Chat GPT give me this code to benchmark, I dont even understand if its fair or not:
@@ -1590,7 +1590,7 @@ Chat GPT give me this code to benchmark, I dont even understand if its fair or n
 const { Bench } = require("tinybench");
 const { z } = require("zod");
 const Joi = require("joi");
-const { saferval, required } = require("saferval");
+const { validant, required } = require("validant");
 const yup = require("yup");
 const { struct, string, number, array, lazy } = require("superstruct");
 
@@ -1616,8 +1616,8 @@ const testData = Array(500)
 // 2. Define Validators
 // ========================
 
-// saferval
-const safervalRule = {
+// validant
+const validantRule = {
     id: [required()],
     value: [required()],
     children: {
@@ -1753,8 +1753,8 @@ function runValidation(validator, data) {
     for (const item of data) {
         try {
             switch (validator) {
-                case "saferval":
-                    saferval.validate(safervalRule, item);
+                case "validant":
+                    validant.validate(validantRule, item);
                     break;
                 case "zod":
                     zodSchema.parse(item);
@@ -1774,7 +1774,7 @@ function runValidation(validator, data) {
 }
 
 bench
-    .add("saferval", () => runValidation("saferval", testData))
+    .add("validant", () => runValidation("validant", testData))
     .add("Zod", () => runValidation("zod", testData))
     .add("Joi", () => runValidation("joi", testData))
     .add("Yup", () => runValidation("yup", testData))
@@ -1785,7 +1785,7 @@ bench
 // ========================
 (async () => {
     console.log("Warming up...");
-    runValidation("saferval", testData.slice(0, 10));
+    runValidation("validant", testData.slice(0, 10));
     runValidation("zod", testData.slice(0, 10));
     runValidation("joi", testData.slice(0, 10));
     runValidation("yup", testData.slice(0, 10));
@@ -1807,7 +1807,7 @@ $ node --max-old-space-size=4096 benchmark.js --records=2000 --depth=5
 Warming up...
 Running benchmark...
 
-saferval    : 123.04 ops/sec
+validant    : 123.04 ops/sec
 Zod         : 73.96 ops/sec
 Joi         : 30.41 ops/sec
 Yup         : 7.81 ops/sec

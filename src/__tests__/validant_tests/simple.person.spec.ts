@@ -1,6 +1,6 @@
 import { required } from "../../rules"
 import { ValidationRule } from "../../types"
-import saferval, { ValidationResult } from "../../saferval"
+import validant, { ValidationResult } from "../../validant"
 
 interface Person {
     name: string
@@ -16,7 +16,7 @@ const person: Person = {
 
 describe("Test Simple Object", () => {
     it("Person name should return errors", () => {
-        const actual = saferval.validate(person, rule)
+        const actual = validant.validate(person, rule)
 
         const expected: ValidationResult<Person> = {
             message: "One or more validation errors occurred.",

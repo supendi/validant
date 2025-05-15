@@ -1,6 +1,6 @@
 import { arrayMinLen, elementOf, emailAddress, maxNumber, minNumber, required } from "../../rules"
 import { ValidationRule } from "../../types"
-import saferval, { ValidationResult } from "../../saferval"
+import validant, { ValidationResult } from "../../validant"
 
 interface Product {
     name: string
@@ -68,7 +68,7 @@ describe("Validate empty order items", () => {
             orderItems: []
         }
 
-        const actual1 = saferval.validate(orderWithEmptyItem, rule)
+        const actual1 = validant.validate(orderWithEmptyItem, rule)
         const expected1: ValidationResult<Order> = {
             message: errorMessage,
             isValid: false,
@@ -122,7 +122,7 @@ describe("Validate empty order items", () => {
                 },
             ]
         }
-        const actual = saferval.validate(order, rule)
+        const actual = validant.validate(order, rule)
         const expected: ValidationResult<Order> = {
             message: errorMessage,
             isValid: false,

@@ -1,6 +1,6 @@
 import { arrayMinLen, elementOf, emailAddress, maxNumber, minNumber, required } from "../../rules"
 import { ValidationRule } from "../../types"
-import saferval, { ValidationResult } from "../../saferval"
+import validant, { ValidationResult } from "../../validant"
 
 interface Product {
     name: string
@@ -92,7 +92,7 @@ describe("Validator another order, this time a valid order", () => {
             ]
         }
 
-        const actual1 = saferval.validate(newOrder1, rule)
+        const actual1 = validant.validate(newOrder1, rule)
         const expected1: ValidationResult<Order> = {
             message: "Good to go.",
             isValid: true,

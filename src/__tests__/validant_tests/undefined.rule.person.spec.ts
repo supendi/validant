@@ -1,5 +1,5 @@
 import { ValidationRule } from "../../types"
-import saferval from "../../saferval"
+import validant from "../../validant"
 
 interface Person {
     name: string
@@ -14,9 +14,9 @@ describe("Test Validate Against null validation rule", () => {
         }
 
         const rule: ValidationRule<Person> = undefined
-        const actual = () => saferval.validate(person, rule)
+        const actual = () => validant.validate(person, rule)
 
-        const expected = new Error(`saferval: validation rule is null or undefined.`)
+        const expected = new Error(`validant: validation rule is null or undefined.`)
 
         expect(actual).toThrow(expected)
     })

@@ -1,6 +1,6 @@
-import { saferval, } from "../../index"
+import { validant, } from "../../index"
 import { ValidationRule } from "../../types"
-import { ValidationResult } from "../../saferval"
+import { ValidationResult } from "../../validant"
 import { emailAddress, arrayMinLen, required, minNumber } from "../../rules"
 
 const defaultMessage = { okMessage: "Good to go.", errorMessage: "One or more validation errors occurred." }
@@ -83,7 +83,7 @@ describe("Validate Order Request with empty order items", () => {
             orderItems: []
         }
 
-        const actual = saferval.validate(orderRequest, orderRule)
+        const actual = validant.validate(orderRequest, orderRule)
 
         const expected: ValidationResult<OrderRequest> = {
             message: defaultMessage.errorMessage,
@@ -122,7 +122,7 @@ describe("Validate Order Request With Max order item quantity", () => {
             ]
         }
 
-        const actual = saferval.validate(orderRequest, orderRule)
+        const actual = validant.validate(orderRequest, orderRule)
 
         const expected: ValidationResult<OrderRequest> = {
             message: defaultMessage.errorMessage,
@@ -170,7 +170,7 @@ describe("Jacky Chan Order Request", () => {
             ]
         }
 
-        const actual = saferval.validate(orderRequest, orderRule)
+        const actual = validant.validate(orderRequest, orderRule)
 
         const expected: ValidationResult<OrderRequest> = {
             message: defaultMessage.errorMessage,
