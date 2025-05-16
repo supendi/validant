@@ -19,7 +19,7 @@ export interface ProductRequest {
     userEmail: string
 }
 
-export interface ProductRepository { getProductByIdAsync: (productId: number) => Promise<Product | undefined>; listProductsAsync: () => Promise<unknown>; addProductAsync: (request: ProductRequest) => Promise<unknown>; updateProductAsync: (product: Product) => Promise<unknown> }
+export interface ProductRepository { getProductByIdAsync: (productId: number) => Promise<Product | undefined>; listProductsAsync: () => Promise<Product[] | undefined>; addProductAsync: (request: ProductRequest) => Promise<unknown>; updateProductAsync: (product: Product) => Promise<unknown> }
 
 export function createProductRepository(productDatabase: Product[], userRepository: UserRepository): ProductRepository {
 
@@ -36,7 +36,7 @@ export function createProductRepository(productDatabase: Product[], userReposito
         });
     }
 
-    function listProductsAsync() {
+    function listProductsAsync(): Promise<Product[] | undefined> {
         return new Promise((resolve) => {
             setTimeout(() => {
                 const products = [...productDatabase]

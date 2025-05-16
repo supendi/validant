@@ -15,8 +15,9 @@ const {
     userRepository,
     registrationValidationService,
     loginValidationService,
-    productValidationService
-} = createEcommerceContext([])
+    productValidationService,
+    productRepository
+} = createEcommerceContext([], [])
 
 /**
  * REGISTRATION FLOW
@@ -607,30 +608,64 @@ describe("Attempt5: Dwi login and create product.", () => {
         expect(user.userType).toEqual("tenant")
 
         // PRODUCT CREATE TEST
-        const productRequest: ProductRequest = {
-            userEmail: user.email,
-            productName: "Basketball T-Shirt",
-            prices: [
-                {
-                    level: 1,
-                    price: 1
-                },
-                {
-                    level: 2,
-                    price: 1
-                },
-                {
-                    level: 3,
-                    price: 1
-                }
-            ]
-        }
+        const productRequests: ProductRequest[] = [
+            {
+                userEmail: user.email,
+                productName: "Basketball T-Shirt",
+                prices: [
+                    {
+                        level: 1,
+                        price: 1
+                    },
+                    {
+                        level: 2,
+                        price: 1
+                    },
+                    {
+                        level: 3,
+                        price: 1
+                    }
+                ]
+            },
+            {
+                userEmail: user.email,
+                productName: "Justeen Bieber Hat",
+                prices: [
+                    {
+                        level: 1,
+                        price: 100
+                    },
+                    {
+                        level: 2,
+                        price: 200 // expensive as h
+                    }
+                ]
+            },
+            {
+                userEmail: user.email,
+                productName: "Gibson Electric Guitar, why is this in a sport shop?",
+                prices: [
+                    {
+                        level: 1,
+                        price: 1100
+                    }
+                ]
+            }
+        ]
 
-        const productValidationResult = await productValidationService.validateAsync(productRequest)
-        const expectedProductValidationResult: ValidationResult<ProductRequest> = {
-            isValid: true,
-            message: "ok",
+        for (let index = 0; index < productRequests.length; index++) {
+            const productRequest = productRequests[index];
+            const productValidationResult = await productValidationService.validateAsync(productRequest)
+            const expectedProductValidationResult: ValidationResult<ProductRequest> = {
+                isValid: true,
+                message: "ok",
+            }
+            expect(productValidationResult).toEqual(expectedProductValidationResult)
+
+            await productRepository.addProductAsync(productRequest)
         }
-        expect(productValidationResult).toEqual(expectedProductValidationResult)
+        const products = await productRepository.listProductsAsync()
+        expect(products).toBeDefined()
+        expect(products.length).toEqual(3)
     })
 })
