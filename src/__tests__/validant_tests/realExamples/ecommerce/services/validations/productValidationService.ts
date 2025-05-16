@@ -62,6 +62,24 @@ function userCanCreateProductRule(userRepository: UserRepository) {
     }
 }
 
+function noDuplicatePriceLevelRule() {
+    return function (prices: ProductPrice[], product: ProductRequest) {
+        for (let index = 0; index < prices.length; index++) {
+            const productPrice = prices[index];
+            const isDuplicatePrice = prices.filter(x => x.level === productPrice.level && x.price === productPrice.price).length > 1
+            if (isDuplicatePrice) {
+                return {
+                    isValid: false,
+                    errorMessage: `Duplicate price ${productPrice.price} and level ${productPrice.level}. At index ${index}.`
+                }
+            }
+        }
+        return {
+            isValid: true
+        }
+    }
+}
+
 function buildProductRule(userRepository: UserRepository) {
     const productRequest: AsyncValidationRule<ProductRequest> = {
         productName: [
@@ -73,6 +91,7 @@ function buildProductRule(userRepository: UserRepository) {
                 required(),
                 arrayMinLen(1, "Product has to be at least having 1 price."),
                 arrayMaxLen(5, "Product prices maximum is 5 level."),
+                noDuplicatePriceLevelRule()
             ],
             arrayItemRule: function (currentPriceItem: ProductPrice, product: ProductRequest) {
                 return {

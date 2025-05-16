@@ -498,8 +498,89 @@ describe("Attempt3: Dwi login and create product.", () => {
     })
 })
 
-
 describe("Attempt4: Dwi login and create product.", () => {
+    it("Failed: Product level duplicate", async () => {
+
+        // LOGIN
+        let dwi: LoginRequest = {
+            email: "dwi@gmail.com",
+            password: "Password123!",
+        }
+
+        // login assert
+        const loginValidationResult = await loginValidationService.validateAsync(dwi)
+        const expectedLoginValidationResult: ValidationResult<LoginRequest> = {
+            isValid: true,
+            message: "ok",
+        }
+
+        expect(loginValidationResult).toEqual(expectedLoginValidationResult)
+
+        // user assert
+        const user = await userRepository.getUserAsync(dwi.email)
+
+        expect(user).not.toBeUndefined()
+        expect(user).not.toBeNull()
+        expect(user.password).toEqual(dwi.password)
+        expect(user.userType).toEqual("tenant")
+
+        // PRODUCT CREATE TEST
+        const productRequest: ProductRequest = {
+            userEmail: user.email,
+            productName: "Basketball T-Shirt",
+            prices: [
+                {
+                    level: 1,
+                    price: 1
+                },
+                {
+                    level: 1,
+                    price: 1
+                },
+                {
+                    level: 4,
+                    price: 1
+                }
+            ]
+        }
+
+        const productValidationResult = await productValidationService.validateAsync(productRequest)
+        const expectedProductValidationResult: ValidationResult<ProductRequest> = {
+            isValid: false,
+            message: "error",
+            errors: {
+                prices: {
+                    errors: ["Duplicate price 1 and level 1. At index 0."],
+                    errorsEach: [
+                        {
+                            index: 1,
+                            validatedObject: {
+                                level: 1,
+                                price: 1
+                            },
+                            errors: {
+                                level: ["Price level should be sequential. And the current price level should be: 2, but got 1"]
+                            }
+                        },
+                        {
+                            index: 2,
+                            validatedObject: {
+                                level: 4,
+                                price: 1
+                            },
+                            errors: {
+                                level: ["Price level should be sequential. And the current price level should be: 2, but got 4"]
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+        expect(productValidationResult).toEqual(expectedProductValidationResult)
+    })
+})
+
+describe("Attempt5: Dwi login and create product.", () => {
     it("Success", async () => {
 
         // LOGIN
