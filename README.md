@@ -4,12 +4,13 @@
 
 ## ✨ Why Validant?
 
-- ✅ Type-safe: Built entirely with TypeScript — types flow naturally from your rules to your results.
-- 🔄 TYPE-FIRST, NOT SCHEMA-FIRST: Unlike other libraries like Zod that generate types from schemas (creating tight coupling between forms and validation), Validant starts from your own types — allowing you to decouple your app from any validation library, including this one. You stay in control of your models, your logic, and your architecture.
-- 🧠 No magic: No special syntax. Just plain functions.
-- 🧩 Composable: Easily combine validations and reuse them across your codebase.
-- 🪶 Lightweight: Zero dependencies. Minimal API. Maximum control. 
-- 🧪 Made for TypeScript first: Validant is written in and only tested with TypeScript. It’s built for modern TypeScript-first projects. It might work in JavaScript — but it’s never been tested there.
+-   ✅ Type-safe: Built entirely with TypeScript — types flow naturally from your rules to your results.
+-   🔄 TYPE-FIRST, NOT SCHEMA-FIRST: Unlike other libraries like Zod that generate types from schemas (creating tight coupling between forms and validation), Validant starts from your own types — allowing you to decouple your app from any validation library, including this one. You stay in control of your models, your logic, and your architecture.
+-   🧠 No magic: No special syntax. Just plain functions.
+-   🧩 Composable: Easily combine validations and reuse them across your codebase.
+-   🪶 Lightweight: Zero dependencies. Minimal API. Maximum control.
+-   🧪 Made for TypeScript first: Validant is written in and only tested with TypeScript. It’s built for modern TypeScript-first projects. It might work in JavaScript — but it’s never been tested there.
+
 ## 📦 Installation
 
 ```
@@ -20,9 +21,61 @@ yarn add validant
 
 ## 🏁 Getting Started
 
-### 🛠️ Schema Declaration
+### 🛠️ Validation Rule, Not Schema
 
-### While **Zod** do
+Your model is your source of truth.
+
+If you already have a model (and you **should**), Validant wraps validations around it — **not the other way around**:
+
+```ts
+class Account {
+    name: string;
+    age: number;
+    email: string;
+}
+```
+
+Then you simply declare your validation rule:
+
+```ts
+import { minNumber, required, emailAddress, ValidationRule } from "validant";
+
+const validationRule: ValidationRule<Account> = {
+    name: [required("Account name is required.")],
+    age: [required(), minNumber(17, "Should be at least 17 years old.")],
+    email: [required(), emailAddress("Invalid email address")],
+};
+```
+
+If your model already defines the structure, why repeat it with something like `name: string()` or `username: z.string()`?
+
+It even works with literal objects:
+
+```ts
+import { minNumber, required, emailAddress, ValidationRule } from "validant";
+
+const account = {
+    name: "",
+    age: 0,
+    email: "",
+};
+
+const validationRule: ValidationRule<typeof account> = {
+    name: [required("Account name is required.")],
+    age: [required(), minNumber(17, "Should be at least 17 years old.")],
+    email: [required(), emailAddress("Invalid email address")],
+};
+```
+
+Even JavaScript understands that account.name is a string — why not build on that?
+
+### ❌ No Shape Ceremony. No Inversion
+
+Infer from schema often ties you closely to the validation library — unless used carefully. Your domain model is fundamental, yet simple to define.
+
+Here's how common validation libraries define shape-first schemas:
+
+**Zod**
 
 ```ts
 import { z } from "zod";
@@ -37,7 +90,7 @@ User.parse({ username: "Ludwig" });
 type User = z.infer<typeof User>;
 ```
 
-### and **superstruct**
+Or **superstruct**
 
 ```ts
 import { create, object, number, string, defaulted } from "superstruct";
@@ -50,7 +103,7 @@ const User = object({
 });
 ```
 
-### and yup
+Or **yup**
 
 ```ts
 import { object, string, number, date, InferType } from "yup";
@@ -64,59 +117,43 @@ let userSchema = object({
 });
 ```
 
-### ✅ Validant: NO SHAPE CEREMONY, NO TYPE DUPLICATION
+And then what? You bind the schema directly to your form?
 
-Your model is your source of truth. Why would we have to do
-`name: string()` or `username: z.string()`
-when your model already have that?
+Validant takes a different approach: keep your model where it belongs — in your domain — and let validation wrap around it cleanly.
 
-Given you already have a model (and you should), Validant wraps validations around it — **not the other way around**:
-```ts
-class Account {
-    name: string;
-    age: number;
-    email: string;
-}
-```
+### ✅ IntelliSense That Just Works
 
-Then you simply just declare your validation rule:
-
-```ts
-import { minNumber, required, emailAddress, ValidationRule } from "validant";
-
-const validationRule: ValidationRule<Account> = {
-    name: [required("Account name is required.")],
-    age: [required(), minNumber(17, "Should be at least 17 years old.")],
-    email: [required(), emailAddress("Invalid email address")],
-};
-```
-
-### ✅ Intellisense
-The above validation looks not difference with other shaping schema? Not at all. See this intellisense:
+Here’s how validation rules align seamlessly with IntelliSense:
 
 ![image](https://github.com/user-attachments/assets/542e0b46-bb7f-4329-9fe1-8a78031b145c)
 
-Means, the rule know your property model so well from your existing model.
+Because Validant uses your existing model, the validation rule knows your properties — their names and types — without extra declarations.
 
-### ✅ TYPE SAFE
+No inference hacks. No schema dance. Just proper TypeScript support, right out of the box.
 
-No mismatch property name and rule at compile time.
+## 🛡️ TYPE SAFE
+
+### 🔒 Safe at Compile Time
+
+No mismatched property names. No type mismatches. TypeScript will catch it — instantly.
 
 ![image](https://github.com/user-attachments/assets/177dc1de-4c3a-4886-824d-515d6b9716f0)
 
-Account doesnt have creditCardNumber. Typescript will tell you immediately. 
+For example, `Account` doesn’t have a `creditCardNumber` — and TypeScript will let you know right away.
 
-This is benefits when you change your model, the rule will also break and tell you.
+This is especially useful when your model changes: the validation rule will break where it should, making it easy to stay in sync.
 
-Rule is type-safe as well, it knows what is the type it tries to validate against and you can make your own.
+Rules are type-safe too — they know exactly what type they’re validating, and you can build your own custom rules with full type awareness.
 
 ![image](https://github.com/user-attachments/assets/22eb3d49-afe3-4e4c-ba4a-d862f920038d)
 
-Even it type-safe from inferred literal object.
+Even with inferred literal objects, type safety still holds:
 
 ![image](https://github.com/user-attachments/assets/8660febc-9722-4165-9a4a-e5f902045964)
 
-But if you really want to guard it at runtime, there is built-in rule to that
+### 🔒 Safe at Run Time
+
+Need runtime guarantees? Validant has built-in rules for that too:
 
 ```ts
 import {
@@ -149,7 +186,7 @@ import {
 const validationRule: ValidationRule<Account> = {
     name: [
         (name, account) => {
-            const isString = typeof name === "string"; // check your own, either return error or throw
+            const isString = typeof name === "string"; // check yourself, either return error or throw
             return {
                 isValid: isString,
                 errorMessage: isString
@@ -172,9 +209,7 @@ const validationRule: ValidationRule<Account> = {
 };
 ```
 
-No model duplication, your model is your single source of truth.
-
-### 🛠️ Type Freedom
+## ✅ Type Freedom
 
 Validant works seamlessly with any kind of TypeScript structure — whether you're using `interface`, `type`, `class`, or even inferring types from objects.
 
@@ -258,11 +293,15 @@ const validationRule: ValidationRule<typeof account> = {
 
 Use what fits your project best — Validant adapts to your TypeScript style.
 
-### 🛠️ Validation
+## 🛠️ Validation
 
-Once installed, you can start validating data.
+Validant supports both **synchronous** and **asynchronous** validation.
 
-#### 1. Define your schema and validation rules
+### ⚡Sync Validation
+
+Validation rules are represented as:
+
+`ValidationRule<T, TRoot extends object = T>`
 
 ```ts
 import { validant, required, minNumber, emailAddress } from "validant";
@@ -274,7 +313,7 @@ interface Account {
     email: string;
 }
 
-// Schema and validation rules
+// validation rules
 const validationRule: ValidationRule<Account> = {
     name: [required("Account name is required.")],
     age: [required(), minNumber(17, "Should be at least 17 years old.")],
@@ -282,9 +321,7 @@ const validationRule: ValidationRule<Account> = {
 };
 ```
 
-#### 2. Validate
-
-Use validant.validate() to validate your data and get the result:
+Run validation using validant.validate():
 
 ```ts
 const account: Account = {
@@ -295,9 +332,73 @@ const account: Account = {
 
 // validate
 const validationResult = validant.validate(account, validationRule);
+```
 
+The result looks like this:
+
+```ts
+ {
+    message: "One or more validation errors occurred.",
+    isValid: false,
+    errors: {
+        name: ["Account name is required."],
+        age: ["Should be at least 17 years old."],
+        email: ["This field is required.", "Invalid email address"],
+    },
+};
+```
+
+### 🌐 Async Validation
+
+If you want to use an async function, you need to define your rule with: `AsyncValidationRule`.
+
+Async rules are represented as:
+
+`AsyncValidationRule<T, TRoot extends Object = T>`
+
+```ts
+import { validant, required, minNumber, emailAddress } from "validant";
+
+// Given your data model:
+interface Account {
+    name: string;
+    age: number;
+    email: string;
+}
+
+// validation rules
+const validationRule: AsyncValidationRule<Account> = {
+    name: [required("Account name is required.")],
+    age: [required(), minNumber(17, "Should be at least 17 years old.")],
+    email: [
+        required(),
+        emailAddress("Invalid email address"),
+        // AsyncValidationRule allows you to accept async function rule, while ValidationRule not.
+        async (email: string) => {
+            /* ...check api or database */
+        },
+    ],
+};
+```
+
+Use validant.validateAsync() to run async rules:
+
+```ts
+const account: Account = {
+    name: "",
+    age: 0,
+    email: "",
+};
+
+// validate
+const validationResult = await validant.validateAsync(account, validationRule);
+```
+
+You’ll get the same structured result:
+
+```ts
 // The validationResult above is equivalent to the following:
-const expected = {
+  {
     message: "One or more validation errors occurred.",
     isValid: false,
     errors: {
@@ -568,7 +669,7 @@ const invalidItemsOrder: Order = {
 };
 ```
 
-Teh above validation results the following error structure
+The above validation results the following error structure
 
 ```ts
 {
@@ -748,27 +849,154 @@ This error object follows the shape of `ErrorOf<Product>`, meaning it mirrors th
 Because of this, it's type-safe—if the Product model changes (e.g., a field is renamed or removed), TypeScript will catch the mismatch. No need to manually update your error structure. You get auto-synced validation typing for free.
 **It handles the discipline for you, so you can just focus on writing the logic and the types, and the rest stays in sync without extra work.**
 
-## 🧬 Complex Validation
+## 🧬 Validation Context Awareness: Property, Root Object, and Arrays
+
+Validant’s validation rules are **context-aware** — giving you access to both the property being validated and the full object it's part of.
+
+### 🔹 Property-Level Awareness
+
+You get full type info on the property:
+
+```ts
+interface Person {
+    name: string;
+    age: number;
+}
+
+const rule: ValidationRule<Person> = {
+    name: [required()],
+    age: [
+        //
+        function (age, person) {
+            if (age < 18) {
+                return {
+                    isValid: false,
+                    errorMessage: `We are sorry ${person.name}, You are not allowed to drink beer.`,
+                };
+                return {
+                    isValid: true,
+                };
+            }
+        },
+    ],
+};
+```
+
+Here, age is strongly typed as a number. IntelliSense works out of the box:
+
+![alt text](image.png)
+
+### Root object awareness
+
+You also get access to the full object (person in this case), so you can create meaningful cross-field validations:
+
+```ts
+function (age, person) {
+    if (age < 18) {
+        return {
+            isValid: false,
+            errorMessage: `We are sorry ${person.name}, you are not allowed to drink beer.`,
+        };
+    }
+
+    return { isValid: true };
+}
+
+```
+
+person is correctly inferred as the root type Person:
+
+![alt text](image-1.png)
+
 Sometimes/often you will need to do sibling check to do the validation.
 
-**Sibling Validation Example**
-```ts
+### Array (Item) Awareness
 
-interface Customer {
-    fullName: string
-    email: string
+Validant supports deep validation for arrays — including item-level rules **with full context**.
+
+#### Example: Order Validation
+
+```ts
+interface Order {
+    id: string;
+    orderItems: OrderItem[];
 }
 
 interface OrderItem {
-    productId: number
-    quantity: number
+    productId: number;
+    quantity: number;
+    discountPercentage: number;
+}
+
+const rule: ValidationRule<Order> = {
+    orderItems: {
+        arrayRules: [arrayMinLen(1)],
+        arrayItemRule: {
+            quantity: [minNumber(1, "Min qty is 1.")],
+            discountPercentage: [maxNumber(10)],
+        },
+    },
+};
+```
+
+`discountPercentage: [maxNumber(10)]`
+
+The rule above limits discountPercentage to a static 10%. But what if the rules change?
+
+Default max is 10%
+
+If quantity >= 10, max discount increases to 30%
+
+You can express that cleanly using a function for arrayItemRule:
+
+```ts
+const rule: ValidationRule<Order> = {
+    orderItems: {
+        arrayRules: [arrayMinLen(1)],
+        // here we assign the rule with function instead of object.
+        // The currentOrderItem is the current array item (context) that is being validated
+        arrayItemRule: function (currentOrderItem, order) {
+            return {
+                quantity: [minNumber(1, "Min qty is 1.")],
+                discountPercentage: [
+                    currentOrderItem.quantity >= 10
+                        ? maxNumber(30)
+                        : maxNumber(10),
+                ],
+            };
+        },
+    },
+};
+```
+
+Here, item refers to the current array element, and order is the root object. And yes — it’s fully type-safe.
+
+![alt text](image-2.png)
+
+## Examples
+
+Yeah, talk is cheap, here some examples:
+
+### Sync Example:
+
+**Order Validation**
+
+```ts
+interface Customer {
+    fullName: string;
+    email: string;
+}
+
+interface OrderItem {
+    productId: number;
+    quantity: number;
 }
 
 interface OrderRequest {
-    orderNumber: string
-    orderDate?: Date
-    customer: Customer
-    orderItems: OrderItem[]
+    orderNumber: string;
+    orderDate?: Date;
+    customer: Customer;
+    orderItems: OrderItem[];
 }
 
 const orderRule: ValidationRule<OrderRequest> = {
@@ -776,10 +1004,7 @@ const orderRule: ValidationRule<OrderRequest> = {
     orderDate: [required("Please enter order date.")],
     customer: {
         fullName: [required()],
-        email: [
-            required(),
-            emailAddress()
-        ],
+        email: [required(), emailAddress()],
     },
     orderItems: {
         arrayRules: [arrayMinLen(1, "Please add at least one product.")],
@@ -788,63 +1013,63 @@ const orderRule: ValidationRule<OrderRequest> = {
             quantity: [
                 minNumber(1, "Minimum quantity is 1."),
                 function (quantity, order) {
-
                     // Case:
                     // When customer first 3 letters contains : Jac ignore invariant
                     // Then Max Quantity = 100
                     // So  Jack, Jacob, Jacky, Jacka will get this special max quantity
-                    // 
+                    //
                     // Other than that
                     // Max quantity = 10
 
                     // CROSS PROPERTY OR SIBLING: Accessing other properties via order
-                    const customerName = order.customer.fullName
-                    const isJac = order.customer.fullName.toLowerCase().startsWith("jac");
+                    const customerName = order.customer.fullName;
+                    const isJac = order.customer.fullName
+                        .toLowerCase()
+                        .startsWith("jac");
 
-                    const maxQuantityForJac = 100
-                    const maxQuantityForOthers = 10
+                    const maxQuantityForJac = 100;
+                    const maxQuantityForOthers = 10;
 
                     if (isJac) {
                         return {
                             isValid: quantity <= maxQuantityForJac,
-                            errorMessage: `You are special ${customerName}, other's max quantity is limited to ${maxQuantityForOthers}. Yours is limited to, but ${maxQuantityForJac} pcs.`
-                        }
+                            errorMessage: `You are special ${customerName}, other's max quantity is limited to ${maxQuantityForOthers}. Yours is limited to, but ${maxQuantityForJac} pcs.`,
+                        };
                     }
                     return {
                         isValid: quantity <= maxQuantityForOthers,
-                        errorMessage: `You only allowed to order ${maxQuantityForOthers} product at once.`
-                    }
-                }
-            ]
-        }
-    }
-}
+                        errorMessage: `You only allowed to order ${maxQuantityForOthers} product at once.`,
+                    };
+                },
+            ],
+        },
+    },
+};
 ```
-You always have the root object as context during validation.
 
 **Nested Example**
-```ts
 
+```ts
 interface Continent {
-    name: string
+    name: string;
 }
 interface Country {
-    name: string
-    continent: Continent
+    name: string;
+    continent: Continent;
 }
 interface City {
-    name: string
-    country: Country
+    name: string;
+    country: Country;
 }
 interface Address {
-    street: string,
-    city: City
+    street: string;
+    city: City;
 }
 interface Person {
-    name: string,
-    age: number,
-    child?: Person
-    address?: Address
+    name: string;
+    age: number;
+    child?: Person;
+    address?: Address;
 }
 
 const rule: ValidationRule<Person> = {
@@ -858,16 +1083,18 @@ const rule: ValidationRule<Person> = {
                 name: [required()],
                 continent: {
                     name: [required()],
-                }
-            }
-        }
+                },
+            },
+        },
     },
     child: {
-        name: [required()]
-    }
-}
+        name: [required()],
+    },
+};
 ```
+
 And the validation result :
+
 ```ts
 {
     message: "One or more validation errors occurred.",
@@ -893,6 +1120,210 @@ And the validation result :
     }
 }
 ```
+
+### Async Examples
+
+#### Login that validates email
+
+```ts
+export type LoginRequest = {
+    email: string;
+    password: string;
+};
+
+function preventRegisteredEmailRule(userRepository: UserRepository) {
+    return async function (email) {
+        if (!email) {
+            return {
+                isValid: true,
+            };
+        }
+        const existingUser = await userRepository.getUserAsync(email); // database/api check
+        if (!existingUser) {
+            return {
+                isValid: false,
+                errorMessage: `${email} is not registered.`,
+            };
+        }
+        return {
+            isValid: true,
+        };
+    };
+}
+
+function buildLoginRule(userRepository: UserRepository) {
+    const registrationRule: AsyncValidationRule<LoginRequest> = {
+        email: [
+            required(),
+            emailAddress(),
+            preventRegisteredEmailRule(userRepository),
+        ],
+        password: [required()],
+    };
+    return registrationRule;
+}
+```
+
+#### Product Validation
+
+```ts
+// Validates if price level is sequential or not
+function sequentialPriceLevelRule(currentPriceItem: ProductPrice) {
+    return function (level: number, product: ProductRequest) {
+        if (!currentPriceItem)
+            throw new Error("Product price cannot be null or undefined.");
+        if (!product) throw new Error("Product cannot be null or undefined.");
+        if (!product.prices)
+            throw new Error("Product prices cannot be null or undefined.");
+
+        // Checks if price level is sequential
+        const currentPriceItemIndex = product.prices.indexOf(currentPriceItem);
+        const isFirstIndex = currentPriceItemIndex === 0;
+
+        // First index is ok: no comparer
+        if (isFirstIndex) {
+            return {
+                isValid: true,
+            };
+        }
+
+        const prevPriceIndex = currentPriceItemIndex - 1;
+        const prevPrice = product.prices[prevPriceIndex];
+        if (!prevPrice)
+            throw new Error(
+                `Previous price item is expected defined. But got: ${prevPrice}`
+            );
+
+        const expectedNextPriceLevel = prevPrice.level + 1;
+        const isValid = level === expectedNextPriceLevel;
+        if (!isValid) {
+            return {
+                isValid: false,
+                errorMessage: `Price level should be sequential. And the current price level should be: ${expectedNextPriceLevel}, but got ${level}`,
+            };
+        }
+
+        return {
+            isValid: true,
+        };
+    };
+}
+
+// Only tenant user that can create product
+function userCanCreateProductRule(userRepository: UserRepository) {
+    return async function (userEmail: string) {
+        // Check if email belongs to a valid user
+        const user = await userRepository.getUserAsync(userEmail); 
+        if (!user) {
+            return {
+                isValid: false,
+                errorMessage: `Invalid user email ${userEmail}.`,
+            };
+        }
+
+        if (user.userType !== "tenant") {
+            return {
+                isValid: false,
+                errorMessage: `User is not allowed to create product.`,
+            };
+        }
+        return {
+            isValid: true,
+        };
+    };
+}
+
+// Ensure no duplicated price rule
+function noDuplicatePriceLevelRule() {
+    return function (prices: ProductPrice[], product: ProductRequest) {
+        for (let index = 0; index < prices.length; index++) {
+            const productPrice = prices[index];
+            const isDuplicatePrice =
+                prices.filter(
+                    (x) =>
+                        x.level === productPrice.level &&
+                        x.price === productPrice.price
+                ).length > 1;
+            if (isDuplicatePrice) {
+                return {
+                    isValid: false,
+                    errorMessage: `Duplicate price ${productPrice.price} and level ${productPrice.level}. At index ${index}.`,
+                };
+            }
+        }
+        return {
+            isValid: true,
+        };
+    };
+}
+
+// Accept user repository for validation
+function buildProductRule(userRepository: UserRepository) {
+    const productRequest: AsyncValidationRule<ProductRequest> = {
+        productName: [
+            required(),
+            stringMinLen(3, "Product name should be at least 3 chars"),
+        ],
+        prices: {
+            arrayRules: [
+                required(),
+                arrayMinLen(1, "Product has to be at least having 1 price."),
+                arrayMaxLen(5, "Product prices maximum is 5 level."),
+                noDuplicatePriceLevelRule(),
+            ],
+            arrayItemRule: function (
+                currentPriceItem: ProductPrice,
+                product: ProductRequest
+            ) {
+                return {
+                    level: [
+                        required(),
+                        minNumber(
+                            1,
+                            "Product level is a non 0 and positive number."
+                        ),
+                        sequentialPriceLevelRule(currentPriceItem),
+                    ],
+                    price: [
+                        required(),
+                        minNumber(1, "Minimum price is at least $1."),
+                    ],
+                };
+            },
+        },
+        userEmail: [userCanCreateProductRule(userRepository)],
+    };
+    return productRequest;
+}
+
+export interface ProductValidationService {
+    validateAsync(
+        request: ProductRequest
+    ): Promise<ValidationResult<ProductRequest>>;
+}
+
+// Creates a validation service
+export function createProductValidationService(
+    userRepository: UserRepository
+): ProductValidationService {
+    async function validateAsync(request: ProductRequest) {
+
+        // pass the repository required by the validation rule builder for validation purpose
+        const registrationRule = buildProductRule(userRepository);
+        return validant.validateAsync(request, registrationRule, {
+            errorMessage: "error",
+            okMessage: "ok",
+        });
+    }
+    return {
+        validateAsync,
+    };
+}
+```
+ 
+#### For more example please visit:
+
+`https://github.com/supendi/validant/tree/main/src/__tests__/validant_tests/realExamples`
 
 ## 🧩 Schema Composition
 
@@ -1579,13 +2010,10 @@ const validationRule = {
 
 This ensures that username is at least 5 characters long.
 
-## MORE EXAMPLE
-Please visit:
-
-https://github.com/supendi/validant/tree/main/src/__tests__/validant_tests
-
 ## 📊 BENCHMARK
+
 Chat GPT give me this code to benchmark, I dont even understand if its fair or not:
+
 ```js
 const { Bench } = require("tinybench");
 const { z } = require("zod");
@@ -1801,7 +2229,9 @@ bench
     }
 })();
 ```
+
 Here's the result
+
 ```bash
 $ node --max-old-space-size=4096 benchmark.js --records=2000 --depth=5
 Warming up...
@@ -1816,4 +2246,4 @@ Superstruct : 101.38 ops/sec
 
 But there is no such 10k of validation at a time!!!!
 
-IT'S FOR THE SAKE OF MARKETING 
+IT'S FOR THE SAKE OF MARKETING
