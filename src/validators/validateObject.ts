@@ -28,23 +28,6 @@ function isArrayValidationRule<T, TRoot>(rule: ValidationRule<T, TRoot>[Extract<
     return isArrayRule
 }
 
-// function getPropertyTypeBasedOnItsRule<T, TRoot>(rule: ValidationRule<T, TRoot>[Extract<keyof T, string>]): PropertyType {
-//     if (!!rule && Array.isArray(rule)) {
-//         return "primitive"
-//     }
-
-//     if (!!rule && typeof rule === "object") {
-//         const isArrayRule = isArrayValidationRule(rule)
-//         return isArrayRule ? "array" : "object";
-//     }
-
-//     if (!!rule && typeof rule === "function") {
-//         return "array"
-//     }
-
-//     return "undefined"
-// }
-
 function validatePrimitiveField<T, TRoot>(key: Extract<keyof T, string>, object: T, root: TRoot, rule: PrimitiveRule<T, TRoot>): PrimitiveFieldValidationResult {
     var fieldErrors: FieldErrors = [];
     for (let index = 0; index < rule.length; index++) {
@@ -82,7 +65,7 @@ function validateArrayField<T, TRoot>(key: Extract<keyof T, string>, object: T, 
         const builtRule = rule(value, root)
         return validateArrayField(key, object, root, builtRule) // Recurse into built rule
     }
- 
+
     var arrayFieldErrors: ErrorOfArray<T> = {};
 
     const arrayValidationRule = rule as ArrayValidationRule<typeof value, TRoot>;
@@ -177,7 +160,7 @@ export const validateObject = <T, TRoot>(object: T, rootObject: TRoot, validatio
             if (!isValidRuleType) {
                 throw new Error(`${typeOfRule} is not a valid rule.`)
             }
-            
+
             const isPrimitiveProperty = Array.isArray(rule)
             const isArrayProperty = isArrayValidationRule(rule)
             const isObjectProperty = typeof value === "object"

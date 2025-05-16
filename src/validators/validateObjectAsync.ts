@@ -13,23 +13,6 @@ function isAsyncArrayValidationRule<T, TRoot>(rule: AsyncValidationRule<T, TRoot
     return isArrayRule
 }
 
-function getPropertyTypeBasedOnItsRule<T, TRoot>(rule: AsyncValidationRule<T, TRoot>[Extract<keyof T, string>]): PropertyType {
-    if (!!rule && Array.isArray(rule)) {
-        return "primitive"
-    }
-
-    if (!!rule && typeof rule === "object") {
-        const isArrayRule = isAsyncArrayValidationRule(rule)
-        return isArrayRule ? "array" : "object";
-    }
-
-    if (!!rule && typeof rule === "function") {
-        return "array"
-    }
-
-    return "object"
-}
-
 async function validatePrimitiveFieldAsync<T, TRoot>(key: Extract<keyof T, string>, object: T, root: TRoot, rule: GenericPropertyRuleFunc<T[Extract<keyof T, string>], TRoot>[]): Promise<PrimitiveFieldValidationResult> {
     var fieldErrors: FieldErrors = [];
     for (let index = 0; index < rule.length; index++) {
@@ -69,10 +52,6 @@ async function validateArrayFieldAsync<T, TRoot>(key: Extract<keyof T, string>, 
         return validateArrayFieldAsync(key, object, root, builtRule) // Recurse into built rule
     }
 
-    const isArrayRule = isAsyncArrayValidationRule(rule)
-    if (!isArrayRule) {
-        return
-    }
     var arrayFieldErrors: ErrorOfArray<T> = {};
 
     const arrayValidationRule = rule as ArrayValidationRule<typeof value, TRoot>;
@@ -119,24 +98,6 @@ async function validateObjectFieldAsync<T, TRoot>(key: Extract<keyof T, string>,
     var fieldErrors: FieldErrors = [];
     const value = object[key];
 
-    // Example case
-    // interface Person {
-    //     name?: string
-    //     children?: Person[]
-    // }
-
-    // const person: Person = {
-    //     name: "",
-    //     children: null <= notice this
-    // } 
-    if (!value) {
-        // validateArrayField(key, object, root, rule)
-        // I am gonna leave this silently not be validated for now. 
-        return {
-            isValid: true
-        };
-    }
-
     const childValidationRule = rule as ValidationRule<typeof value, TRoot>;
     const error = await validateObjectAsync(value, root, childValidationRule);
     const validationResult: ObjectFieldValidationResult<T[Extract<keyof T, string>]> = {
@@ -162,9 +123,6 @@ export const validateObjectAsync = async <T, TRoot>(object: T, rootObject: TRoot
     var errors: ErrorOf<T> = undefined;
 
     function assignErrorsIfAny(key: any, fieldErrors: FieldErrors | ErrorOfArray<T> | ErrorOf<T[Extract<keyof T, string>]>) {
-        if (!fieldErrors) {
-            return
-        }
         if (!errors) {
             errors = {};
         }
@@ -181,42 +139,36 @@ export const validateObjectAsync = async <T, TRoot>(object: T, rootObject: TRoot
                 continue;
             }
 
-            let typeOfProperty: PropertyType = getPropertyTypeBasedOnItsRule(rule)
+            const allowedRules = ["array", "object", "function"]
+            const typeOfRule = typeof rule
+            const isValidRuleType = allowedRules.includes(typeOfRule)
+            if (!isValidRuleType) {
+                throw new Error(`${typeOfRule} is not a valid rule.`)
+            }
 
-            switch (typeOfProperty) {
-                case "primitive":
-                    if (Array.isArray(rule)) {
-                        const validationResult = await validatePrimitiveFieldAsync(key, object, rootObject, rule)
-                        if (!validationResult.isValid) {
-                            assignErrorsIfAny(key, validationResult.errors)
-                        }
-                    }
-                    break;
-                case "array":
-                    if (!value && isAsyncArrayValidationRule(rule)) {
-                        const result = await validateArrayFieldAsync(key, object, rootObject, rule)
-                        if (result?.errors || result?.errorsEach) {
-                            assignErrorsIfAny(key, result)
-                        }
-                        break;
-                    }
-                    if (Array.isArray(value)) {
-                        const result = await validateArrayFieldAsync(key, object, rootObject, rule)
-                        if (result?.errors || result?.errorsEach) {
-                            assignErrorsIfAny(key, result)
-                        }
-                    }
-                    break;
-                case "object":
-                    const error = await validateObjectFieldAsync(key, object, rootObject, rule)
-                    if (error && !error.isValid) {
-                        assignErrorsIfAny(key, error.errors)
-                    }
-                    break;
-                case "undefined":
-                    continue;
-                default:
-                    break;
+            const isPrimitiveProperty = Array.isArray(rule)
+            const isArrayProperty = isAsyncArrayValidationRule(rule)
+            const isObjectProperty = typeof value === "object"
+
+            if (isPrimitiveProperty) {
+                const validationResult = await validatePrimitiveFieldAsync(key, object, rootObject, rule)
+                if (!validationResult.isValid) {
+                    assignErrorsIfAny(key, validationResult.errors)
+                }
+                continue
+            }
+            if (isArrayProperty) {
+                const result = await validateArrayFieldAsync(key, object, rootObject, rule)
+                if (result?.errors || result?.errorsEach) {
+                    assignErrorsIfAny(key, result)
+                }
+                continue
+            }
+            if (isObjectProperty) {
+                const error = await validateObjectFieldAsync(key, object, rootObject, rule)
+                if (error && !error.isValid) {
+                    assignErrorsIfAny(key, error.errors)
+                }
             }
         }
     }
