@@ -18,7 +18,6 @@ export const validateFieldAsync = async <TObject, TRoot>(propName: keyof TObject
 
     let resolvedErrorMessage = errorMessage
     if (resolvedErrorMessage) {
-
         resolvedErrorMessage = resolvedErrorMessage.replace(":value", stringifyValue(value));
     }
 

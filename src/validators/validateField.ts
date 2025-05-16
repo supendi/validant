@@ -41,7 +41,6 @@ export const validateField = <TObject, TRoot>(propName: keyof TObject, object: T
 
     let resolvedErrorMessage = errorMessage
     if (resolvedErrorMessage) {
-
         resolvedErrorMessage = resolvedErrorMessage.replace(":value", stringifyValue(value));
     }
 
