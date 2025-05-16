@@ -69,7 +69,7 @@ const validationRule: ValidationRule<typeof account> = {
 
 Even JavaScript understands that account.name is a string — why not build on that?
 
-### ❌ No Shape Ceremony. No Inversion
+### ❌ No Shape Ceremony. No Infer
 
 Infer from schema often ties you closely to the validation library — unless used carefully. Your domain model is fundamental, yet simple to define.
 
@@ -884,7 +884,7 @@ const rule: ValidationRule<Person> = {
 
 Here, age is strongly typed as a number. IntelliSense works out of the box:
 
-![alt text](image.png)
+![image](https://github.com/user-attachments/assets/961f6ba2-eb26-4404-97ad-f4e2fb432ab5)
 
 ### Root object awareness
 
@@ -906,9 +906,7 @@ function (age, person) {
 
 person is correctly inferred as the root type Person:
 
-![alt text](image-1.png)
-
-Sometimes/often you will need to do sibling check to do the validation.
+![image](https://github.com/user-attachments/assets/7874d83a-ea9e-4c36-acda-1b04f1bfb4c7)
 
 ### Array (Item) Awareness
 
@@ -943,9 +941,9 @@ const rule: ValidationRule<Order> = {
 
 The rule above limits discountPercentage to a static 10%. But what if the rules change?
 
-Default max is 10%
+- Default max is 10%
 
-If quantity >= 10, max discount increases to 30%
+- If quantity >= 10, max discount increases to 30%
 
 You can express that cleanly using a function for arrayItemRule:
 
@@ -971,7 +969,7 @@ const rule: ValidationRule<Order> = {
 
 Here, item refers to the current array element, and order is the root object. And yes — it’s fully type-safe.
 
-![alt text](image-2.png)
+![image](https://github.com/user-attachments/assets/a95614a5-0dfd-458c-b0c4-789ffa509ce2)
 
 ## Examples
 
