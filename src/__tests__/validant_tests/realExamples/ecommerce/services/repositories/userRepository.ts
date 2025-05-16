@@ -6,7 +6,7 @@ export type User = {
     email: string
     fullName: string
     password: string
-    type: UserType
+    userType: UserType
 }
 
 export interface UserRepository {

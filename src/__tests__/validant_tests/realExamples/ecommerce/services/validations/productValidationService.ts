@@ -30,7 +30,7 @@ function sequentialPriceLevelRule(currentPriceItem: ProductPrice) {
         if (!isValid) {
             return {
                 isValid: false,
-                errorMessage: `Current price level should be: ${expectedNextPriceLevel}`
+                errorMessage: `Price level should be sequential. And the current price level should be: ${expectedNextPriceLevel}, but got ${level}`
             }
         }
 
@@ -50,7 +50,7 @@ function userCanCreateProductRule(userRepository: UserRepository) {
             }
         }
 
-        if (user.type !== "tenant") {
+        if (user.userType !== "tenant") {
             return {
                 isValid: false,
                 errorMessage: `User is not allowed to create product.`
@@ -78,8 +78,12 @@ function buildProductRule(userRepository: UserRepository) {
                 return {
                     level: [
                         required(),
-                        minNumber(1, "Product level non 0 and a positive number."),
+                        minNumber(1, "Product level is a non 0 and positive number."),
                         sequentialPriceLevelRule(currentPriceItem)
+                    ],
+                    price: [
+                        required(),
+                        minNumber(1, "Minimum price is at least $1.")
                     ]
                 }
             }

@@ -18,8 +18,6 @@ const {
     productValidationService
 } = createEcommerceContext([])
 
-
-
 /**
  * REGISTRATION FLOW
  */
@@ -94,7 +92,7 @@ describe("Reza get mad, but now he carefully enter the password.", () => {
             email: rezaRegistration.email,
             fullName: rezaRegistration.fullName,
             password: rezaRegistration.password,
-            type: "customer"
+            userType: rezaRegistration.userType
         }
 
         await userRepository.addUserAsync(user)
@@ -154,7 +152,7 @@ describe("Anjar comeback to register, he tried to be a hacker, and try to regist
 describe("Dwi wants to be a tenant.", () => {
     it("Dwi successfully register as tenant", async () => {
 
-        let dwi: RegistrationRequest = {
+        let dwiRegistration: RegistrationRequest = {
             fullName: "Sport Shop",
             email: "dwi@gmail.com",
             password: "Password123!",
@@ -162,12 +160,23 @@ describe("Dwi wants to be a tenant.", () => {
             userType: "tenant"
         }
 
-        const actual = await registrationValidationService.validateAsync(dwi)
+        const actual = await registrationValidationService.validateAsync(dwiRegistration)
 
         const expected: ValidationResult<RegistrationRequest> = {
             isValid: true,
             message: "ok"
         }
+        expect(actual).toEqual(expected)
+
+        const user: User = {
+            email: dwiRegistration.email,
+            fullName: dwiRegistration.fullName,
+            password: dwiRegistration.password,
+            userType: dwiRegistration.userType
+        }
+
+        await userRepository.addUserAsync(user)
+
         expect(actual).toEqual(expected)
     })
 })
@@ -244,6 +253,7 @@ describe("Reza do login and success", () => {
     })
 })
 
+// PRODUCT FLOW
 describe("Reza do login and create product.", () => {
     it("Failed, he's not a tenant, he's a customer", async () => {
 
@@ -267,7 +277,7 @@ describe("Reza do login and create product.", () => {
         expect(user).not.toBeUndefined()
         expect(user).not.toBeNull()
         expect(user.password).toEqual(rezaLogin.password)
-        expect(user.type).toEqual("customer")
+        expect(user.userType).toEqual("customer")
 
         // PRODUCT CREATE TEST
         const productRequest: ProductRequest = {
@@ -290,4 +300,256 @@ describe("Reza do login and create product.", () => {
         expect(productValidationResult).toEqual(expectedProductValidationResult)
     })
 })
-// next product flow
+
+describe("Attempt2: Dwi login and create product.", () => {
+    it("Failed", async () => {
+
+        // LOGIN
+        let dwi: LoginRequest = {
+            email: "dwi@gmail.com",
+            password: "Password123!",
+        }
+
+        // login assert
+        const loginValidationResult = await loginValidationService.validateAsync(dwi)
+        const expectedLoginValidationResult: ValidationResult<LoginRequest> = {
+            isValid: true,
+            message: "ok",
+        }
+
+        expect(loginValidationResult).toEqual(expectedLoginValidationResult)
+
+        // user assert
+        const user = await userRepository.getUserAsync(dwi.email)
+
+        expect(user).not.toBeUndefined()
+        expect(user).not.toBeNull()
+        expect(user.password).toEqual(dwi.password)
+        expect(user.userType).toEqual("tenant")
+
+        // PRODUCT CREATE TEST
+        const productRequest: ProductRequest = {
+            userEmail: user.email,
+            productName: "",
+            prices: []
+        }
+
+        const productValidationResult = await productValidationService.validateAsync(productRequest)
+        const expectedProductValidationResult: ValidationResult<ProductRequest> = {
+            isValid: false,
+            message: "error",
+            errors: {
+                productName: ["This field is required.", "Product name should be at least 3 chars"],
+                prices: {
+                    errors: ["This field is required.", "Product has to be at least having 1 price."]
+                }
+            }
+        }
+        expect(productValidationResult).toEqual(expectedProductValidationResult)
+    })
+})
+
+describe("Attempt2: Dwi login and create product.", () => {
+    it("Failed caused by product price and level errors", async () => {
+
+        // LOGIN
+        let dwi: LoginRequest = {
+            email: "dwi@gmail.com",
+            password: "Password123!",
+        }
+
+        // login assert
+        const loginValidationResult = await loginValidationService.validateAsync(dwi)
+        const expectedLoginValidationResult: ValidationResult<LoginRequest> = {
+            isValid: true,
+            message: "ok",
+        }
+
+        expect(loginValidationResult).toEqual(expectedLoginValidationResult)
+
+        // user assert
+        const user = await userRepository.getUserAsync(dwi.email)
+
+        expect(user).not.toBeUndefined()
+        expect(user).not.toBeNull()
+        expect(user.password).toEqual(dwi.password)
+        expect(user.userType).toEqual("tenant")
+
+        // PRODUCT CREATE TEST
+        const productRequest: ProductRequest = {
+            userEmail: user.email,
+            productName: "Basketball T-Shirt",
+            prices: [
+                {
+                    level: 0,
+                    price: 0
+                },
+                {
+                    level: 2,
+                    price: 2
+                }
+            ]
+        }
+
+        const productValidationResult = await productValidationService.validateAsync(productRequest)
+        const expectedProductValidationResult: ValidationResult<ProductRequest> = {
+            isValid: false,
+            message: "error",
+            errors: {
+                prices: {
+                    errorsEach: [
+                        {
+                            index: 0,
+                            validatedObject: {
+                                level: 0,
+                                price: 0
+                            },
+                            errors: {
+                                level: ["Product level is a non 0 and positive number."],
+                                price: ["Minimum price is at least $1."],
+                            }
+                        },
+                        {
+                            index: 1,
+                            validatedObject: {
+                                level: 2,
+                                price: 2
+                            },
+                            errors: {
+                                level: ["Price level should be sequential. And the current price level should be: 1, but got 2"]
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+        expect(productValidationResult).toEqual(expectedProductValidationResult)
+    })
+})
+
+describe("Attempt3: Dwi login and create product.", () => {
+    it("Failed: Product level sequence is incorrect", async () => {
+
+        // LOGIN
+        let dwi: LoginRequest = {
+            email: "dwi@gmail.com",
+            password: "Password123!",
+        }
+
+        // login assert
+        const loginValidationResult = await loginValidationService.validateAsync(dwi)
+        const expectedLoginValidationResult: ValidationResult<LoginRequest> = {
+            isValid: true,
+            message: "ok",
+        }
+
+        expect(loginValidationResult).toEqual(expectedLoginValidationResult)
+
+        // user assert
+        const user = await userRepository.getUserAsync(dwi.email)
+
+        expect(user).not.toBeUndefined()
+        expect(user).not.toBeNull()
+        expect(user.password).toEqual(dwi.password)
+        expect(user.userType).toEqual("tenant")
+
+        // PRODUCT CREATE TEST
+        const productRequest: ProductRequest = {
+            userEmail: user.email,
+            productName: "Basketball T-Shirt",
+            prices: [
+                {
+                    level: 1,
+                    price: 1
+                },
+                {
+                    level: 2,
+                    price: 1
+                },
+                {
+                    level: 4,
+                    price: 1
+                }
+            ]
+        }
+
+        const productValidationResult = await productValidationService.validateAsync(productRequest)
+        const expectedProductValidationResult: ValidationResult<ProductRequest> = {
+            isValid: false,
+            message: "error",
+            errors: {
+                prices: {
+                    errorsEach: [
+                        {
+                            index: 2,
+                            validatedObject: {
+                                level: 4,
+                                price: 1
+                            },
+                            errors: {
+                                level: ["Price level should be sequential. And the current price level should be: 3, but got 4"]
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+        expect(productValidationResult).toEqual(expectedProductValidationResult)
+    })
+})
+
+
+describe("Attempt4: Dwi login and create product.", () => {
+    it("Success", async () => {
+
+        // LOGIN
+        let dwi: LoginRequest = {
+            email: "dwi@gmail.com",
+            password: "Password123!",
+        }
+
+        // login assert
+        const loginValidationResult = await loginValidationService.validateAsync(dwi)
+        const expectedLoginValidationResult: ValidationResult<LoginRequest> = {
+            isValid: true,
+            message: "ok",
+        }
+
+        expect(loginValidationResult).toEqual(expectedLoginValidationResult)
+
+        // user assert
+        const user = await userRepository.getUserAsync(dwi.email)
+
+        expect(user).not.toBeUndefined()
+        expect(user).not.toBeNull()
+        expect(user.password).toEqual(dwi.password)
+        expect(user.userType).toEqual("tenant")
+
+        // PRODUCT CREATE TEST
+        const productRequest: ProductRequest = {
+            userEmail: user.email,
+            productName: "Basketball T-Shirt",
+            prices: [
+                {
+                    level: 1,
+                    price: 1
+                },
+                {
+                    level: 2,
+                    price: 1
+                },
+                {
+                    level: 3,
+                    price: 1
+                }
+            ]
+        }
+
+        const productValidationResult = await productValidationService.validateAsync(productRequest)
+        const expectedProductValidationResult: ValidationResult<ProductRequest> = {
+            isValid: true,
+            message: "ok",
+        }
+        expect(productValidationResult).toEqual(expectedProductValidationResult)
+    })
+})
