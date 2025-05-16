@@ -302,8 +302,8 @@ describe("Reza do login and create product.", () => {
     })
 })
 
-describe("Attempt2: Dwi login and create product.", () => {
-    it("Failed", async () => {
+describe("Attempt1: Dwi login and create product.", () => {
+    it("Failed because product requirement incomplete.", async () => {
 
         // LOGIN
         let dwi: LoginRequest = {
@@ -349,6 +349,7 @@ describe("Attempt2: Dwi login and create product.", () => {
         expect(productValidationResult).toEqual(expectedProductValidationResult)
     })
 })
+
 
 describe("Attempt2: Dwi login and create product.", () => {
     it("Failed caused by product price and level errors", async () => {
@@ -582,7 +583,7 @@ describe("Attempt4: Dwi login and create product.", () => {
 })
 
 describe("Attempt5: Dwi login and create product.", () => {
-    it("Success", async () => {
+    it("Successfully added 3 new products", async () => {
 
         // LOGIN
         let dwi: LoginRequest = {
