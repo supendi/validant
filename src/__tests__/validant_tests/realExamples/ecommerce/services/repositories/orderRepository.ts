@@ -3,13 +3,18 @@
  * To ensure that this kind of scenario works
  */
 
+export interface Customer {
+    fullName: string
+    email: string
+}
 
 export type Order = {
     orderNumber: string
     orderDate: Date
-    orderName?: string,
-    gst: number
+    orderName?: string
+    customer: Customer
     totalAmount: number
+    gst: number
     createdByUserEmail: string
     createdAt: Date
     orderItems: OrderItem[]
@@ -17,7 +22,7 @@ export type Order = {
 
 export interface OrderItem {
     orderNumber: string
-    productId: number,
+    productId: number
     qty: number
     price: number
     amount: number
@@ -28,9 +33,10 @@ export interface OrderItem {
 
 export type OrderRequest = {
     orderDate: Date
-    orderName?: string,
-    gst: number
+    orderName?: string
+    customer: Customer
     totalAmount: number
+    gst: number
     orderItems: OrderItemRequest[]
     userEmail: string
 }
@@ -90,8 +96,7 @@ export function createOrderRepository(orderDatabase: Order[]) {
                     orderNumber: nextOrderNumber,
                     orderDate: request.orderDate,
                     orderName: request.orderName,
-                    gst: request.gst,
-                    totalAmount: request.totalAmount,
+                    customer: request.customer,
                     orderItems: request.orderItems.map<OrderItem>(x => ({
                         orderNumber: nextOrderNumber,
                         productId: x.productId,
@@ -102,6 +107,8 @@ export function createOrderRepository(orderDatabase: Order[]) {
                         discountPercentage: x.discountPercentage,
                         subtotal: x.subtotal,
                     })),
+                    totalAmount: request.totalAmount,
+                    gst: request.gst,
                     createdByUserEmail: request.userEmail,
                     createdAt: now,
                 }

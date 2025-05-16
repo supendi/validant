@@ -62,13 +62,15 @@ function buildOrderRule(userRepository: UserRepository, productRepository: Produ
             required(),
             isDateObject()
         ],
-        totalAmount: [minNumber(1)],
         userEmail: [
             required(),
             emailAddress(),
             isValidUser(userRepository),
         ],
-        gst: [required()],
+        customer: {
+            fullName: [required()],
+            email: [required()],
+        },
         orderItems: {
             arrayRules: [required("Please add at least an item")],
             arrayItemRule: function (currentOrderItem, order) {
@@ -103,7 +105,9 @@ function buildOrderRule(userRepository: UserRepository, productRepository: Produ
                     ],
                 }
             }
-        }
+        },
+        totalAmount: [minNumber(1)],
+        gst: [required()],
     }
     return orderRequest
 }

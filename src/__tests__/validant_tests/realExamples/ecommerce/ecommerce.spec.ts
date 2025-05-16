@@ -701,9 +701,13 @@ describe("Attempt1: Reza Create an Order", () => {
         const orderRequest: OrderRequest = {
             orderDate: new Date().toISOString() as any as Date, // Fails isDateObject rule
             userEmail: "",
-            gst: 0,
+            customer: {
+                fullName: user.fullName,
+                email: user.email,
+            },
             orderItems: [],
             totalAmount: 0,
+            gst: 0,
         }
 
         const orderValidationResult = await orderValidationService.validateAsync(orderRequest)
@@ -752,6 +756,10 @@ describe("Attempt2: Reza Create an Order", () => {
         let orderRequest: OrderRequest = {
             orderDate: new Date(), // Fails isDateObject rule
             userEmail: user.email,
+            customer: {
+                fullName: user.fullName,
+                email: user.email,
+            },
             orderItems: [
                 {
                     productId: 0,
@@ -840,6 +848,10 @@ describe("Attempt2: Reza Create an Order", () => {
         let orderRequest: OrderRequest = {
             orderDate: new Date(), // Fails isDateObject rule
             userEmail: user.email,
+            customer: {
+                fullName: user.fullName,
+                email: user.email,
+            },
             orderItems: [
                 {
                     productId: firstProduct.id,
@@ -931,6 +943,10 @@ describe("Attempt3: Reza Create an Order", () => {
         let orderRequest: OrderRequest = {
             orderDate: new Date(), // Fails isDateObject rule
             userEmail: user.email,
+            customer: {
+                fullName: user.fullName,
+                email: user.email,
+            },
             orderItems: [
                 {
                     productId: firstProduct.id,
