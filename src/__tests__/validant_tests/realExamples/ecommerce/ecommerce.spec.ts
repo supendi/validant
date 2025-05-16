@@ -971,6 +971,5 @@ describe("Attempt3: Reza Create an Order", () => {
         await orderRepository.addOrderAsync(orderRequest)
 
         const orders = await orderRepository.listOrdersAsync()
-        console.log(orders)
     })
 })

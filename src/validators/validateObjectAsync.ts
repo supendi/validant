@@ -14,20 +14,16 @@ function isAsyncArrayValidationRule<T, TRoot>(rule: AsyncValidationRule<T, TRoot
 }
 
 function getPropertyTypeBasedOnItsRule<T, TRoot>(rule: AsyncValidationRule<T, TRoot>[Extract<keyof T, string>]): PropertyType {
-    if (!rule) {
-        return "undefined"
-    }
-
-    if (Array.isArray(rule)) {
+    if (!!rule && Array.isArray(rule)) {
         return "primitive"
     }
 
-    if (typeof rule === "object") {
+    if (!!rule && typeof rule === "object") {
         const isArrayRule = isAsyncArrayValidationRule(rule)
         return isArrayRule ? "array" : "object";
     }
 
-    if (typeof rule === "function") {
+    if (!!rule && typeof rule === "function") {
         return "array"
     }
 
