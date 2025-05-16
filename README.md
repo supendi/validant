@@ -2227,19 +2227,43 @@ bench
     }
 })();
 ```
+package.json:
+{
+  "dependencies": {
+    "joi": "^17.13.3",
+    "superstruct": "^2.0.2",
+    "tinybench": "^4.0.1",
+    "validant": "^0.0.45",
+    "yup": "^1.6.1",
+    "zod": "^3.24.4"
+  }
+}
+
 
 Here's the result
+
+```bash
+$ node --max-old-space-size=4096 benchmark.js
+Warming up...
+Running benchmark...
+
+validant    : 279.39 ops/sec
+Zod         : 71.75 ops/sec
+Joi         : 33.52 ops/sec
+Yup         : 8.33 ops/sec
+Superstruct : 103.07 ops/sec
+```
 
 ```bash
 $ node --max-old-space-size=4096 benchmark.js --records=2000 --depth=5
 Warming up...
 Running benchmark...
 
-validant    : 123.04 ops/sec
-Zod         : 73.96 ops/sec
-Joi         : 30.41 ops/sec
-Yup         : 7.81 ops/sec
-Superstruct : 101.38 ops/sec
+validant    : 258.49 ops/sec
+Zod         : 69.31 ops/sec
+Joi         : 29.53 ops/sec
+Yup         : 7.75 ops/sec
+Superstruct : 101.32 ops/sec
 ```
 
 But there is no such 10k of validation at a time!!!!
