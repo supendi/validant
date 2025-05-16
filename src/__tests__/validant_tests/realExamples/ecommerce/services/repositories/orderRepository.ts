@@ -6,27 +6,46 @@
 
 export type Order = {
     orderNumber: string
-    orderDate: string
+    orderDate: Date
     orderName?: string,
     gst: number
     totalAmount: number
-    createdByUserId: number
+    createdByUserEmail: string
     createdAt: Date
+    orderItems: OrderItem[]
 }
 
 export interface OrderItem {
-    id: number
     orderNumber: string
-    orderId: number
-    orderName: string
+    productId: number,
     qty: number
     price: number
-    discountPercentage: number
-    discountAmount: number
     amount: number
+    discountPercentage?: number
+    discountAmount?: number
+    subtotal: number
 }
 
-export function createUserRepository(orderDatabase: Order[]) {
+export type OrderRequest = {
+    orderDate: Date
+    orderName?: string,
+    gst: number
+    totalAmount: number
+    orderItems: OrderItemRequest[]
+    userEmail: string
+}
+
+export interface OrderItemRequest {
+    productId: number,
+    qty: number
+    price: number
+    amount: number
+    discountPercentage: number
+    discountAmount: number
+    subtotal: number
+}
+
+export function createOrderRepository(orderDatabase: Order[]) {
 
     function getOrderAsync(orderNumber: string): Promise<Order | undefined> {
         return new Promise((resolve) => {
@@ -37,7 +56,7 @@ export function createUserRepository(orderDatabase: Order[]) {
                 } else {
                     resolve(undefined);
                 }
-            }, 100);
+            }, 10);
         });
     }
 
@@ -50,21 +69,45 @@ export function createUserRepository(orderDatabase: Order[]) {
                 } else {
                     resolve(undefined);
                 }
-            }, 100);
+            }, 10);
         });
     }
 
-    function addOrderAsync(order: Order) {
-        if (!order) throw new Error("Argument order is null or undefined. It is required.");
+    function addOrderAsync(request: OrderRequest) {
+        if (!request) throw new Error("Argument order request is null or undefined. It is required.");
 
         return new Promise((resolve) => {
             setTimeout(async () => {
-                const existingOrder = await getOrderAsync(order.orderNumber);
-                if (existingOrder) throw new Error(`Duplicate order number ${order.orderNumber}`);
+                const nextId = orderDatabase.length + 1
+                const nextOrderNumber = "ORDER" + nextId
 
+                const existingOrder = await getOrderAsync(nextOrderNumber);
+                if (existingOrder) throw new Error(`Duplicate order number ${nextOrderNumber}`);
+
+                const now = new Date()
+
+                const order: Order = {
+                    orderNumber: nextOrderNumber,
+                    orderDate: request.orderDate,
+                    orderName: request.orderName,
+                    gst: request.gst,
+                    totalAmount: request.totalAmount,
+                    orderItems: request.orderItems.map<OrderItem>(x => ({
+                        orderNumber: nextOrderNumber,
+                        productId: x.productId,
+                        price: x.price,
+                        qty: x.qty,
+                        amount: x.amount,
+                        discountAmount: x.discountAmount,
+                        discountPercentage: x.discountPercentage,
+                        subtotal: x.subtotal,
+                    })),
+                    createdByUserEmail: request.userEmail,
+                    createdAt: now,
+                }
                 orderDatabase.push(order);
                 resolve(undefined)
-            }, 100);
+            }, 10);
         });
     }
 
@@ -82,7 +125,7 @@ export function createUserRepository(orderDatabase: Order[]) {
 
                 orderDatabase[indexOfOrder] = order
                 resolve(undefined)
-            }, 100);
+            }, 10);
         });
     }
 

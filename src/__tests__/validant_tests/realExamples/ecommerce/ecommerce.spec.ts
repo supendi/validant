@@ -6,6 +6,7 @@
 
 import { ValidationResult } from "../../../../validant"
 import { createEcommerceContext } from "./ecommerceContext"
+import { OrderRequest } from "./services/repositories/orderRepository"
 import { ProductRequest } from "./services/repositories/productRepository"
 import { User, UserType } from "./services/repositories/userRepository"
 import { LoginRequest } from "./services/validations/loginValidationService"
@@ -16,8 +17,10 @@ const {
     registrationValidationService,
     loginValidationService,
     productValidationService,
-    productRepository
-} = createEcommerceContext([], [])
+    productRepository,
+    orderValidationService,
+    orderRepository,
+} = createEcommerceContext([], [], [])
 
 /**
  * REGISTRATION FLOW
@@ -668,5 +671,307 @@ describe("Attempt5: Dwi login and create product.", () => {
         const products = await productRepository.listProductsAsync()
         expect(products).toBeDefined()
         expect(products.length).toEqual(3)
+    })
+})
+
+// ORDER
+describe("Attempt1: Reza Create an Order", () => {
+    it("Fail caused by incomplete order info", async () => {
+        // LOGIN
+        let rezaLogin: LoginRequest = {
+            email: "notreza@fakeemailbutsuccess.com",
+            password: "Password123!",
+        }
+
+        const loginValidationResult = await loginValidationService.validateAsync(rezaLogin)
+
+        const expectedLoginValidationResult: ValidationResult<LoginRequest> = {
+            isValid: true,
+            message: "ok",
+        }
+
+        expect(loginValidationResult).toEqual(expectedLoginValidationResult)
+
+        const user = await userRepository.getUserAsync(rezaLogin.email)
+
+        expect(user).not.toBeUndefined()
+        expect(user).not.toBeNull()
+
+        // ORDER
+        const orderRequest: OrderRequest = {
+            orderDate: new Date().toISOString() as any as Date, // Fails isDateObject rule
+            userEmail: "",
+            gst: 0,
+            orderItems: [],
+            totalAmount: 0,
+        }
+
+        const orderValidationResult = await orderValidationService.validateAsync(orderRequest)
+
+        const expectedOrderValidationResult: ValidationResult<OrderRequest> = {
+            isValid: false,
+            message: "error",
+            errors: {
+                orderDate: ["This field is not a valid date, type of value was: string."],
+                orderItems: {
+                    errors: ["Please add at least an item"]
+                },
+                totalAmount: ["The minimum value for this field is 1.",],
+                userEmail: ["This field is required.", "Invalid email address. The valid email example: john.doe@example.com.",]
+
+            }
+        }
+
+        expect(orderValidationResult).toEqual(expectedOrderValidationResult)
+    })
+})
+
+describe("Attempt2: Reza Create an Order", () => {
+    it(" Incomplete order item", async () => {
+        // LOGIN
+        let rezaLogin: LoginRequest = {
+            email: "notreza@fakeemailbutsuccess.com",
+            password: "Password123!",
+        }
+
+        const loginValidationResult = await loginValidationService.validateAsync(rezaLogin)
+
+        const expectedLoginValidationResult: ValidationResult<LoginRequest> = {
+            isValid: true,
+            message: "ok",
+        }
+
+        expect(loginValidationResult).toEqual(expectedLoginValidationResult)
+
+        const user = await userRepository.getUserAsync(rezaLogin.email)
+
+        expect(user).not.toBeUndefined()
+        expect(user).not.toBeNull()
+
+        // ORDER  
+        let orderRequest: OrderRequest = {
+            orderDate: new Date(), // Fails isDateObject rule
+            userEmail: user.email,
+            orderItems: [
+                {
+                    productId: 0,
+                    price: 0,
+                    qty: 0,
+                    amount: 0,
+                    discountAmount: 0,
+                    discountPercentage: 0,
+                    subtotal: 0,
+                }
+            ],
+            totalAmount: 0,
+            gst: 0,
+        }
+
+        const totalAmount = orderRequest.orderItems.reduce((sum, item) => sum + item.amount, 0)
+        const gst = totalAmount * 0.1
+
+        orderRequest.totalAmount = totalAmount
+        orderRequest.gst = gst
+
+        const orderValidationResult = await orderValidationService.validateAsync(orderRequest)
+
+        const expectedOrderValidationResult: ValidationResult<OrderRequest> = {
+            isValid: false,
+            message: "error",
+            errors: {
+                orderItems: {
+                    errorsEach: [
+                        {
+                            index: 0,
+                            errors: {
+                                productId: ["Product id 0 is invalid."],
+                                qty: ["The minimum value for this field is 1."],
+                                amount: ["The minimum value for this field is 1.",],
+                                price: ["The minimum value for this field is 1."],
+                                subtotal: ["The minimum value for this field is 1.",]
+                            },
+                            validatedObject: {
+                                productId: 0,
+                                price: 0,
+                                qty: 0,
+                                amount: 0,
+                                discountAmount: 0,
+                                discountPercentage: 0,
+                                subtotal: 0
+                            }
+                        }
+                    ]
+                },
+                totalAmount: ["The minimum value for this field is 1.",],
+            }
+        }
+
+        expect(orderValidationResult).toEqual(expectedOrderValidationResult)
+    })
+})
+
+describe("Attempt2: Reza Create an Order", () => {
+    it("Failed: Incomplete order item", async () => {
+        // LOGIN
+        let rezaLogin: LoginRequest = {
+            email: "notreza@fakeemailbutsuccess.com",
+            password: "Password123!",
+        }
+
+        const loginValidationResult = await loginValidationService.validateAsync(rezaLogin)
+
+        const expectedLoginValidationResult: ValidationResult<LoginRequest> = {
+            isValid: true,
+            message: "ok",
+        }
+
+        expect(loginValidationResult).toEqual(expectedLoginValidationResult)
+
+        const user = await userRepository.getUserAsync(rezaLogin.email)
+
+        expect(user).not.toBeUndefined()
+        expect(user).not.toBeNull()
+
+        // ORDER
+        const products = await productRepository.listProductsAsync()
+        const firstProduct = products[0]
+        const productPriceLevel1 = firstProduct.prices[0]
+
+        let orderRequest: OrderRequest = {
+            orderDate: new Date(), // Fails isDateObject rule
+            userEmail: user.email,
+            orderItems: [
+                {
+                    productId: firstProduct.id,
+                    qty: 100,
+                    price: productPriceLevel1.price,
+                    amount: 0,
+                    discountPercentage: 40,
+                    discountAmount: 0,
+                    subtotal: 0
+                }
+            ],
+            totalAmount: 0,
+            gst: 0,
+        }
+
+        orderRequest.orderItems = orderRequest.orderItems.map(orderItem => {
+            orderItem.amount = orderItem.qty * orderItem.price
+            orderItem.discountAmount = orderItem.amount * (orderItem.discountPercentage / 100)
+            orderItem.subtotal = orderItem.amount - orderItem.discountAmount
+            return orderItem
+        })
+
+        const totalAmount = orderRequest.orderItems.reduce((sum, item) => sum + item.amount, 0)
+        const gst = totalAmount * 0.1
+
+        orderRequest.totalAmount = totalAmount
+        orderRequest.gst = gst
+
+        const orderValidationResult = await orderValidationService.validateAsync(orderRequest)
+
+        const expectedOrderValidationResult: ValidationResult<OrderRequest> = {
+            isValid: false,
+            message: "error",
+            errors: {
+                orderItems: {
+                    errorsEach: [
+                        {
+                            index: 0,
+                            errors: {
+                                qty: ["The maximum value for this field is 10."],
+                                discountPercentage: ["Can't be more than 30 percent of discount. Our boss is watching."]
+                            },
+                            validatedObject: {
+                                productId: firstProduct.id,
+                                qty: 100,
+                                price: productPriceLevel1.price,
+                                amount: 100,
+                                discountPercentage: 40,
+                                discountAmount: 40,
+                                subtotal: 60
+                            }
+                        }
+                    ]
+                },
+            }
+        }
+
+        expect(orderValidationResult).toEqual(expectedOrderValidationResult)
+    })
+})
+
+
+describe("Attempt3: Reza Create an Order", () => {
+    it("Success", async () => {
+        // LOGIN
+        let rezaLogin: LoginRequest = {
+            email: "notreza@fakeemailbutsuccess.com",
+            password: "Password123!",
+        }
+
+        const loginValidationResult = await loginValidationService.validateAsync(rezaLogin)
+
+        const expectedLoginValidationResult: ValidationResult<LoginRequest> = {
+            isValid: true,
+            message: "ok",
+        }
+
+        expect(loginValidationResult).toEqual(expectedLoginValidationResult)
+
+        const user = await userRepository.getUserAsync(rezaLogin.email)
+
+        expect(user).not.toBeUndefined()
+        expect(user).not.toBeNull()
+
+        // ORDER
+        const products = await productRepository.listProductsAsync()
+        const firstProduct = products[0]
+        const productPriceLevel1 = firstProduct.prices[0]
+
+        let orderRequest: OrderRequest = {
+            orderDate: new Date(), // Fails isDateObject rule
+            userEmail: user.email,
+            orderItems: [
+                {
+                    productId: firstProduct.id,
+                    qty: 10,
+                    price: productPriceLevel1.price,
+                    amount: 0,
+                    discountPercentage: 30,
+                    discountAmount: 0,
+                    subtotal: 0
+                }
+            ],
+            totalAmount: 0,
+            gst: 0,
+        }
+
+        orderRequest.orderItems = orderRequest.orderItems.map(orderItem => {
+            orderItem.amount = orderItem.qty * orderItem.price
+            orderItem.discountAmount = orderItem.amount * (orderItem.discountPercentage / 100)
+            orderItem.subtotal = orderItem.amount - orderItem.discountAmount
+            return orderItem
+        })
+
+        const totalAmount = orderRequest.orderItems.reduce((sum, item) => sum + item.amount, 0)
+        const gst = totalAmount * 0.1
+
+        orderRequest.totalAmount = totalAmount
+        orderRequest.gst = gst
+
+        const orderValidationResult = await orderValidationService.validateAsync(orderRequest)
+
+        const expectedOrderValidationResult: ValidationResult<OrderRequest> = {
+            isValid: true,
+            message: "ok",
+        }
+
+        expect(orderValidationResult).toEqual(expectedOrderValidationResult)
+
+        await orderRepository.addOrderAsync(orderRequest)
+
+        const orders = await orderRepository.listOrdersAsync()
+        console.log(orders)
     })
 })

@@ -8,28 +8,32 @@ export type LoginRequest = {
     password: string
 }
 
+function preventRegisteredEmailRule(userRepository: UserRepository) {
+    return async function (email) {
+        if (!email) { // lets skip this for now.
+            return {
+                isValid: true
+            }
+        }
+        const existingUser = await userRepository.getUserAsync(email)
+        if (!existingUser) {
+            return {
+                isValid: false,
+                errorMessage: `${email} is not registered.`
+            }
+        }
+        return {
+            isValid: true
+        }
+    }
+}
+
 function buildLoginRule(userRepository: UserRepository) {
     const registrationRule: AsyncValidationRule<LoginRequest> = {
         email: [
             required(),
             emailAddress(),
-            async function (email) {
-                if (!email) { // lets skip this for now.
-                    return {
-                        isValid: true
-                    }
-                }
-                const existingUser = await userRepository.getUserAsync(email)
-                if (!existingUser) {
-                    return {
-                        isValid: false,
-                        errorMessage: `${email} is not registered.`
-                    }
-                }
-                return {
-                    isValid: true
-                }
-            }
+            preventRegisteredEmailRule(userRepository)
         ],
         password: [
             required(),
