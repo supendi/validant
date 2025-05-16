@@ -217,8 +217,9 @@ export const validateObjectAsync = async <T, TRoot>(object: T, rootObject: TRoot
                         assignErrorsIfAny(key, error.errors)
                     }
                     break;
+                case "undefined":
+                    continue;
                 default:
-                    // I dont know what should be the default validator
                     break;
             }
         }

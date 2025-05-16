@@ -1,5 +1,4 @@
-import { required } from "../../../rules"
-import { ValidationRule } from "../../../types/ValidationRule"
+import { AsyncValidationRule } from "../../../types/AsyncValidationRule" 
 import validant, { ValidationResult } from "../../../validant"
 
 interface Person {
@@ -7,7 +6,7 @@ interface Person {
     age: 1
 }
 
-const rule: ValidationRule<Person> = {
+const rule: AsyncValidationRule<Person> = {
     name: [undefined],
     age: undefined
 }
@@ -17,9 +16,9 @@ const person: Person = {
     age: 1
 }
 
-describe("Test Simple Object", () => {
-    it("return true", () => {
-        const actual = validant.validate(person, rule)
+describe("Ignore or skip undefined rule", () => {
+    it("return true", async () => {
+        const actual = await validant.validateAsync(person, rule)
 
         const expected: ValidationResult<Person> = {
             message: "Good to go.",
