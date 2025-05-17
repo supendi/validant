@@ -1,6 +1,6 @@
 import { arrayMinLen, minNumber, required } from "../../../rules"
 import { ValidationRule } from "../../../types/ValidationRule"
-import validant, { ValidationResult } from "../../../validant"
+import { ValidationResult, validant } from "../../../validant"
 
 interface Product {
     name?: string

@@ -1,5 +1,5 @@
 import { PropertyRuleFunc, ValidationRule } from "../../../types/ValidationRule"
-import validant from "../../../validant"
+import { validant } from "../../../validant"
 
 interface Person {
     name: string

@@ -21,64 +21,70 @@ export interface ValidationMessage {
     errorMessage: string
 }
 
-/**
- * Validates an object with the specified validation rule
- * @param object 
- * @param validationRule 
- * @returns ValidationResult
- */
-export const validate = <T, TRoot>(object: T, validationRule: ValidationRule<T>, validationMessage: ValidationMessage = { okMessage: "Good to go.", errorMessage: "One or more validation errors occurred." }): ValidationResult<T> => {
-    const errors = validateObject(object, object, validationRule)
-    let isValid = true
+export interface ValidantOptions {
+}
 
-    for (const key in errors) {
-        if (Object.prototype.hasOwnProperty.call(errors, key)) {
-            const error = errors[key];
-            if (error) {
-                isValid = false
-                break
+export class Validant {
+    options: ValidantOptions
+
+    constructor(options?: ValidantOptions) {
+        this.options = options
+    }
+
+    /**
+     * Validates an object with the specified validation rule
+     * @param object 
+     * @param validationRule 
+     * @returns ValidationResult
+     */
+    validate = <T, TRoot>(object: T, validationRule: ValidationRule<T>, validationMessage: ValidationMessage = { okMessage: "Good to go.", errorMessage: "One or more validation errors occurred." }): ValidationResult<T> => {
+        const errors = validateObject(object, object, validationRule)
+        let isValid = true
+
+        for (const key in errors) {
+            if (Object.prototype.hasOwnProperty.call(errors, key)) {
+                const error = errors[key];
+                if (error) {
+                    isValid = false
+                    break
+                }
             }
+        }
+
+        return {
+            message: isValid ? validationMessage.okMessage : validationMessage.errorMessage,
+            isValid: isValid,
+            errors: errors,
         }
     }
 
-    return {
-        message: isValid ? validationMessage.okMessage : validationMessage.errorMessage,
-        isValid: isValid,
-        errors: errors,
-    }
-}
 
+    /**
+     * Validates an object with the specified validation rule
+     * @param object 
+     * @param validationRule 
+     * @returns ValidationResult
+     */
+    validateAsync = async <T, TRoot>(object: T, validationRule: AsyncValidationRule<T>, validationMessage: ValidationMessage = { okMessage: "Good to go.", errorMessage: "One or more validation errors occurred." }): Promise<ValidationResult<T>> => {
+        const errors = await validateObjectAsync(object, object, validationRule)
+        let isValid = true
 
-/**
- * Validates an object with the specified validation rule
- * @param object 
- * @param validationRule 
- * @returns ValidationResult
- */
-export const validateAsync = async <T, TRoot>(object: T, validationRule: AsyncValidationRule<T>, validationMessage: ValidationMessage = { okMessage: "Good to go.", errorMessage: "One or more validation errors occurred." }): Promise<ValidationResult<T>> => {
-    const errors = await validateObjectAsync(object, object, validationRule)
-    let isValid = true
-
-    for (const key in errors) {
-        if (Object.prototype.hasOwnProperty.call(errors, key)) {
-            const error = errors[key];
-            if (error) {
-                isValid = false
-                break
+        for (const key in errors) {
+            if (Object.prototype.hasOwnProperty.call(errors, key)) {
+                const error = errors[key];
+                if (error) {
+                    isValid = false
+                    break
+                }
             }
         }
-    }
 
-    return {
-        message: isValid ? validationMessage.okMessage : validationMessage.errorMessage,
-        isValid: isValid,
-        errors: errors,
+        return {
+            message: isValid ? validationMessage.okMessage : validationMessage.errorMessage,
+            isValid: isValid,
+            errors: errors,
+        }
     }
 }
 
-const saferval = {
-    validate,
-    validateAsync
-}
-
-export default saferval
+export const validant = new Validant()

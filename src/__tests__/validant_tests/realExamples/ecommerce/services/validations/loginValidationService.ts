@@ -1,5 +1,5 @@
 import { emailAddress, required } from "../../../../../../rules"
-import validant, { ValidationResult } from "../../../../../../validant"
+import { validant, ValidationResult } from "../../../../../../validant"
 import { AsyncValidationRule } from "../../../../../../types/AsyncValidationRule"
 import { UserRepository } from "../repositories/userRepository"
 

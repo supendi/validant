@@ -1,7 +1,8 @@
+import { validant, ValidationResult } from "../../.."
 import { required } from "../../../rules"
 import { ValidationRule } from "../../../types/ValidationRule"
-import validant, { ValidationResult } from "../../../validant"
 
+ 
 interface Product {
     expiredDate?: Date
 }

@@ -1,5 +1,5 @@
 import { AsyncValidationRule } from "../../../types/AsyncValidationRule"
-import validant from "../../../validant"
+import { validant } from "../../../validant"
 
 interface Person {
     name: string

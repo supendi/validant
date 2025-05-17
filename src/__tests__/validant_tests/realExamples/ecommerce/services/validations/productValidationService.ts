@@ -1,5 +1,5 @@
 import { arrayMaxLen, arrayMinLen, minNumber, required, stringMinLen } from "../../../../../../rules"
-import validant, { ValidationResult } from "../../../../../../validant"
+import { validant, ValidationResult } from "../../../../../../validant"
 import { AsyncValidationRule } from "../../../../../../types/AsyncValidationRule"
 import { ProductPrice, ProductRequest } from "../repositories/productRepository"
 import { UserRepository } from "../repositories/userRepository"

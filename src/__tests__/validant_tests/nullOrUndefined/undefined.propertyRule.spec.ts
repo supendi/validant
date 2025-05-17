@@ -1,5 +1,5 @@
 import { ValidationRule } from "../../../types/ValidationRule"
-import validant, { ValidationResult } from "../../../validant"
+import { ValidationResult, validant } from "../../../validant"
 
 interface Person {
     name: string
