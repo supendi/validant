@@ -9,14 +9,14 @@ export interface PropertyRuleValidationResult {
 }
 
 /**
-* The signature of property validator function, used as property rule.
+* The signature of property rule function, used as property rule.
 * Use this function signature for custom validation.
 */
 export type PropertyRuleFunc<TValue, TRoot extends Object> = (value: TValue, root: TRoot) => PropertyRuleValidationResult;
 
 /**
  * Represents a set of validation rules.
- * The validation schema should implement this type.
+ * The validation rule should implement this type.
  */
 export type ValidationRule<T, TRoot extends Object = T> = { [key in keyof T]?
     : T[key] extends Date ? PropertyRuleFunc<T[key], TRoot>[]

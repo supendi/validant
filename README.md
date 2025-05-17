@@ -350,7 +350,7 @@ The result looks like this:
 
 ### 🌐 Async Validation
 
-If you want to use an async function, you need to define your rule with: `AsyncValidationRule`.
+If you want to use an **async function** as your rule function, you need to define your rule with: `AsyncValidationRule`.
 
 Async rules are represented as:
 
@@ -435,7 +435,7 @@ Validant provides complete control through custom validation functions with stri
 
 ```typescript
 /**
- * Validation result contract
+ * Property validation result contract
  */
 export interface PropertyRuleValidationResult {
     isValid: boolean;
@@ -443,7 +443,7 @@ export interface PropertyRuleValidationResult {
 }
 
 /**
- * Custom validator function signature
+ * Rule function signature
  * @template TValue - Type of the property being validated
  * @template TRoot - Type of the root object
  */
@@ -600,7 +600,7 @@ const loginRule: ValidationRule<LoginRequest> = {
 
 Validating arrays in Validant is simple yet powerful. You can apply rules both to the array itself (e.g. length checks) and to each individual item in the array.
 
-### Schema Example
+### Validation Rule Example
 
 ```ts
 interface OrderItem {
@@ -1323,11 +1323,11 @@ export function createProductValidationService(
 
 `https://github.com/supendi/validant/tree/main/src/__tests__/validant_tests/realExamples`
 
-## 🧩 Schema Composition
+## 🧩 Validation Rule Composition
 
 As your data grows in complexity, Validant makes it easy to split validation logic into smaller, reusable pieces.
 
-You can compose validation schemas by defining rules for nested objects or array items separately and plugging them into your main schema.
+You can compose validation Validation Rule by defining rules for nested objects or array items separately and plugging them into your main Validation Rule.
 
 ```ts
 interface Address {
@@ -1361,10 +1361,10 @@ const customerRule: ValidationRule<Customer> = {
 **Why Compose?**
 
 -   ✅ Break down complex models into smaller rule sets
--   ✅ Reuse rules across multiple schemas
+-   ✅ Reuse rules across multiple ValidationRule
 -   ✅ Maintain readability and scalability
 
-Whether you're validating a single nested object or a list of them, Validant keeps your schema clear and modular.
+Whether you're validating a single nested object or a list of them, Validant keeps your ValidationRule clear and modular.
 
 ## 📚 API Reference
 
@@ -2265,7 +2265,3 @@ Joi         : 29.53 ops/sec
 Yup         : 7.75 ops/sec
 Superstruct : 101.32 ops/sec
 ```
-
-But there is no such 10k of validation at a time!!!!
-
-IT'S FOR THE SAKE OF MARKETING

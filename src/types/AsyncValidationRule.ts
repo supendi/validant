@@ -14,7 +14,7 @@ export type GenericPropertyRuleFunc<TValue, TRoot extends Object> = AsyncPropert
 
 /**
  * Represents a set of validation rules.
- * The validation schema should implement this type.
+ * The validation rule should implement this type.
  */
 export type AsyncValidationRule<T, TRoot extends Object = T> = { [key in keyof T]?
     : T[key] extends Date ? (GenericPropertyRuleFunc<T[key], TRoot>)[]
