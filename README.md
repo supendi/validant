@@ -941,9 +941,9 @@ const rule: ValidationRule<Order> = {
 
 The rule above limits discountPercentage to a static 10%. But what if the rules change?
 
-- Default max is 10%
+-   Default max is 10%
 
-- If quantity >= 10, max discount increases to 30%
+-   If quantity >= 10, max discount increases to 30%
 
 You can express that cleanly using a function for arrayItemRule:
 
@@ -1211,7 +1211,7 @@ function sequentialPriceLevelRule(currentPriceItem: ProductPrice) {
 function userCanCreateProductRule(userRepository: UserRepository) {
     return async function (userEmail: string) {
         // Check if email belongs to a valid user
-        const user = await userRepository.getUserAsync(userEmail); 
+        const user = await userRepository.getUserAsync(userEmail);
         if (!user) {
             return {
                 isValid: false,
@@ -1305,7 +1305,6 @@ export function createProductValidationService(
     userRepository: UserRepository
 ): ProductValidationService {
     async function validateAsync(request: ProductRequest) {
-
         // pass the repository required by the validation rule builder for validation purpose
         const registrationRule = buildProductRule(userRepository);
         return validant.validateAsync(request, registrationRule, {
@@ -1318,7 +1317,7 @@ export function createProductValidationService(
     };
 }
 ```
- 
+
 #### For more example please visit:
 
 `https://github.com/supendi/validant/tree/main/src/__tests__/validant_tests/realExamples`
@@ -2007,261 +2006,3 @@ const validationRule = {
 ```
 
 This ensures that username is at least 5 characters long.
-
-## 📊 BENCHMARK
-
-Chat GPT give me this code to benchmark, I dont even understand if its fair or not:
-
-```js
-const { Bench } = require("tinybench");
-const { z } = require("zod");
-const Joi = require("joi");
-const { validant, required } = require("validant");
-const yup = require("yup");
-const { struct, string, number, array, lazy } = require("superstruct");
-
-// ========================
-// 1. Generate Test Data (500 records, 3 levels deep)
-// ========================
-const generateData = (depth = 0) => ({
-    id: `id-${Math.random().toString(36).slice(2)}`,
-    value: Math.floor(Math.random() * 100),
-    children:
-        depth < 3
-            ? Array(3)
-                  .fill(null)
-                  .map(() => generateData(depth + 1))
-            : [],
-});
-
-const testData = Array(500)
-    .fill(null)
-    .map(() => generateData());
-
-// ========================
-// 2. Define Validators
-// ========================
-
-// validant
-const validantRule = {
-    id: [required()],
-    value: [required()],
-    children: {
-        arrayItemRule: {
-            id: [required()],
-            value: [required()],
-            children: {
-                arrayItemRule: {
-                    id: [required()],
-                    value: [required()],
-                    children: {
-                        arrayItemRule: {
-                            id: [required()],
-                            value: [required()],
-                            children: {
-                                arrayItemRule: {
-                                    id: [required()],
-                                    value: [required()],
-                                },
-                            },
-                        },
-                    },
-                },
-            },
-        },
-    },
-};
-// Zod
-const zodSchema = z.object({
-    id: z.string(),
-    value: z.number(),
-    children: z.array(
-        z.object({
-            id: z.string(),
-            value: z.number(),
-            children: z.array(
-                z.object({
-                    id: z.string(),
-                    value: z.number(),
-                    children: z.array(
-                        z.object({
-                            id: z.string(),
-                            value: z.number(),
-                            children: z.array(
-                                z.object({
-                                    id: z.string(),
-                                    value: z.number(),
-                                })
-                            ),
-                        })
-                    ),
-                })
-            ),
-        })
-    ),
-});
-
-// Joi
-const joiSchema = Joi.object({
-    id: Joi.string().required(),
-    value: Joi.number().required(),
-    children: Joi.array().items(
-        Joi.object({
-            id: Joi.string().required(),
-            value: Joi.number().required(),
-            children: Joi.array().items(
-                Joi.object({
-                    id: Joi.string().required(),
-                    value: Joi.number().required(),
-                    children: Joi.array().items(
-                        Joi.object({
-                            id: Joi.string().required(),
-                            value: Joi.number().required(),
-                            children: Joi.array().items(
-                                Joi.object({
-                                    id: Joi.string().required(),
-                                    value: Joi.number().required(),
-                                })
-                            ),
-                        })
-                    ),
-                })
-            ),
-        })
-    ),
-});
-
-// Yup
-const yupSchema = yup.object({
-    id: yup.string().required(),
-    value: yup.number().required(),
-    children: yup.array().of(
-        yup.object({
-            id: yup.string().required(),
-            value: yup.number().required(),
-            children: yup.array().of(
-                yup.object({
-                    id: yup.string().required(),
-                    value: yup.number().required(),
-                    children: yup.array().of(
-                        yup.object({
-                            id: yup.string().required(),
-                            value: yup.number().required(),
-                            children: yup.array().of(
-                                yup.object({
-                                    id: yup.string().required(),
-                                    value: yup.number().required(),
-                                })
-                            ),
-                        })
-                    ),
-                })
-            ),
-        })
-    ),
-});
-
-// Superstruct
-const SuperstructSchema = lazy(() =>
-    struct({
-        id: string(),
-        value: number(),
-        children: array(SuperstructSchema),
-    })
-);
-
-// ========================
-// 3. Run Benchmarks
-// ========================
-const bench = new Bench();
-
-function runValidation(validator, data) {
-    for (const item of data) {
-        try {
-            switch (validator) {
-                case "validant":
-                    validant.validate(validantRule, item);
-                    break;
-                case "zod":
-                    zodSchema.parse(item);
-                    break;
-                case "joi":
-                    joiSchema.validate(item, { abortEarly: false });
-                    break;
-                case "yup":
-                    yupSchema.validateSync(item);
-                    break;
-                case "superstruct":
-                    SuperstructSchema(item);
-                    break;
-            }
-        } catch (_) {}
-    }
-}
-
-bench
-    .add("validant", () => runValidation("validant", testData))
-    .add("Zod", () => runValidation("zod", testData))
-    .add("Joi", () => runValidation("joi", testData))
-    .add("Yup", () => runValidation("yup", testData))
-    .add("Superstruct", () => runValidation("superstruct", testData));
-
-// ========================
-// 4. Run Benchmark
-// ========================
-(async () => {
-    console.log("Warming up...");
-    runValidation("validant", testData.slice(0, 10));
-    runValidation("zod", testData.slice(0, 10));
-    runValidation("joi", testData.slice(0, 10));
-    runValidation("yup", testData.slice(0, 10));
-    runValidation("superstruct", testData.slice(0, 10));
-
-    console.log("Running benchmark...\n");
-    await bench.run();
-
-    for (const task of bench.tasks) {
-        console.log(
-            `${task.name.padEnd(12)}: ${task.result.hz.toFixed(2)} ops/sec`
-        );
-    }
-})();
-```
-package.json:
-{
-  "dependencies": {
-    "joi": "^17.13.3",
-    "superstruct": "^2.0.2",
-    "tinybench": "^4.0.1",
-    "validant": "^0.0.45",
-    "yup": "^1.6.1",
-    "zod": "^3.24.4"
-  }
-}
-
-
-Here's the result
-
-```bash
-$ node --max-old-space-size=4096 benchmark.js
-Warming up...
-Running benchmark...
-
-validant    : 279.39 ops/sec
-Zod         : 71.75 ops/sec
-Joi         : 33.52 ops/sec
-Yup         : 8.33 ops/sec
-Superstruct : 103.07 ops/sec
-```
-
-```bash
-$ node --max-old-space-size=4096 benchmark.js --records=2000 --depth=5
-Warming up...
-Running benchmark...
-
-validant    : 258.49 ops/sec
-Zod         : 69.31 ops/sec
-Joi         : 29.53 ops/sec
-Yup         : 7.75 ops/sec
-Superstruct : 101.32 ops/sec
-```
