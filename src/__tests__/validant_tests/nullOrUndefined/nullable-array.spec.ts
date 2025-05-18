@@ -1,7 +1,5 @@
-import { validant, } from "../../../index"
-import { ValidationRule } from "../../../types/ValidationRule"
-import { ValidationResult } from "../../../validant"
-import { arrayMinLen, elementOf, maxNumber, minNumber, required } from "../../../rules"
+
+import { Validator, ValidationResult, arrayMinLen, elementOf, maxNumber, minNumber, required, ValidationRule } from "../../../index"
 
 interface Order {
     id: string
@@ -30,13 +28,14 @@ const rule: ValidationRule<Order> = {
 describe("Validate null property", () => {
     it("Should return error", () => {
 
-        const newOrder1: Order = {
+        const order: Order = {
             id: "1",
             orderItems: null
         }
 
-        const actual1 = validant.validate(newOrder1, rule)
-        const expected1: ValidationResult<Order> = {
+        const validator = new Validator(rule)
+        const actual = validator.validate(order)
+        const expected: ValidationResult<Order> = {
             message: "One or more validation errors occurred.",
             isValid: false,
             errors: {
@@ -46,6 +45,6 @@ describe("Validate null property", () => {
             },
         }
 
-        expect(actual1).toEqual(expected1)
+        expect(actual).toEqual(expected)
     })
 })

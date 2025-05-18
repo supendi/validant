@@ -1,7 +1,4 @@
-import { validant, } from "../../../index"
-import { ValidationRule } from "../../../types/ValidationRule"
-import { ValidationResult } from "../../../validant"
-import { arrayMinLen, required } from "../../../rules"
+import { Validator, required, ValidationRule, ValidationResult, arrayMinLen } from "../../../index"
 
 interface Product {
     name: string
@@ -76,7 +73,8 @@ describe("Validator Test The Custom Validator", () => {
             ]
         }
 
-        const actual = validant.validate(order, orderRule)
+        const validator = new Validator(orderRule)
+        const actual = validator.validate(order)
         const expected: ValidationResult<Order> = {
             message: "One or more validation errors occurred.",
             isValid: false,

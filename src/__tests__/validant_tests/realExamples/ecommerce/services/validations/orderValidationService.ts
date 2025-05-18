@@ -1,6 +1,4 @@
-import { emailAddress, isDateObject, maxNumber, minNumber, required } from "../../../../../../rules"
-import { validant, ValidationResult } from "../../../../../../validant"
-import { AsyncValidationRule } from "../../../../../../types/AsyncValidationRule"
+import { AsyncValidator, AsyncValidationRule, emailAddress, required, ValidationResult, isDateObject, minNumber, maxNumber } from "../../../../../../index"
 import { UserRepository } from "../repositories/userRepository"
 import { OrderItemRequest, OrderRequest } from "../repositories/orderRepository"
 import { ProductRepository } from "../repositories/productRepository"
@@ -118,8 +116,10 @@ export interface OrderValidationService {
 
 export function createOrderValidationService(userRepository: UserRepository, productRepository: ProductRepository): OrderValidationService {
     async function validateAsync(request: OrderRequest) {
-        const registrationRule = buildOrderRule(userRepository, productRepository)
-        return validant.validateAsync(request, registrationRule, {
+        const orderRule = buildOrderRule(userRepository, productRepository)
+
+        const validator = new AsyncValidator(orderRule)
+        return validator.validateAsync(request, {
             errorMessage: "error",
             okMessage: "ok"
         })

@@ -1,6 +1,4 @@
-import { arrayMinLen, elementOf, emailAddress, maxNumber, minNumber, required } from "../../../rules"
-import { ValidationRule } from "../../../types/ValidationRule"
-import { ValidationResult, validant } from "../../../validant"
+import { Validator, arrayMinLen, emailAddress, minNumber, required, ValidationResult, ValidationRule, elementOf, maxNumber } from "../../../index"
 
 interface Product {
     name: string
@@ -55,7 +53,7 @@ const rule: ValidationRule<Order> = {
 describe("Validator another order, this time a valid order", () => {
     it("return a valid validation result", () => {
 
-        const newOrder1: Order = {
+        const newOrder: Order = {
             id: "1",
             orderDate: new Date(),
             orderNumber: "ORD/0001",
@@ -92,13 +90,14 @@ describe("Validator another order, this time a valid order", () => {
             ]
         }
 
-        const actual1 = validant.validate(newOrder1, rule)
-        const expected1: ValidationResult<Order> = {
+        const validator = new Validator(rule)
+        const actual = validator.validate(newOrder)
+        const expected: ValidationResult<Order> = {
             message: "Good to go.",
             isValid: true,
             errors: undefined,
         }
 
-        expect(actual1).toEqual(expected1)
+        expect(actual).toEqual(expected)
     })
 })

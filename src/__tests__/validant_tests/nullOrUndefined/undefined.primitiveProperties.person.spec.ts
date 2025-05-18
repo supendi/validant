@@ -1,6 +1,4 @@
-import { required } from "../../../rules"
-import { ValidationRule } from "../../../types/ValidationRule"
-import { ValidationResult, validant } from "../../../validant"
+import { Validator, ValidationResult, required, ValidationRule } from "../../../index"
 
 interface Person {
     name?: string
@@ -17,7 +15,8 @@ describe("Test Against undefined properties with undefined rules", () => {
 
         const person: Person = {}
 
-        const actual = validant.validate(person, rule)
+        const validator = new Validator(rule)
+        const actual = validator.validate(person)
 
         const expected: ValidationResult<Person> = {
             message: "Good to go.",
@@ -37,7 +36,9 @@ describe("Test Simple Object", () => {
             age: [required()]
         }
         const person: Person = {}
-        const actual = validant.validate(person, rule)
+        
+        const validator = new Validator(rule)
+        const actual = validator.validate(person)
 
         const expected: ValidationResult<Person> = {
             message: "One or more validation errors occurred.",

@@ -10,6 +10,7 @@
 -   🧩 Composable: Easily combine validations and reuse them across your codebase.
 -   🪶 Lightweight: Zero dependencies. Minimal API. Maximum control.
 -   🧪 Made for TypeScript first: Validant is written in and only tested with TypeScript. It’s built for modern TypeScript-first projects. It might work in JavaScript — but it’s never been tested there.
+-   ✅ Supports Field-Level Validation: Deep, fine-grained validation on individual fields — sync or async, arrays, nested objects, you name it.
 
 ## 📦 Installation
 
@@ -49,7 +50,7 @@ const validationRule: ValidationRule<Account> = {
 
 If your model already defines the structure, why repeat it with something like `name: string()` or `username: z.string()`?
 
-It even works with literal objects:
+It works with literal object as well:
 
 ```ts
 import { minNumber, required, emailAddress, ValidationRule } from "validant";
@@ -69,7 +70,7 @@ const validationRule: ValidationRule<typeof account> = {
 
 Even JavaScript understands that account.name is a string — why not build on that?
 
-### ❌ No Shape Ceremony. No Infer
+### ❌ No Shape Ceremony. No Infer.
 
 Infer from schema often ties you closely to the validation library — unless used carefully. Your domain model is fundamental, yet simple to define.
 
@@ -117,8 +118,6 @@ let userSchema = object({
 });
 ```
 
-And then what? You bind the schema directly to your form?
-
 Validant takes a different approach: keep your model where it belongs — in your domain — and let validation wrap around it cleanly.
 
 ### ✅ IntelliSense That Just Works
@@ -162,7 +161,6 @@ import {
     minNumber,
     required,
     ValidationRule,
-    validant,
 } from "validant";
 
 const validationRule: ValidationRule<Account> = {
@@ -180,7 +178,6 @@ import {
     minNumber,
     required,
     ValidationRule,
-    validant,
 } from "validant";
 
 const validationRule: ValidationRule<Account> = {
@@ -299,12 +296,20 @@ Validant supports both **synchronous** and **asynchronous** validation.
 
 ### ⚡Sync Validation
 
+#### Object Level Validation
 Validation rules are represented as:
 
 `ValidationRule<T, TRoot extends object = T>`
 
 ```ts
-import { validant, required, minNumber, emailAddress } from "validant";
+import {
+    Validator,
+    ValidationRule,
+    Validator,
+    required,
+    minNumber,
+    emailAddress,
+} from "validant";
 
 // Given your data model:
 interface Account {
@@ -321,7 +326,7 @@ const validationRule: ValidationRule<Account> = {
 };
 ```
 
-Run validation using validant.validate():
+#### instantiate validator and validate
 
 ```ts
 const account: Account = {
@@ -331,7 +336,8 @@ const account: Account = {
 };
 
 // validate
-const validationResult = validant.validate(account, validationRule);
+const validator = new Validator(validationRule);
+const validationResult = validator.validate(account);
 ```
 
 The result looks like this:
@@ -348,8 +354,40 @@ The result looks like this:
 };
 ```
 
+#### Field Level Validation
+
+You can validate a specific field of an object easily by calling validator.validateField(fieldName, object).
+
+```ts
+const account: Account = {
+    name: "",
+    age: 0,
+    email: "",
+};
+
+// Create a validator with your validation rules
+const validator = new Validator(validationRule);
+
+// Validate the "name" field of the account object
+const validationResult = validator.validateField("name", account);
+```
+
+The result will be an object like this:
+
+```ts
+{
+    isValid: false,
+    fieldName: "name",
+    errors: {
+        name: ["This field is required."]
+    }
+}
+```
+This lets you perform precise, field-level validation with clear error feedback.
+
 ### 🌐 Async Validation
 
+#### Async Object Level Validation
 If you want to use an **async function** as your rule function, you need to define your rule with: `AsyncValidationRule`.
 
 Async rules are represented as:
@@ -357,7 +395,13 @@ Async rules are represented as:
 `AsyncValidationRule<T, TRoot extends Object = T>`
 
 ```ts
-import { validant, required, minNumber, emailAddress } from "validant";
+import {
+    AsyncValidationRule,
+    AsyncValidator,
+    required,
+    minNumber,
+    emailAddress,
+} from "validant";
 
 // Given your data model:
 interface Account {
@@ -381,7 +425,7 @@ const validationRule: AsyncValidationRule<Account> = {
 };
 ```
 
-Use validant.validateAsync() to run async rules:
+Instantiate the AsyncValidator and validate
 
 ```ts
 const account: Account = {
@@ -391,7 +435,8 @@ const account: Account = {
 };
 
 // validate
-const validationResult = await validant.validateAsync(account, validationRule);
+const validator = new AsyncValidator(validationRule);
+const validationResult = await validator.validateAsync(account);
 ```
 
 You’ll get the same structured result:
@@ -408,6 +453,37 @@ You’ll get the same structured result:
     },
 };
 ```
+
+#### Async Field Level Validation
+
+You can validate a specific field of an object easily by calling validator.validateFieldAsync(fieldName, object).
+
+```ts
+const account: Account = {
+    name: "",
+    age: 0,
+    email: "",
+};
+
+// Create a validator with your validation rules
+const validator = new Validator(validationRule);
+
+// Validate the "email" field of the account object
+const validationResult = validator.validateFieldAsync("email", account);
+```
+
+The result will be an object like this:
+
+```ts
+{
+    isValid: false,
+    fieldName: "email",
+    errors: {
+        email: ["This field is required.", "Invalid email address"]
+    }
+}
+```
+This lets you perform precise, async field-level validation with clear error feedback.
 
 #### ✅ Intuitive Error Structure
 
@@ -459,7 +535,7 @@ export type PropertyRuleFunc<TValue, TRoot extends Object> = (
 -   ✅ All custom rules are context-aware — validating against sibling fields is easy.
 -   ❌ No hacks or workarounds needed.
 
-### 🧩 Inline Custom Validation Example
+### 🧩 Inline Custom Rule Example
 
 You can define your custom validation both inline or as a separated function.
 
@@ -471,7 +547,7 @@ interface LoginRequest {
 
 const loginRule: ValidationRule<LoginRequest> = {
     userName: [
-        // Required validation
+        // Required rule
         function (username, loginRequest) {
             if (!username) {
                 return {
@@ -483,7 +559,7 @@ const loginRule: ValidationRule<LoginRequest> = {
                 isValid: true,
             };
         },
-        // Business rule validation
+        // Business rule
         function (username, loginRequest) {
             if (username.toLocaleLowerCase().includes("admin")) {
                 return {
@@ -497,7 +573,7 @@ const loginRule: ValidationRule<LoginRequest> = {
         },
     ],
     password: [
-        // Required validation
+        // Required rule
         function (password, loginRequest) {
             if (!password) {
                 return {
@@ -521,7 +597,8 @@ const loginRequest: LoginRequest = {
     password: "",
 };
 
-const result = validant.validate(loginRequest, loginRule);
+const validator = new Validator(loginRule);
+const result = validator.validate(loginRequest);
 ```
 
 **Result Structure**
@@ -537,7 +614,7 @@ const result = validant.validate(loginRequest, loginRule);
 };
 ```
 
-### 🧩 Composable Validation
+### 🧩 Composable Rule
 
 Not a fan of bulky inline validations? If you feel the above inline validation is fat, lets turn them into reusable function instead with a meaningful function name:
 
@@ -596,6 +673,42 @@ const loginRule: ValidationRule<LoginRequest> = {
 };
 ```
 
+## 🔓 Loose Coupling
+
+The `requiredAdminRule` function represents a domain-specific business validation. It’s too valuable to be tightly coupled to any particular validation library. That logic belongs to your domain, not to infrastructure.
+
+The type `PropertyRuleFunc<string, LoginRequest>` is simply a helper — it gives you compile-time type safety and ensures your rule is compatible with the validation engine. But it’s not mandatory to explicitly annotate every rule with it.
+
+For example, this will still work seamlessly:
+
+```ts
+// The PropertyRuleFunc<string, LoginRequest> removed
+function requiredAdminRule() {
+    return function (username: string, loginRequest: LoginRequest) {
+        if (username.toLocaleLowerCase().includes("admin")) {
+            return {
+                isValid: false,
+                errorMessage: "Admin is not allowed to login.",
+            };
+        }
+        return {
+            isValid: true,
+        };
+    };
+}
+```
+
+As long as the function conforms to the expected shape, it will integrate with the validation system automatically — making your domain logic loosely coupled, portable, and testable without dragging in validation dependencies.
+
+This approach encourages separation of concerns:
+
+-   Keep domain rules in domain layers.
+-   Easy to test.
+-   Keep validation orchestration in the validation layer.
+-   Compose them freely using meaningful, reusable functions.
+
+Even if you change your framework in the future, the `requiredAdminRule` remains highly reusable. An adapter function is all it takes to integrate it elsewhere.
+
 ## 🧮 Array Validation
 
 Validating arrays in Validant is simple yet powerful. You can apply rules both to the array itself (e.g. length checks) and to each individual item in the array.
@@ -638,7 +751,8 @@ const emptyOrder: Order = {
     orderItems: [], // Fails arrayMinLen
 };
 
-const result = validant.validate(emptyOrder, orderRule);
+const validator = new Validator(loginRule);
+const result = validator.validate(emptyOrder, orderRule);
 ```
 
 The above validation results error structure:
@@ -713,7 +827,10 @@ The above validation results the following error structure
 -   Works with any depth of nested arrays
 -   **Dont worry if your property names or data structure change**, TypeScript (and your editor) will catch it instantly
 
-❌ No confusing string paths like "orderItems[0].quantity" (at least for me) — **good luck with that** while debugging or binding errors to your UI.
+❌ No confusing string paths like "orderItems[0].quantity"
+
+-   Good luck debugging when property names change, or when you're trying to trace validation errors in deeply nested structures.
+-   Binding errors back to your UI? Prepare for brittle code and guesswork.
 
 ## ⚠️ Error Structure Breakdown
 
@@ -1307,7 +1424,9 @@ export function createProductValidationService(
     async function validateAsync(request: ProductRequest) {
         // pass the repository required by the validation rule builder for validation purpose
         const registrationRule = buildProductRule(userRepository);
-        return validant.validateAsync(request, registrationRule, {
+
+        const validator = new AsyncValidator(loginRule);
+        return validator.validateAsync(request, registrationRule, {
             errorMessage: "error",
             okMessage: "ok",
         });
@@ -1512,7 +1631,7 @@ And you have a rule like "Minimum 5 items required", the error might look like:
 
 Use this structure to display detailed and indexed feedback per array element — and at the same time handle overall constraints at the array level.
 
-### Custom Property Validator
+### Custom Rule Function (Property Validator)
 
 These types let you define your own custom validation rules for individual properties in a type-safe way.
 

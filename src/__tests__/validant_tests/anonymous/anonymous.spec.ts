@@ -1,6 +1,4 @@
-import { validant, ValidationRule, } from "../../../index"
-import { ValidationResult } from "../../../validant"
-import { arrayMinLen, isNumber, maxNumber, minNumber, required } from "../../../rules"
+import { Validator, ValidationRule, ValidationResult, arrayMinLen, isNumber, maxNumber, minNumber, required } from "../../../index"
 
 const rule = {
     orderItems: {
@@ -26,7 +24,8 @@ describe("Validate Anonymous", () => {
             orderItems: []
         }
 
-        const actual = validant.validate(order, rule)
+        const validator = new Validator(rule)
+        const actual = validator.validate(order)
         const expected: ValidationResult<typeof order> = {
             message: "One or more validation errors occurred.",
             isValid: false,
@@ -54,7 +53,8 @@ describe("Validate Anonymous", () => {
             ]
         }
 
-        const actual = validant.validate(order, rule)
+        const validator = new Validator(rule)
+        const actual = validator.validate(order)
         const expected: ValidationResult<typeof order> = {
             message: "One or more validation errors occurred.",
             isValid: false,
@@ -112,8 +112,8 @@ describe("Validate Anonymous", () => {
                 }
             }
         }
-
-        const actual = () => validant.validate(order, isolatedRule)
+        const validator = new Validator(isolatedRule)
+        const actual = () => validator.validate(order)
         const error = new Error("minNumber: Value is not a number. The value was: 0 (type: 'string')")
 
         expect(actual).toThrow(error)

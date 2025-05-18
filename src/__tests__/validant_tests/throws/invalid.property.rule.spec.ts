@@ -1,5 +1,4 @@
-import { ValidationRule } from "../../../types/ValidationRule"
-import { validant } from "../../../validant"
+import { ValidationRule, Validator, } from "../../../index"
 
 interface Person {
     name: string
@@ -18,7 +17,8 @@ describe("Test Invalid Rule", () => {
             children: "123123" as any
         }
 
-        const actual = () => validant.validate(person, rule)
+        const validator = new Validator(rule)
+        const actual = () => validator.validate(person)
 
         const expected = new Error(`string is not a valid rule.`)
 

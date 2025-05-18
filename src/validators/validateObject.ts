@@ -20,7 +20,7 @@ export type ObjectFieldValidationResult<T> = {
     errors?: ErrorOf<T> | FieldErrors
 }
 
-function isArrayValidationRule<T, TRoot>(rule: ValidationRule<T, TRoot>[Extract<keyof T, string>] | ArrayValidationRule<T[Extract<keyof T, string>], TRoot>) {
+export function isArrayValidationRule<T, TRoot>(rule: ValidationRule<T, TRoot>[Extract<keyof T, string>] | ArrayValidationRule<T[Extract<keyof T, string>], TRoot>) {
     const allowedKeys = new Set(["arrayRules", "arrayItemRule"]);
     const keys = Object.keys(rule);
 
@@ -28,7 +28,7 @@ function isArrayValidationRule<T, TRoot>(rule: ValidationRule<T, TRoot>[Extract<
     return isArrayRule
 }
 
-function validatePrimitiveField<T, TRoot>(key: Extract<keyof T, string>, object: T, root: TRoot, rule: PrimitiveRule<T, TRoot>): PrimitiveFieldValidationResult {
+export function validatePrimitiveField<T, TRoot>(key: Extract<keyof T, string>, object: T, root: TRoot, rule: PrimitiveRule<T, TRoot>): PrimitiveFieldValidationResult {
     var fieldErrors: FieldErrors = [];
     for (let index = 0; index < rule.length; index++) {
         const propertyRuleFunc = rule[index];
@@ -62,8 +62,8 @@ function validateArrayField<T, TRoot>(key: Extract<keyof T, string>, object: T, 
 
     // Support dynamic rule builder function
     if (typeof rule === "function") {
-        const builtRule = rule(value, root)
-        return validateArrayField(key, object, root, builtRule) // Recurse into built rule
+        const arrayRule = rule(value, root)
+        return validateArrayField(key, object, root, arrayRule) // Recurse into built rule
     }
 
     var arrayFieldErrors: ErrorOfArray<T> = {};

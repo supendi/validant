@@ -1,6 +1,4 @@
-import { validant, } from "../../../index"
-import { ValidationRule } from "../../../types/ValidationRule"
-import { emailAddress, required, minNumber } from "../../../rules"
+import { Validator, minNumber, required, ValidationRule, emailAddress } from "../../../index"
 
 interface Account {
     name: string,
@@ -23,7 +21,8 @@ describe("Simple Object Test", () => {
             email: ""
         }
 
-        const actual = validant.validate(account, validationRule)
+        const validator = new Validator(validationRule)
+        const actual = validator.validate(account)
 
         var expected = {
             message: "One or more validation errors occurred.",

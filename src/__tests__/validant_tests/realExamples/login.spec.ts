@@ -1,7 +1,4 @@
-import { validant, } from "../../../index"
-import { ValidationRule } from "../../../types/ValidationRule"
-import { ValidationResult } from "../../../validant"
-import { required, } from "../../../rules"
+import { required, ValidationResult, ValidationRule, Validator } from "../../../index"
 
 const defaultMessage = { okMessage: "Good to go.", errorMessage: "One or more validation errors occurred." }
 
@@ -22,7 +19,8 @@ describe("validate login request", () => {
             password: ""
         }
 
-        const actual = validant.validate(loginRequest, loginRule)
+        const validator = new Validator(loginRule)
+        const actual = validator.validate(loginRequest)
 
         const expected: ValidationResult<LoginRequest> = {
             message: defaultMessage.errorMessage,

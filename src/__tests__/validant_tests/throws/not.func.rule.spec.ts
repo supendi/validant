@@ -1,5 +1,4 @@
-import { PropertyRuleFunc, ValidationRule } from "../../../types/ValidationRule"
-import { validant } from "../../../validant"
+import { Validator, PropertyRuleFunc, ValidationRule, } from "../../../index"
 
 interface Person {
     name: string
@@ -16,7 +15,9 @@ describe("Test Not Function Property Rule", () => {
         const rule: ValidationRule<Person> = {
             age: ["dev use any and dont know if this is not a func" as any as PropertyRuleFunc<1, Person>]
         }
-        const actual = () => validant.validate(person, rule)
+
+        const validator = new Validator(rule)
+        const actual = () => validator.validate(person)
 
         const expected = new Error("propertyRuleFunc is not a function")
 

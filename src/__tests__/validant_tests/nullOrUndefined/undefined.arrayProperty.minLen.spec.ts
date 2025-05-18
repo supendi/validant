@@ -1,7 +1,4 @@
-import { validant, } from "../../../index"
-import { ValidationRule } from "../../../types/ValidationRule"
-import { ValidationResult } from "../../../validant"
-import { arrayMinLen, required } from "../../../rules"
+import { Validator, ValidationResult, arrayMinLen, required, ValidationRule } from "../../../index"
 
 interface Person {
     name?: string
@@ -29,7 +26,8 @@ describe("Validator test with children array", () => {
             ]
         }
 
-        const actual = validant.validate(person, rule)
+        const validator = new Validator(rule)
+        const actual = validator.validate(person)
 
         const expected: ValidationResult<Person> = {
             message: "One or more validation errors occurred.",

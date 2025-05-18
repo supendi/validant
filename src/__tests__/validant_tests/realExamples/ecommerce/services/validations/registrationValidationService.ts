@@ -1,6 +1,4 @@
-import { emailAddress, equalToPropertyValue, regularExpression, required } from "../../../../../../rules"
-import { validant, ValidationResult } from "../../../../../../validant"
-import { AsyncValidationRule } from "../../../../../../types/AsyncValidationRule"
+import { AsyncValidator, AsyncValidationRule, required, ValidationResult, regularExpression, emailAddress, equalToPropertyValue, } from "../../../../../../index"
 import { UserRepository, UserType } from "../repositories/userRepository"
 
 export const ALLOWED_USER_TYPES: UserType[] = ["customer", "tenant"]
@@ -75,7 +73,9 @@ export interface UserValidationService {
 export function createRegistrationValidationService(userRepository: UserRepository): UserValidationService {
     async function validateAsync(request: RegistrationRequest) {
         const registrationRule = buildRegistrationRule(userRepository)
-        return validant.validateAsync(request, registrationRule, {
+
+        const validator = new AsyncValidator(registrationRule)
+        return validator.validateAsync(request, {
             errorMessage: "error",
             okMessage: "ok"
         })

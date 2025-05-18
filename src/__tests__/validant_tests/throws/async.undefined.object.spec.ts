@@ -1,5 +1,4 @@
-import { AsyncValidationRule } from "../../../types/AsyncValidationRule"
-import { validant } from "../../../validant"
+import { AsyncValidator, AsyncValidationRule, } from "../../../index"
 
 interface Person {
     name: string
@@ -14,10 +13,11 @@ const rule: AsyncValidationRule<Person> = {
 describe("Test Validate Against Undefined", () => {
     it("throw error", async () => {
         const person: Person | undefined = undefined
- 
+
         const expected = new Error(`validant: object is null or undefined during validation.`)
 
-        await expect(validant.validateAsync(person, rule))
+        const validator = new AsyncValidator(rule)
+        await expect(validator.validateAsync(person))
             .rejects
             .toThrow(expected)
     })
@@ -29,7 +29,8 @@ describe("Test Validate Against null", () => {
 
         const expected = new Error(`validant: object is null or undefined during validation.`)
 
-        await expect(validant.validateAsync(person, rule))
+        const validator = new AsyncValidator(rule)
+        await expect(validator.validateAsync(person))
             .rejects
             .toThrow(expected)
     })

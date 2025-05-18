@@ -1,5 +1,4 @@
-import { AsyncValidationRule } from "../../../types/AsyncValidationRule"
-import { validant } from "../../../validant"
+import { AsyncValidator, AsyncValidationRule, } from "../../../index"
 
 interface Person {
     name: string
@@ -14,7 +13,8 @@ describe("Test Validate Against null validation rule", () => {
         }
 
         const rule: AsyncValidationRule<Person> = undefined
-        const actual = async () => await validant.validateAsync(person, rule)
+        const validator = new AsyncValidator(rule)
+        const actual = async () => await validator.validateAsync(person)
 
         const expected = new Error(`validant: validation rule is null or undefined.`)
 

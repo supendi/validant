@@ -20,6 +20,23 @@ export type ErrorOf<T extends Object> = { [key in keyof T]?:
     : T[key] extends PossiblyUndefined<object> ? ErrorOf<T[key]>
     : string[] }
 
+export type ErrorValueOf<T, K extends keyof T> =
+    T[K] extends Date
+    ? string[]
+    : T[K] extends PossiblyUndefined<Array<any>>
+    ? ErrorOfArray<T[K]>
+    : T[K] extends PossiblyUndefined<object>
+    ? ErrorOf<T[K]>
+    : string[];
+
+export interface FieldErrorOf<T, K extends keyof T = keyof T> {
+    isValid: boolean;
+    fieldName: K;
+    errors?: {
+        [P in K]: ErrorValueOf<T, P>;
+    };
+}
+
 /**
  * Represent the error that has index as one of its properties.
  */

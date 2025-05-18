@@ -1,5 +1,4 @@
-import { ValidationRule } from "../../../types/ValidationRule"
-import { ValidationResult, validant } from "../../../validant"
+import { Validator, ValidationResult, ValidationRule } from "../../../index"
 
 interface Person {
     name: string
@@ -18,7 +17,9 @@ const person: Person = {
 
 describe("Ignore or skip undefined rule", () => {
     it("return true", () => {
-        const actual = validant.validate(person, rule)
+
+        const validator = new Validator(rule)
+        const actual = validator.validate(person)
 
         const expected: ValidationResult<Person> = {
             message: "Good to go.",

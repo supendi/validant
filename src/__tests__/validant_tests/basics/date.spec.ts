@@ -1,8 +1,5 @@
-import { validant, ValidationResult } from "../../.."
-import { required } from "../../../rules"
-import { ValidationRule } from "../../../types/ValidationRule"
+import { required, ValidationResult, ValidationRule, Validator } from "../../../index"
 
- 
 interface Product {
     expiredDate?: Date
 }
@@ -15,7 +12,8 @@ describe("Test", () => {
     it("return error empty Date", () => {
         const product: Product = {} // date undefined
 
-        const actual = validant.validate(product, rule)
+        const validator = new Validator(rule)
+        const actual = validator.validate(product)
         const expected: ValidationResult<Product> = {
             message: "One or more validation errors occurred.",
             isValid: false,
@@ -33,15 +31,16 @@ describe("Test non empty date", () => {
         const product = {
             expiredDate: new Date()
         }
-        const actual2 = validant.validate(product, rule)
+        const validator = new Validator(rule)
+        const actual = validator.validate(product)
 
-        const expected2: ValidationResult<Product> = {
+        const expected: ValidationResult<Product> = {
             message: "Good to go.",
             isValid: true,
             errors: undefined
         }
 
-        expect(actual2).toEqual(expected2)
+        expect(actual).toEqual(expected)
     })
 })
 

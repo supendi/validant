@@ -1,6 +1,4 @@
-import { arrayMaxLen, arrayMinLen, minNumber, required, stringMinLen } from "../../../../../../rules"
-import { validant, ValidationResult } from "../../../../../../validant"
-import { AsyncValidationRule } from "../../../../../../types/AsyncValidationRule"
+import { AsyncValidator, AsyncValidationRule, required, ValidationResult, minNumber, arrayMinLen, stringMinLen, arrayMaxLen } from "../../../../../../index"
 import { ProductPrice, ProductRequest } from "../repositories/productRepository"
 import { UserRepository } from "../repositories/userRepository"
 
@@ -120,8 +118,10 @@ export interface ProductValidationService {
 
 export function createProductValidationService(userRepository: UserRepository): ProductValidationService {
     async function validateAsync(request: ProductRequest) {
-        const registrationRule = buildProductRule(userRepository)
-        return validant.validateAsync(request, registrationRule, {
+        const productRule = buildProductRule(userRepository)
+
+        const validator = new AsyncValidator(productRule)
+        return validator.validateAsync(request, {
             errorMessage: "error",
             okMessage: "ok"
         })

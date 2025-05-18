@@ -1,4 +1,4 @@
-import { ValidationResult } from "../../validant";
+import { ValidationResult } from "../../Validator";
 
 
 /**

@@ -5,7 +5,7 @@ import { ValidationRule } from "../types/ValidationRule";
 import { validateFieldAsync } from "./validateFieldAsync";
 import { FieldErrors, ObjectFieldValidationResult, PrimitiveFieldValidationResult, PropertyType } from "./validateObject";
 
-function isAsyncArrayValidationRule<T, TRoot>(rule: AsyncValidationRule<T, TRoot>[Extract<keyof T, string>] | AsyncArrayValidationRule<T[Extract<keyof T, string>], TRoot>) {
+export function isAsyncArrayValidationRule<T, TRoot>(rule: AsyncValidationRule<T, TRoot>[Extract<keyof T, string>] | AsyncArrayValidationRule<T[Extract<keyof T, string>], TRoot>) {
     const allowedKeys = new Set(["arrayRules", "arrayItemRule"]);
     const keys = Object.keys(rule);
 
@@ -13,7 +13,7 @@ function isAsyncArrayValidationRule<T, TRoot>(rule: AsyncValidationRule<T, TRoot
     return isArrayRule
 }
 
-async function validatePrimitiveFieldAsync<T, TRoot>(key: Extract<keyof T, string>, object: T, root: TRoot, rule: GenericPropertyRuleFunc<T[Extract<keyof T, string>], TRoot>[]): Promise<PrimitiveFieldValidationResult> {
+export async function validatePrimitiveFieldAsync<T, TRoot>(key: Extract<keyof T, string>, object: T, root: TRoot, rule: GenericPropertyRuleFunc<T[Extract<keyof T, string>], TRoot>[]): Promise<PrimitiveFieldValidationResult> {
     var fieldErrors: FieldErrors = [];
     for (let index = 0; index < rule.length; index++) {
         const propertyRuleFunc = rule[index];

@@ -1,5 +1,4 @@
-import { validant, } from "../../../index"
-import { ValidationRule } from "../../../types/ValidationRule"
+import { Validator, ValidationRule } from "../../../index"
 
 interface Account {
     name: string,
@@ -29,7 +28,8 @@ describe("Test Inline Custom Rule", () => {
             name: "John",
         }
 
-        const validationResult = validant.validate(account, validationRule)
+        const validator = new Validator(validationRule)
+        const validationResult = validator.validate(account)
 
         const expected = {
             message: "One or more validation errors occurred.",

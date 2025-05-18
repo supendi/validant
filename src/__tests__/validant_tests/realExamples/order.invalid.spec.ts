@@ -1,6 +1,4 @@
-import { arrayMinLen, elementOf, emailAddress, maxNumber, minNumber, required } from "../../../rules"
-import { ValidationRule } from "../../../types/ValidationRule"
-import { ValidationResult, validant } from "../../../validant"
+import { arrayMinLen, elementOf, emailAddress, maxNumber, minNumber, required, ValidationResult, ValidationRule, Validator } from "../../../index"
 
 interface Product {
     name: string
@@ -55,7 +53,7 @@ const rule: ValidationRule<Order> = {
 const errorMessage = "One or more validation errors occurred.";
 
 describe("Validate empty order items", () => {
-    it("Should return errors", () => { 
+    it("Should return errors", () => {
         const orderWithEmptyItem: Order = {
             id: "1",
             orderDate: null,
@@ -68,7 +66,8 @@ describe("Validate empty order items", () => {
             orderItems: []
         }
 
-        const actual1 = validant.validate(orderWithEmptyItem, rule)
+        const validator = new Validator(rule)
+        const actual1 = validator.validate(orderWithEmptyItem)
         const expected1: ValidationResult<Order> = {
             message: errorMessage,
             isValid: false,
@@ -91,7 +90,7 @@ describe("Validate empty order items", () => {
 })
 
 describe("Validate empty order items", () => {
-    it("Should return errors", () => { 
+    it("Should return errors", () => {
         const order: Order = {
             id: "1",
             orderDate: null,
@@ -122,7 +121,10 @@ describe("Validate empty order items", () => {
                 },
             ]
         }
-        const actual = validant.validate(order, rule)
+
+        const validator = new Validator(rule)
+        const actual = validator.validate(order)
+        
         const expected: ValidationResult<Order> = {
             message: errorMessage,
             isValid: false,

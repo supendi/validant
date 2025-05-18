@@ -1,22 +1,24 @@
-import { minNumber, required } from "../../../rules"
-import { ValidationRule } from "../../../types/ValidationRule"
-import { ValidationResult, validant } from "../../../validant"
+import { minNumber, required, ValidationResult, ValidationRule, Validator } from "../../../index"
 
 interface Continent {
     name: string
 }
+
 interface Country {
     name: string
     continent: Continent
 }
+
 interface City {
     name: string
     country: Country
 }
+
 interface Address {
     street: string,
     city: City
 }
+
 interface Person {
     name: string,
     age: number,
@@ -67,7 +69,8 @@ describe("Nested Object Test with nested address", () => {
             }
         }
 
-        const actual = validant.validate(john, rule)
+        const validator = new Validator(rule)
+        const actual = validator.validate(john)
 
         const expected: ValidationResult<Person> = {
             message: "One or more validation errors occurred.",

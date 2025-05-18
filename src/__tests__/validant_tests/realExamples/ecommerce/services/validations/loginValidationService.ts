@@ -1,6 +1,4 @@
-import { emailAddress, required } from "../../../../../../rules"
-import { validant, ValidationResult } from "../../../../../../validant"
-import { AsyncValidationRule } from "../../../../../../types/AsyncValidationRule"
+import { AsyncValidator, AsyncValidationRule, emailAddress, required, ValidationResult, } from "../../../../../../index"
 import { UserRepository } from "../repositories/userRepository"
 
 export type LoginRequest = {
@@ -8,7 +6,7 @@ export type LoginRequest = {
     password: string
 }
 
-function preventRegisteredEmailRule(userRepository: UserRepository) {
+function preventUnRegisteredEmailRule(userRepository: UserRepository) {
     return async function (email) {
         if (!email) { // lets skip this for now.
             return {
@@ -33,7 +31,7 @@ function buildLoginRule(userRepository: UserRepository) {
         email: [
             required(),
             emailAddress(),
-            preventRegisteredEmailRule(userRepository)
+            preventUnRegisteredEmailRule(userRepository)
         ],
         password: [
             required(),
@@ -49,7 +47,8 @@ export interface LoginValidationService {
 export function createLoginValidationService(userRepository: UserRepository): LoginValidationService {
     async function validateAsync(request: LoginRequest) {
         const registrationRule = buildLoginRule(userRepository)
-        return validant.validateAsync(request, registrationRule, {
+        const validator = new AsyncValidator(registrationRule)
+        return validator.validateAsync(request, {
             errorMessage: "error",
             okMessage: "ok"
         })

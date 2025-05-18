@@ -1,6 +1,4 @@
-import { validant, } from "../../../index"
-import { ValidationRule } from "../../../types/ValidationRule"
-import { ValidationResult } from "../../../validant"
+import { Validator, ValidationRule, ValidationResult } from "../../../index"
 
 interface LoginRequest {
     userName: string
@@ -55,7 +53,8 @@ describe("validate login request", () => {
             password: ""
         }
 
-        const actual = validant.validate(loginRequest, loginRule)
+        const validator = new Validator(loginRule)
+        const actual = validator.validate(loginRequest)
 
         const expected: ValidationResult<LoginRequest> = {
             message: "One or more validation errors occurred.",
@@ -78,7 +77,8 @@ describe("validate login request", () => {
             password: ""
         }
 
-        const actual = validant.validate(loginRequest, loginRule)
+        const validator = new Validator(loginRule)
+        const actual = validator.validate(loginRequest)
 
         const expected: ValidationResult<LoginRequest> = {
             message: "One or more validation errors occurred.",

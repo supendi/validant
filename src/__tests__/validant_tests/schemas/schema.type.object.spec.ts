@@ -1,6 +1,4 @@
-import { validant, } from "../../../index"
-import { ValidationRule } from "../../../types/ValidationRule"
-import { emailAddress, required, minNumber } from "../../../rules"
+import { Validator, emailAddress, minNumber, required, ValidationRule, } from "../../../index"
 
 type Account = {
     name: string
@@ -22,7 +20,8 @@ const validationRule: ValidationRule<typeof account> = {
 
 describe("Simple Object Test", () => {
     it("Should return errors", () => {
-        const actual = validant.validate(account, validationRule)
+        const validator = new Validator(validationRule)
+        const actual = validator.validate(account)
 
         var expected = {
             message: "One or more validation errors occurred.",

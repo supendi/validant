@@ -1,6 +1,4 @@
-import { arrayMinLen, minNumber, required } from "../../../rules"
-import { ValidationRule } from "../../../types/ValidationRule"
-import { ValidationResult, validant } from "../../../validant"
+import { arrayMinLen, minNumber, required, ValidationResult, ValidationRule, Validator } from "../../../index"
 
 interface Product {
     name?: string
@@ -39,7 +37,8 @@ describe("Validate test with product", () => {
             ]
         }
 
-        const validationResult = validant.validate(ironStick, validationRule)
+        const validator = new Validator(validationRule)
+        const validationResult = validator.validate(ironStick)
 
         const expected: ValidationResult<Product> = {
             message: "One or more validation errors occurred.",

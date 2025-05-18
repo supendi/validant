@@ -1,5 +1,4 @@
-import { AsyncValidationRule } from "../../../types/AsyncValidationRule" 
-import { validant } from "../../../validant"
+import { AsyncValidator, AsyncValidationRule, } from "../../../index"
 
 interface Person {
     name: string
@@ -18,7 +17,8 @@ describe("Test Invalid Rule", () => {
             children: "123123" as any
         }
 
-        const actual = () => validant.validateAsync(person, rule)
+        const validator = new AsyncValidator(rule)
+        const actual = () => validator.validateAsync(person)
 
         const expected = new Error(`string is not a valid rule.`)
 

@@ -1,7 +1,4 @@
-import { validant, } from "../../../index"
-import { ValidationResult } from "../../../validant"
-import { arrayMinLen, maxNumber, minNumber, required } from "../../../rules"
-import { AsyncValidationRule } from "../../../types/AsyncValidationRule"
+import { AsyncValidator, AsyncValidationRule, ValidationResult, arrayMinLen, maxNumber, minNumber, required } from "../../../index"
 
 interface Order {
     id: string
@@ -66,7 +63,8 @@ describe("ValidateAsync Test", () => {
             orderItems: []
         }
 
-        const actual = await validant.validateAsync(order, rule)
+        const validator = new AsyncValidator(rule)
+        const actual = await validator.validateAsync(order)
         const expected: ValidationResult<Order> = {
             message: "One or more validation errors occurred.",
             isValid: false,
@@ -89,7 +87,8 @@ describe("Validate null property", () => {
             orderItems: []
         }
 
-        const actual = await validant.validateAsync(order, rule)
+        const validator = new AsyncValidator(rule)
+        const actual = await validator.validateAsync(order)
         const expected: ValidationResult<Order> = {
             message: "One or more validation errors occurred.",
             isValid: false,
@@ -117,7 +116,8 @@ describe("ValidateAsync Test", () => {
             ]
         }
 
-        const actual = await validant.validateAsync(order, rule)
+        const validator = new AsyncValidator(rule)
+        const actual = await validator.validateAsync(order)
         const expected: ValidationResult<Order> = {
             message: "One or more validation errors occurred.",
             isValid: false,

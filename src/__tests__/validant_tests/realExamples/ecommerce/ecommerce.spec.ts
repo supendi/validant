@@ -4,7 +4,7 @@
  * So there is no service in this scenario, this test is the service itself.
  */
 
-import { ValidationResult } from "../../../../validant"
+import { ValidationResult } from "../../../../Validator"
 import { createEcommerceContext } from "./ecommerceContext"
 import { OrderRequest } from "./services/repositories/orderRepository"
 import { ProductRequest } from "./services/repositories/productRepository"
