@@ -30,7 +30,7 @@ export type ValidationRule<T, TRoot extends Object = T> = { [key in keyof T]?
 * {
     orderItems: {
         arrayRules: [arrayMinLength(3)],
-        arrayItemRule: {
+        arrayElementRule: {
             qty: [minNumber(5)]
         }
     }
@@ -47,7 +47,7 @@ export type ArrayValidationRule<TArrayValue, TRoot extends Object> = {
     /**
      * The validation rule foreach element of an array.
      * Example:
-     * { orderItems: { arrayItemRule: { qty: [minNumber(5)] } }
+     * { orderItems: { arrayElementRule: { qty: [minNumber(5)] } }
      */
-    arrayItemRule?: ValidationRule<PossiblyUndefined<ArrayElementType<TArrayValue>>, TRoot> | ((arrayItem: ArrayElementType<TArrayValue>, root: TRoot) => ValidationRule<ArrayElementType<TArrayValue>, TRoot>);
+    arrayElementRule?: ValidationRule<PossiblyUndefined<ArrayElementType<TArrayValue>>, TRoot> | ((arrayItem: ArrayElementType<TArrayValue>, root: TRoot) => ValidationRule<ArrayElementType<TArrayValue>, TRoot>);
 };

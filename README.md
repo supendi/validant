@@ -1,26 +1,25 @@
 # Validant
 
-**Validant** is a lightweight, composable validation library built in TypeScript. Type first. No DSLs. Just pure functions — you take full control.
+**Validant** is a TypeScript-first validation library for real-world, dynamic rules — no DSLs, just types and functions.
 
 ## ✨ Why Validant?
-
--   ✅ Type-safe: Built entirely with TypeScript — types flow naturally from your rules to your results.
--   🔄 TYPE-FIRST, NOT SCHEMA-FIRST: Unlike other libraries like Zod that generate types from schemas (creating tight coupling between forms and validation), Validant starts from your own types — allowing you to decouple your app from any validation library, including this one. You stay in control of your models, your logic, and your architecture.
--   🧠 No magic: No special syntax. Just plain functions.
+ 
+-   🔄 TYPE-FIRST, NOT SCHEMA-FIRST = LOOSE COUPLING: Unlike other libraries that generate types from schemas, Validant starts from your own types — allowing you to decouple your app from any validation library, including this one.
+-   🧠 No DSLs. No special syntax. Just plain functions.
 -   🧩 Composable: Easily combine validations and reuse them across your codebase.
--   🪶 Lightweight: Zero dependencies. Minimal API. Maximum control.
+-   🪶 Zero dependencies. Minimal API. Maximum control.
 -   🧪 Made for TypeScript first: Validant is written in and only tested with TypeScript. It’s built for modern TypeScript-first projects. It might work in JavaScript — but it’s never been tested there.
--   ✅ Supports Field-Level Validation: Deep, fine-grained validation on individual fields — sync or async, arrays, nested objects, you name it.
+-   ✅ Deep, fine-grained validation on individual fields — sync or async, arrays, nested objects, also support Validate per Field
 
-## 📦 Installation
+## 🏁 Getting Started
+
+### 📦 Installation
 
 ```
 npm install validant
 # or
 yarn add validant
 ```
-
-## 🏁 Getting Started
 
 ### 🛠️ Validation Rule, Not Schema
 
@@ -297,6 +296,7 @@ Validant supports both **synchronous** and **asynchronous** validation.
 ### ⚡Sync Validation
 
 #### Object Level Validation
+
 Validation rules are represented as:
 
 `ValidationRule<T, TRoot extends object = T>`
@@ -383,11 +383,13 @@ The result will be an object like this:
     }
 }
 ```
+
 This lets you perform precise, field-level validation with clear error feedback.
 
 ### 🌐 Async Validation
 
 #### Async Object Level Validation
+
 If you want to use an **async function** as your rule function, you need to define your rule with: `AsyncValidationRule`.
 
 Async rules are represented as:
@@ -483,6 +485,7 @@ The result will be an object like this:
     }
 }
 ```
+
 This lets you perform precise, async field-level validation with clear error feedback.
 
 #### ✅ Intuitive Error Structure
@@ -729,7 +732,7 @@ interface Order {
 const orderRule: ValidationRule<Order> = {
     orderItems: {
         arrayRules: [arrayMinLen(1)], // Array-level rules
-        arrayItemRule: {
+        arrayElementRule: {
             // Item-level rules
             productId: [required()],
             quantity: [
@@ -763,7 +766,7 @@ The above validation results error structure:
     isValid: false,
     errors: {
         orderItems: {
-            errors: ["The minimum length for this field is 1."]
+            arrayErrors: ["The minimum length for this field is 1."]
         }
     }
 }
@@ -791,7 +794,7 @@ The above validation results the following error structure
     isValid: false,
     errors: {
         orderItems: {
-            errorsEach: [
+            arrayElementErrors: [
                 {
                     index: 0,
                     validatedObject: {
@@ -813,7 +816,7 @@ The above validation results the following error structure
 ✅ Dual-Level Validation
 
 -   arrayRules: Validate the array itself (length, required, etc.). Array level error is represented in the **errors** property
--   arrayItemRule: Validate each item's structure. Array item error is represented in the **errorsEach** property.
+-   arrayElementRule: Validate each item's structure. Array item error is represented in the **arrayElementErrors** property.
 
 ✅ Precise Error Reporting
 
@@ -895,8 +898,8 @@ Here’s the structure:
 
 ```ts
 export type ErrorOfArray<TArray> = {
-    errors?: string[]; // the error of array itself or array level errors
-    errorsEach?: IndexedErrorOf<ArrayElementType<TArray>>[]; // array item errors representation
+    arrayErrors?: string[]; // the error of array itself or array level errors
+    arrayElementErrors?: IndexedErrorOf<ArrayElementType<TArray>>[]; // array item errors representation
 };
 ```
 
@@ -932,8 +935,8 @@ The validation error might look like:
 {
     id: ["required."]
     orderItems: {
-        errors:["the minimum order items is 10 items, please add 9 more."], // array level errors
-        errorsEach: [ // array items error
+        arrayErrors:["the minimum order items is 10 items, please add 9 more."], // array level errors
+        arrayElementErrors: [ // array items error
             {
                 index: 0,
                 validatedObject: { // the object reference being validated
@@ -1046,7 +1049,7 @@ interface OrderItem {
 const rule: ValidationRule<Order> = {
     orderItems: {
         arrayRules: [arrayMinLen(1)],
-        arrayItemRule: {
+        arrayElementRule: {
             quantity: [minNumber(1, "Min qty is 1.")],
             discountPercentage: [maxNumber(10)],
         },
@@ -1062,7 +1065,7 @@ The rule above limits discountPercentage to a static 10%. But what if the rules 
 
 -   If quantity >= 10, max discount increases to 30%
 
-You can express that cleanly using a function for arrayItemRule:
+You can express that cleanly using a function for arrayElementRule:
 
 ```ts
 const rule: ValidationRule<Order> = {
@@ -1070,7 +1073,7 @@ const rule: ValidationRule<Order> = {
         arrayRules: [arrayMinLen(1)],
         // here we assign the rule with function instead of object.
         // The currentOrderItem is the current array item (context) that is being validated
-        arrayItemRule: function (currentOrderItem, order) {
+        arrayElementRule: function (currentOrderItem, order) {
             return {
                 quantity: [minNumber(1, "Min qty is 1.")],
                 discountPercentage: [
@@ -1123,7 +1126,7 @@ const orderRule: ValidationRule<OrderRequest> = {
     },
     orderItems: {
         arrayRules: [arrayMinLen(1, "Please add at least one product.")],
-        arrayItemRule: {
+        arrayElementRule: {
             productId: [required("Please enter product.")],
             quantity: [
                 minNumber(1, "Minimum quantity is 1."),
@@ -1215,19 +1218,19 @@ And the validation result :
     message: "One or more validation errors occurred.",
         isValid: false,
             errors: {
-        name: ["This field is required."],
-            age: ["The minimum value for this field is 20."],
-                address: {
-            street: ["This field is required."],
-                city: {
                 name: ["This field is required."],
-                    country: {
-                    name: ["This field is required."],
-                        continent: {
-                        name: ["This field is required."],
-                    }
+                age: ["The minimum value for this field is 20."],
+                address: {
+                    street: ["This field is required."],
+                        city: {
+                            name: ["This field is required."],
+                                country: {
+                                    name: ["This field is required."],
+                                        continent: {
+                                            name: ["This field is required."],
+                                }
+                        }
                 }
-            }
         },
         child: {
             name: ["This field is required."],
@@ -1386,7 +1389,7 @@ function buildProductRule(userRepository: UserRepository) {
                 arrayMaxLen(5, "Product prices maximum is 5 level."),
                 noDuplicatePriceLevelRule(),
             ],
-            arrayItemRule: function (
+            arrayElementRule: function (
                 currentPriceItem: ProductPrice,
                 product: ProductRequest
             ) {
@@ -1471,7 +1474,7 @@ const customerRule: ValidationRule<Customer> = {
     email: [required(), emailAddress()],
     addresses: {
         arrayRules: [required()],
-        arrayItemRule: customerAddressRule,
+        arrayElementRule: customerAddressRule,
     },
 };
 ```
@@ -1594,8 +1597,8 @@ Represents the error structure for array fields in a model. It distinguishes bet
 
 ```ts
 export type ErrorOfArray<TArray> = {
-    errors?: string[];
-    errorsEach?: IndexedErrorOf<ArrayElementType<TArray>>[];
+    arrayErrors?: string[];
+    arrayElementErrors?: IndexedErrorOf<ArrayElementType<TArray>>[];
 };
 ```
 
@@ -1614,8 +1617,8 @@ And you have a rule like "Minimum 5 items required", the error might look like:
 ```ts
 {
     orderItems: {
-        errors: ["The minimum order is 5 items"],
-        errorsEach: [
+        arrayErrors: ["The minimum order is 5 items"],
+        arrayElementErrors: [
             {
                 index: 0,
                 validatedObject: { productId: 1, quantity: 0 },
@@ -1686,7 +1689,7 @@ Defines how to validate both the array itself and its individual elements.
 ```ts
 export type ArrayValidationRule<TArrayValue, TRoot extends Object> = {
     arrayRules?: PropertyRuleFunc<TArrayValue, TRoot>[];
-    arrayItemRule?:
+    arrayElementRule?:
         | ValidationRule<
               PossiblyUndefined<ArrayElementType<TArrayValue>>,
               TRoot
@@ -1712,7 +1715,7 @@ orderItems: {
 
 This ensures the array (e.g. orderItems) has at least 3 items.
 
-**arrayItemRule**
+**arrayElementRule**
 
 Validation rules for each element inside the array.
 
@@ -1720,7 +1723,7 @@ Example
 
 ```ts
 orderItems: {
-    arrayItemRule: {
+    arrayElementRule: {
         qty: [minNumber(5)];
     }
 }
@@ -1730,7 +1733,7 @@ Or for dynamic rules per item (**function style**):
 
 ```ts
 orderItems: {
-    arrayItemRule: (item, root) => ({
+    arrayElementRule: (item, root) => ({
         qty: item.type === "bulk" ? [minNumber(10)] : [],
     });
 }

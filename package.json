@@ -1,7 +1,7 @@
 {
   "name": "validant",
   "version": "0.0.50",
-  "description": "Validant is a lightweight, composable validation library built in TypeScript. No schemas. No DSLs. Just pure functions — you take full control.",
+  "description": "Validant is a TypeScript-first validation library for real-world, dynamic rules — no DSLs, just types and functions.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [

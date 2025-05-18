@@ -91,7 +91,7 @@ function buildProductRule(userRepository: UserRepository) {
                 arrayMaxLen(5, "Product prices maximum is 5 level."),
                 noDuplicatePriceLevelRule()
             ],
-            arrayItemRule: function (currentPriceItem: ProductPrice, product: ProductRequest) {
+            arrayElementRule: function (currentPriceItem: ProductPrice, product: ProductRequest) {
                 return {
                     level: [
                         required(),

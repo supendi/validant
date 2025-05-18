@@ -297,7 +297,7 @@ describe("Reza do login and create product.", () => {
             errors: {
                 userEmail: ["User is not allowed to create product."],
                 prices: {
-                    errors: ["This field is required.", "Product has to be at least having 1 price."]
+                    arrayErrors: ["This field is required.", "Product has to be at least having 1 price."]
                 }
             }
         }
@@ -345,7 +345,7 @@ describe("Attempt1: Dwi login and create product.", () => {
             errors: {
                 productName: ["This field is required.", "Product name should be at least 3 chars"],
                 prices: {
-                    errors: ["This field is required.", "Product has to be at least having 1 price."]
+                    arrayErrors: ["This field is required.", "Product has to be at least having 1 price."]
                 }
             }
         }
@@ -402,7 +402,7 @@ describe("Attempt2: Dwi login and create product.", () => {
             message: "error",
             errors: {
                 prices: {
-                    errorsEach: [
+                    arrayElementErrors: [
                         {
                             index: 0,
                             validatedObject: {
@@ -484,7 +484,7 @@ describe("Attempt3: Dwi login and create product.", () => {
             message: "error",
             errors: {
                 prices: {
-                    errorsEach: [
+                    arrayElementErrors: [
                         {
                             index: 2,
                             validatedObject: {
@@ -555,8 +555,8 @@ describe("Attempt4: Dwi login and create product.", () => {
             message: "error",
             errors: {
                 prices: {
-                    errors: ["Duplicate price 1 and level 1. At index 0."],
-                    errorsEach: [
+                    arrayErrors: ["Duplicate price 1 and level 1. At index 0."],
+                    arrayElementErrors: [
                         {
                             index: 1,
                             validatedObject: {
@@ -718,7 +718,7 @@ describe("Attempt1: Reza Create an Order", () => {
             errors: {
                 orderDate: ["This field is not a valid date, type of value was: string."],
                 orderItems: {
-                    errors: ["Please add at least an item"]
+                    arrayErrors: ["Please add at least an item"]
                 },
                 totalAmount: ["The minimum value for this field is 1.",],
                 userEmail: ["This field is required.", "Invalid email address. The valid email example: john.doe@example.com.",]
@@ -788,7 +788,7 @@ describe("Attempt2: Reza Create an Order", () => {
             message: "error",
             errors: {
                 orderItems: {
-                    errorsEach: [
+                    arrayElementErrors: [
                         {
                             index: 0,
                             errors: {
@@ -887,7 +887,7 @@ describe("Attempt2: Reza Create an Order", () => {
             message: "error",
             errors: {
                 orderItems: {
-                    errorsEach: [
+                    arrayElementErrors: [
                         {
                             index: 0,
                             errors: {

@@ -6,7 +6,7 @@ import { validateFieldAsync } from "./validateFieldAsync";
 import { FieldErrors, ObjectFieldValidationResult, PrimitiveFieldValidationResult, PropertyType } from "./validateObject";
 
 export function isAsyncArrayValidationRule<T, TRoot>(rule: AsyncValidationRule<T, TRoot>[Extract<keyof T, string>] | AsyncArrayValidationRule<T[Extract<keyof T, string>], TRoot>) {
-    const allowedKeys = new Set(["arrayRules", "arrayItemRule"]);
+    const allowedKeys = new Set(["arrayRules", "arrayElementRule"]);
     const keys = Object.keys(rule);
 
     const isArrayRule = keys.every(key => allowedKeys.has(key));
@@ -60,28 +60,28 @@ async function validateArrayFieldAsync<T, TRoot>(key: Extract<keyof T, string>, 
         for (let index = 0; index < arrayValidationRule.arrayRules.length; index++) {
             const primitiveFieldValidationResult = await validatePrimitiveFieldAsync(key, object, root, arrayValidationRule.arrayRules)
             if (!primitiveFieldValidationResult.isValid) {
-                arrayFieldErrors.errors = primitiveFieldValidationResult.errors
+                arrayFieldErrors.arrayErrors = primitiveFieldValidationResult.errors
             }
         }
     }
 
-    if (arrayValidationRule.arrayItemRule && Array.isArray(value)) {
+    if (arrayValidationRule.arrayElementRule && Array.isArray(value)) {
         for (let index = 0; index < value.length; index++) {
             const element = value[index];
             let error: ErrorOf<any> = undefined
-            if (typeof arrayValidationRule.arrayItemRule === "function") {
-                const validationRule = arrayValidationRule.arrayItemRule(element, root)
+            if (typeof arrayValidationRule.arrayElementRule === "function") {
+                const validationRule = arrayValidationRule.arrayElementRule(element, root)
                 error = await validateObjectAsync(element, root, validationRule);
             }
             else {
-                error = await validateObjectAsync(element, root, arrayValidationRule.arrayItemRule);
+                error = await validateObjectAsync(element, root, arrayValidationRule.arrayElementRule);
             }
             if (error) {
-                if (!arrayFieldErrors.errorsEach) {
-                    arrayFieldErrors.errorsEach = []
+                if (!arrayFieldErrors.arrayElementErrors) {
+                    arrayFieldErrors.arrayElementErrors = []
                 }
 
-                arrayFieldErrors.errorsEach.push({
+                arrayFieldErrors.arrayElementErrors.push({
                     index: index,
                     errors: error,
                     validatedObject: element
@@ -159,7 +159,7 @@ export const validateObjectAsync = async <T, TRoot>(object: T, rootObject: TRoot
             }
             if (isArrayProperty) {
                 const result = await validateArrayFieldAsync(key, object, rootObject, rule)
-                if (result?.errors || result?.errorsEach) {
+                if (result?.arrayErrors || result?.arrayElementErrors) {
                     assignErrorsIfAny(key, result)
                 }
                 continue

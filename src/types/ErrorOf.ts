@@ -49,7 +49,7 @@ export type IndexedErrorOf<T extends Object> = {
 /**
  * Represent the error model for array.
  * Example: If T { name: string, children: T[]}
- * Then ErrorOfArray<T> will be  { name: string[], children: { errors: string[], errorsEach: { index: number, errors: ErrorOf<T>, validatedObject: T | null | undefined }}[] }
+ * Then ErrorOfArray<T> will be  { name: string[], children: { errors: string[], arrayElementErrors: { index: number, errors: ErrorOf<T>, validatedObject: T | null | undefined }}[] }
  */
 export type ErrorOfArray<TArray> = {
     /**
@@ -60,13 +60,13 @@ export type ErrorOfArray<TArray> = {
      * The error will be represented as:
      * { orderItems: { errors: ["The minimum order is 5 items"]}}
      */
-    errors?: string[],
+    arrayErrors?: string[],
 
     /**
      * If each element of array need to be validated.
-     * The errorsEach represents the errors of the each element of the array.
+     * The arrayElementErrors represents the errors of the each element of the array.
      * Example :
-     * errorsEach: { index: number, errors: ErrorOf<T>, validatedObject: T | null | undefined }}[] 
+     * arrayElementErrors: { index: number, errors: ErrorOf<T>, validatedObject: T | null | undefined }}[] 
      */
-    errorsEach?: IndexedErrorOf<ArrayElementType<TArray>>[]
+    arrayElementErrors?: IndexedErrorOf<ArrayElementType<TArray>>[]
 }

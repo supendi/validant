@@ -41,8 +41,8 @@ describe("ValidationResult Test", () => {
                 name: ["Your name is required."],
                 age: ["Minimum is 17 years old."],
                 children: {
-                    errors: ["Children is required"],
-                    errorsEach: [
+                    arrayErrors: ["Children is required"],
+                    arrayElementErrors: [
                         {
                             index: 0,
                             errors: {

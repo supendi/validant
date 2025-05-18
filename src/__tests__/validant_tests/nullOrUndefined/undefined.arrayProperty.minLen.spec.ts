@@ -11,7 +11,7 @@ const rule: ValidationRule<Person> = {
 
 rule.children = {
     arrayRules: [arrayMinLen(2, "The minimum children is 2.")],
-    arrayItemRule: rule
+    arrayElementRule: rule
 }
 
 describe("Validator test with children array", () => {
@@ -35,14 +35,14 @@ describe("Validator test with children array", () => {
             errors: {
                 name: ["This field is required."],
                 children: {
-                    errors: ["The minimum children is 2."],
-                    errorsEach: [
+                    arrayErrors: ["The minimum children is 2."],
+                    arrayElementErrors: [
                         {
                             index: 0,
                             errors: {
                                 name: ["This field is required."],
                                 children: {
-                                    errors: ["The minimum children is 2."]
+                                    arrayErrors: ["The minimum children is 2."]
                                 }
                             },
                             validatedObject: {

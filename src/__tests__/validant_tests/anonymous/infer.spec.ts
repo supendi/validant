@@ -8,7 +8,7 @@ const order = {
 const rule: ValidationRule<typeof order> = {
     orderItems: {
         arrayRules: [arrayMinLen(1)],
-        arrayItemRule: {
+        arrayElementRule: {
             productId: [
                 isNumber(),
                 required(),
@@ -32,7 +32,7 @@ describe("Validate Inferred", () => {
             isValid: false,
             errors: {
                 orderItems: {
-                    errors: ["The minimum length for this field is 1."]
+                    arrayErrors: ["The minimum length for this field is 1."]
                 }
             },
         }
@@ -61,7 +61,7 @@ describe("Validate Inferred", () => {
             isValid: false,
             errors: {
                 orderItems: {
-                    errorsEach: [
+                    arrayElementErrors: [
                         {
                             index: 0,
                             validatedObject: {
@@ -118,7 +118,7 @@ describe("Validate Inferred", () => {
         const newOrderRule: ValidationRule<typeof order> = {
             orderItems: {
                 arrayRules: [arrayMinLen(1)],
-                arrayItemRule: {
+                arrayElementRule: {
                     productId: [
                         isNumber(),
                         required(),
@@ -137,7 +137,7 @@ describe("Validate Inferred", () => {
             isValid: false,
             errors: {
                 orderItems: {
-                    errorsEach: [
+                    arrayElementErrors: [
                         {
                             index: 0,
                             validatedObject: {

@@ -28,7 +28,7 @@ const rule: AsyncValidationRule<Order> = {
     orderItems: function () {
         return {
             arrayRules: [arrayMinLen(1)],
-            arrayItemRule: function () {
+            arrayElementRule: function () {
                 return {
                     productId: [
                         required(),
@@ -70,7 +70,7 @@ describe("ValidateAsync Test", () => {
             isValid: false,
             errors: {
                 orderItems: {
-                    errors: ["The minimum length for this field is 1."]
+                    arrayErrors: ["The minimum length for this field is 1."]
                 }
             },
         }
@@ -94,7 +94,7 @@ describe("Validate null property", () => {
             isValid: false,
             errors: {
                 orderItems: {
-                    errors: ["The minimum length for this field is 1."]
+                    arrayErrors: ["The minimum length for this field is 1."]
                 }
             },
         }
@@ -123,7 +123,7 @@ describe("ValidateAsync Test", () => {
             isValid: false,
             errors: {
                 orderItems: {
-                    errorsEach: [
+                    arrayElementErrors: [
                         {
                             index: 0,
                             validatedObject: {

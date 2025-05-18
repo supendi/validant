@@ -71,7 +71,7 @@ function buildOrderRule(userRepository: UserRepository, productRepository: Produ
         },
         orderItems: {
             arrayRules: [required("Please add at least an item")],
-            arrayItemRule: function (currentOrderItem, order) {
+            arrayElementRule: function (currentOrderItem, order) {
                 return {
                     productId: [
                         required("Please enter product id."),

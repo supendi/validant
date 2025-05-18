@@ -70,7 +70,7 @@ describe("Test validate field", () => {
             },
             children: {
                 arrayRules: [required()],
-                arrayItemRule: {
+                arrayElementRule: {
                     name: [required()]
                 }
             }
@@ -93,7 +93,7 @@ describe("Test validate field", () => {
             fieldName: "children",
             errors: {
                 children: {
-                    errorsEach: [
+                    arrayElementErrors: [
                         {
                             index: 0,
                             validatedObject: {
@@ -121,7 +121,7 @@ describe("Test validate field", () => {
             },
             children: {
                 arrayRules: [required()],
-                arrayItemRule: {
+                arrayElementRule: {
                     name: [required()]
                 }
             }

@@ -46,7 +46,7 @@ const rule: ValidationRule<Order> = {
     },
     orderItems: {
         arrayRules: [arrayMinLen(4)],
-        arrayItemRule: orderItemsRule
+        arrayElementRule: orderItemsRule
     }
 }
 
@@ -80,7 +80,7 @@ describe("Validate empty order items", () => {
                     name: ["This field is required."]
                 },
                 orderItems: {
-                    errors: ["The minimum length for this field is 4."],
+                    arrayErrors: ["The minimum length for this field is 4."],
                 }
             }
         }
@@ -137,8 +137,8 @@ describe("Validate empty order items", () => {
                     name: ["This field is required."]
                 },
                 orderItems: {
-                    errors: ["The minimum length for this field is 4."],
-                    errorsEach: [
+                    arrayErrors: ["The minimum length for this field is 4."],
+                    arrayElementErrors: [
                         {
                             index: 0,
                             errors: {

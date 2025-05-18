@@ -28,7 +28,7 @@ const fetchProductIdAsync = jest.fn(async (productId: number) => {
 const rule: AsyncValidationRule<Order> = {
     orderItems: {
         arrayRules: [arrayMinLen(1)],
-        arrayItemRule: {
+        arrayElementRule: {
             productId: [
                 required(),
                 async function (productId) {
@@ -67,7 +67,7 @@ describe("ValidateAsync Test", () => {
             isValid: false,
             errors: {
                 orderItems: {
-                    errors: ["The minimum length for this field is 1."]
+                    arrayErrors: ["The minimum length for this field is 1."]
                 }
             },
         }
@@ -91,7 +91,7 @@ describe("Validate null property", () => {
             isValid: false,
             errors: {
                 orderItems: {
-                    errors: ["The minimum length for this field is 1."]
+                    arrayErrors: ["The minimum length for this field is 1."]
                 }
             },
         }
@@ -120,7 +120,7 @@ describe("ValidateAsync Test", () => {
             isValid: false,
             errors: {
                 orderItems: {
-                    errorsEach: [
+                    arrayElementErrors: [
                         {
                             index: 0,
                             validatedObject: {

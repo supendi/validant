@@ -21,7 +21,7 @@ export type ObjectFieldValidationResult<T> = {
 }
 
 export function isArrayValidationRule<T, TRoot>(rule: ValidationRule<T, TRoot>[Extract<keyof T, string>] | ArrayValidationRule<T[Extract<keyof T, string>], TRoot>) {
-    const allowedKeys = new Set(["arrayRules", "arrayItemRule"]);
+    const allowedKeys = new Set(["arrayRules", "arrayElementRule"]);
     const keys = Object.keys(rule);
 
     const isArrayRule = keys.every(key => allowedKeys.has(key));
@@ -74,28 +74,28 @@ function validateArrayField<T, TRoot>(key: Extract<keyof T, string>, object: T, 
         for (let index = 0; index < arrayValidationRule.arrayRules.length; index++) {
             const primitiveFieldValidationResult = validatePrimitiveField(key, object, root, arrayValidationRule.arrayRules)
             if (!primitiveFieldValidationResult.isValid) {
-                arrayFieldErrors.errors = primitiveFieldValidationResult.errors
+                arrayFieldErrors.arrayErrors = primitiveFieldValidationResult.errors
             }
         }
     }
 
-    if (arrayValidationRule.arrayItemRule && Array.isArray(value)) {
+    if (arrayValidationRule.arrayElementRule && Array.isArray(value)) {
         for (let index = 0; index < value.length; index++) {
             const element = value[index];
             let error: ErrorOf<any> = undefined
-            if (typeof arrayValidationRule.arrayItemRule === "function") {
-                const validationRule = arrayValidationRule.arrayItemRule(element, root)
+            if (typeof arrayValidationRule.arrayElementRule === "function") {
+                const validationRule = arrayValidationRule.arrayElementRule(element, root)
                 error = validateObject(element, root, validationRule);
             }
             else {
-                error = validateObject(element, root, arrayValidationRule.arrayItemRule);
+                error = validateObject(element, root, arrayValidationRule.arrayElementRule);
             }
             if (error) {
-                if (!arrayFieldErrors.errorsEach) {
-                    arrayFieldErrors.errorsEach = []
+                if (!arrayFieldErrors.arrayElementErrors) {
+                    arrayFieldErrors.arrayElementErrors = []
                 }
 
-                arrayFieldErrors.errorsEach.push({
+                arrayFieldErrors.arrayElementErrors.push({
                     index: index,
                     errors: error,
                     validatedObject: element
@@ -174,7 +174,7 @@ export const validateObject = <T, TRoot>(object: T, rootObject: TRoot, validatio
             }
             if (isArrayProperty) {
                 const result = validateArrayField(key, object, rootObject, rule)
-                if (result?.errors || result?.errorsEach) {
+                if (result?.arrayErrors || result?.arrayElementErrors) {
                     assignErrorsIfAny(key, result)
                 }
                 continue

@@ -14,7 +14,7 @@ const validationRule: ValidationRule<Product> = {
     name: [required()],
     units: {
         arrayRules: [arrayMinLen(3, "Product uom has to be at least 3 units.")],
-        arrayItemRule: {
+        arrayElementRule: {
             name: [required()],
             conversion: [minNumber(1)]
         }
@@ -46,8 +46,8 @@ describe("Validate test with product", () => {
             errors: {
                 name: ["This field is required."],
                 units: {
-                    errors: ["Product uom has to be at least 3 units."],
-                    errorsEach: [
+                    arrayErrors: ["Product uom has to be at least 3 units."],
+                    arrayElementErrors: [
                         {
                             index: 0,
                             errors: {

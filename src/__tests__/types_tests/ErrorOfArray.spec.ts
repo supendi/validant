@@ -13,8 +13,8 @@ describe("ErrorOfArray Test", () => {
         }
 
         let productsErrors: ErrorOfArray<Product[]> = {
-            errors: ["The minimum of selected products is 1"],
-            errorsEach: [
+            arrayErrors: ["The minimum of selected products is 1"],
+            arrayElementErrors: [
                 {
                     index: 0,
                     errors: {

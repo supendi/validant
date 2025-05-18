@@ -46,7 +46,7 @@ const rule: ValidationRule<Order> = {
     },
     orderItems: {
         arrayRules: [arrayMinLen(4)],
-        arrayItemRule: orderItemsRule
+        arrayElementRule: orderItemsRule
     }
 }
 

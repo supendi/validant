@@ -20,7 +20,7 @@ const orderItemsRule: ValidationRule<OrderItem, Order> = {
 const rule: AsyncValidationRule<Order> = {
     orderItems: {
         arrayRules: [arrayMinLen(1)],
-        arrayItemRule: orderItemsRule
+        arrayElementRule: orderItemsRule
     }
 }
 
@@ -39,7 +39,7 @@ describe("Validate null property", () => {
             isValid: false,
             errors: {
                 orderItems: {
-                    errors: ["The minimum length for this field is 1."]
+                    arrayErrors: ["The minimum length for this field is 1."]
                 }
             },
         }

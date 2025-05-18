@@ -13,7 +13,7 @@ interface OrderItem {
 const rule: ValidationRule<Order> = {
     orderItems: {
         arrayRules: [arrayMinLen(1)],
-        arrayItemRule: {
+        arrayElementRule: {
             productId: [
                 required(),
             ],
@@ -40,7 +40,7 @@ describe("Validate null property", () => {
             isValid: false,
             errors: {
                 orderItems: {
-                    errors: ["The minimum length for this field is 1."]
+                    arrayErrors: ["The minimum length for this field is 1."]
                 }
             },
         }
@@ -69,7 +69,7 @@ describe("Validate null property", () => {
             isValid: false,
             errors: {
                 orderItems: {
-                    errorsEach: [
+                    arrayElementErrors: [
                         {
                             index: 0,
                             validatedObject: {

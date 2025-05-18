@@ -32,7 +32,7 @@ const orderRule: ValidationRule<OrderRequest> = {
     },
     orderItems: {
         arrayRules: [arrayMinLen(1, "Please add at least one product.")],
-        arrayItemRule: {
+        arrayElementRule: {
             productId: [required("Please enter product.")],
             quantity: [
                 minNumber(1, "Minimum quantity is 1."),
@@ -95,7 +95,7 @@ describe("Validate Order Request with empty order items", () => {
                     email: ["This field is required.", "Invalid email address. The valid email example: john.doe@example.com."]
                 },
                 orderItems: {
-                    errors: ["Please add at least one product."]
+                    arrayErrors: ["Please add at least one product."]
                 }
             }
         }
@@ -135,7 +135,7 @@ describe("Validate Order Request With Max order item quantity", () => {
                     email: ["This field is required.", "Invalid email address. The valid email example: john.doe@example.com."]
                 },
                 orderItems: {
-                    errorsEach: [
+                    arrayElementErrors: [
                         {
                             index: 0,
                             validatedObject: orderRequest.orderItems[0],
@@ -183,7 +183,7 @@ describe("Jacky Chan Order Request", () => {
                     email: ["This field is required.", "Invalid email address. The valid email example: john.doe@example.com."]
                 },
                 orderItems: {
-                    errorsEach: [
+                    arrayElementErrors: [
                         {
                             index: 0,
                             validatedObject: orderRequest.orderItems[0],

@@ -12,7 +12,7 @@ const personRule: ValidationRule<Person> = {
 
 personRule.children = {
     arrayRules: [required()],
-    arrayItemRule: personRule // <= notes that children use existing rule: person rule
+    arrayElementRule: personRule // <= notes that children use existing rule: person rule
 }
 
 describe("Test undefined array properties", () => {
@@ -28,7 +28,7 @@ describe("Test undefined array properties", () => {
             errors: {
                 name: ["This field is required."],
                 children: {
-                    errors: ["This field is required."]
+                    arrayErrors: ["This field is required."]
                 }
             }
         }
@@ -57,13 +57,13 @@ describe("Test undefined array properties", () => {
             errors: {
                 name: ["This field is required."],
                 children: {
-                    errorsEach: [
+                    arrayElementErrors: [
                         {
                             index: 0,
                             errors: {
                                 name: ["This field is required."],
                                 children: {
-                                    errors: ["This field is required."] // note that person.children[0].children above is undefined, and its required.
+                                    arrayErrors: ["This field is required."] // note that person.children[0].children above is undefined, and its required.
                                 },
                             },
                             validatedObject: person.children ? person.children[0] : undefined

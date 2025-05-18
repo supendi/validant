@@ -26,7 +26,7 @@ const customerRule: ValidationRule<Customer> = {
     ],
     addresses: {
         arrayRules: [required()],
-        arrayItemRule: customerAddressRule
+        arrayElementRule: customerAddressRule
     }
 }
 
@@ -49,7 +49,7 @@ describe("Validate customer with empty address", () => {
                 fullName: ["This field is required."],
                 email: ["This field is required.", "Invalid email address. The valid email example: john.doe@example.com."],
                 addresses: {
-                    errors: ["This field is required."]
+                    arrayErrors: ["This field is required."]
                 }
             }
         }
@@ -87,7 +87,7 @@ describe("Validate customer with address items", () => {
                 fullName: ["This field is required."],
                 email: ["This field is required.", "Invalid email address. The valid email example: john.doe@example.com."],
                 addresses: {
-                    errorsEach: [
+                    arrayElementErrors: [
                         {
                             index: 0,
                             errors: {

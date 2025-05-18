@@ -3,7 +3,7 @@ import { Validator, ValidationRule, ValidationResult, arrayMinLen, isNumber, max
 const rule = {
     orderItems: {
         arrayRules: [arrayMinLen(1)],
-        arrayItemRule: {
+        arrayElementRule: {
             productId: [
                 isNumber(),
                 required(),
@@ -31,7 +31,7 @@ describe("Validate Anonymous", () => {
             isValid: false,
             errors: {
                 orderItems: {
-                    errors: ["The minimum length for this field is 1."]
+                    arrayErrors: ["The minimum length for this field is 1."]
                 }
             },
         }
@@ -60,7 +60,7 @@ describe("Validate Anonymous", () => {
             isValid: false,
             errors: {
                 orderItems: {
-                    errorsEach: [
+                    arrayElementErrors: [
                         {
                             index: 0,
                             validatedObject: {
@@ -99,7 +99,7 @@ describe("Validate Anonymous", () => {
         const isolatedRule: ValidationRule<any> = {
             orderItems: {
                 arrayRules: [arrayMinLen(1)],
-                arrayItemRule: {
+                arrayElementRule: {
                     productId: [
                         isNumber(),
                         required(),

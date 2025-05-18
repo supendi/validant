@@ -31,15 +31,15 @@ interface OrderItem {
 const orderRule: ValidationRule<Order> = {
     orderItems: function build(orderItems, order) {
         return {
-            arrayItemRule: {
+            arrayElementRule: {
                 orderId: [required("required")],
                 deliveryAddress: {
-                    arrayItemRule: function test(deliveryAddress, order) {
+                    arrayElementRule: function test(deliveryAddress, order) {
                         return {
                             cities: function () {
                                 return {
                                     arrayRules: [arrayMinLen(1)],
-                                    arrayItemRule: function test(city, order1) {
+                                    arrayElementRule: function test(city, order1) {
                                         return {
                                             name: []
                                         }
@@ -80,7 +80,7 @@ describe("Validator Test The Custom Validator", () => {
             isValid: false,
             errors: {
                 orderItems: {
-                    errorsEach: [
+                    arrayElementErrors: [
                         {
                             index: 0,
                             validatedObject: {
@@ -97,11 +97,11 @@ describe("Validator Test The Custom Validator", () => {
                             errors: {
                                 orderId: ["required"],
                                 deliveryAddress: {
-                                    errorsEach: [
+                                    arrayElementErrors: [
                                         {
                                             errors: {
                                                 cities: {
-                                                    errors: ["The minimum length for this field is 1."]
+                                                    arrayErrors: ["The minimum length for this field is 1."]
                                                 }
                                             },
                                             index: 0,

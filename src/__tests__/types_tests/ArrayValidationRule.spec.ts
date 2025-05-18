@@ -33,7 +33,7 @@ describe("ArrayValidationRule Compile Test", () => {
 
         const arrayOfPersonValidationRule: ArrayValidationRule<Person[], Person> = {
             arrayRules: [requiredRule],
-            arrayItemRule: personRule,
+            arrayElementRule: personRule,
         }
 
         expect(arrayOfPersonValidationRule).not.toBeUndefined()
@@ -59,7 +59,7 @@ describe("ArrayValidationRule Compile Test", () => {
 
         const arrayOfPersonValidationRule: ArrayValidationRule<Person[], Person> = {
             arrayRules: [requiredRule],
-            arrayItemRule: personRule,
+            arrayElementRule: personRule,
         }
 
         expect(arrayOfPersonValidationRule).not.toBeUndefined()
@@ -85,7 +85,7 @@ describe("ArrayValidationRule Compile Test", () => {
             orderItems: function build(y: OrderItem[], x: Order) {
                 return {
                     arrayRules: [required("")],
-                    arrayItemRule: {
+                    arrayElementRule: {
                         productId: []
                     }
                 }
