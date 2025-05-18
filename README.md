@@ -469,7 +469,7 @@ const account: Account = {
 const validator = new AsyncValidator(validationRule);
 
 // Validate the "email" field of the account object
-const validationResult = validator.validateFieldAsync("email", account);
+const validationResult = await validator.validateFieldAsync("email", account);
 ```
 
 The result will be an object like this:
