@@ -326,7 +326,7 @@ const validationRule: ValidationRule<Account> = {
 };
 ```
 
-#### instantiate validator and validate
+Instantiate validator and validate
 
 ```ts
 const account: Account = {
@@ -466,7 +466,7 @@ const account: Account = {
 };
 
 // Create a validator with your validation rules
-const validator = new Validator(validationRule);
+const validator = new AsyncValidator(validationRule);
 
 // Validate the "email" field of the account object
 const validationResult = validator.validateFieldAsync("email", account);
@@ -970,7 +970,7 @@ Because of this, it's type-safe—if the Product model changes (e.g., a field is
 
 Validant’s validation rules are **context-aware** — giving you access to both the property being validated and the full object it's part of.
 
-### 🔹 Property-Level Awareness
+### 🔹Property-Level Awareness
 
 You get full type info on the property:
 
@@ -1003,7 +1003,7 @@ Here, age is strongly typed as a number. IntelliSense works out of the box:
 
 ![image](https://github.com/user-attachments/assets/961f6ba2-eb26-4404-97ad-f4e2fb432ab5)
 
-### Root object awareness
+### 🔹Root object awareness
 
 You also get access to the full object (person in this case), so you can create meaningful cross-field validations:
 
@@ -1025,7 +1025,7 @@ person is correctly inferred as the root type Person:
 
 ![image](https://github.com/user-attachments/assets/7874d83a-ea9e-4c36-acda-1b04f1bfb4c7)
 
-### Array (Item) Awareness
+### 🔹Array (Item) Awareness
 
 Validant supports deep validation for arrays — including item-level rules **with full context**.
 
