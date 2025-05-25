@@ -1,4 +1,4 @@
-import { Validator, ValidationRule, ValidationResult, } from "../../../index"
+import { Validator, ValidationRule, ValidationResult, required, } from "../../../index"
 
 interface Person {
     name: string
@@ -6,8 +6,8 @@ interface Person {
 }
 
 const rule: ValidationRule<Person> = {
-    name: [undefined],
-    age: undefined
+    name: [required()],
+    age: [required()],
 }
 
 describe("Test Validate Against Undefined", () => {
@@ -18,8 +18,12 @@ describe("Test Validate Against Undefined", () => {
         const actual = validator.validate(person)
 
         const expected: ValidationResult<Person> = {
-            isValid: true,
-            message: "Good to go.",
+            message: "One or more validation errors occurred.",
+            isValid: false,
+            errors: {
+                name: ["This field is required."],
+                age: ["This field is required."],
+            }
         }
 
         expect(actual).toEqual(expected)
@@ -34,8 +38,12 @@ describe("Test Validate Against null", () => {
         const actual = validator.validate(person)
 
         const expected: ValidationResult<Person> = {
-            isValid: true,
-            message: "Good to go.",
+            message: "One or more validation errors occurred.",
+            isValid: false,
+            errors: {
+                name: ["This field is required."],
+                age: ["This field is required."],
+            }
         }
 
         expect(actual).toEqual(expected)

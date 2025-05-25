@@ -129,11 +129,11 @@ function validateObjectField<T, TRoot>(key: Extract<keyof T, string>, object: T,
  * @returns
  */
 export const validateObject = <T, TRoot>(object: T, rootObject: TRoot, validationRule: ValidationRule<T, TRoot>): ErrorOf<T> => {
-    if (!object) {
-        throw new Error(`validant: object is null or undefined during validation.`)
-    }
     if (!validationRule) {
         throw new Error(`validant: validation rule is null or undefined.`)
+    }
+    if (!object) {
+        object = {} as T
     }
     var errors: ErrorOf<T> = undefined;
 

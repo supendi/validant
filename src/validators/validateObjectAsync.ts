@@ -114,11 +114,11 @@ async function validateObjectFieldAsync<T, TRoot>(key: Extract<keyof T, string>,
  * @returns
  */
 export const validateObjectAsync = async <T, TRoot>(object: T, rootObject: TRoot, validationRule: AsyncValidationRule<T, TRoot>): Promise<ErrorOf<T>> => {
-    if (!object) {
-        throw new Error(`validant: object is null or undefined during validation.`)
-    }
     if (!validationRule) {
         throw new Error(`validant: validation rule is null or undefined.`)
+    }
+    if (!object) {
+        object = {} as T
     }
     var errors: ErrorOf<T> = undefined;
 
