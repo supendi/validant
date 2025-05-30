@@ -1,28 +1,29 @@
 import { PossiblyUndefined, ArrayElementType } from "./ErrorOf";
 
 /**
- * Represents the return type or validation result when PropertyRuleFunc invoked
+ * Represents the return type or validation result when ValidateFunc invoked
  */
-export interface PropertyRuleValidationResult {
-    isValid: boolean;
-    errorMessage?: string;
+export interface RuleViolation {
+    ruleName: string;
+    attemptedValue: any;
+    errorMessage: string;
 }
 
 /**
 * The signature of property rule function, used as property rule.
 * Use this function signature for custom validation.
 */
-export type PropertyRuleFunc<TValue, TRoot extends Object> = (value: TValue, root: TRoot) => PropertyRuleValidationResult;
+export type ValidateFunc<TValue, TRoot extends Object> = (value: TValue, root: TRoot) => RuleViolation | undefined;
 
 /**
  * Represents a set of validation rules.
  * The validation rule should implement this type.
  */
 export type ValidationRule<T, TRoot extends Object = T> = { [key in keyof T]?
-    : T[key] extends Date ? PropertyRuleFunc<T[key], TRoot>[]
+    : T[key] extends Date ? ValidateFunc<T[key], TRoot>[]
     : T[key] extends PossiblyUndefined<Array<any>> ? ArrayValidationRule<T[key], TRoot> | ((value: T[key], root: TRoot) => ArrayValidationRule<T[key], TRoot>)
     : T[key] extends PossiblyUndefined<object> ? ValidationRule<T[key], TRoot>
-    : PropertyRuleFunc<T[key], TRoot>[] }
+    : ValidateFunc<T[key], TRoot>[] }
 
 /**
 * Represents validation rule of array of T
@@ -42,7 +43,7 @@ export type ArrayValidationRule<TArrayValue, TRoot extends Object> = {
     * Example:
     * { orderItems: { validators: [arrayMinLength(5)] }
     */
-    arrayRules?: PropertyRuleFunc<TArrayValue, TRoot>[];
+    arrayRules?: ValidateFunc<TArrayValue, TRoot>[];
 
     /**
      * The validation rule foreach element of an array.

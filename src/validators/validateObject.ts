@@ -1,12 +1,12 @@
 import { ErrorOf, ErrorOfArray } from "../types/ErrorOf";
 import { ArrayValidationRule } from "../types/ValidationRule";
-import { PropertyRuleFunc } from "../types/ValidationRule";
+import { ValidateFunc } from "../types/ValidationRule";
 import { ValidationRule } from "../types/ValidationRule";
 import { validateField } from "./validateField";
 
 export type PropertyType = "array" | "object" | "primitive" | "undefined"
 
-type PrimitiveRule<T, TRoot> = PropertyRuleFunc<T[Extract<keyof T, string>], TRoot>[]
+type PrimitiveRule<T, TRoot> = ValidateFunc<T[Extract<keyof T, string>], TRoot>[]
 
 export type FieldErrors = string[]
 
@@ -31,17 +31,17 @@ export function isArrayValidationRule<T, TRoot>(rule: ValidationRule<T, TRoot>[E
 export function validatePrimitiveField<T, TRoot>(key: Extract<keyof T, string>, object: T, root: TRoot, rule: PrimitiveRule<T, TRoot>): PrimitiveFieldValidationResult {
     var fieldErrors: FieldErrors = [];
     for (let index = 0; index < rule.length; index++) {
-        const propertyRuleFunc = rule[index];
-        if (!propertyRuleFunc) {
+        const validateFunc = rule[index];
+        if (!validateFunc) {
             continue;
         }
 
-        const isFunction = typeof (propertyRuleFunc) === "function";
+        const isFunction = typeof (validateFunc) === "function";
         if (!isFunction) {
             throw Error("propertyRuleFunc is not a function")
         }
 
-        const propValidationResult = validateField(key, object, root, propertyRuleFunc);
+        const propValidationResult = validateField(key, object, root, validateFunc);
 
         const isValid = propValidationResult.isValid;
 

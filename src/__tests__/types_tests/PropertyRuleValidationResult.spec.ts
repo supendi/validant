@@ -1,10 +1,11 @@
-import { PropertyRuleValidationResult } from "../../types/ValidationRule"
+import { RuleViolation } from "../../types/ValidationRule"
 
 
-describe("PropertyRuleValidationResult Test", () => {
+describe("RuleViolation Test", () => {
     it("Should compile", () => {
-        let validationResult: PropertyRuleValidationResult = {
-            isValid: true,
+        let validationResult: RuleViolation = {
+            ruleName: "as long as it is a string",
+            attemptedValue: "anything",
             errorMessage: "No error"
         }
 

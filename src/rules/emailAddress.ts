@@ -1,4 +1,4 @@
-import { PropertyRuleFunc } from "../types/ValidationRule";
+import { ValidateFunc } from "../types/ValidationRule";
 import { regularExpression } from "./regularExpression";
 
 /**
@@ -6,12 +6,12 @@ import { regularExpression } from "./regularExpression";
  * @param errorMessage Custom error messages or default returned
  * @returns 
  */
-export const emailAddress = <TObject extends Object>(errorMessage?: string): PropertyRuleFunc<string, TObject> => {
+export const emailAddress = <TObject extends Object>(errorMessage?: string): ValidateFunc<string, TObject> => {
     if (!errorMessage) {
         errorMessage = `Invalid email address. The valid email example: john.doe@example.com.`
     }
 
     var emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-    return regularExpression(emailRegex, errorMessage)
+    return regularExpression(emailRegex, emailAddress.name, errorMessage)
 }

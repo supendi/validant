@@ -32,7 +32,7 @@ export function createProductRepository(productDatabase: Product[], userReposito
                 } else {
                     resolve(undefined);
                 }
-            }, 10);
+            }, 2);
         });
     }
 
@@ -45,7 +45,7 @@ export function createProductRepository(productDatabase: Product[], userReposito
                 } else {
                     resolve(undefined);
                 }
-            }, 10);
+            }, 2);
         });
     }
 
@@ -70,7 +70,7 @@ export function createProductRepository(productDatabase: Product[], userReposito
                     createdDate: now,
                 });
                 resolve(undefined)
-            }, 10);
+            }, 2);
         });
     }
 
@@ -88,7 +88,7 @@ export function createProductRepository(productDatabase: Product[], userReposito
 
                 productDatabase[indexOfProduct] = product
                 resolve(undefined)
-            }, 10);
+            }, 2);
         });
     }
 

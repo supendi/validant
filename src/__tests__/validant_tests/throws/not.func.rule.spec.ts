@@ -1,4 +1,4 @@
-import { Validator, PropertyRuleFunc, ValidationRule, } from "../../../index"
+import { Validator, ValidateFunc, ValidationRule, } from "../../../index"
 
 interface Person {
     name: string
@@ -13,7 +13,7 @@ describe("Test Not Function Property Rule", () => {
         }
 
         const rule: ValidationRule<Person> = {
-            age: ["dev use any and dont know if this is not a func" as any as PropertyRuleFunc<1, Person>]
+            age: ["dev use any and dont know if this is not a func" as any as ValidateFunc<1, Person>]
         }
 
         const validator = new Validator(rule)

@@ -1,4 +1,4 @@
-import { PropertyRuleFunc } from "../types/ValidationRule";
+import { ValidateFunc } from "../types/ValidationRule";
 
 /**
  * Represents a single validation result of property
@@ -28,16 +28,15 @@ export function stringifyValue<TValue>(value: TValue): string {
  * Do a single validation against single property
  * @param propName
  * @param object
- * @param propertyRuleFunc
+ * @param validateFunc
  * @returns
  */
-export const validateField = <TObject, TRoot>(propName: keyof TObject, object: TObject, root: TRoot, propertyRuleFunc: PropertyRuleFunc<TObject[keyof TObject], TRoot>): PropertyValidationResult<TObject> => {
+export const validateField = <TObject, TRoot>(propName: keyof TObject, object: TObject, root: TRoot, validateFunc: ValidateFunc<TObject[keyof TObject], TRoot>): PropertyValidationResult<TObject> => {
     const value = object[propName];
 
-    const {
-        isValid,
-        errorMessage
-    } = propertyRuleFunc(value, root);
+    const violation = validateFunc(value, root);
+    const isValid = !violation;
+    let errorMessage = violation ? violation.errorMessage : "";
 
     let resolvedErrorMessage = errorMessage
     if (resolvedErrorMessage) {

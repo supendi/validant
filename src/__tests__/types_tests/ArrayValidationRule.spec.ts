@@ -1,18 +1,20 @@
 import { required } from "../../rules"
 import { ArrayValidationRule } from "../../types/ValidationRule"
-import { PropertyRuleFunc } from "../../types/ValidationRule"
+import { ValidateFunc } from "../../types/ValidationRule"
 import { ValidationRule } from "../../types/ValidationRule"
 
-const requiredRule: PropertyRuleFunc<any, any> = (value: any, obj?: any) => {
+const requiredRule: ValidateFunc<any, any> = (value: any, obj?: any) => {
     return {
-        isValid: !!value,
+        ruleName: requiredRule.name,
+        attemptedValue: value,
         errorMessage: "This field is required"
     }
 }
-const minNumberValidator: PropertyRuleFunc<any, any> = (value: any, obj?: any) => {
+const minNumberValidator: ValidateFunc<any, any> = (value: any, obj?: any) => {
     return {
-        isValid: false,
-        errorMessage: "Minimum number is"
+        ruleName: minNumberValidator.name,
+        attemptedValue: value,
+        errorMessage: "yeah"
     }
 }
 

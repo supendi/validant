@@ -1,20 +1,19 @@
-import { GenericPropertyRuleFunc } from "../types/AsyncValidationRule";
+import { GenericValidateFunc } from "../types/AsyncValidationRule";
 import { PropertyValidationResult, stringifyValue } from "./validateField";
 
 /**
  * Do a single validation against single property
  * @param propName
  * @param object
- * @param propertyRuleFunc
+ * @param validateFunc
  * @returns
  */
-export const validateFieldAsync = async <TObject, TRoot>(propName: keyof TObject, object: TObject, root: TRoot, propertyRuleFunc: GenericPropertyRuleFunc<TObject[keyof TObject], TRoot>): Promise<PropertyValidationResult<TObject>> => {
+export const validateFieldAsync = async <TObject, TRoot>(propName: keyof TObject, object: TObject, root: TRoot, validateFunc: GenericValidateFunc<TObject[keyof TObject], TRoot>): Promise<PropertyValidationResult<TObject>> => {
     const value = object[propName];
 
-    const {
-        isValid,
-        errorMessage
-    } = await propertyRuleFunc(value, root);
+    const violation = await validateFunc(value, root);
+    const isValid = !violation;
+    let errorMessage = violation ? violation.errorMessage : "";
 
     let resolvedErrorMessage = errorMessage
     if (resolvedErrorMessage) {

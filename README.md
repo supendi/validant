@@ -3,7 +3,7 @@
 **Validant** is a TypeScript-first validation library for real-world, dynamic rules — no DSLs, just types and functions.
 
 ## ✨ Why Validant?
- 
+
 -   🔄 TYPE-FIRST, NOT SCHEMA-FIRST = LOOSE COUPLING: Unlike other libraries that generate types from schemas, Validant starts from your own types — allowing you to decouple your app from any validation library, including this one.
 -   🧠 No DSLs. No special syntax. Just plain functions.
 -   🧩 Composable: Easily combine validations and reuse them across your codebase.
@@ -183,12 +183,13 @@ const validationRule: ValidationRule<Account> = {
     name: [
         (name, account) => {
             const isString = typeof name === "string"; // check yourself, either return error or throw
-            return {
-                isValid: isString,
-                errorMessage: isString
-                    ? ""
-                    : "Please enter then name with string",
-            };
+            if (!isString) {
+                return {
+                    ruleName: "",
+                    attemptedValue: name,
+                    errorMessage: "Please enter the name with string",
+                };
+            }
         },
     ],
     age: [required()],
@@ -514,11 +515,12 @@ Validant provides complete control through custom validation functions with stri
 
 ```typescript
 /**
- * Property validation result contract
+ * The return type if when validation failed
  */
-export interface PropertyRuleValidationResult {
-    isValid: boolean;
-    errorMessage?: string;
+export interface RuleViolation {
+    ruleName: string;
+    attemptedValue: any;
+    errorMessage: string;
 }
 
 /**
@@ -526,10 +528,10 @@ export interface PropertyRuleValidationResult {
  * @template TValue - Type of the property being validated
  * @template TRoot - Type of the root object
  */
-export type PropertyRuleFunc<TValue, TRoot extends Object> = (
+export type ValidateFunc<TValue, TRoot extends Object> = (
     value: TValue,
     root: TRoot
-) => PropertyRuleValidationResult;
+) => RuleViolation | undefined;
 ```
 
 **Key Advantages**
@@ -550,43 +552,34 @@ interface LoginRequest {
 
 const loginRule: ValidationRule<LoginRequest> = {
     userName: [
-        // Required rule
         function (username, loginRequest) {
             if (!username) {
                 return {
-                    isValid: false,
+                    ruleName: "none",
+                    attemptedValue: username,
                     errorMessage: "Please enter username.",
                 };
             }
-            return {
-                isValid: true,
-            };
         },
-        // Business rule
         function (username, loginRequest) {
             if (username.toLocaleLowerCase().includes("admin")) {
                 return {
-                    isValid: false,
+                    ruleName: "none",
+                    attemptedValue: username,
                     errorMessage: "Admin is not allowed to login.",
                 };
             }
-            return {
-                isValid: true,
-            };
         },
     ],
     password: [
-        // Required rule
         function (password, loginRequest) {
             if (!password) {
                 return {
-                    isValid: false,
+                    ruleName: "none",
+                    attemptedValue: password,
                     errorMessage: "Please enter password.",
                 };
             }
-            return {
-                isValid: true,
-            };
         },
     ],
 };
@@ -627,76 +620,68 @@ interface LoginRequest {
     password: string;
 }
 
-function requiredUserNameRule(): PropertyRuleFunc<string, LoginRequest> {
+function requiredUserNameRule(): ValidateFunc<string, LoginRequest> {
     return function (username, loginRequest) {
         if (!username) {
             return {
-                isValid: false,
+                ruleName: requiredUserNameRule.name,
+                attemptedValue: username,
                 errorMessage: "Please enter username.",
             };
         }
-        return {
-            isValid: true,
-        };
     };
 }
 
-function requiredAdminRule(): PropertyRuleFunc<string, LoginRequest> {
+function adminShouldBeBlocked(): ValidateFunc<string, LoginRequest> {
     return function (username, loginRequest) {
         if (username.toLocaleLowerCase().includes("admin")) {
             return {
-                isValid: false,
+                ruleName: adminShouldBeBlocked.name,
+                attemptedValue: username,
                 errorMessage: "Admin is not allowed to login.",
             };
         }
-        return {
-            isValid: true,
-        };
     };
 }
 
-function requiredPasswordRule(): PropertyRuleFunc<string, LoginRequest> {
+function requiredPasswordRule(): ValidateFunc<string, LoginRequest> {
     return function (password, loginRequest) {
         if (!password) {
             return {
-                isValid: false,
+                ruleName: requiredPasswordRule.name,
+                attemptedValue: password,
                 errorMessage: "Please enter password.",
             };
         }
-        return {
-            isValid: true,
-        };
     };
 }
 
 // Much simpler. you can put above custom rules into its own files, its your choice
 const loginRule: ValidationRule<LoginRequest> = {
-    userName: [requiredUserNameRule(), requiredAdminRule()],
+    userName: [requiredUserNameRule(), adminShouldBeBlocked()],
     password: [requiredPasswordRule()],
 };
 ```
 
 ## 🔓 Loose Coupling
 
-The `requiredAdminRule` function represents a domain-specific business validation. It’s too valuable to be tightly coupled to any particular validation library. That logic belongs to your domain, not to infrastructure.
+The `adminShouldBeBlocked` function represents a domain-specific business validation. It’s too valuable to be tightly coupled to any particular validation library. That logic belongs to your domain, not to infrastructure.
 
-The type `PropertyRuleFunc<string, LoginRequest>` is simply a helper — it gives you compile-time type safety and ensures your rule is compatible with the validation engine. But it’s not mandatory to explicitly annotate every rule with it.
+The type `ValidateFunc<string, LoginRequest>` is simply a helper — it gives you compile-time type safety and ensures your rule is compatible with the validation engine. But it’s not mandatory to explicitly annotate every rule with it.
 
 For example, this will still work seamlessly:
 
 ```ts
-// The PropertyRuleFunc<string, LoginRequest> removed
-function requiredAdminRule() {
-    return function (username: string, loginRequest: LoginRequest) {
+// The ValidateFunc<string, LoginRequest> removed
+function adminShouldBeBlocked() {
+    return function (username, loginRequest) {
         if (username.toLocaleLowerCase().includes("admin")) {
             return {
-                isValid: false,
+                ruleName: adminShouldBeBlocked.name,
+                attemptedValue: username,
                 errorMessage: "Admin is not allowed to login.",
             };
         }
-        return {
-            isValid: true,
-        };
     };
 }
 ```
@@ -710,7 +695,7 @@ This approach encourages separation of concerns:
 -   Keep validation orchestration in the validation layer.
 -   Compose them freely using meaningful, reusable functions.
 
-Even if you change your framework in the future, the `requiredAdminRule` remains highly reusable. An adapter function is all it takes to integrate it elsewhere.
+Even if you change your framework in the future, the `adminShouldBeBlocked` remains highly reusable. An adapter function is all it takes to integrate it elsewhere.
 
 ## 🧮 Array Validation
 
@@ -986,15 +971,12 @@ interface Person {
 const rule: ValidationRule<Person> = {
     name: [required()],
     age: [
-        //
         function (age, person) {
             if (age < 18) {
                 return {
-                    isValid: false,
+                    ruleName: "Minimum age to drink beer.",
+                    attemptedValue: age,
                     errorMessage: `We are sorry ${person.name}, You are not allowed to drink beer.`,
-                };
-                return {
-                    isValid: true,
                 };
             }
         },
@@ -1014,12 +996,11 @@ You also get access to the full object (person in this case), so you can create 
 function (age, person) {
     if (age < 18) {
         return {
-            isValid: false,
-            errorMessage: `We are sorry ${person.name}, you are not allowed to drink beer.`,
+            ruleName: "Minimum age to drink beer.",
+            attemptedValue: age,
+            errorMessage: `We are sorry ${person.name}, You are not allowed to drink beer.`,
         };
     }
-
-    return { isValid: true };
 }
 
 ```
@@ -1139,7 +1120,7 @@ const orderRule: ValidationRule<OrderRequest> = {
                     // Other than that
                     // Max quantity = 10
 
-                    // CROSS PROPERTY OR SIBLING: Accessing other properties via order
+                    // Accessing other properties via order
                     const customerName = order.customer.fullName;
                     const isJac = order.customer.fullName
                         .toLowerCase()
@@ -1148,16 +1129,27 @@ const orderRule: ValidationRule<OrderRequest> = {
                     const maxQuantityForJac = 100;
                     const maxQuantityForOthers = 10;
 
+                    const isValidQuantityForJac = quantity <= maxQuantityForJac;
+                    const isValidQuantityForOthers =
+                        quantity <= maxQuantityForOthers;
+
                     if (isJac) {
+                        if (!isValidQuantityForJac) {
+                            return {
+                                ruleName: "isJac",
+                                attemptedValue: quantity,
+                                errorMessage: `You are special ${customerName}, other's max quantity is limited to ${maxQuantityForOthers}. Yours is limited to, but ${maxQuantityForJac} pcs.`,
+                            };
+                        }
+                    }
+
+                    if (!isValidQuantityForOthers) {
                         return {
-                            isValid: quantity <= maxQuantityForJac,
-                            errorMessage: `You are special ${customerName}, other's max quantity is limited to ${maxQuantityForOthers}. Yours is limited to, but ${maxQuantityForJac} pcs.`,
+                            ruleName: "isJac",
+                            attemptedValue: quantity,
+                            errorMessage: `You only allowed to order ${maxQuantityForOthers} product at once.`,
                         };
                     }
-                    return {
-                        isValid: quantity <= maxQuantityForOthers,
-                        errorMessage: `You only allowed to order ${maxQuantityForOthers} product at once.`,
-                    };
                 },
             ],
         },
@@ -1249,23 +1241,20 @@ export type LoginRequest = {
     password: string;
 };
 
-function preventRegisteredEmailRule(userRepository: UserRepository) {
+function preventUnregisteredEmailRule(userRepository: UserRepository) {
     return async function (email) {
         if (!email) {
-            return {
-                isValid: true,
-            };
+            // lets skip this for now.
+            return;
         }
-        const existingUser = await userRepository.getUserAsync(email); // database/api check
+        const existingUser = await userRepository.getUserAsync(email);
         if (!existingUser) {
             return {
-                isValid: false,
+                ruleName: preventUnregisteredEmailRule.name,
+                attemptedValue: email,
                 errorMessage: `${email} is not registered.`,
             };
         }
-        return {
-            isValid: true,
-        };
     };
 }
 
@@ -1300,9 +1289,7 @@ function sequentialPriceLevelRule(currentPriceItem: ProductPrice) {
 
         // First index is ok: no comparer
         if (isFirstIndex) {
-            return {
-                isValid: true,
-            };
+            return;
         }
 
         const prevPriceIndex = currentPriceItemIndex - 1;
@@ -1316,42 +1303,35 @@ function sequentialPriceLevelRule(currentPriceItem: ProductPrice) {
         const isValid = level === expectedNextPriceLevel;
         if (!isValid) {
             return {
-                isValid: false,
+                ruleName: sequentialPriceLevelRule.name,
+                attemptedValue: level,
                 errorMessage: `Price level should be sequential. And the current price level should be: ${expectedNextPriceLevel}, but got ${level}`,
             };
         }
-
-        return {
-            isValid: true,
-        };
     };
 }
 
-// Only tenant user that can create product
 function userCanCreateProductRule(userRepository: UserRepository) {
     return async function (userEmail: string) {
-        // Check if email belongs to a valid user
         const user = await userRepository.getUserAsync(userEmail);
         if (!user) {
             return {
-                isValid: false,
+                ruleName: userCanCreateProductRule.name,
+                attemptedValue: userEmail,
                 errorMessage: `Invalid user email ${userEmail}.`,
             };
         }
 
         if (user.userType !== "tenant") {
             return {
-                isValid: false,
+                ruleName: userCanCreateProductRule.name,
+                attemptedValue: userEmail,
                 errorMessage: `User is not allowed to create product.`,
             };
         }
-        return {
-            isValid: true,
-        };
     };
 }
 
-// Ensure no duplicated price rule
 function noDuplicatePriceLevelRule() {
     return function (prices: ProductPrice[], product: ProductRequest) {
         for (let index = 0; index < prices.length; index++) {
@@ -1364,18 +1344,15 @@ function noDuplicatePriceLevelRule() {
                 ).length > 1;
             if (isDuplicatePrice) {
                 return {
-                    isValid: false,
+                    ruleName: noDuplicatePriceLevelRule.name,
+                    attemptedValue: prices,
                     errorMessage: `Duplicate price ${productPrice.price} and level ${productPrice.level}. At index ${index}.`,
                 };
             }
         }
-        return {
-            isValid: true,
-        };
     };
 }
 
-// Accept user repository for validation
 function buildProductRule(userRepository: UserRepository) {
     const productRequest: AsyncValidationRule<ProductRequest> = {
         productName: [
@@ -1638,29 +1615,31 @@ Use this structure to display detailed and indexed feedback per array element �
 
 These types let you define your own custom validation rules for individual properties in a type-safe way.
 
-### **`PropertyRuleValidationResult`**
+### **`RuleViolation`**
 
-Represents the result of a single property validation.
+Represents the result of a single property validation. Return this value if the rule is violated
 
 ```ts
-export interface PropertyRuleValidationResult {
-    isValid: boolean;
-    errorMessage?: string;
+export interface RuleViolation {
+    ruleName: string;
+    attemptedValue: any;
+    errorMessage: string;
 }
 ```
 
--   isValid: Whether the value is valid.
--   errorMessage: Leave empty/undefined when is valid. Set your custom validation message is not valid.
+-   ruleName: The rule name that is being violated.
+-   attemptedValue: The value being validated.
+-   errorMessage: The error message when violation happened
 
-### **`PropertyRuleFunc<TValue, TRoot>`**
+### **`ValidateFunc<TValue, TRoot>`**
 
-Defines the signature of a property validator function. Used to write custom validation logic.
+Defines the signature of a property validator function. Return undefined if valid, return RuleViolation if is invalid.
 
 ```ts
-export type PropertyRuleFunc<TValue, TRoot extends Object> = (
+export type ValidateFunc<TValue, TRoot extends Object> = (
     value: TValue,
     root: TRoot
-) => PropertyRuleValidationResult;
+) => RuleViolation | undefined;
 ```
 
 -   TValue: Type of the property being validated.
@@ -1669,10 +1648,11 @@ export type PropertyRuleFunc<TValue, TRoot extends Object> = (
 **Example**
 
 ```ts
-const noSpecialChars: PropertyRuleFunc<string, Account> = (value, root) => {
+const noSpecialChars: ValidateFunc<string, Account> = (value, root) => {
     if (/[^a-zA-Z0-9 ]/.test(value)) {
         return {
-            isValid: false,
+            ruleName: noSpecialChars.name,
+            attemptedValue: value,
             errorMessage: "Special characters are not allowed.",
         };
     }
@@ -1688,7 +1668,7 @@ Defines how to validate both the array itself and its individual elements.
 
 ```ts
 export type ArrayValidationRule<TArrayValue, TRoot extends Object> = {
-    arrayRules?: PropertyRuleFunc<TArrayValue, TRoot>[];
+    arrayRules?: ValidateFunc<TArrayValue, TRoot>[];
     arrayElementRule?:
         | ValidationRule<
               PossiblyUndefined<ArrayElementType<TArrayValue>>,

@@ -1,5 +1,5 @@
 import { equalToPropertyValue } from "../../rules/equalToPropertyValue"
-import { PropertyRuleValidationResult } from "../../types/ValidationRule"
+import { RuleViolation } from "../../types/ValidationRule"
 
 describe(`Test ${equalToPropertyValue.name}`, () => {
     it("should return false and have default error message", () => {
@@ -15,11 +15,12 @@ describe(`Test ${equalToPropertyValue.name}`, () => {
         const defaultErrorMessage = `The value should be equal to the value of '${propertyName}'.`
         const input = "test12333@gmail.com"
 
-        const ruleFunc = equalToPropertyValue<Customer>(propertyName)
+        const validateFunc = equalToPropertyValue<Customer>(propertyName)
 
-        const actual = ruleFunc(input, customer)
-        const expected: PropertyRuleValidationResult = {
-            isValid: false,
+        const actual = validateFunc(input, customer)
+        const expected: RuleViolation = {
+            ruleName: equalToPropertyValue.name,
+            attemptedValue: input,
             errorMessage: defaultErrorMessage
         }
 
@@ -42,11 +43,12 @@ describe(`Test ${equalToPropertyValue.name}`, () => {
         const propertyName: keyof Customer = 'email'
         const input = "test12333@gmail.com"
 
-        const ruleFunc = equalToPropertyValue<Customer>(propertyName, customErrorMessage)
+        const validateFunc = equalToPropertyValue<Customer>(propertyName, customErrorMessage)
 
-        const actual = ruleFunc(input, customer)
-        const expected: PropertyRuleValidationResult = {
-            isValid: false,
+        const actual = validateFunc(input, customer)
+        const expected: RuleViolation = {
+            ruleName: equalToPropertyValue.name,
+            attemptedValue: input,
             errorMessage: customErrorMessage
         }
 
@@ -69,12 +71,10 @@ describe(`Test ${equalToPropertyValue.name}`, () => {
         const propertyName: keyof Customer = 'email'
         const input = "admin@gmail.com"
 
-        const ruleFunc = equalToPropertyValue<Customer>(propertyName, customErrorMessage)
+        const validateFunc = equalToPropertyValue<Customer>(propertyName, customErrorMessage)
 
-        const actual = ruleFunc(input, customer)
-        const expected: PropertyRuleValidationResult = {
-            isValid: true
-        }
+        const actual = validateFunc(input, customer)
+        const expected = undefined
 
         expect(actual).toEqual(expected)
     })
@@ -109,11 +109,12 @@ describe(`Test ${equalToPropertyValue.name}`, () => {
             street: "Bandung"
         }
 
-        const ruleFunc = equalToPropertyValue<Customer>(propertyName, customErrorMessage)
+        const validateFunc = equalToPropertyValue<Customer>(propertyName, customErrorMessage)
 
-        const actual = ruleFunc(addressValue, customer)
-        const expected: PropertyRuleValidationResult = {
-            isValid: false,
+        const actual = validateFunc(addressValue, customer)
+        const expected: RuleViolation = {
+            ruleName: equalToPropertyValue.name,
+            attemptedValue: addressValue,
             errorMessage: customErrorMessage
         }
 
@@ -129,7 +130,7 @@ describe(`Test ${equalToPropertyValue.name}`, () => {
             street: string
             cityId: number
         }
-        
+
         type Customer = {
             email: string
             address: Address
@@ -148,12 +149,10 @@ describe(`Test ${equalToPropertyValue.name}`, () => {
         // Reference: Should return true
         const addressValue = customer.address
 
-        const ruleFunc = equalToPropertyValue<Customer>(propertyName, customErrorMessage)
+        const validateFunc = equalToPropertyValue<Customer>(propertyName, customErrorMessage)
 
-        const actual = ruleFunc(addressValue, customer)
-        const expected: PropertyRuleValidationResult = {
-            isValid: true
-        }
+        const actual = validateFunc(addressValue, customer)
+        const expected = undefined
 
         expect(actual).toEqual(expected)
     })

@@ -7,15 +7,26 @@ interface Account {
 const validationRule: ValidationRule<Account> = {
     name: [
         (value, object) => {
+            const isValid = value.length >= 5
+            if (isValid) {
+                return
+            }
             return {
-                isValid: value.length >= 5,
+                ruleName: "none",
+                attemptedValue: value,
                 errorMessage: "Name length minimum is 5 chars."
             }
         },
         (value, object) => {
             // Must contain A letter 
+            const isValid = value.toLocaleLowerCase().includes("a")
+            if (isValid) {
+                return
+            }
+
             return {
-                isValid: value.toLocaleLowerCase().includes("a"),
+                ruleName: "none",
+                attemptedValue: value,
                 errorMessage: "Name must contain 'A' letter."
             }
         }

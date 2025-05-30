@@ -10,23 +10,19 @@ const loginRule: ValidationRule<LoginRequest> = {
         function (username, loginRequest) {
             if (!username) {
                 return {
-                    isValid: false,
+                    ruleName: "none",
+                    attemptedValue: username,
                     errorMessage: "Please enter username."
                 }
-            }
-            return {
-                isValid: true
             }
         },
         function (username, loginRequest) {
             if (username.toLocaleLowerCase().includes("admin")) {
                 return {
-                    isValid: false,
+                    ruleName: "none",
+                    attemptedValue: username,
                     errorMessage: "Admin is not allowed to login."
                 }
-            }
-            return {
-                isValid: true
             }
         }
     ],
@@ -34,12 +30,10 @@ const loginRule: ValidationRule<LoginRequest> = {
         function (password, loginRequest) {
             if (!password) {
                 return {
-                    isValid: false,
+                    ruleName: "none",
+                    attemptedValue: password,
                     errorMessage: "Please enter password."
                 }
-            }
-            return {
-                isValid: true
             }
         }
     ]

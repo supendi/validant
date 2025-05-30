@@ -40,15 +40,25 @@ const orderItemRule: ValidationRule<OrderItem, OrderRequest> = {
             const maxQuantityForJac = 100
             const maxQuantityForOthers = 10
 
+            const isValidQuantityForJac = quantity <= maxQuantityForJac
+            const isValidQuantityForOthers = quantity <= maxQuantityForOthers
+
             if (isJac) {
-                return {
-                    isValid: quantity <= maxQuantityForJac,
-                    errorMessage: `You are special ${customerName}, other's max quantity is limited to ${maxQuantityForOthers}. Yours is limited to, but ${maxQuantityForJac} pcs.`
+                if (!isValidQuantityForJac) {
+                    return {
+                        ruleName: "isJac",
+                        attemptedValue: quantity,
+                        errorMessage: `You are special ${customerName}, other's max quantity is limited to ${maxQuantityForOthers}. Yours is limited to, but ${maxQuantityForJac} pcs.`
+                    }
                 }
             }
-            return {
-                isValid: quantity <= maxQuantityForOthers,
-                errorMessage: `You only allowed to order ${maxQuantityForOthers} product at once.`
+
+            if (!isValidQuantityForOthers) {
+                return {
+                    ruleName: "isJac",
+                    attemptedValue: quantity,
+                    errorMessage: `You only allowed to order ${maxQuantityForOthers} product at once.`
+                }
             }
         }
     ]

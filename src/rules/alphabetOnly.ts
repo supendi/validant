@@ -8,5 +8,5 @@ const alphabetOnlyRegex = /^[a-zA-Z ]*$/;
  * @returns 
  */
 export function alphabetOnly<T extends Object>(errorMessage?: string) {
-    return regularExpression<T>(alphabetOnlyRegex, errorMessage ? errorMessage : "This field should not contain any numbers or symbols. Accept only A-Z a-z and spaces.")
+    return regularExpression<T>(alphabetOnlyRegex, alphabetOnly.name, errorMessage ? errorMessage : "This field should not contain any numbers or symbols. Accept only A-Z a-z and spaces.")
 }

@@ -16,19 +16,17 @@ function uniqueEmailRule(userRepository: UserRepository) {
         const user = await userRepository.getUserAsync(email)
         if (user) {
             return {
-                isValid: false,
+                ruleName: uniqueEmailRule.name,
+                attemptedValue: email,
                 errorMessage: `The email ${email} has been registered.`
             }
-        }
-        return {
-            isValid: true
         }
     }
 }
 
 function strongPasswordRule() {
     const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d])([A-Za-z\d]|[^a-zA-Z\d]){8,}$/
-    return regularExpression(strongPasswordRegex, "Should contain a number, capital letter, at least 8 chars min and special char.")
+    return regularExpression(strongPasswordRegex, strongPasswordRule.name, "Should contain a number, capital letter, at least 8 chars min and special char.")
 }
 
 function validUserTypeRule() {
@@ -36,12 +34,10 @@ function validUserTypeRule() {
         const isValidType = ALLOWED_USER_TYPES.includes(userType)
         if (!isValidType) {
             return {
-                isValid: false,
+                ruleName: validUserTypeRule.name,
+                attemptedValue: userType,
                 errorMessage: `Invalid user types ${userType}. Allowed types ${ALLOWED_USER_TYPES.join(" ")}.`
             }
-        }
-        return {
-            isValid: true
         }
     }
 }

@@ -6,22 +6,18 @@ export type LoginRequest = {
     password: string
 }
 
-function preventUnRegisteredEmailRule(userRepository: UserRepository) {
+function preventUnregisteredEmailRule(userRepository: UserRepository) {
     return async function (email) {
         if (!email) { // lets skip this for now.
-            return {
-                isValid: true
-            }
+            return
         }
         const existingUser = await userRepository.getUserAsync(email)
         if (!existingUser) {
             return {
-                isValid: false,
+                ruleName: preventUnregisteredEmailRule.name,
+                attemptedValue: email,
                 errorMessage: `${email} is not registered.`
             }
-        }
-        return {
-            isValid: true
         }
     }
 }
@@ -31,7 +27,7 @@ function buildLoginRule(userRepository: UserRepository) {
         email: [
             required(),
             emailAddress(),
-            preventUnRegisteredEmailRule(userRepository)
+            preventUnregisteredEmailRule(userRepository)
         ],
         password: [
             required(),

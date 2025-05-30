@@ -10,10 +10,11 @@
   "scripts": {
     "rm-node_modules": "rm -rf node_modules",
     "rm-dist": "rm -rf ./dist",
+    "clean": "yarn rm-node_modules && yarn rm-dist && rm -rf coverage",
     "test": "yarn rm-dist && tsc --noEmit && jest --coverage",
     "build": "yarn rm-dist && tsc",
-    "build-prod": "yarn rm-dist && tsc -p tsconfig.production.json",
-    "prepare-publish": "yarn rm-node_modules && yarn install && yarn test && yarn build-prod && yarn bundle-check",
+    "build-prod": "tsc -p tsconfig.production.json",
+    "prepare-publish": "yarn clean && yarn install && yarn test && yarn build-prod && yarn bundle-check",
     "bundle-check": "npm pack --dry-run",
     "publish": "yarn prepare-publish && npm version patch"
   },

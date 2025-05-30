@@ -1,4 +1,4 @@
-import { AsyncArrayValidationRule, AsyncValidationRule, GenericPropertyRuleFunc } from "../types/AsyncValidationRule";
+import { AsyncArrayValidationRule, AsyncValidationRule, GenericValidateFunc } from "../types/AsyncValidationRule";
 import { ErrorOf, ErrorOfArray } from "../types/ErrorOf";
 import { ArrayValidationRule } from "../types/ValidationRule";
 import { ValidationRule } from "../types/ValidationRule";
@@ -13,7 +13,7 @@ export function isAsyncArrayValidationRule<T, TRoot>(rule: AsyncValidationRule<T
     return isArrayRule
 }
 
-export async function validatePrimitiveFieldAsync<T, TRoot>(key: Extract<keyof T, string>, object: T, root: TRoot, rule: GenericPropertyRuleFunc<T[Extract<keyof T, string>], TRoot>[]): Promise<PrimitiveFieldValidationResult> {
+export async function validatePrimitiveFieldAsync<T, TRoot>(key: Extract<keyof T, string>, object: T, root: TRoot, rule: GenericValidateFunc<T[Extract<keyof T, string>], TRoot>[]): Promise<PrimitiveFieldValidationResult> {
     var fieldErrors: FieldErrors = [];
     for (let index = 0; index < rule.length; index++) {
         const propertyRuleFunc = rule[index];

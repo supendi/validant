@@ -26,7 +26,7 @@ export function createUserRepository(userDatabase: User[]): UserRepository {
                 userDatabase.push(user);
                 resolve()
                 return
-            }, 100);
+            }, 2);
         });
     }
 
@@ -39,7 +39,7 @@ export function createUserRepository(userDatabase: User[]): UserRepository {
                 } else {
                     resolve(undefined);
                 }
-            }, 100);
+            }, 2);
         });
     }
 

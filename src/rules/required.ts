@@ -1,4 +1,4 @@
-import { PropertyRuleFunc } from "../types/ValidationRule";
+import { ValidateFunc } from "../types/ValidationRule";
 
 /**
  * Specifies the rule that if a property is required.
@@ -17,10 +17,15 @@ import { PropertyRuleFunc } from "../types/ValidationRule";
  * @param errorMessage Custom error messages or default returned
  * @returns 
  */
-export const required = <TValue, TObject extends Object>(errorMessage?: string): PropertyRuleFunc<TValue | null | undefined, TObject> => {
-    const finalErrorMessage = errorMessage ?? "This field is required.";
+export const required = <TValue, TObject extends Object>(errorMessage?: string): ValidateFunc<TValue | null | undefined, TObject> => {
 
     return (value) => {
+        const violation = {
+            ruleName: required.name,
+            attemptedValue: value,
+            errorMessage: errorMessage ?? "This field is required."
+        }
+
         const isNull = value === null;
         const isUndefined = value === undefined;
         const isEmptyString = value === "";
@@ -42,14 +47,7 @@ export const required = <TValue, TObject extends Object>(errorMessage?: string):
         const isValid = !isInvalid
 
         if (!isValid) {
-            return {
-                isValid: false,
-                errorMessage: finalErrorMessage,
-            };
+            return violation
         }
-
-        return {
-            isValid: true
-        };
     };
 };

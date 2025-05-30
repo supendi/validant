@@ -1,7 +1,7 @@
 
-import { AsyncValidationRule, AsyncArrayValidationRule, AsyncPropertyRuleFunc, GenericPropertyRuleFunc } from "./types/AsyncValidationRule";
+import { AsyncValidationRule, AsyncArrayValidationRule, AsyncValidateFunc, GenericValidateFunc } from "./types/AsyncValidationRule";
 import { ErrorOf, ErrorOfArray, IndexedErrorOf, ArrayElementType, PossiblyUndefined } from './types/ErrorOf'
-import { ArrayValidationRule, PropertyRuleFunc, PropertyRuleValidationResult, ValidationRule } from "./types/ValidationRule";
+import { ArrayValidationRule, ValidateFunc, RuleViolation, ValidationRule } from "./types/ValidationRule";
 import { Validator, ValidationResult, ValidantOptions, ValidationMessage } from "./Validator";
 import { AsyncValidator } from "./AsyncValidator";
 import { PropertyValidationResult } from "./validators/validateField";
@@ -47,8 +47,8 @@ export {
 export {
     AsyncValidationRule,
     AsyncArrayValidationRule,
-    AsyncPropertyRuleFunc,
-    GenericPropertyRuleFunc
+    AsyncValidateFunc,
+    GenericValidateFunc
 }
 
 export {
@@ -61,8 +61,8 @@ export {
 
 export {
     ArrayValidationRule,
-    PropertyRuleFunc,
-    PropertyRuleValidationResult,
+    ValidateFunc,
+    RuleViolation,
     ValidationRule
 }
 

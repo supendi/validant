@@ -14,9 +14,7 @@ function sequentialPriceLevelRule(currentPriceItem: ProductPrice) {
 
         // First index is ok: no comparer
         if (isFirstIndex) {
-            return {
-                isValid: true
-            }
+            return
         }
 
         const prevPriceIndex = currentPriceItemIndex - 1
@@ -27,13 +25,10 @@ function sequentialPriceLevelRule(currentPriceItem: ProductPrice) {
         const isValid = level === expectedNextPriceLevel
         if (!isValid) {
             return {
-                isValid: false,
+                ruleName: sequentialPriceLevelRule.name,
+                attemptedValue: level,
                 errorMessage: `Price level should be sequential. And the current price level should be: ${expectedNextPriceLevel}, but got ${level}`
             }
-        }
-
-        return {
-            isValid: true
         }
     }
 }
@@ -43,19 +38,18 @@ function userCanCreateProductRule(userRepository: UserRepository) {
         const user = await userRepository.getUserAsync(userEmail)
         if (!user) {
             return {
-                isValid: false,
+                ruleName: userCanCreateProductRule.name,
+                attemptedValue: userEmail,
                 errorMessage: `Invalid user email ${userEmail}.`
             }
         }
 
         if (user.userType !== "tenant") {
             return {
-                isValid: false,
+                ruleName: userCanCreateProductRule.name,
+                attemptedValue: userEmail,
                 errorMessage: `User is not allowed to create product.`
             }
-        }
-        return {
-            isValid: true
         }
     }
 }
@@ -67,13 +61,11 @@ function noDuplicatePriceLevelRule() {
             const isDuplicatePrice = prices.filter(x => x.level === productPrice.level && x.price === productPrice.price).length > 1
             if (isDuplicatePrice) {
                 return {
-                    isValid: false,
+                    ruleName: noDuplicatePriceLevelRule.name,
+                    attemptedValue: prices,
                     errorMessage: `Duplicate price ${productPrice.price} and level ${productPrice.level}. At index ${index}.`
                 }
             }
-        }
-        return {
-            isValid: true
         }
     }
 }

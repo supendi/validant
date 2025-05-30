@@ -1,4 +1,4 @@
-import { Validator, ValidationRule, ValidationResult, PropertyRuleFunc } from "../../../index"
+import { Validator, ValidationRule, ValidationResult, ValidateFunc } from "../../../index"
 
 const defaultMessage = { okMessage: "Good to go.", errorMessage: "One or more validation errors occurred." }
 
@@ -7,44 +7,38 @@ interface LoginRequest {
     password: string
 }
 
-function requiredUserNameRule(): PropertyRuleFunc<string, LoginRequest> {
+function requiredUserNameRule(): ValidateFunc<string, LoginRequest> {
     return function (username, loginRequest) {
         if (!username) {
             return {
-                isValid: false,
+                ruleName: requiredUserNameRule.name,
+                attemptedValue: username,
                 errorMessage: "Please enter username."
             }
         }
-        return {
-            isValid: true
-        }
     }
 }
 
-function requiredAdminRule(): PropertyRuleFunc<string, LoginRequest> {
+function adminShouldBeBlocked(): ValidateFunc<string, LoginRequest> {
     return function (username, loginRequest) {
         if (username.toLocaleLowerCase().includes("admin")) {
             return {
-                isValid: false,
+                ruleName: adminShouldBeBlocked.name,
+                attemptedValue: username,
                 errorMessage: "Admin is not allowed to login."
             }
-        }
-        return {
-            isValid: true
         }
     }
 }
 
-function requiredPasswordRule(): PropertyRuleFunc<string, LoginRequest> {
+function requiredPasswordRule(): ValidateFunc<string, LoginRequest> {
     return function (password, loginRequest) {
         if (!password) {
             return {
-                isValid: false,
+                ruleName: requiredPasswordRule.name,
+                attemptedValue: password,
                 errorMessage: "Please enter password."
             }
-        }
-        return {
-            isValid: true
         }
     }
 }
@@ -52,7 +46,7 @@ function requiredPasswordRule(): PropertyRuleFunc<string, LoginRequest> {
 const loginRule: ValidationRule<LoginRequest> = {
     userName: [
         requiredUserNameRule(),
-        requiredAdminRule()
+        adminShouldBeBlocked()
     ],
     password: [
         requiredPasswordRule()

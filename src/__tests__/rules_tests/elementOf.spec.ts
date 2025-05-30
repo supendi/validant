@@ -1,5 +1,5 @@
 import { elementOf } from "../../rules/elementOf"
-import { PropertyRuleValidationResult } from "../../types/ValidationRule"
+import { RuleViolation } from "../../types/ValidationRule"
 
 describe(`Test ${elementOf.name}`, () => {
     it("should return false and have default error message", () => {
@@ -7,11 +7,12 @@ describe(`Test ${elementOf.name}`, () => {
         const defaultErrorMessage = `The value ':value' is not an element of [${arr.join(", ")}].` // the ':value' is expected. its validateField.ts that replaces that.
         const input = 4
 
-        const ruleFunc = elementOf(arr)
+        const validateFunc = elementOf(arr)
 
-        const actual = ruleFunc(input, {})
-        const expected: PropertyRuleValidationResult = {
-            isValid: false,
+        const actual = validateFunc(input, {})
+        const expected: RuleViolation = {
+            ruleName: elementOf.name,
+            attemptedValue: input,
             errorMessage: defaultErrorMessage
         }
 
@@ -25,11 +26,12 @@ describe(`Test ${elementOf.name}`, () => {
         const customErrorMessage = `Wrong guess.`
         const input = 4
 
-        const ruleFunc = elementOf(arr, customErrorMessage)
+        const validateFunc = elementOf(arr, customErrorMessage)
 
-        const actual = ruleFunc(input, {})
-        const expected: PropertyRuleValidationResult = {
-            isValid: false,
+        const actual = validateFunc(input, {})
+        const expected: RuleViolation = {
+            ruleName: elementOf.name,
+            attemptedValue: input,
             errorMessage: customErrorMessage
         }
 
@@ -43,14 +45,11 @@ describe(`Test ${elementOf.name}`, () => {
         const customErrorMessage = `Wrong guess.`
         const input = 3
 
-        const ruleFunc = elementOf(arr, customErrorMessage)
+        const validateFunc = elementOf(arr, customErrorMessage)
 
-        const actual = ruleFunc(input, {})
-        const expected: PropertyRuleValidationResult = {
-            isValid: true
-        }
+        const actual = validateFunc(input, {})
 
-        expect(actual).toEqual(expected)
+        expect(actual).toEqual(undefined)
     })
 })
 
@@ -60,14 +59,11 @@ describe(`Test ${elementOf.name}`, () => {
         const customErrorMessage = `Wrong guess.`
         const input = "Indonesia"
 
-        const ruleFunc = elementOf(arr, customErrorMessage)
+        const validateFunc = elementOf(arr, customErrorMessage)
 
-        const actual = ruleFunc(input, {})
-        const expected: PropertyRuleValidationResult = {
-            isValid: true
-        }
+        const actual = validateFunc(input, {})
 
-        expect(actual).toEqual(expected)
+        expect(actual).toEqual(undefined)
     })
 })
 
@@ -84,7 +80,7 @@ describe(`Test ${elementOf.name}`, () => {
             }
         ]
         const customErrorMessage = `Wrong guess.`
-        const ruleFunc = elementOf(arr, customErrorMessage)
+        const validateFunc = elementOf(arr, customErrorMessage)
 
         //The following IS NOT the reference element of the above array. Even it looks similar.
         const input = {
@@ -92,9 +88,10 @@ describe(`Test ${elementOf.name}`, () => {
             id: 1,
         }
 
-        const actual = ruleFunc(input, {})
-        const expected: PropertyRuleValidationResult = {
-            isValid: false,
+        const actual = validateFunc(input, {})
+        const expected: RuleViolation = {
+            ruleName: elementOf.name,
+            attemptedValue: input,
             errorMessage: customErrorMessage
         }
 
@@ -115,17 +112,14 @@ describe(`Test ${elementOf.name}`, () => {
             }
         ]
         const customErrorMessage = `Wrong guess.`
-        const ruleFunc = elementOf(arr, customErrorMessage)
+        const validateFunc = elementOf(arr, customErrorMessage)
 
         //The following IS the reference element of the above array.
         const input = arr.find(x => x.id === 1)
 
-        const actual = ruleFunc(input, {})
-        const expected: PropertyRuleValidationResult = {
-            isValid: true
-        }
+        const actual = validateFunc(input, {})
 
-        expect(actual).toEqual(expected)
+        expect(actual).toEqual(undefined)
     })
 })
 

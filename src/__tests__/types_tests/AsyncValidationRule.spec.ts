@@ -1,5 +1,6 @@
 import { minNumber, required } from "../../rules"
 import { AsyncValidationRule } from "../../types/AsyncValidationRule"
+import { RuleViolation } from "../../types/ValidationRule"
 
 type User = {
     email: string
@@ -35,12 +36,13 @@ function emailHasBeenRegisteredAsyncRule() {
     return async function (email: string) {
         const existingUserByEmail = await fetchUserByEmail(email);
         if (existingUserByEmail) {
-            return {
-                isValid: false,
-                errorMessage: `The email ${email} has been registered`
-            };
+            const violation = {
+                ruleName: emailHasBeenRegisteredAsyncRule.name,
+                attemptedValue: email,
+                errorMessage: `Email '${email}' has already been registered.`
+            }
+            return violation
         }
-        return { isValid: true };
     };
 }
 

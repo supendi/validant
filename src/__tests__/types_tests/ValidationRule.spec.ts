@@ -1,5 +1,5 @@
 import { ArrayValidationRule } from "../../types/ValidationRule"
-import { PropertyRuleFunc } from "../../types/ValidationRule"
+import { ValidateFunc } from "../../types/ValidationRule"
 import { ValidationRule } from "../../types/ValidationRule"
 import { elementOf, emailAddress, maxNumber, arrayMinLen, minNumber, required } from "../../rules"
 
@@ -110,16 +110,18 @@ describe("ValidationRules Simple Person Test", () => {
             name: string
             age: number
         }
-        const requiredValidator: PropertyRuleFunc<any, any> = (value: any, obj?: any) => {
+        const requiredValidator: ValidateFunc<any, any> = (value: any, obj?: any) => {
             return {
-                isValid: !!value,
+                ruleName: requiredValidator.name,
+                attemptedValue: value,
                 errorMessage: "This field is required"
             }
         }
-        const minNumberValidator: PropertyRuleFunc<any, any> = (value: any, obj?: any) => {
+        const minNumberValidator: ValidateFunc<any, any> = (value: any, obj?: any) => {
             return {
-                isValid: false,
-                errorMessage: "Minimum number is"
+                ruleName: minNumberValidator.name,
+                attemptedValue: value,
+                errorMessage: "minNumberValidator"
             }
         }
 
@@ -161,22 +163,25 @@ describe("ValidationRules Complex Person Test", () => {
             father: Person
             children: Person[]
         }
-        const requiredValidator: PropertyRuleFunc<any, any> = (value: any, obj?: any) => {
+        const requiredValidator: ValidateFunc<any, any> = (value: any, obj?: any) => {
             return {
-                isValid: !!value,
-                errorMessage: "This field is required"
+                ruleName: requiredValidator.name,
+                attemptedValue: value,
+                errorMessage: "error"
             }
         }
-        const minNumberValidator: PropertyRuleFunc<any, any> = (value: any, obj?: any) => {
+        const minNumberValidator: ValidateFunc<any, any> = (value: any, obj?: any) => {
             return {
-                isValid: false,
-                errorMessage: "Minimum number is"
+                ruleName: minNumberValidator.name,
+                attemptedValue: value,
+                errorMessage: "error"
             }
         }
-        const maxNumberValidator: PropertyRuleFunc<any, any> = (value: any, obj?: any) => {
+        const maxNumberValidator: ValidateFunc<any, any> = (value: any, obj?: any) => {
             return {
-                isValid: false,
-                errorMessage: "Maximum number is"
+                ruleName: maxNumberValidator.name,
+                attemptedValue: value,
+                errorMessage: "error"
             }
         }
 

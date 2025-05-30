@@ -1,5 +1,5 @@
 import { required } from "../../rules/required"
-import { PropertyRuleValidationResult } from "../../types/ValidationRule"
+import { RuleViolation } from "../../types/ValidationRule"
 
 const defaultErrorMessage = "This field is required."
 
@@ -9,12 +9,13 @@ const defaultErrorMessage = "This field is required."
 
 describe(`Null Test ${required.name}`, () => {
     it("should return false and have default error message", () => {
-        const ruleFunc = required()
-        const myName = null
+        const validateFunc = required()
+        const value = null
 
-        const actual = ruleFunc(myName, {})
-        const expected: PropertyRuleValidationResult = {
-            isValid: false,
+        const actual = validateFunc(value, {})
+        const expected: RuleViolation = {
+            ruleName: required.name,
+            attemptedValue: value,
             errorMessage: defaultErrorMessage
         }
 
@@ -24,12 +25,13 @@ describe(`Null Test ${required.name}`, () => {
 
 describe(`Undefined Test ${required.name}`, () => {
     it("should return false and have default error message", () => {
-        const ruleFunc = required()
-        const myName = undefined
+        const validateFunc = required()
+        const value = undefined
 
-        const actual = ruleFunc(myName, {})
-        const expected: PropertyRuleValidationResult = {
-            isValid: false,
+        const actual = validateFunc(value, {})
+        const expected: RuleViolation = {
+            ruleName: required.name,
+            attemptedValue: value,
             errorMessage: defaultErrorMessage
         }
 
@@ -39,12 +41,13 @@ describe(`Undefined Test ${required.name}`, () => {
 
 describe(`Empty string Test ${required.name}`, () => {
     it("should return false and have default error message", () => {
-        const ruleFunc = required()
-        const myName = ""
+        const validateFunc = required()
+        const value = ""
 
-        const actual = ruleFunc(myName, {})
-        const expected: PropertyRuleValidationResult = {
-            isValid: false,
+        const actual = validateFunc(value, {})
+        const expected: RuleViolation = {
+            ruleName: required.name,
+            attemptedValue: value,
             errorMessage: defaultErrorMessage
         }
 
@@ -54,12 +57,13 @@ describe(`Empty string Test ${required.name}`, () => {
 
 describe(`Empty Array Test ${required.name}`, () => {
     it("should return false and have default error message", () => {
-        const ruleFunc = required()
+        const validateFunc = required()
         const orders = []
 
-        const actual = ruleFunc(orders, {})
-        const expected: PropertyRuleValidationResult = {
-            isValid: false,
+        const actual = validateFunc(orders, {})
+        const expected: RuleViolation = {
+            ruleName: required.name,
+            attemptedValue: orders,
             errorMessage: defaultErrorMessage
         }
 
@@ -69,12 +73,13 @@ describe(`Empty Array Test ${required.name}`, () => {
 
 describe(`Empty Object Test ${required.name}`, () => {
     it("should return false and have default error message", () => {
-        const ruleFunc = required()
+        const validateFunc = required()
         const emptyOrder = {}
 
-        const actual = ruleFunc(emptyOrder, {})
-        const expected: PropertyRuleValidationResult = {
-            isValid: false,
+        const actual = validateFunc(emptyOrder, {})
+        const expected: RuleViolation = {
+            ruleName: required.name,
+            attemptedValue: emptyOrder,
             errorMessage: defaultErrorMessage
         }
 
@@ -85,12 +90,13 @@ describe(`Empty Object Test ${required.name}`, () => {
 describe(`Empty Object Test ${required.name}`, () => {
     it("should return false and have custom error message", () => {
         const customErrorMessage = "Empty object treated as invalid"
-        const ruleFunc = required(customErrorMessage)
+        const validateFunc = required(customErrorMessage)
         const emptyOrder = {}
 
-        const actual = ruleFunc(emptyOrder, {})
-        const expected: PropertyRuleValidationResult = {
-            isValid: false,
+        const actual = validateFunc(emptyOrder, {})
+        const expected: RuleViolation = {
+            ruleName: required.name,
+            attemptedValue: emptyOrder,
             errorMessage: customErrorMessage
         }
 
@@ -100,12 +106,13 @@ describe(`Empty Object Test ${required.name}`, () => {
 
 describe(`NaN Test ${required.name}`, () => {
     it("should return false and have default error message", () => {
-        const ruleFunc = required()
+        const validateFunc = required()
         const notANumber = NaN
 
-        const actual = ruleFunc(notANumber, {})
-        const expected: PropertyRuleValidationResult = {
-            isValid: false,
+        const actual = validateFunc(notANumber, {})
+        const expected: RuleViolation = {
+            ruleName: required.name,
+            attemptedValue: notANumber,
             errorMessage: defaultErrorMessage
         }
 
@@ -116,12 +123,13 @@ describe(`NaN Test ${required.name}`, () => {
 describe(`Invalid Date Test ${required.name}`, () => {
     it("should return false and have default error message", () => {
         const customErrorMessage = "Date is invalid"
-        const ruleFunc = required(customErrorMessage)
+        const validateFunc = required(customErrorMessage)
         const invalidDate = new Date("invalid date")
 
-        const actual = ruleFunc(invalidDate, {})
-        const expected: PropertyRuleValidationResult = {
-            isValid: false,
+        const actual = validateFunc(invalidDate, {})
+        const expected: RuleViolation = {
+            ruleName: required.name,
+            attemptedValue: invalidDate,
             errorMessage: customErrorMessage
         }
 
@@ -131,12 +139,13 @@ describe(`Invalid Date Test ${required.name}`, () => {
 
 describe(`Whitespace string Test ${required.name}`, () => {
     it("should return false and have default error message", () => {
-        const ruleFunc = required()
+        const validateFunc = required()
         const whitespace = "   "
 
-        const actual = ruleFunc(whitespace, {})
-        const expected: PropertyRuleValidationResult = {
-            isValid: false,
+        const actual = validateFunc(whitespace, {})
+        const expected: RuleViolation = {
+            ruleName: required.name,
+            attemptedValue: whitespace,
             errorMessage: defaultErrorMessage
         }
 
@@ -152,41 +161,33 @@ describe(`Whitespace string Test ${required.name}`, () => {
 
 describe(`Zero string Test ${required.name}`, () => {
     it("should return true and empty error", () => {
-        const ruleFunc = required()
+        const validateFunc = required()
         const zeroString = "0"
 
-        const actual = ruleFunc(zeroString, {})
-        const expected: PropertyRuleValidationResult = {
-            isValid: true
-        }
-
+        const actual = validateFunc(zeroString, {})
+        const expected = undefined
         expect(actual).toEqual(expected)
     })
 })
 
 describe(`Zero number Test ${required.name}`, () => {
     it("should return true and empty error", () => {
-        const ruleFunc = required()
+        const validateFunc = required()
         const zeroString = 0
 
-        const actual = ruleFunc(zeroString, {})
-        const expected: PropertyRuleValidationResult = {
-            isValid: true
-        }
-
+        const actual = validateFunc(zeroString, {})
+        const expected = undefined
         expect(actual).toEqual(expected)
     })
 })
 
 describe(`false boolean Test ${required.name}`, () => {
     it("should return true and empty error", () => {
-        const ruleFunc = required()
+        const validateFunc = required()
         const isFalse = false
 
-        const actual = ruleFunc(isFalse, {})
-        const expected: PropertyRuleValidationResult = {
-            isValid: true
-        }
+        const actual = validateFunc(isFalse, {})
+        const expected = undefined
 
         expect(actual).toEqual(expected)
     })
@@ -194,13 +195,11 @@ describe(`false boolean Test ${required.name}`, () => {
 
 describe(`true boolean Test ${required.name}`, () => {
     it("should return true and empty error", () => {
-        const ruleFunc = required()
+        const validateFunc = required()
         const isTrue = true
 
-        const actual = ruleFunc(isTrue, {})
-        const expected: PropertyRuleValidationResult = {
-            isValid: true
-        }
+        const actual = validateFunc(isTrue, {})
+        const expected = undefined
 
         expect(actual).toEqual(expected)
     })
@@ -208,13 +207,11 @@ describe(`true boolean Test ${required.name}`, () => {
 
 describe(`Array Test ${required.name}`, () => {
     it("should return true and empty error", () => {
-        const ruleFunc = required()
+        const validateFunc = required()
         const arr = [1]
 
-        const actual = ruleFunc(arr, {})
-        const expected: PropertyRuleValidationResult = {
-            isValid: true
-        }
+        const actual = validateFunc(arr, {})
+        const expected = undefined
 
         expect(actual).toEqual(expected)
     })
@@ -222,13 +219,11 @@ describe(`Array Test ${required.name}`, () => {
 
 describe(`Number Test ${required.name}`, () => {
     it("should return true and empty error", () => {
-        const ruleFunc = required()
+        const validateFunc = required()
         const one = 1
 
-        const actual = ruleFunc(one, {})
-        const expected: PropertyRuleValidationResult = {
-            isValid: true
-        }
+        const actual = validateFunc(one, {})
+        const expected = undefined
 
         expect(actual).toEqual(expected)
     })
@@ -236,15 +231,13 @@ describe(`Number Test ${required.name}`, () => {
 
 describe(`Object Test ${required.name}`, () => {
     it("should return true and empty error", () => {
-        const ruleFunc = required()
+        const validateFunc = required()
         const obj = {
             number: 1
         }
 
-        const actual = ruleFunc(obj, {})
-        const expected: PropertyRuleValidationResult = {
-            isValid: true
-        }
+        const actual = validateFunc(obj, {})
+        const expected = undefined
 
         expect(actual).toEqual(expected)
     })
@@ -252,13 +245,11 @@ describe(`Object Test ${required.name}`, () => {
 
 describe(`Date Test ${required.name}`, () => {
     it("should return true and empty error", () => {
-        const ruleFunc = required()
+        const validateFunc = required()
         const today = new Date()
 
-        const actual = ruleFunc(today, {})
-        const expected: PropertyRuleValidationResult = {
-            isValid: true
-        }
+        const actual = validateFunc(today, {})
+        const expected = undefined
 
         expect(actual).toEqual(expected)
     })

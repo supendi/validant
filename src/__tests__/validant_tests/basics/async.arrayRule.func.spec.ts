@@ -36,12 +36,10 @@ const rule: AsyncValidationRule<Order> = {
                             const id = await fetchProductIdAsync(productId)
                             if (!id) {
                                 return {
-                                    isValid: false,
+                                    ruleName: "unknownProductId",
+                                    attemptedValue: productId,
                                     errorMessage: `Invalid product id ${productId}.`
                                 }
-                            }
-                            return {
-                                isValid: true
                             }
                         }
                     ],

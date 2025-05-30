@@ -1,5 +1,5 @@
 import { isString } from "../../rules/isString"
-import { PropertyRuleValidationResult } from "../../types/ValidationRule"
+import { RuleViolation } from "../../types/ValidationRule"
 
 
 /**
@@ -8,13 +8,14 @@ import { PropertyRuleValidationResult } from "../../types/ValidationRule"
 
 describe(`Null Test ${isString.name}`, () => {
     it("should return false and have default error message", () => {
-        const ruleFunc = isString()
+        const validateFunc = isString()
         const date = null
         const defaultErrorMessage = `This field is not a valid string, type of value was: ${typeof date}.`
 
-        const actual = ruleFunc(date, {})
-        const expected: PropertyRuleValidationResult = {
-            isValid: false,
+        const actual = validateFunc(date, {})
+        const expected: RuleViolation = {
+            ruleName: isString.name,
+            attemptedValue: date,
             errorMessage: defaultErrorMessage
         }
 
@@ -24,13 +25,14 @@ describe(`Null Test ${isString.name}`, () => {
 
 describe(`Undefined Test ${isString.name}`, () => {
     it("should return false and have default error message", () => {
-        const ruleFunc = isString()
+        const validateFunc = isString()
         const date = undefined
         const defaultErrorMessage = `This field is not a valid string, type of value was: ${typeof date}.`
 
-        const actual = ruleFunc(date, {})
-        const expected: PropertyRuleValidationResult = {
-            isValid: false,
+        const actual = validateFunc(date, {})
+        const expected: RuleViolation = {
+            ruleName: isString.name,
+            attemptedValue: date,
             errorMessage: defaultErrorMessage
         }
 
@@ -40,13 +42,14 @@ describe(`Undefined Test ${isString.name}`, () => {
 
 describe(`Empty Array Test ${isString.name}`, () => {
     it("should return false and have default error message", () => {
-        const ruleFunc = isString()
+        const validateFunc = isString()
         const date = []
         const defaultErrorMessage = `This field is not a valid string, type of value was: ${typeof date}.`
 
-        const actual = ruleFunc(date, {})
-        const expected: PropertyRuleValidationResult = {
-            isValid: false,
+        const actual = validateFunc(date, {})
+        const expected: RuleViolation = {
+            ruleName: isString.name,
+            attemptedValue: date,
             errorMessage: defaultErrorMessage
         }
 
@@ -56,13 +59,14 @@ describe(`Empty Array Test ${isString.name}`, () => {
 
 describe(`Empty Object Test ${isString.name}`, () => {
     it("should return false and have default error message", () => {
-        const ruleFunc = isString()
+        const validateFunc = isString()
         const date = {}
         const defaultErrorMessage = `This field is not a valid string, type of value was: ${typeof date}.`
 
-        const actual = ruleFunc(date, {})
-        const expected: PropertyRuleValidationResult = {
-            isValid: false,
+        const actual = validateFunc(date, {})
+        const expected: RuleViolation = {
+            ruleName: isString.name,
+            attemptedValue: date,
             errorMessage: defaultErrorMessage
         }
 
@@ -73,12 +77,13 @@ describe(`Empty Object Test ${isString.name}`, () => {
 describe(`Empty Object Test ${isString.name}`, () => {
     it("should return false and have custom error message", () => {
         const customErrorMessage = "Invalid string."
-        const ruleFunc = isString(customErrorMessage)
+        const validateFunc = isString(customErrorMessage)
         const emptyOrder = {}
 
-        const actual = ruleFunc(emptyOrder, {})
-        const expected: PropertyRuleValidationResult = {
-            isValid: false,
+        const actual = validateFunc(emptyOrder, {})
+        const expected: RuleViolation = {
+            ruleName: isString.name,
+            attemptedValue: emptyOrder,
             errorMessage: customErrorMessage
         }
 
@@ -88,13 +93,14 @@ describe(`Empty Object Test ${isString.name}`, () => {
 
 describe(`NaN Test ${isString.name}`, () => {
     it("should return false and have default error message", () => {
-        const ruleFunc = isString()
+        const validateFunc = isString()
         const date = NaN
         const defaultErrorMessage = `This field is not a valid string, type of value was: ${typeof date}.`
 
-        const actual = ruleFunc(date, {})
-        const expected: PropertyRuleValidationResult = {
-            isValid: false,
+        const actual = validateFunc(date, {})
+        const expected: RuleViolation = {
+            ruleName: isString.name,
+            attemptedValue: date,
             errorMessage: defaultErrorMessage
         }
 
@@ -105,12 +111,13 @@ describe(`NaN Test ${isString.name}`, () => {
 describe(`Invalid Date Test ${isString.name}`, () => {
     it("should return false and have default error message", () => {
         const customErrorMessage = "Date is invalid"
-        const ruleFunc = isString(customErrorMessage)
+        const validateFunc = isString(customErrorMessage)
         const invalidDate = new Date("invalid string")
 
-        const actual = ruleFunc(invalidDate, {})
-        const expected: PropertyRuleValidationResult = {
-            isValid: false,
+        const actual = validateFunc(invalidDate, {})
+        const expected: RuleViolation = {
+            ruleName: isString.name,
+            attemptedValue: invalidDate,
             errorMessage: customErrorMessage
         }
 
@@ -120,14 +127,15 @@ describe(`Invalid Date Test ${isString.name}`, () => {
 
 describe(`false boolean Test ${isString.name}`, () => {
     it("should return error", () => {
-        const ruleFunc = isString()
+        const validateFunc = isString()
         const isFalse = false
 
         const defaultErrorMessage = `This field is not a valid string, type of value was: ${typeof isFalse}.`
 
-        const actual = ruleFunc(isFalse, {})
-        const expected: PropertyRuleValidationResult = {
-            isValid: false,
+        const actual = validateFunc(isFalse, {})
+        const expected: RuleViolation = {
+            ruleName: isString.name,
+            attemptedValue: isFalse,
             errorMessage: defaultErrorMessage
         }
 
@@ -137,14 +145,15 @@ describe(`false boolean Test ${isString.name}`, () => {
 
 describe(`true boolean Test ${isString.name}`, () => {
     it("should return error", () => {
-        const ruleFunc = isString()
+        const validateFunc = isString()
         const isTrue = true
 
         const defaultErrorMessage = `This field is not a valid string, type of value was: ${typeof isTrue}.`
 
-        const actual = ruleFunc(isTrue, {})
-        const expected: PropertyRuleValidationResult = {
-            isValid: false,
+        const actual = validateFunc(isTrue, {})
+        const expected: RuleViolation = {
+            ruleName: isString.name,
+            attemptedValue: isTrue,
             errorMessage: defaultErrorMessage
         }
 
@@ -154,14 +163,15 @@ describe(`true boolean Test ${isString.name}`, () => {
 
 describe(`Number Test ${isString.name}`, () => {
     it("should return error", () => {
-        const ruleFunc = isString()
+        const validateFunc = isString()
         const one = 1
 
         const defaultErrorMessage = `This field is not a valid string, type of value was: ${typeof one}.`
 
-        const actual = ruleFunc(one, {})
-        const expected: PropertyRuleValidationResult = {
-            isValid: false,
+        const actual = validateFunc(one, {})
+        const expected: RuleViolation = {
+            ruleName: isString.name,
+            attemptedValue: one,
             errorMessage: defaultErrorMessage
         }
 
@@ -171,16 +181,17 @@ describe(`Number Test ${isString.name}`, () => {
 
 describe(`Object Test ${isString.name}`, () => {
     it("should return error", () => {
-        const ruleFunc = isString()
+        const validateFunc = isString()
         const obj = {
             number: 1
         }
 
         const defaultErrorMessage = `This field is not a valid string, type of value was: ${typeof obj}.`
 
-        const actual = ruleFunc(obj, {})
-        const expected: PropertyRuleValidationResult = {
-            isValid: false,
+        const actual = validateFunc(obj, {})
+        const expected: RuleViolation = {
+            ruleName: isString.name,
+            attemptedValue: obj,
             errorMessage: defaultErrorMessage
         }
 
@@ -193,13 +204,11 @@ describe(`Object Test ${isString.name}`, () => {
  */
 describe(`Date Test ${isString.name}`, () => {
     it("should return true and empty error", () => {
-        const ruleFunc = isString()
+        const validateFunc = isString()
         const dateButString = new Date().toString()
 
-        const actual = ruleFunc(dateButString, {})
-        const expected: PropertyRuleValidationResult = {
-            isValid: true
-        }
+        const actual = validateFunc(dateButString, {})
+        const expected = undefined
 
         expect(actual).toEqual(expected)
     })
@@ -207,12 +216,10 @@ describe(`Date Test ${isString.name}`, () => {
 
 describe(`Whitespace string Test ${isString.name}`, () => {
     it("should return false and have default error message", () => {
-        const ruleFunc = isString()
+        const validateFunc = isString()
         const whitespace = "   "
-        const actual = ruleFunc(whitespace, {})
-        const expected: PropertyRuleValidationResult = {
-            isValid: true
-        }
+        const actual = validateFunc(whitespace, {})
+        const expected = undefined
 
         expect(actual).toEqual(expected)
     })
@@ -220,25 +227,20 @@ describe(`Whitespace string Test ${isString.name}`, () => {
 
 describe(`Zero string Test ${isString.name}`, () => {
     it("should return error", () => {
-        const ruleFunc = isString()
+        const validateFunc = isString()
         const zeroString = "0"
-        const actual = ruleFunc(zeroString, {})
-        const expected: PropertyRuleValidationResult = {
-            isValid: true
-        }
+        const actual = validateFunc(zeroString, {})
+        const expected = undefined
 
         expect(actual).toEqual(expected)
     })
 })
 describe(`Empty string Test ${isString.name}`, () => {
     it("should return false and have default error message", () => {
-        const ruleFunc = isString()
+        const validateFunc = isString()
         const date = ""
-        const actual = ruleFunc(date, {})
-        const expected: PropertyRuleValidationResult = {
-            isValid: true
-        }
-
+        const actual = validateFunc(date, {})
+        const expected = undefined
         expect(actual).toEqual(expected)
     })
 })

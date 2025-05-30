@@ -6,19 +6,15 @@ import { ProductRepository } from "../repositories/productRepository"
 function isValidUser(userRepository: UserRepository) {
     return async (userEmail: string) => {
         if (!userEmail) { // skip checking if not provided
-            return {
-                isValid: true
-            }
+            return
         }
         const user = await userRepository.getUserAsync(userEmail)
         if (!user) {
             return {
-                isValid: false,
+                ruleName: isValidUser.name,
+                attemptedValue: userEmail,
                 errorMessage: `Invalid user ${userEmail}`
             }
-        }
-        return {
-            isValid: true
         }
     }
 }
@@ -28,12 +24,10 @@ function isValidProductRule(productRepository: ProductRepository) {
         const product = await productRepository.getProductByIdAsync(productId)
         if (!product) {
             return {
-                isValid: false,
+                ruleName: isValidUser.name,
+                attemptedValue: productId,
                 errorMessage: `Product id ${productId} is invalid.`
             }
-        }
-        return {
-            isValid: true
         }
     }
 }
@@ -43,13 +37,10 @@ function discountExceedOrderItemAmountRule(currentOrderItem: OrderItemRequest) {
         const isValid = discountAmount <= currentOrderItem.amount
         if (!isValid) {
             return {
-                isValid: false,
+                ruleName: discountExceedOrderItemAmountRule.name,
+                attemptedValue: discountAmount,
                 errorMessage: "Discount amount can't be greater than the item amount itself, are you doing a business or charity?"
             }
-        }
-
-        return {
-            isValid: true
         }
     }
 }

@@ -62,7 +62,7 @@ export function createOrderRepository(orderDatabase: Order[]) {
                 } else {
                     resolve(undefined);
                 }
-            }, 10);
+            }, 2);
         });
     }
 
@@ -75,7 +75,7 @@ export function createOrderRepository(orderDatabase: Order[]) {
                 } else {
                     resolve(undefined);
                 }
-            }, 10);
+            }, 2);
         });
     }
 
@@ -114,7 +114,7 @@ export function createOrderRepository(orderDatabase: Order[]) {
                 }
                 orderDatabase.push(order);
                 resolve(undefined)
-            }, 10);
+            }, 2);
         });
     }
 
@@ -132,7 +132,7 @@ export function createOrderRepository(orderDatabase: Order[]) {
 
                 orderDatabase[indexOfOrder] = order
                 resolve(undefined)
-            }, 10);
+            }, 2);
         });
     }
 

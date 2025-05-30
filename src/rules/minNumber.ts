@@ -1,4 +1,4 @@
-import { PropertyRuleFunc } from "../types/ValidationRule";
+import { ValidateFunc } from "../types/ValidationRule";
 
 /**
  * Returns a minimum number validation rule.
@@ -6,8 +6,7 @@ import { PropertyRuleFunc } from "../types/ValidationRule";
  * @param errorMessage Custom error message.
  * @returns The validation rule.
  */
-export const minNumber = <TObject extends Object>(min: number, errorMessage?: string): PropertyRuleFunc<number, TObject> => {
-    const finalErrorMessage = errorMessage ?? `The minimum value for this field is ${min}.`;
+export const minNumber = <TObject extends Object>(min: number, errorMessage?: string): ValidateFunc<number, TObject> => {
 
     return (value: number) => {
         const typeOfValue = typeof value;
@@ -17,17 +16,16 @@ export const minNumber = <TObject extends Object>(min: number, errorMessage?: st
             throw new Error(`${minNumber.name}: Value is not a number. The value was: ${value} (type: '${typeof value}')`)
         }
 
+        const violation = {
+            ruleName: minNumber.name,
+            attemptedValue: value,
+            errorMessage: errorMessage ?? `The minimum value for this field is ${min}.`
+        }
+        
         const isValid = value >= min
 
         if (!isValid) {
-            return {
-                isValid: isValid,
-                errorMessage: finalErrorMessage
-            }
-        }
-
-        return {
-            isValid: true
+            return violation
         }
     };
 
