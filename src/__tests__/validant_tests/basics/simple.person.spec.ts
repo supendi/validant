@@ -22,7 +22,13 @@ describe("Test Simple Object", () => {
             message: "One or more validation errors occurred.",
             isValid: false,
             errors: {
-                name: ["This field is required."]
+                name: [
+                    {
+                        errorMessage: "This field is required.",
+                        attemptedValue: "",
+                        ruleName: required.name
+                    }
+                ]
             }
         }
 

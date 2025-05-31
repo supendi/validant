@@ -21,8 +21,20 @@ describe("Test Validate Against Undefined", () => {
             message: "One or more validation errors occurred.",
             isValid: false,
             errors: {
-                name: ["This field is required."],
-                age: ["This field is required."],
+                name: [
+                    {
+                        errorMessage: "This field is required.",
+                        attemptedValue: undefined,
+                        ruleName: required.name
+                    }
+                ],
+                age: [
+                    {
+                        errorMessage: "This field is required.",
+                        attemptedValue: undefined,
+                        ruleName: required.name
+                    }
+                ],
             }
         }
 
@@ -41,8 +53,20 @@ describe("Test Validate Against null", () => {
             message: "One or more validation errors occurred.",
             isValid: false,
             errors: {
-                name: ["This field is required."],
-                age: ["This field is required."],
+                name: [
+                    {
+                        errorMessage: "This field is required.",
+                        attemptedValue: undefined,
+                        ruleName: required.name
+                    }
+                ],
+                age: [
+                    {
+                        errorMessage: "This field is required.",
+                        attemptedValue: undefined,
+                        ruleName: required.name
+                    }
+                ],
             }
         }
 

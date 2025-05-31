@@ -29,7 +29,13 @@ describe("Test Simple Object", () => {
             isValid: false,
             fieldName: "name",
             errors: {
-                name: ["This field is required."]
+                name: [
+                    {
+                        errorMessage: "This field is required.",
+                        attemptedValue: "",
+                        ruleName: required.name
+                    }
+                ]
             }
         }
 
@@ -100,7 +106,13 @@ describe("Test validate field", () => {
                                 name: ""
                             },
                             errors: {
-                                name: ["This field is required."]
+                                name: [
+                                    {
+                                        errorMessage: "This field is required.",
+                                        attemptedValue: "",
+                                        ruleName: required.name
+                                    }
+                                ]
                             }
                         }
                     ]
@@ -139,7 +151,13 @@ describe("Test validate field", () => {
             fieldName: "address",
             errors: {
                 address: {
-                    city: ["This field is required."]
+                    city: [
+                        {
+                            errorMessage: "This field is required.",
+                            attemptedValue: undefined,
+                            ruleName: required.name
+                        }
+                    ]
                 }
             }
         }

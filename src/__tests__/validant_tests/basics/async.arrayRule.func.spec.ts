@@ -68,7 +68,13 @@ describe("ValidateAsync Test", () => {
             isValid: false,
             errors: {
                 orderItems: {
-                    arrayErrors: ["The minimum length for this field is 1."]
+                    arrayErrors: [
+                        {
+                            errorMessage: "The minimum length for this field is 1.",
+                            attemptedValue: [],
+                            ruleName: arrayMinLen.name
+                        }
+                    ]
                 }
             },
         }
@@ -92,7 +98,13 @@ describe("Validate null property", () => {
             isValid: false,
             errors: {
                 orderItems: {
-                    arrayErrors: ["The minimum length for this field is 1."]
+                    arrayErrors: [
+                        {
+                            errorMessage: "The minimum length for this field is 1.",
+                            attemptedValue: [],
+                            ruleName: arrayMinLen.name
+                        }
+                    ]
                 }
             },
         }
@@ -129,8 +141,20 @@ describe("ValidateAsync Test", () => {
                                 quantity: 0
                             },
                             errors: {
-                                quantity: ["Min qty is 1."],
-                                productId: [`Invalid product id ${0}.`]
+                                quantity: [
+                                    {
+                                        errorMessage: "Min qty is 1.",
+                                        attemptedValue: 0,
+                                        ruleName: minNumber.name
+                                    }
+                                ],
+                                productId: [
+                                    {
+                                        errorMessage: "Invalid product id 0.",
+                                        attemptedValue: 0,
+                                        ruleName: "unknownProductId"
+                                    }
+                                ]
                             }
                         }
                     ]

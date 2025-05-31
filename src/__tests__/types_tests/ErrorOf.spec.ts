@@ -1,5 +1,4 @@
-
-import { ErrorOf } from "../../types/ErrorOf" 
+import { ErrorOf } from "../../types/ErrorOf"
 
 /**
  * Ensure all the code below compiled
@@ -13,12 +12,28 @@ describe("ErrorOf Test", () => {
 
         const actual: ErrorOf<SimplePerson> = {
             age: [
-                "Age is required",
-                "Maximum age is 56"
+                {
+                    errorMessage: "Age is required",
+                    attemptedValue: undefined,
+                    ruleName: "required"
+                },
+                {
+                    errorMessage: "Maximum age is 56",
+                    attemptedValue: 60,
+                    ruleName: "max"
+                },
             ],
             name: [
-                "Name is required",
-                "Minimum chars of person name is 2"
+                {
+                    errorMessage: "Name is required",
+                    attemptedValue: undefined,
+                    ruleName: "required"
+                },
+                {
+                    errorMessage: "Minimum chars of person name is 2",
+                    attemptedValue: "A",
+                    ruleName: "minLength"
+                },
             ]
         }
         expect(!actual).not.toBeNull()
@@ -42,20 +57,56 @@ describe("ErrorOf Test", () => {
 
         const actual: ErrorOf<ComplexPerson> = {
             age: [
-                "Age is required",
-                "Maximum age is 56"
+                {
+                    errorMessage: "Age is required",
+                    attemptedValue: undefined,
+                    ruleName: "required"
+                },
+                {
+                    errorMessage: "Maximum age is 56",
+                    attemptedValue: 60,
+                    ruleName: "max"
+                }
             ],
             name: [
-                "Name is required",
-                "Minimum chars of person name is 2"
+                {
+                    errorMessage: "Name is required",
+                    attemptedValue: undefined,
+                    ruleName: "required"
+                },
+                {
+                    errorMessage: "Minimum chars of person name is 2",
+                    attemptedValue: "A",
+                    ruleName: "minLength"
+                }
             ],
             birtDate: [
-                "Birtdate is required",
-                "Date cannot be future"
+                {
+                    errorMessage: "Birtdate is required",
+                    attemptedValue: undefined,
+                    ruleName: "required"
+                },
+                {
+                    errorMessage: "Date cannot be future",
+                    attemptedValue: new Date("2100-01-01"),
+                    ruleName: "future"
+                }
             ],
             address: {
-                cityId: ["invalid city id ''"],
-                street: ["Please enter street name"]
+                cityId: [
+                    {
+                        errorMessage: "invalid city id ''",
+                        attemptedValue: "",
+                        ruleName: "invalidCity"
+                    }
+                ],
+                street: [
+                    {
+                        errorMessage: "Please enter street name",
+                        attemptedValue: "",
+                        ruleName: "required"
+                    }
+                ]
             },
             children: {
                 arrayErrors: [],
@@ -65,18 +116,32 @@ describe("ErrorOf Test", () => {
                         errors: {
                             // Ensure If age/other property is an optional error,it doesn't have any errors
                             // age: [
-                            //     "Age is required",
-                            //     "Children age cannot be greater than parent"
+                            //     { errorMessage: "Age is required", attemptedValue: undefined, ruleName: "required" },
+                            //     { errorMessage: "Children age cannot be greater than parent", attemptedValue: 10, ruleName: "ageComparison" }
                             // ],
                             name: [
-                                "Minimum chars of person name is 2"
+                                {
+                                    errorMessage: "Minimum chars of person name is 2",
+                                    attemptedValue: "A",
+                                    ruleName: "minLength"
+                                }
                             ],
                             birtDate: [
-                                "Date cannot be future"
+                                {
+                                    errorMessage: "Date cannot be future",
+                                    attemptedValue: new Date("2100-01-01"),
+                                    ruleName: "future"
+                                }
                             ],
                             address: {
-                                // cityId: ["invalid city id ''"], //ensure each property is optional
-                                street: ["Please enter street name"]
+                                // cityId: [{ errorMessage: "invalid city id ''", attemptedValue: "", ruleName: "invalidCity" }], //ensure each property is optional
+                                street: [
+                                    {
+                                        errorMessage: "Please enter street name",
+                                        attemptedValue: "",
+                                        ruleName: "required"
+                                    }
+                                ]
                             },
                         },
                         validatedObject: undefined
@@ -106,16 +171,40 @@ describe("ErrorOf Complex Person Test", () => {
 
         const actual: ErrorOf<ComplexPerson> = {
             age: [
-                "Age is required",
-                "Maximum age is 56"
+                {
+                    errorMessage: "Age is required",
+                    attemptedValue: undefined,
+                    ruleName: "required"
+                },
+                {
+                    errorMessage: "Maximum age is 56",
+                    attemptedValue: 60,
+                    ruleName: "max"
+                }
             ],
             name: [
-                "Name is required",
-                "Minimum chars of person name is 2"
+                {
+                    errorMessage: "Name is required",
+                    attemptedValue: undefined,
+                    ruleName: "required"
+                },
+                {
+                    errorMessage: "Minimum chars of person name is 2",
+                    attemptedValue: "A",
+                    ruleName: "minLength"
+                }
             ],
             birtDate: [
-                "Birtdate is required",
-                "Date cannot be future"
+                {
+                    errorMessage: "Birtdate is required",
+                    attemptedValue: undefined,
+                    ruleName: "required"
+                },
+                {
+                    errorMessage: "Date cannot be future",
+                    attemptedValue: new Date("2100-01-01"),
+                    ruleName: "future"
+                }
             ],
             addresses: {
                 arrayErrors: [],
@@ -123,8 +212,20 @@ describe("ErrorOf Complex Person Test", () => {
                     {
                         index: 0,
                         errors: {
-                            cityId: ["invalid city id ''"],
-                            street: ["Please enter street name"]
+                            cityId: [
+                                {
+                                    errorMessage: "invalid city id ''",
+                                    attemptedValue: "",
+                                    ruleName: "invalidCity"
+                                }
+                            ],
+                            street: [
+                                {
+                                    errorMessage: "Please enter street name",
+                                    attemptedValue: "",
+                                    ruleName: "required"
+                                }
+                            ]
                         },
                         validatedObject: undefined
                     }
@@ -138,14 +239,22 @@ describe("ErrorOf Complex Person Test", () => {
                         errors: {
                             // If age doesnt have errors
                             // age: [
-                            //     "Age is required",
-                            //     "Children age cannot be greater than parent"
+                            //     { errorMessage: "Age is required", attemptedValue: undefined, ruleName: "required" },
+                            //     { errorMessage: "Children age cannot be greater than parent", attemptedValue: 10, ruleName: "ageComparison" }
                             // ],
                             name: [
-                                "Minimum chars of person name is 2"
+                                {
+                                    errorMessage: "Minimum chars of person name is 2",
+                                    attemptedValue: "A",
+                                    ruleName: "minLength"
+                                }
                             ],
                             birtDate: [
-                                "Date cannot be future"
+                                {
+                                    errorMessage: "Date cannot be future",
+                                    attemptedValue: new Date("2100-01-01"),
+                                    ruleName: "future"
+                                }
                             ],
                             addresses: {
                                 arrayErrors: [],
@@ -153,8 +262,14 @@ describe("ErrorOf Complex Person Test", () => {
                                     {
                                         index: 0,
                                         errors: {
-                                            // cityId: ["invalid city id ''"], //ensure each property is optional
-                                            street: ["Please enter street name"]
+                                            // cityId: [{ errorMessage: "invalid city id ''", attemptedValue: "", ruleName: "invalidCity" }], //ensure each property is optional
+                                            street: [
+                                                {
+                                                    errorMessage: "Please enter street name",
+                                                    attemptedValue: "",
+                                                    ruleName: "required"
+                                                }
+                                            ]
                                         },
                                         validatedObject: undefined
                                     }

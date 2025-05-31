@@ -18,7 +18,13 @@ describe("Test", () => {
             message: "One or more validation errors occurred.",
             isValid: false,
             errors: {
-                expiredDate: ["This field is required."]
+                expiredDate: [
+                    {
+                        errorMessage: "This field is required.",
+                        attemptedValue: undefined,
+                        ruleName: required.name
+                    }
+                ]
             },
         }
 

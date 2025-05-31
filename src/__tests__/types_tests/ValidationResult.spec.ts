@@ -16,8 +16,20 @@ describe("ValidationResult Test", () => {
             isValid: false,
             message: "It's bad",
             errors: {
-                name: ["Your name is required."],
-                age: ["Minimum is 17 years old."]
+                name: [
+                    {
+                        errorMessage: "Your name is required.",
+                        attemptedValue: "",
+                        ruleName: "required"
+                    }
+                ],
+                age: [
+                    {
+                        errorMessage: "Minimum is 17 years old.",
+                        attemptedValue: 10,
+                        ruleName: "min"
+                    }
+                ]
             }
         }
 
@@ -38,16 +50,46 @@ describe("ValidationResult Test", () => {
             isValid: false,
             message: "It's bad",
             errors: {
-                name: ["Your name is required."],
-                age: ["Minimum is 17 years old."],
+                name: [
+                    {
+                        errorMessage: "Your name is required.",
+                        attemptedValue: "",
+                        ruleName: "required"
+                    }
+                ],
+                age: [
+                    {
+                        errorMessage: "Minimum is 17 years old.",
+                        attemptedValue: 10,
+                        ruleName: "min"
+                    }
+                ],
                 children: {
-                    arrayErrors: ["Children is required"],
+                    arrayErrors: [
+                        {
+                            errorMessage: "Children is required",
+                            attemptedValue: undefined,
+                            ruleName: "required"
+                        }
+                    ],
                     arrayElementErrors: [
                         {
                             index: 0,
                             errors: {
-                                age: ["Min 8 years old"],
-                                name: ["Required"]
+                                age: [
+                                    {
+                                        errorMessage: "Min 8 years old",
+                                        attemptedValue: 1,
+                                        ruleName: "min"
+                                    }
+                                ],
+                                name: [
+                                    {
+                                        errorMessage: "Required",
+                                        attemptedValue: "",
+                                        ruleName: "required"
+                                    }
+                                ]
                             },
                             validatedObject: {
                                 age: 1,

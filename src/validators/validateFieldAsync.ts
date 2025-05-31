@@ -21,11 +21,12 @@ export const validateFieldAsync = async <TObject, TRoot>(propName: keyof TObject
     }
 
     const validationResult: PropertyValidationResult<TObject> = {
+        ruleName: violation ? violation.ruleName : "",
         object: object,
         propertyName: propName,
         propertyValue: value,
         errorMessage: isValid ? "" : resolvedErrorMessage,
-        isValid: isValid
+        isValid: isValid,
     };
 
     return validationResult;

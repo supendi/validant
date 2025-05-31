@@ -10,7 +10,7 @@ const loginRule: ValidationRule<LoginRequest> = {
         function (username, loginRequest) {
             if (!username) {
                 return {
-                    ruleName: "none",
+                    ruleName: "requiredUserName",
                     attemptedValue: username,
                     errorMessage: "Please enter username."
                 }
@@ -19,7 +19,7 @@ const loginRule: ValidationRule<LoginRequest> = {
         function (username, loginRequest) {
             if (username.toLocaleLowerCase().includes("admin")) {
                 return {
-                    ruleName: "none",
+                    ruleName: "adminShouldBeBlocked",
                     attemptedValue: username,
                     errorMessage: "Admin is not allowed to login."
                 }
@@ -30,7 +30,7 @@ const loginRule: ValidationRule<LoginRequest> = {
         function (password, loginRequest) {
             if (!password) {
                 return {
-                    ruleName: "none",
+                    ruleName: "requiredPassword",
                     attemptedValue: password,
                     errorMessage: "Please enter password."
                 }
@@ -54,8 +54,20 @@ describe("validate login request", () => {
             message: "One or more validation errors occurred.",
             isValid: false,
             errors: {
-                userName: ["Please enter username."],
-                password: ["Please enter password."],
+                userName: [
+                    {
+                        errorMessage: "Please enter username.",
+                        attemptedValue: "",
+                        ruleName: "requiredUserName"
+                    }
+                ],
+                password: [
+                    {
+                        errorMessage: "Please enter password.",
+                        attemptedValue: "",
+                        ruleName: "requiredPassword"
+                    }
+                ],
             }
         }
 
@@ -78,12 +90,23 @@ describe("validate login request", () => {
             message: "One or more validation errors occurred.",
             isValid: false,
             errors: {
-                userName: ["Admin is not allowed to login."],
-                password: ["Please enter password."],
+                userName: [
+                    {
+                        errorMessage: "Admin is not allowed to login.",
+                        attemptedValue: "admin",
+                        ruleName: "adminShouldBeBlocked"
+                    }
+                ],
+                password: [
+                    {
+                        errorMessage: "Please enter password.",
+                        attemptedValue: "",
+                        ruleName: "requiredPassword"
+                    }
+                ],
             }
         }
 
         expect(actual).toEqual(expected)
     })
 })
-

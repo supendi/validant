@@ -95,13 +95,25 @@ describe("Validator Test The Custom Validator", () => {
                                 ]
                             },
                             errors: {
-                                orderId: ["required"],
+                                orderId: [
+                                    {
+                                        errorMessage: "required",
+                                        attemptedValue: undefined,
+                                        ruleName: required.name
+                                    }
+                                ],
                                 deliveryAddress: {
                                     arrayElementErrors: [
                                         {
                                             errors: {
                                                 cities: {
-                                                    arrayErrors: ["The minimum length for this field is 1."]
+                                                    arrayErrors: [
+                                                        {
+                                                            errorMessage: "The minimum length for this field is 1.",
+                                                            attemptedValue: [],
+                                                            ruleName: arrayMinLen.name
+                                                        }
+                                                    ]
                                                 }
                                             },
                                             index: 0,

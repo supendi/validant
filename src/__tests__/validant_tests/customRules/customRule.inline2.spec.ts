@@ -1,4 +1,4 @@
-import { Validator, ValidationRule } from "../../../index"
+import { Validator, ValidationRule, ValidationResult } from "../../../index"
 
 interface Account {
     name: string,
@@ -12,7 +12,7 @@ const validationRule: ValidationRule<Account> = {
                 return
             }
             return {
-                ruleName: "none",
+                ruleName: "minLength",
                 attemptedValue: value,
                 errorMessage: "Name length minimum is 5 chars."
             }
@@ -25,7 +25,7 @@ const validationRule: ValidationRule<Account> = {
             }
 
             return {
-                ruleName: "none",
+                ruleName: "containsA",
                 attemptedValue: value,
                 errorMessage: "Name must contain 'A' letter."
             }
@@ -42,11 +42,22 @@ describe("Test Inline Custom Rule", () => {
         const validator = new Validator(validationRule)
         const validationResult = validator.validate(account)
 
-        const expected = {
+        const expected: ValidationResult<Account> = {
             message: "One or more validation errors occurred.",
             isValid: false,
             errors: {
-                name: ["Name length minimum is 5 chars.", "Name must contain 'A' letter."]
+                name: [
+                    {
+                        errorMessage: "Name length minimum is 5 chars.",
+                        attemptedValue: "John",
+                        ruleName: "minLength"
+                    },
+                    {
+                        errorMessage: "Name must contain 'A' letter.",
+                        attemptedValue: "John",
+                        ruleName: "containsA"
+                    }
+                ]
             }
         }
 

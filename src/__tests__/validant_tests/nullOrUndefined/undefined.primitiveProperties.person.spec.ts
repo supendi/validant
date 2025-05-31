@@ -36,7 +36,7 @@ describe("Test Simple Object", () => {
             age: [required()]
         }
         const person: Person = {}
-        
+
         const validator = new Validator(rule)
         const actual = validator.validate(person)
 
@@ -44,8 +44,20 @@ describe("Test Simple Object", () => {
             message: "One or more validation errors occurred.",
             isValid: false,
             errors: {
-                name: ["This field is required."],
-                age: ["This field is required."],
+                name: [
+                    {
+                        errorMessage: "This field is required.",
+                        attemptedValue: undefined,
+                        ruleName: required.name
+                    }
+                ],
+                age: [
+                    {
+                        errorMessage: "This field is required.",
+                        attemptedValue: undefined,
+                        ruleName: required.name
+                    }
+                ],
             }
         }
 

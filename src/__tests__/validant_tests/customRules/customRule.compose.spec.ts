@@ -68,8 +68,20 @@ describe("validate login request", () => {
             message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
-                userName: ["Please enter username."],
-                password: ["Please enter password."],
+                userName: [
+                    {
+                        errorMessage: "Please enter username.",
+                        attemptedValue: "",
+                        ruleName: requiredUserNameRule.name
+                    }
+                ],
+                password: [
+                    {
+                        errorMessage: "Please enter password.",
+                        attemptedValue: "",
+                        ruleName: requiredPasswordRule.name
+                    }
+                ],
             }
         }
 
@@ -92,12 +104,23 @@ describe("validate login request", () => {
             message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
-                userName: ["Admin is not allowed to login."],
-                password: ["Please enter password."],
+                userName: [
+                    {
+                        errorMessage: "Admin is not allowed to login.",
+                        attemptedValue: "admin",
+                        ruleName: adminShouldBeBlocked.name
+                    }
+                ],
+                password: [
+                    {
+                        errorMessage: "Please enter password.",
+                        attemptedValue: "",
+                        ruleName: requiredPasswordRule.name
+                    }
+                ],
             }
         }
 
         expect(actual).toEqual(expected)
     })
 })
-

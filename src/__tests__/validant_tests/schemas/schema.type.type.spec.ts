@@ -1,4 +1,4 @@
-import { Validator, emailAddress, minNumber, required, ValidationRule, } from "../../../index"
+import { Validator, emailAddress, minNumber, required, ValidationRule, ValidationResult, } from "../../../index"
 
 type Account = {
     name: string
@@ -24,13 +24,36 @@ describe("Simple Object Test", () => {
         const validator = new Validator(validationRule)
         const actual = validator.validate(account)
 
-        var expected = {
+        var expected: ValidationResult<Account> = {
             message: "One or more validation errors occurred.",
             isValid: false,
             errors: {
-                name: ["Account name is required."],
-                age: ["Should be at least 17 years old."],
-                email: ["This field is required.", "Invalid email address"],
+                name: [
+                    {
+                        attemptedValue: "",
+                        errorMessage: "Account name is required.",
+                        ruleName: required.name
+                    }
+                ],
+                age: [
+                    {
+                        attemptedValue: 0,
+                        errorMessage: "Should be at least 17 years old.",
+                        ruleName: minNumber.name
+                    }
+                ],
+                email: [
+                    {
+                        errorMessage: "This field is required.",
+                        attemptedValue: "",
+                        ruleName: required.name
+                    },
+                    {
+                        errorMessage: "Invalid email address",
+                        attemptedValue: "",
+                        ruleName: emailAddress.name
+                    }
+                ],
             }
         }
 

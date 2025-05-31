@@ -348,9 +348,32 @@ The result looks like this:
     message: "One or more validation errors occurred.",
     isValid: false,
     errors: {
-        name: ["Account name is required."],
-        age: ["Should be at least 17 years old."],
-        email: ["This field is required.", "Invalid email address"],
+        name: [
+            {
+                attemptedValue: "",
+                errorMessage: "Account name is required.",
+                ruleName: required.name
+            }
+        ],
+        age: [
+            {
+                attemptedValue: 0,
+                errorMessage: "Should be at least 17 years old.",
+                ruleName: minNumber.name
+            }
+        ],
+        email: [
+            {
+                errorMessage: "This field is required.",
+                attemptedValue: "",
+                ruleName: required.name
+            },
+            {
+                errorMessage: "Invalid email address",
+                attemptedValue: "",
+                ruleName: emailAddress.name
+            }
+        ]
     },
 };
 ```
@@ -380,7 +403,13 @@ The result will be an object like this:
     isValid: false,
     fieldName: "name",
     errors: {
-        name: ["This field is required."]
+        name: [
+            {
+                attemptedValue: "",
+                errorMessage: "This field is required.",
+                ruleName: required.name
+            }
+        ],
     }
 }
 ```
@@ -450,9 +479,32 @@ You’ll get the same structured result:
     message: "One or more validation errors occurred.",
     isValid: false,
     errors: {
-        name: ["Account name is required."],
-        age: ["Should be at least 17 years old."],
-        email: ["This field is required.", "Invalid email address"],
+         name: [
+            {
+                attemptedValue: "",
+                errorMessage: "Account name is required.",
+                ruleName: required.name
+            }
+        ],
+        age: [
+            {
+                attemptedValue: 0,
+                errorMessage: "Should be at least 17 years old.",
+                ruleName: minNumber.name
+            }
+        ],
+        email: [
+            {
+                errorMessage: "This field is required.",
+                attemptedValue: "",
+                ruleName: required.name
+            },
+            {
+                errorMessage: "Invalid email address",
+                attemptedValue: "",
+                ruleName: emailAddress.name
+            }
+        ]
     },
 };
 ```
@@ -482,7 +534,18 @@ The result will be an object like this:
     isValid: false,
     fieldName: "email",
     errors: {
-        email: ["This field is required.", "Invalid email address"]
+        email: [
+            {
+                errorMessage: "This field is required.",
+                attemptedValue: "",
+                ruleName: required.name
+            },
+            {
+                errorMessage: "Invalid email address",
+                attemptedValue: "",
+                ruleName: emailAddress.name
+            }
+        ]
     }
 }
 ```
@@ -555,7 +618,7 @@ const loginRule: ValidationRule<LoginRequest> = {
         function (username, loginRequest) {
             if (!username) {
                 return {
-                    ruleName: "none",
+                    ruleName: "custom",
                     attemptedValue: username,
                     errorMessage: "Please enter username.",
                 };
@@ -564,7 +627,7 @@ const loginRule: ValidationRule<LoginRequest> = {
         function (username, loginRequest) {
             if (username.toLocaleLowerCase().includes("admin")) {
                 return {
-                    ruleName: "none",
+                    ruleName: "custom",
                     attemptedValue: username,
                     errorMessage: "Admin is not allowed to login.",
                 };
@@ -575,7 +638,7 @@ const loginRule: ValidationRule<LoginRequest> = {
         function (password, loginRequest) {
             if (!password) {
                 return {
-                    ruleName: "none",
+                    ruleName: "any",
                     attemptedValue: password,
                     errorMessage: "Please enter password.",
                 };
@@ -604,8 +667,20 @@ const result = validator.validate(loginRequest);
     message: "One or more validation errors occurred.",
     isValid: false,
     errors: {
-        userName: ["Please enter username."],
-        password: ["Please enter password."],
+        userName: [
+            {
+                errorMessage: "Please enter username.",
+                attemptedValue: "",
+                ruleName: "custom"
+            }
+        ],
+        password: [
+            {
+                errorMessage: "Please enter password.",
+                attemptedValue: "",
+                ruleName: "custom"
+            }
+        ],
     },
 };
 ```
@@ -751,7 +826,13 @@ The above validation results error structure:
     isValid: false,
     errors: {
         orderItems: {
-            arrayErrors: ["The minimum length for this field is 1."]
+            arrayErrors: [
+                {
+                    errorMessage: "The minimum length for this field is 1.",
+                    attemptedValue: [],
+                    ruleName: "arrayMinLen"
+                }
+            ]
         }
     }
 }
@@ -787,7 +868,13 @@ The above validation results the following error structure
                         quantity: 0
                     },
                     errors: {
-                        quantity: ["Min qty is 1."]
+                        quantity: [
+                            {
+                                errorMessage: "Min qty is 1.",
+                                attemptedValue: 0,
+                                ruleName: "minNumber"
+                            }
+                        ]
                     }
                 }
             ]
@@ -834,16 +921,26 @@ Object error is represented by:
 ```ts
 export type ErrorOf<T extends Object> = {
     [key in keyof T]?: T[key] extends Date
-        ? string[]
+        ? RuleViolation[]
         : T[key] extends PossiblyUndefined<Array<any>>
         ? ErrorOfArray<T[key]>
         : T[key] extends PossiblyUndefined<object>
         ? ErrorOf<T[key]>
-        : string[];
+        : RuleViolation[];
 };
 ```
 
-An `ErrorOf<T>` maps each field in an object to a string array of messages. Here's an example to make it clear:
+where RuleViolation
+
+```ts
+export interface RuleViolation {
+    ruleName: string;
+    attemptedValue: any;
+    errorMessage: string;
+}
+```
+
+An `ErrorOf<T>` maps each field in an object to a array of RuleViolation object. Here's an example to make it clear:
 
 Given the model:
 
@@ -858,8 +955,8 @@ then the error of Address or `ErrorOf<Address>` will be:
 
 ```ts
 interface Address {
-    street: string[];
-    cityId: string[];
+    street: RuleViolation[];
+    cityId: RuleViolation[];
 }
 ```
 
@@ -867,8 +964,30 @@ So the possible ouput of the address error is:
 
 ```ts
 const addressError = {
-    street: ["required.", "min lengt is 3 chars."];
-    cityId: ["invalid city", "must be a number"];
+    street: [
+        {
+            errorMessage: "required.",
+            attemptedValue: "",
+            ruleName: "required"
+        },
+        {
+            errorMessage: "min length is 3 chars.",
+            attemptedValue: "",
+            ruleName: "arrayMinLen"
+        }
+    ],
+    cityId: [
+        {
+            errorMessage: "invalid city",
+            attemptedValue: 0,
+            ruleName: "isValidCityId"
+        },
+        {
+            errorMessage: "must be a number",
+            attemptedValue: "1",
+            ruleName: "isNumber"
+        }
+    ];
 }
 ```
 
@@ -920,7 +1039,7 @@ The validation error might look like:
 {
     id: ["required."]
     orderItems: {
-        arrayErrors:["the minimum order items is 10 items, please add 9 more."], // array level errors
+        arrayErrors:["The minimum order items is 10 items, please add 9 more."], // array level errors
         arrayElementErrors: [ // array items error
             {
                 index: 0,
@@ -929,8 +1048,20 @@ The validation error might look like:
                     quantity: 0,
                 },
                 errors: { // product error
-                    productId: ["invalid product id."],
-                    quantity: ["Min qty is 1."],
+                    productId: [
+                        {
+                            errorMessage: "invalid product id.",
+                            attemptedValue: "1",
+                            ruleName: "isNumber"
+                        }
+                    ],
+                    quantity: [
+                        {
+                            errorMessage: "Min qty is 1.",
+                            attemptedValue: "1",
+                            ruleName: "isNumber"
+                        }
+                    ],
                 },
             },
         ];
@@ -944,8 +1075,20 @@ Take this example from the product error above:
 
 ```ts
 {
-    productId: ["invalid product id."],
-    quantity: ["Min qty is 1."],
+    productId: [
+        {
+            errorMessage: "invalid product id.",
+            attemptedValue: "1",
+            ruleName: "isNumber"
+        }
+    ],
+    quantity: [
+        {
+            errorMessage: "Min qty is 1.",
+            attemptedValue: "1",
+            ruleName: "isNumber"
+        }
+    ]
 }
 ```
 
@@ -1209,23 +1352,75 @@ And the validation result :
 {
     message: "One or more validation errors occurred.",
         isValid: false,
-            errors: {
-                name: ["This field is required."],
-                age: ["The minimum value for this field is 20."],
-                address: {
-                    street: ["This field is required."],
-                        city: {
-                            name: ["This field is required."],
-                                country: {
-                                    name: ["This field is required."],
-                                        continent: {
-                                            name: ["This field is required."],
-                                }
-                        }
+         errors: {
+            name: [
+                {
+                    errorMessage: "This field is required.",
+                    attemptedValue: "",
+                    ruleName: "required"
                 }
+            ],
+            age: [
+                {
+                    errorMessage: "The minimum value for this field is 20.",
+                    attemptedValue: 0,
+                    ruleName: "required"
+                }
+            ],
+            address: {
+                street: [
+                    {
+                        errorMessage: "This field is required.",
+                        attemptedValue: "",
+                        ruleName: "required"
+                    }
+                ],
+                city: {
+                    name: [
+                        {
+                            errorMessage: "This field is required.",
+                            attemptedValue: "",
+                            ruleName: "required"
+                        }
+                    ],
+                    country: {
+                        name: [
+                            {
+                                errorMessage: "This field is required.",
+                                attemptedValue: "",
+                                ruleName: "required"
+                            }
+                        ],
+                        continent: {
+                            name: [
+                                {
+                                    errorMessage: "This field is required.",
+                                    attemptedValue: "",
+                                    ruleName: "required"
+                                }
+                            ],
+                        }
+                    }
+                }
+            },
+            child: {
+                name: [
+                    {
+                        errorMessage: "This field is required.",
+                        attemptedValue: "",
+                        ruleName: "required"
+                    }
+                ],
+            }
         },
         child: {
-            name: ["This field is required."],
+            name: [
+                {
+                    errorMessage: "This field is required.",
+                    attemptedValue: "",
+                    ruleName: "required"
+                }
+            ],
         }
     }
 }
@@ -1509,8 +1704,20 @@ const validationResult: ValidationResult<Account> = {
     isValid: false,
     message: "Validation failed",
     errors: {
-        name: ["Name is required"],
-        age: ["Must be at least 17"],
+        name: [
+            {
+                errorMessage: "This field is required.",
+                attemptedValue: "",
+                ruleName: "required",
+            },
+        ],
+        age: [
+            {
+                errorMessage: "Must be at least 17",
+                attemptedValue: 1,
+                ruleName: "minAgeRule",
+            },
+        ],
     },
 };
 ```
@@ -1559,8 +1766,20 @@ When validating arrays, this type helps track which item failed and why.
         quantity: 0,
     },
     errors: {
-        productId: ["Invalid product ID"],
-        quantity: ["Minimum quantity is 1"],
+        productId: [
+            {
+                errorMessage: "Invalid product ID",
+                attemptedValue: "",
+                ruleName: "isValidProductId"
+            }
+        ],
+        quantity: [
+            {
+                errorMessage: "Minimum quantity is 1",
+                attemptedValue: "",
+                ruleName: "minNumber"
+            }
+        ],
     }
 }
 ```
@@ -1600,8 +1819,20 @@ And you have a rule like "Minimum 5 items required", the error might look like:
                 index: 0,
                 validatedObject: { productId: 1, quantity: 0 },
                 errors: {
-                    productId: ["Invalid ID"],
-                    quantity: ["Minimum quantity is 1"]
+                    productId: [
+                        {
+                            errorMessage: "Invalid product ID",
+                            attemptedValue: "",
+                            ruleName: "isValidProductId"
+                        }
+                    ],
+                    quantity: [
+                        {
+                            errorMessage: "Minimum quantity is 1",
+                            attemptedValue: "",
+                            ruleName: "minNumber"
+                        }
+                    ],
                 }
             }
         ]

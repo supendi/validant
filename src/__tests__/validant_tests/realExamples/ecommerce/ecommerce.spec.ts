@@ -1,4 +1,3 @@
-
 /**
  * This test pretends to be service layer that validates requests.
  * So there is no service in this scenario, this test is the service itself.
@@ -41,9 +40,27 @@ describe("Reza try to register, unwillingly.", () => {
             isValid: false,
             message: "error",
             errors: {
-                email: ["Invalid email address. The valid email example: john.doe@example.com."],
-                password: ["Should contain a number, capital letter, at least 8 chars min and special char."],
-                confirmPassword: ["Password must match."]
+                email: [
+                    {
+                        errorMessage: "Invalid email address. The valid email example: john.doe@example.com.",
+                        attemptedValue: "reza@fakeemailandfalse",
+                        ruleName: "emailAddress"
+                    }
+                ],
+                password: [
+                    {
+                        errorMessage: "Should contain a number, capital letter, at least 8 chars min and special char.",
+                        attemptedValue: "weak",
+                        ruleName: "strongPasswordRule"
+                    }
+                ],
+                confirmPassword: [
+                    {
+                        errorMessage: "Password must match.",
+                        attemptedValue: "not weak",
+                        ruleName: "equalToPropertyValue"
+                    }
+                ]
             }
         }
 
@@ -67,7 +84,13 @@ describe("Reza realize that he needs to at least provide correct format of email
             isValid: false,
             message: "error",
             errors: {
-                confirmPassword: ["Password must match."]
+                confirmPassword: [
+                    {
+                        errorMessage: "Password must match.",
+                        attemptedValue: "Password123!",
+                        ruleName: "equalToPropertyValue"
+                    }
+                ]
             }
         }
 
@@ -122,7 +145,13 @@ describe("Anjar also register, he tries to register with the same Reza's email a
             isValid: false,
             message: "error",
             errors: {
-                email: [`The email ${anjarRegistration.email} has been registered.`]
+                email: [
+                    {
+                        errorMessage: `The email ${anjarRegistration.email} has been registered.`,
+                        attemptedValue: anjarRegistration.email,
+                        ruleName: "uniqueEmailRule"
+                    }
+                ]
             }
         }
         expect(actual).toEqual(expected)
@@ -146,7 +175,13 @@ describe("Anjar comeback to register, he tried to be a hacker, and try to regist
             isValid: false,
             message: "error",
             errors: {
-                userType: [`Invalid user types ${anjarRegistration.userType}. Allowed types ${ALLOWED_USER_TYPES.join(" ")}.`]
+                userType: [
+                    {
+                        errorMessage: `Invalid user types ${anjarRegistration.userType}. Allowed types ${ALLOWED_USER_TYPES.join(" ")}.`,
+                        attemptedValue: anjarRegistration.userType,
+                        ruleName: "validUserTypeRule"
+                    }
+                ]
             }
         }
         expect(actual).toEqual(expected)
@@ -202,8 +237,25 @@ describe("Reza do login", () => {
             isValid: false,
             message: "error",
             errors: {
-                email: ["This field is required.", "Invalid email address. The valid email example: john.doe@example.com."],
-                password: ["This field is required."]
+                email: [
+                    {
+                        errorMessage: "This field is required.",
+                        attemptedValue: "",
+                        ruleName: "required"
+                    },
+                    {
+                        errorMessage: "Invalid email address. The valid email example: john.doe@example.com.",
+                        attemptedValue: "",
+                        ruleName: "emailAddress"
+                    }
+                ],
+                password: [
+                    {
+                        errorMessage: "This field is required.",
+                        attemptedValue: "",
+                        ruleName: "required"
+                    }
+                ]
             }
         }
 
@@ -225,7 +277,13 @@ describe("Reza do login with incorrect email address", () => {
             isValid: false,
             message: "error",
             errors: {
-                email: [`${rezaLogin.email} is not registered.`],
+                email: [
+                    {
+                        errorMessage: `${rezaLogin.email} is not registered.`,
+                        attemptedValue: rezaLogin.email,
+                        ruleName: "preventUnregisteredEmailRule"
+                    }
+                ],
             }
         }
 
@@ -295,9 +353,26 @@ describe("Reza do login and create product.", () => {
             isValid: false,
             message: "error",
             errors: {
-                userEmail: ["User is not allowed to create product."],
+                userEmail: [
+                    {
+                        errorMessage: "User is not allowed to create product.",
+                        attemptedValue: user.email,
+                        ruleName: "userCanCreateProductRule"
+                    }
+                ],
                 prices: {
-                    arrayErrors: ["This field is required.", "Product has to be at least having 1 price."]
+                    arrayErrors: [
+                        {
+                            errorMessage: "This field is required.",
+                            attemptedValue: [],
+                            ruleName: "required"
+                        },
+                        {
+                            errorMessage: "Product has to be at least having 1 price.",
+                            attemptedValue: [],
+                            ruleName: "arrayMinLen"
+                        }
+                    ]
                 }
             }
         }
@@ -343,9 +418,31 @@ describe("Attempt1: Dwi login and create product.", () => {
             isValid: false,
             message: "error",
             errors: {
-                productName: ["This field is required.", "Product name should be at least 3 chars"],
+                productName: [
+                    {
+                        errorMessage: "This field is required.",
+                        attemptedValue: "",
+                        ruleName: "required"
+                    },
+                    {
+                        errorMessage: "Product name should be at least 3 chars",
+                        attemptedValue: "",
+                        ruleName: "stringMinLen"
+                    }
+                ],
                 prices: {
-                    arrayErrors: ["This field is required.", "Product has to be at least having 1 price."]
+                    arrayErrors: [
+                        {
+                            errorMessage: "This field is required.",
+                            attemptedValue: [],
+                            ruleName: "required"
+                        },
+                        {
+                            errorMessage: "Product has to be at least having 1 price.",
+                            attemptedValue: [],
+                            ruleName: "arrayMinLen"
+                        }
+                    ]
                 }
             }
         }
@@ -410,8 +507,20 @@ describe("Attempt2: Dwi login and create product.", () => {
                                 price: 0
                             },
                             errors: {
-                                level: ["Product level is a non 0 and positive number."],
-                                price: ["Minimum price is at least $1."],
+                                level: [
+                                    {
+                                        errorMessage: "Product level is a non 0 and positive number.",
+                                        attemptedValue: 0,
+                                        ruleName: "minNumber"
+                                    }
+                                ],
+                                price: [
+                                    {
+                                        errorMessage: "Minimum price is at least $1.",
+                                        attemptedValue: 0,
+                                        ruleName: "minNumber"
+                                    }
+                                ],
                             }
                         },
                         {
@@ -421,7 +530,13 @@ describe("Attempt2: Dwi login and create product.", () => {
                                 price: 2
                             },
                             errors: {
-                                level: ["Price level should be sequential. And the current price level should be: 1, but got 2"]
+                                level: [
+                                    {
+                                        errorMessage: "Price level should be sequential. And the current price level should be: 1, but got 2",
+                                        attemptedValue: 2,
+                                        ruleName: "sequentialPriceLevelRule"
+                                    }
+                                ]
                             }
                         }
                     ]
@@ -492,7 +607,13 @@ describe("Attempt3: Dwi login and create product.", () => {
                                 price: 1
                             },
                             errors: {
-                                level: ["Price level should be sequential. And the current price level should be: 3, but got 4"]
+                                level: [
+                                    {
+                                        errorMessage: "Price level should be sequential. And the current price level should be: 3, but got 4",
+                                        attemptedValue: 4,
+                                        ruleName: "sequentialPriceLevelRule"
+                                    }
+                                ]
                             }
                         }
                     ]
@@ -555,7 +676,13 @@ describe("Attempt4: Dwi login and create product.", () => {
             message: "error",
             errors: {
                 prices: {
-                    arrayErrors: ["Duplicate price 1 and level 1. At index 0."],
+                    arrayErrors: [
+                        {
+                            errorMessage: "Duplicate price 1 and level 1. At index 0.",
+                            attemptedValue: productRequest.prices,
+                            ruleName: "noDuplicatePriceLevelRule"
+                        }
+                    ],
                     arrayElementErrors: [
                         {
                             index: 1,
@@ -564,7 +691,13 @@ describe("Attempt4: Dwi login and create product.", () => {
                                 price: 1
                             },
                             errors: {
-                                level: ["Price level should be sequential. And the current price level should be: 2, but got 1"]
+                                level: [
+                                    {
+                                        errorMessage: "Price level should be sequential. And the current price level should be: 2, but got 1",
+                                        attemptedValue: 1,
+                                        ruleName: "sequentialPriceLevelRule"
+                                    }
+                                ]
                             }
                         },
                         {
@@ -574,7 +707,13 @@ describe("Attempt4: Dwi login and create product.", () => {
                                 price: 1
                             },
                             errors: {
-                                level: ["Price level should be sequential. And the current price level should be: 2, but got 4"]
+                                level: [
+                                    {
+                                        errorMessage: "Price level should be sequential. And the current price level should be: 2, but got 4",
+                                        attemptedValue: 4,
+                                        ruleName: "sequentialPriceLevelRule"
+                                    }
+                                ]
                             }
                         }
                     ]
@@ -697,9 +836,11 @@ describe("Attempt1: Reza Create an Order", () => {
         expect(user).not.toBeUndefined()
         expect(user).not.toBeNull()
 
+        const orderDate = new Date().toISOString() as any as Date
+
         // ORDER
         const orderRequest: OrderRequest = {
-            orderDate: new Date().toISOString() as any as Date, // Fails isDateObject rule
+            orderDate: orderDate, // Fails isDateObject rule
             userEmail: "",
             customer: {
                 fullName: user.fullName,
@@ -716,12 +857,41 @@ describe("Attempt1: Reza Create an Order", () => {
             isValid: false,
             message: "error",
             errors: {
-                orderDate: ["This field is not a valid date, type of value was: string."],
+                orderDate: [
+                    {
+                        errorMessage: "This field is not a valid date, type of value was: string.",
+                        attemptedValue: orderDate,
+                        ruleName: "isDateObject"
+                    }
+                ],
                 orderItems: {
-                    arrayErrors: ["Please add at least an item"]
+                    arrayErrors: [
+                        {
+                            errorMessage: "Please add at least an item",
+                            attemptedValue: [],
+                            ruleName: "required"
+                        }
+                    ]
                 },
-                totalAmount: ["The minimum value for this field is 1.",],
-                userEmail: ["This field is required.", "Invalid email address. The valid email example: john.doe@example.com.",]
+                totalAmount: [
+                    {
+                        errorMessage: "The minimum value for this field is 1.",
+                        attemptedValue: 0,
+                        ruleName: "minNumber"
+                    }
+                ],
+                userEmail: [
+                    {
+                        errorMessage: "This field is required.",
+                        attemptedValue: "",
+                        ruleName: "required"
+                    },
+                    {
+                        errorMessage: "Invalid email address. The valid email example: john.doe@example.com.",
+                        attemptedValue: "",
+                        ruleName: "emailAddress"
+                    }
+                ]
 
             }
         }
@@ -792,11 +962,41 @@ describe("Attempt2: Reza Create an Order", () => {
                         {
                             index: 0,
                             errors: {
-                                productId: ["Product id 0 is invalid."],
-                                qty: ["The minimum value for this field is 1."],
-                                amount: ["The minimum value for this field is 1.",],
-                                price: ["The minimum value for this field is 1."],
-                                subtotal: ["The minimum value for this field is 1.",]
+                                productId: [
+                                    {
+                                        errorMessage: "Product id 0 is invalid.",
+                                        attemptedValue: 0,
+                                        ruleName: "isValidProductRule"
+                                    }
+                                ],
+                                qty: [
+                                    {
+                                        errorMessage: "The minimum value for this field is 1.",
+                                        attemptedValue: 0,
+                                        ruleName: "minNumber"
+                                    }
+                                ],
+                                amount: [
+                                    {
+                                        errorMessage: "The minimum value for this field is 1.",
+                                        attemptedValue: 0,
+                                        ruleName: "minNumber"
+                                    }
+                                ],
+                                price: [
+                                    {
+                                        errorMessage: "The minimum value for this field is 1.",
+                                        attemptedValue: 0,
+                                        ruleName: "minNumber"
+                                    }
+                                ],
+                                subtotal: [
+                                    {
+                                        errorMessage: "The minimum value for this field is 1.",
+                                        attemptedValue: 0,
+                                        ruleName: "minNumber"
+                                    }
+                                ]
                             },
                             validatedObject: {
                                 productId: 0,
@@ -810,7 +1010,13 @@ describe("Attempt2: Reza Create an Order", () => {
                         }
                     ]
                 },
-                totalAmount: ["The minimum value for this field is 1.",],
+                totalAmount: [
+                    {
+                        errorMessage: "The minimum value for this field is 1.",
+                        attemptedValue: 0,
+                        ruleName: "minNumber"
+                    }
+                ],
             }
         }
 
@@ -891,8 +1097,20 @@ describe("Attempt2: Reza Create an Order", () => {
                         {
                             index: 0,
                             errors: {
-                                qty: ["The maximum value for this field is 10."],
-                                discountPercentage: ["Can't be more than 30 percent of discount. Our boss is watching."]
+                                qty: [
+                                    {
+                                        errorMessage: "The maximum value for this field is 10.",
+                                        attemptedValue: 100,
+                                        ruleName: "maxNumber"
+                                    }
+                                ],
+                                discountPercentage: [
+                                    {
+                                        errorMessage: "Can't be more than 30 percent of discount. Our boss is watching.",
+                                        attemptedValue: 40,
+                                        ruleName: "maxNumber"
+                                    }
+                                ]
                             },
                             validatedObject: {
                                 productId: firstProduct.id,

@@ -24,7 +24,7 @@ function isValidProductRule(productRepository: ProductRepository) {
         const product = await productRepository.getProductByIdAsync(productId)
         if (!product) {
             return {
-                ruleName: isValidUser.name,
+                ruleName: isValidProductRule.name,
                 attemptedValue: productId,
                 errorMessage: `Product id ${productId} is invalid.`
             }

@@ -1,3 +1,5 @@
+import { RuleViolation } from "./ValidationRule";
+
 /**
  * Represents a generic type that is possibly undefined
  */
@@ -15,10 +17,10 @@ export type ArrayElementType<TArray> = TArray extends (infer U)[] ? U : never;
  * Then ErrorOf<T> is { name: string[] } 
  */
 export type ErrorOf<T extends Object> = { [key in keyof T]?:
-    T[key] extends Date ? string[]
+    T[key] extends Date ? RuleViolation[]
     : T[key] extends PossiblyUndefined<Array<any>> ? ErrorOfArray<T[key]>
     : T[key] extends PossiblyUndefined<object> ? ErrorOf<T[key]>
-    : string[] }
+    : RuleViolation[] }
 
 export type ErrorValueOf<T, K extends keyof T> =
     T[K] extends Date
@@ -27,7 +29,7 @@ export type ErrorValueOf<T, K extends keyof T> =
     ? ErrorOfArray<T[K]>
     : T[K] extends PossiblyUndefined<object>
     ? ErrorOf<T[K]>
-    : string[];
+    : RuleViolation[];
 
 export interface FieldErrorOf<T, K extends keyof T = keyof T> {
     isValid: boolean;
@@ -60,7 +62,7 @@ export type ErrorOfArray<TArray> = {
      * The error will be represented as:
      * { orderItems: { errors: ["The minimum order is 5 items"]}}
      */
-    arrayErrors?: string[],
+    arrayErrors?: RuleViolation[],
 
     /**
      * If each element of array need to be validated.

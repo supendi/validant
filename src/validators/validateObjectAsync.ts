@@ -3,7 +3,7 @@ import { ErrorOf, ErrorOfArray } from "../types/ErrorOf";
 import { ArrayValidationRule } from "../types/ValidationRule";
 import { ValidationRule } from "../types/ValidationRule";
 import { validateFieldAsync } from "./validateFieldAsync";
-import { FieldErrors, ObjectFieldValidationResult, PrimitiveFieldValidationResult, PropertyType } from "./validateObject";
+import { Violations, ObjectFieldValidationResult, PrimitiveFieldValidationResult, PropertyType } from "./validateObject";
 
 export function isAsyncArrayValidationRule<T, TRoot>(rule: AsyncValidationRule<T, TRoot>[Extract<keyof T, string>] | AsyncArrayValidationRule<T[Extract<keyof T, string>], TRoot>) {
     const allowedKeys = new Set(["arrayRules", "arrayElementRule"]);
@@ -14,30 +14,34 @@ export function isAsyncArrayValidationRule<T, TRoot>(rule: AsyncValidationRule<T
 }
 
 export async function validatePrimitiveFieldAsync<T, TRoot>(key: Extract<keyof T, string>, object: T, root: TRoot, rule: GenericValidateFunc<T[Extract<keyof T, string>], TRoot>[]): Promise<PrimitiveFieldValidationResult> {
-    var fieldErrors: FieldErrors = [];
+    var violations: Violations = [];
     for (let index = 0; index < rule.length; index++) {
-        const propertyRuleFunc = rule[index];
-        if (!propertyRuleFunc) {
+        const validateFunc = rule[index];
+        if (!validateFunc) {
             continue;
         }
 
-        const isFunction = typeof (propertyRuleFunc) === "function";
+        const isFunction = typeof (validateFunc) === "function";
         if (!isFunction) {
-            throw Error("propertyRuleFunc is not a function")
+            throw Error("validateFunc is not a function")
             // continue;
         }
 
-        const propValidationResult = await validateFieldAsync(key, object, root, propertyRuleFunc);
+        const propValidationResult = await validateFieldAsync(key, object, root, validateFunc);
 
         const isValid = propValidationResult.isValid;
 
         if (!isValid) {
-            fieldErrors.push(propValidationResult.errorMessage);
+            violations.push({
+                attemptedValue: propValidationResult.propertyValue,
+                errorMessage: propValidationResult.errorMessage,
+                ruleName: propValidationResult.ruleName,
+            });
         }
     }
     const validationResult: PrimitiveFieldValidationResult = {
-        errors: fieldErrors,
-        isValid: fieldErrors.length === 0
+        errors: violations,
+        isValid: violations.length === 0
     };
     return validationResult
 }
@@ -95,14 +99,14 @@ async function validateArrayFieldAsync<T, TRoot>(key: Extract<keyof T, string>, 
 }
 
 async function validateObjectFieldAsync<T, TRoot>(key: Extract<keyof T, string>, object: T, root: TRoot, rule: AsyncValidationRule<T, TRoot>[Extract<keyof T, string>]): Promise<ObjectFieldValidationResult<T[Extract<keyof T, string>]>> {
-    var fieldErrors: FieldErrors = [];
+    var violations: Violations = [];
     const value = object[key];
 
     const childValidationRule = rule as ValidationRule<typeof value, TRoot>;
     const error = await validateObjectAsync(value, root, childValidationRule);
     const validationResult: ObjectFieldValidationResult<T[Extract<keyof T, string>]> = {
         errors: error,
-        isValid: fieldErrors.length === 0 && !error
+        isValid: violations.length === 0 && !error
     };
     return validationResult
 }
@@ -122,11 +126,11 @@ export const validateObjectAsync = async <T, TRoot>(object: T, rootObject: TRoot
     }
     var errors: ErrorOf<T> = undefined;
 
-    function assignErrorsIfAny(key: any, fieldErrors: FieldErrors | ErrorOfArray<T> | ErrorOf<T[Extract<keyof T, string>]>) {
+    function assignErrorsIfAny(key: any, violations: Violations | ErrorOfArray<T> | ErrorOf<T[Extract<keyof T, string>]>) {
         if (!errors) {
             errors = {};
         }
-        errors[key as any] = fieldErrors
+        errors[key as any] = violations
     }
 
     //Iterate against validation rule instead.

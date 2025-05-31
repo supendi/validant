@@ -26,9 +26,21 @@ describe("Test undefined array properties", () => {
             message: "One or more validation errors occurred.",
             isValid: false,
             errors: {
-                name: ["This field is required."],
+                name: [
+                    {
+                        errorMessage: "This field is required.",
+                        attemptedValue: undefined,
+                        ruleName: required.name
+                    }
+                ],
                 children: {
-                    arrayErrors: ["This field is required."]
+                    arrayErrors: [
+                        {
+                            errorMessage: "This field is required.",
+                            attemptedValue: undefined,
+                            ruleName: required.name
+                        }
+                    ]
                 }
             }
         }
@@ -55,15 +67,33 @@ describe("Test undefined array properties", () => {
             message: "One or more validation errors occurred.",
             isValid: false,
             errors: {
-                name: ["This field is required."],
+                name: [
+                    {
+                        errorMessage: "This field is required.",
+                        attemptedValue: "",
+                        ruleName: required.name
+                    }
+                ],
                 children: {
                     arrayElementErrors: [
                         {
                             index: 0,
                             errors: {
-                                name: ["This field is required."],
+                                name: [
+                                    {
+                                        errorMessage: "This field is required.",
+                                        attemptedValue: "",
+                                        ruleName: required.name
+                                    }
+                                ],
                                 children: {
-                                    arrayErrors: ["This field is required."] // note that person.children[0].children above is undefined, and its required.
+                                    arrayErrors: [
+                                        {
+                                            errorMessage: "This field is required.",
+                                            attemptedValue: undefined,
+                                            ruleName: required.name
+                                        }
+                                    ]
                                 },
                             },
                             validatedObject: person.children ? person.children[0] : undefined

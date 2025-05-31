@@ -76,22 +76,64 @@ describe("Nested Object Test with nested address", () => {
             message: "One or more validation errors occurred.",
             isValid: false,
             errors: {
-                name: ["This field is required."],
-                age: ["The minimum value for this field is 20."],
+                name: [
+                    {
+                        errorMessage: "This field is required.",
+                        attemptedValue: "",
+                        ruleName: required.name
+                    }
+                ],
+                age: [
+                    {
+                        errorMessage: "The minimum value for this field is 20.",
+                        attemptedValue: 0,
+                        ruleName: minNumber.name
+                    }
+                ],
                 address: {
-                    street: ["This field is required."],
+                    street: [
+                        {
+                            errorMessage: "This field is required.",
+                            attemptedValue: "",
+                            ruleName: required.name
+                        }
+                    ],
                     city: {
-                        name: ["This field is required."],
+                        name: [
+                            {
+                                errorMessage: "This field is required.",
+                                attemptedValue: "",
+                                ruleName: required.name
+                            }
+                        ],
                         country: {
-                            name: ["This field is required."],
+                            name: [
+                                {
+                                    errorMessage: "This field is required.",
+                                    attemptedValue: "",
+                                    ruleName: required.name
+                                }
+                            ],
                             continent: {
-                                name: ["This field is required."],
+                                name: [
+                                    {
+                                        errorMessage: "This field is required.",
+                                        attemptedValue: "",
+                                        ruleName: required.name
+                                    }
+                                ],
                             }
                         }
                     }
                 },
                 child: {
-                    name: ["This field is required."],
+                    name: [
+                        {
+                            errorMessage: "This field is required.",
+                            attemptedValue: "",
+                            ruleName: required.name
+                        }
+                    ],
                 }
             }
         }

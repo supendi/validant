@@ -1,5 +1,5 @@
 import { ErrorOf, ErrorOfArray } from "../types/ErrorOf";
-import { ArrayValidationRule } from "../types/ValidationRule";
+import { ArrayValidationRule, RuleViolation } from "../types/ValidationRule";
 import { ValidateFunc } from "../types/ValidationRule";
 import { ValidationRule } from "../types/ValidationRule";
 import { validateField } from "./validateField";
@@ -8,16 +8,16 @@ export type PropertyType = "array" | "object" | "primitive" | "undefined"
 
 type PrimitiveRule<T, TRoot> = ValidateFunc<T[Extract<keyof T, string>], TRoot>[]
 
-export type FieldErrors = string[]
+export type Violations = RuleViolation[]
 
 export type PrimitiveFieldValidationResult = {
     isValid: boolean
-    errors: FieldErrors
+    errors: Violations
 }
 
 export type ObjectFieldValidationResult<T> = {
     isValid: boolean
-    errors?: ErrorOf<T> | FieldErrors
+    errors?: ErrorOf<T> | Violations
 }
 
 export function isArrayValidationRule<T, TRoot>(rule: ValidationRule<T, TRoot>[Extract<keyof T, string>] | ArrayValidationRule<T[Extract<keyof T, string>], TRoot>) {
@@ -29,7 +29,7 @@ export function isArrayValidationRule<T, TRoot>(rule: ValidationRule<T, TRoot>[E
 }
 
 export function validatePrimitiveField<T, TRoot>(key: Extract<keyof T, string>, object: T, root: TRoot, rule: PrimitiveRule<T, TRoot>): PrimitiveFieldValidationResult {
-    var fieldErrors: FieldErrors = [];
+    var violations: Violations = [];
     for (let index = 0; index < rule.length; index++) {
         const validateFunc = rule[index];
         if (!validateFunc) {
@@ -46,12 +46,16 @@ export function validatePrimitiveField<T, TRoot>(key: Extract<keyof T, string>, 
         const isValid = propValidationResult.isValid;
 
         if (!isValid) {
-            fieldErrors.push(propValidationResult.errorMessage);
+            violations.push({
+                attemptedValue: propValidationResult.propertyValue,
+                errorMessage: propValidationResult.errorMessage,
+                ruleName: propValidationResult.ruleName,
+            });
         }
     }
     const validationResult: PrimitiveFieldValidationResult = {
-        errors: fieldErrors,
-        isValid: fieldErrors.length === 0
+        errors: violations,
+        isValid: violations.length === 0
     };
     return validationResult
 }
@@ -110,14 +114,14 @@ function validateArrayField<T, TRoot>(key: Extract<keyof T, string>, object: T, 
 
 
 function validateObjectField<T, TRoot>(key: Extract<keyof T, string>, object: T, root: TRoot, rule: ValidationRule<T, TRoot>[Extract<keyof T, string>]): ObjectFieldValidationResult<T[Extract<keyof T, string>]> {
-    var fieldErrors: FieldErrors = [];
+    var violations: Violations = [];
     const value = object[key];
 
     const childValidationRule = rule as ValidationRule<typeof value, TRoot>;
     const error = validateObject(value, root, childValidationRule);
     const validationResult: ObjectFieldValidationResult<T[Extract<keyof T, string>]> = {
         errors: error,
-        isValid: fieldErrors.length === 0 && !error
+        isValid: violations.length === 0 && !error
     };
     return validationResult
 }
@@ -137,11 +141,11 @@ export const validateObject = <T, TRoot>(object: T, rootObject: TRoot, validatio
     }
     var errors: ErrorOf<T> = undefined;
 
-    function assignErrorsIfAny(key: any, fieldErrors: FieldErrors | ErrorOfArray<T> | ErrorOf<T[Extract<keyof T, string>]>) {
+    function assignErrorsIfAny(key: any, violations: Violations | ErrorOfArray<T> | ErrorOf<T[Extract<keyof T, string>]>) {
         if (!errors) {
             errors = {};
         }
-        errors[key as any] = fieldErrors
+        errors[key as any] = violations
     }
 
     //Iterate against validation rule instead.

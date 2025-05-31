@@ -39,7 +39,13 @@ describe("Validate null property", () => {
             isValid: false,
             errors: {
                 orderItems: {
-                    arrayErrors: ["The minimum length for this field is 1."]
+                    arrayErrors: [
+                        {
+                            errorMessage: "The minimum length for this field is 1.",
+                            attemptedValue: null,
+                            ruleName: arrayMinLen.name
+                        }
+                    ]
                 }
             },
         }

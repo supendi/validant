@@ -1,4 +1,3 @@
- 
 /**
  * Ensure all the code below are compiled
  */
@@ -13,13 +12,31 @@ describe("ErrorOfArray Test", () => {
         }
 
         let productsErrors: ErrorOfArray<Product[]> = {
-            arrayErrors: ["The minimum of selected products is 1"],
+            arrayErrors: [
+                {
+                    errorMessage: "The minimum of selected products is 1",
+                    attemptedValue: undefined,
+                    ruleName: "minCount"
+                }
+            ],
             arrayElementErrors: [
                 {
                     index: 0,
                     errors: {
-                        name: ["Required"],
-                        price: ["Required"],
+                        name: [
+                            {
+                                errorMessage: "Required",
+                                attemptedValue: "",
+                                ruleName: "required"
+                            }
+                        ],
+                        price: [
+                            {
+                                errorMessage: "Required",
+                                attemptedValue: 0,
+                                ruleName: "required"
+                            }
+                        ],
                     },
                     validatedObject: {
                         name: "",
@@ -29,8 +46,20 @@ describe("ErrorOfArray Test", () => {
                 {
                     index: 0,
                     errors: {
-                        name: ["Product name should not contain number."],
-                        price: ["Price maximum is 100."],
+                        name: [
+                            {
+                                errorMessage: "Product name should not contain number.",
+                                attemptedValue: "ProductName1",
+                                ruleName: "invalidName"
+                            }
+                        ],
+                        price: [
+                            {
+                                errorMessage: "Price maximum is 100.",
+                                attemptedValue: 120,
+                                ruleName: "max"
+                            }
+                        ],
                     },
                     validatedObject: {
                         name: "ProductName1",

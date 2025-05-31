@@ -32,7 +32,13 @@ describe("Validate Inferred", () => {
             isValid: false,
             errors: {
                 orderItems: {
-                    arrayErrors: ["The minimum length for this field is 1."]
+                    arrayErrors: [
+                        {
+                            errorMessage: "The minimum length for this field is 1.",
+                            attemptedValue: [],
+                            ruleName: arrayMinLen.name
+                        }
+                    ]
                 }
             },
         }
@@ -69,7 +75,13 @@ describe("Validate Inferred", () => {
                                 quantity: 0
                             },
                             errors: {
-                                quantity: ["Min qty is 1."]
+                                quantity: [
+                                    {
+                                        errorMessage: "Min qty is 1.",
+                                        attemptedValue: 0,
+                                        ruleName: minNumber.name
+                                    }
+                                ]
                             }
                         }
                     ]
@@ -145,8 +157,20 @@ describe("Validate Inferred", () => {
                                 quantity: "0"
                             },
                             errors: {
-                                productId: ["This field is not a valid number, type of value was: string."],
-                                quantity: ["This field is not a valid number, type of value was: string."]
+                                productId: [
+                                    {
+                                        errorMessage: "This field is not a valid number, type of value was: string.",
+                                        attemptedValue: "1",
+                                        ruleName: isNumber.name
+                                    }
+                                ],
+                                quantity: [
+                                    {
+                                        errorMessage: "This field is not a valid number, type of value was: string.",
+                                        attemptedValue: "0",
+                                        ruleName: isNumber.name
+                                    }
+                                ]
                             }
                         }
                     ]

@@ -6,6 +6,7 @@ import { ValidateFunc } from "../types/ValidationRule";
 
 export interface PropertyValidationResult<T> {
     object: T;
+    ruleName: string;
     propertyName: keyof T;
     propertyValue: T[keyof T];
     isValid: boolean;
@@ -44,6 +45,7 @@ export const validateField = <TObject, TRoot>(propName: keyof TObject, object: T
     }
 
     const validationResult: PropertyValidationResult<TObject> = {
+        ruleName: violation ? violation.ruleName : "",
         object: object,
         propertyName: propName,
         propertyValue: value,

@@ -98,14 +98,49 @@ describe("Validate Order Request with empty order items", () => {
             message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
-                orderNumber: ["Order number is required."],
-                orderDate: ["Please enter order date."],
+                orderNumber: [
+                    {
+                        errorMessage: "Order number is required.",
+                        attemptedValue: "",
+                        ruleName: required.name
+                    }
+                ],
+                orderDate: [
+                    {
+                        errorMessage: "Please enter order date.",
+                        attemptedValue: undefined,
+                        ruleName: required.name
+                    }
+                ],
                 customer: {
-                    fullName: ["This field is required."],
-                    email: ["This field is required.", "Invalid email address. The valid email example: john.doe@example.com."]
+                    fullName: [
+                        {
+                            errorMessage: "This field is required.",
+                            attemptedValue: "",
+                            ruleName: required.name
+                        }
+                    ],
+                    email: [
+                        {
+                            errorMessage: "This field is required.",
+                            attemptedValue: "",
+                            ruleName: required.name
+                        },
+                        {
+                            errorMessage: "Invalid email address. The valid email example: john.doe@example.com.",
+                            attemptedValue: "",
+                            ruleName: emailAddress.name
+                        }
+                    ]
                 },
                 orderItems: {
-                    arrayErrors: ["Please add at least one product."]
+                    arrayErrors: [
+                        {
+                            errorMessage: "Please add at least one product.",
+                            attemptedValue: [],
+                            ruleName: arrayMinLen.name
+                        }
+                    ]
                 }
             }
         }
@@ -138,11 +173,40 @@ describe("Validate Order Request With Max order item quantity", () => {
             message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
-                orderNumber: ["Order number is required."],
-                orderDate: ["Please enter order date."],
+                orderNumber: [
+                    {
+                        errorMessage: "Order number is required.",
+                        attemptedValue: "",
+                        ruleName: required.name
+                    }
+                ],
+                orderDate: [
+                    {
+                        errorMessage: "Please enter order date.",
+                        attemptedValue: undefined,
+                        ruleName: required.name
+                    }
+                ],
                 customer: {
-                    fullName: ["This field is required."],
-                    email: ["This field is required.", "Invalid email address. The valid email example: john.doe@example.com."]
+                    fullName: [
+                        {
+                            errorMessage: "This field is required.",
+                            attemptedValue: "",
+                            ruleName: required.name
+                        }
+                    ],
+                    email: [
+                        {
+                            errorMessage: "This field is required.",
+                            attemptedValue: "",
+                            ruleName: required.name
+                        },
+                        {
+                            errorMessage: "Invalid email address. The valid email example: john.doe@example.com.",
+                            attemptedValue: "",
+                            ruleName: emailAddress.name
+                        }
+                    ]
                 },
                 orderItems: {
                     arrayElementErrors: [
@@ -150,7 +214,13 @@ describe("Validate Order Request With Max order item quantity", () => {
                             index: 0,
                             validatedObject: orderRequest.orderItems[0],
                             errors: {
-                                quantity: ["You only allowed to order 10 product at once."]
+                                quantity: [
+                                    {
+                                        errorMessage: "You only allowed to order 10 product at once.",
+                                        attemptedValue: 16,
+                                        ruleName: "isJac"
+                                    }
+                                ]
                             }
                         }
                     ]
@@ -187,10 +257,33 @@ describe("Jacky Chan Order Request", () => {
             message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
-                orderNumber: ["Order number is required."],
-                orderDate: ["Please enter order date."],
+                orderNumber: [
+                    {
+                        errorMessage: "Order number is required.",
+                        attemptedValue: "",
+                        ruleName: required.name
+                    }
+                ],
+                orderDate: [
+                    {
+                        errorMessage: "Please enter order date.",
+                        attemptedValue: undefined,
+                        ruleName: required.name
+                    }
+                ],
                 customer: {
-                    email: ["This field is required.", "Invalid email address. The valid email example: john.doe@example.com."]
+                    email: [
+                        {
+                            errorMessage: "This field is required.",
+                            attemptedValue: "",
+                            ruleName: required.name
+                        },
+                        {
+                            errorMessage: "Invalid email address. The valid email example: john.doe@example.com.",
+                            attemptedValue: "",
+                            ruleName: emailAddress.name
+                        }
+                    ]
                 },
                 orderItems: {
                     arrayElementErrors: [
@@ -198,7 +291,13 @@ describe("Jacky Chan Order Request", () => {
                             index: 0,
                             validatedObject: orderRequest.orderItems[0],
                             errors: {
-                                quantity: ["You are special JaCkY chan, other's max quantity is limited to 10. Yours is limited to, but 100 pcs."]
+                                quantity: [
+                                    {
+                                        errorMessage: "You are special JaCkY chan, other's max quantity is limited to 10. Yours is limited to, but 100 pcs.",
+                                        attemptedValue: 120,
+                                        ruleName: "isJac"
+                                    }
+                                ]
                             }
                         }
                     ]

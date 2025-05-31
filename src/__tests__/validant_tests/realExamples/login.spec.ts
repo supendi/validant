@@ -26,8 +26,20 @@ describe("validate login request", () => {
             message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
-                userName: ["Please enter user name."],
-                password: ["Please enter password."],
+                userName: [
+                    {
+                        errorMessage: "Please enter user name.",
+                        attemptedValue: "",
+                        ruleName: required.name
+                    }
+                ],
+                password: [
+                    {
+                        errorMessage: "Please enter password.",
+                        attemptedValue: "",
+                        ruleName: required.name
+                    }
+                ],
             }
         }
 

@@ -33,16 +33,40 @@ describe("Validator test with children array", () => {
             message: "One or more validation errors occurred.",
             isValid: false,
             errors: {
-                name: ["This field is required."],
+                name: [
+                    {
+                        errorMessage: "This field is required.",
+                        attemptedValue: "",
+                        ruleName: required.name
+                    }
+                ],
                 children: {
-                    arrayErrors: ["The minimum children is 2."],
+                    arrayErrors: [
+                        {
+                            errorMessage: "The minimum children is 2.",
+                            attemptedValue: person.children,
+                            ruleName: arrayMinLen.name
+                        }
+                    ],
                     arrayElementErrors: [
                         {
                             index: 0,
                             errors: {
-                                name: ["This field is required."],
+                                name: [
+                                    {
+                                        errorMessage: "This field is required.",
+                                        attemptedValue: "",
+                                        ruleName: required.name
+                                    }
+                                ],
                                 children: {
-                                    arrayErrors: ["The minimum children is 2."]
+                                    arrayErrors: [
+                                        {
+                                            errorMessage: "The minimum children is 2.",
+                                            attemptedValue: undefined,
+                                            ruleName: arrayMinLen.name
+                                        }
+                                    ]
                                 }
                             },
                             validatedObject: {

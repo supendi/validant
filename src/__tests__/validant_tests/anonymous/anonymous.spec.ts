@@ -31,7 +31,13 @@ describe("Validate Anonymous", () => {
             isValid: false,
             errors: {
                 orderItems: {
-                    arrayErrors: ["The minimum length for this field is 1."]
+                    arrayErrors: [
+                        {
+                            errorMessage: "The minimum length for this field is 1.",
+                            attemptedValue: [],
+                            ruleName: "arrayMinLen"
+                        }
+                    ]
                 }
             },
         }
@@ -68,7 +74,13 @@ describe("Validate Anonymous", () => {
                                 quantity: 0
                             },
                             errors: {
-                                quantity: ["Min qty is 1."]
+                                quantity: [
+                                    {
+                                        errorMessage: "Min qty is 1.",
+                                        attemptedValue: 0,
+                                        ruleName: "minNumber"
+                                    }
+                                ]
                             }
                         }
                     ]

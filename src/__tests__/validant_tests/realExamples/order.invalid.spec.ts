@@ -72,15 +72,51 @@ describe("Validate empty order items", () => {
             message: errorMessage,
             isValid: false,
             errors: {
-                orderDate: ["This field is required."],
-                orderNumber: ["This field is required."],
+                orderDate: [
+                    {
+                        errorMessage: "This field is required.",
+                        attemptedValue: null,
+                        ruleName: required.name
+                    }
+                ],
+                orderNumber: [
+                    {
+                        errorMessage: "This field is required.",
+                        attemptedValue: "",
+                        ruleName: required.name
+                    }
+                ],
                 customer: {
-                    id: ["The value '1' is not an element of [10, 11, 12, 13]."],
-                    email: ["Invalid email address. The valid email example: john.doe@example.com."],
-                    name: ["This field is required."]
+                    id: [
+                        {
+                            errorMessage: `The value '1' is not an element of [${customerIds.join(", ")}].`,
+                            attemptedValue: 1,
+                            ruleName: elementOf.name
+                        }
+                    ],
+                    email: [
+                        {
+                            errorMessage: "Invalid email address. The valid email example: john.doe@example.com.",
+                            attemptedValue: "invalid",
+                            ruleName: emailAddress.name
+                        }
+                    ],
+                    name: [
+                        {
+                            errorMessage: "This field is required.",
+                            attemptedValue: "",
+                            ruleName: required.name
+                        }
+                    ]
                 },
                 orderItems: {
-                    arrayErrors: ["The minimum length for this field is 4."],
+                    arrayErrors: [
+                        {
+                            errorMessage: "The minimum length for this field is 4.",
+                            attemptedValue: [],
+                            ruleName: arrayMinLen.name
+                        }
+                    ],
                 }
             }
         }
@@ -124,34 +160,99 @@ describe("Validate empty order items", () => {
 
         const validator = new Validator(rule)
         const actual = validator.validate(order)
-        
+
         const expected: ValidationResult<Order> = {
             message: errorMessage,
             isValid: false,
             errors: {
-                orderDate: ["This field is required."],
-                orderNumber: ["This field is required."],
+                orderDate: [
+                    {
+                        errorMessage: "This field is required.",
+                        attemptedValue: null,
+                        ruleName: required.name
+                    }
+                ],
+                orderNumber: [
+                    {
+                        errorMessage: "This field is required.",
+                        attemptedValue: "",
+                        ruleName: required.name
+                    }
+                ],
                 customer: {
-                    id: ["The value '1' is not an element of [10, 11, 12, 13]."],
-                    email: ["This field is required.", "Invalid email address. The valid email example: john.doe@example.com."],
-                    name: ["This field is required."]
+                    id: [
+                        {
+                            errorMessage: `The value '1' is not an element of [${customerIds.join(", ")}].`,
+                            attemptedValue: 1,
+                            ruleName: elementOf.name
+                        }
+                    ],
+                    email: [
+                        {
+                            errorMessage: "This field is required.",
+                            attemptedValue: "",
+                            ruleName: required.name
+                        },
+                        {
+                            errorMessage: "Invalid email address. The valid email example: john.doe@example.com.",
+                            attemptedValue: "",
+                            ruleName: emailAddress.name
+                        }
+                    ],
+                    name: [
+                        {
+                            errorMessage: "This field is required.",
+                            attemptedValue: "",
+                            ruleName: required.name
+                        }
+                    ]
                 },
                 orderItems: {
-                    arrayErrors: ["The minimum length for this field is 4."],
+                    arrayErrors: [
+                        {
+                            errorMessage: "The minimum length for this field is 4.",
+                            attemptedValue: order.orderItems,
+                            ruleName: arrayMinLen.name
+                        }
+                    ],
                     arrayElementErrors: [
                         {
                             index: 0,
                             errors: {
-                                productId: ["The value '0' is not an element of [1, 2, 3, 4, 5]."],
-                                quantity: ["The minimum value for this field is 1."],
+                                productId: [
+                                    {
+                                        errorMessage: `The value '0' is not an element of [${productIds.join(", ")}].`,
+                                        attemptedValue: 0,
+                                        ruleName: elementOf.name
+                                    }
+                                ],
+                                quantity: [
+                                    {
+                                        errorMessage: "The minimum value for this field is 1.",
+                                        attemptedValue: 0,
+                                        ruleName: minNumber.name
+                                    }
+                                ],
                             },
                             validatedObject: order.orderItems[0]
                         },
                         {
                             index: 2,
                             errors: {
-                                productId: ["The value '6' is not an element of [1, 2, 3, 4, 5]."],
-                                quantity: ["The maximum value for this field is 5."],
+                                productId: [
+                                    {
+                                        errorMessage: `The value '6' is not an element of [${productIds.join(", ")}].`,
+                                        attemptedValue: 6,
+                                        ruleName: elementOf.name
+                                    }
+                                ],
+                                quantity: [
+                                    {
+                                        errorMessage: "The maximum value for this field is 5.",
+                                        attemptedValue: 12,
+                                        ruleName: maxNumber.name
+                                    }
+                                ],
                             },
                             validatedObject: order.orderItems[2]
                         },

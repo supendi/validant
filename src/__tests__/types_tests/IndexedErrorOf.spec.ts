@@ -1,4 +1,3 @@
- 
 /**
  * Ensure all the code below are compiled
  */
@@ -15,8 +14,20 @@ describe("IndexedErrorOf Test", () => {
         let error: IndexedErrorOf<Person> = {
             index: 0,
             errors: {
-                age: ["Required"],
-                name: ["Required"]
+                age: [
+                    {
+                        errorMessage: "Required",
+                        attemptedValue: 0,
+                        ruleName: "required"
+                    }
+                ],
+                name: [
+                    {
+                        errorMessage: "Required",
+                        attemptedValue: "",
+                        ruleName: "required"
+                    }
+                ]
             },
             validatedObject: {
                 name: "",

@@ -44,30 +44,54 @@ describe("Validate test with product", () => {
             message: "One or more validation errors occurred.",
             isValid: false,
             errors: {
-                name: ["This field is required."],
+                name: [
+                    {
+                        errorMessage: "This field is required.",
+                        attemptedValue: "",
+                        ruleName: required.name
+                    }
+                ],
                 units: {
-                    arrayErrors: ["Product uom has to be at least 3 units."],
+                    arrayErrors: [
+                        {
+                            errorMessage: "Product uom has to be at least 3 units.",
+                            attemptedValue: ironStick.units,
+                            ruleName: arrayMinLen.name
+                        }
+                    ],
                     arrayElementErrors: [
                         {
                             index: 0,
                             errors: {
-                                name: ["This field is required."],
-                                conversion: ["The minimum value for this field is 1."]
+                                name: [
+                                    {
+                                        errorMessage: "This field is required.",
+                                        attemptedValue: "",
+                                        ruleName: required.name
+                                    }
+                                ],
+                                conversion: [
+                                    {
+                                        errorMessage: "The minimum value for this field is 1.",
+                                        attemptedValue: 0,
+                                        ruleName: minNumber.name
+                                    }
+                                ]
                             },
-                            validatedObject: {
-                                name: "",
-                                conversion: 0
-                            }
+                            validatedObject: ironStick.units[0]
                         },
                         {
                             index: 1,
                             errors: {
-                                conversion: ["The minimum value for this field is 1."]
+                                conversion: [
+                                    {
+                                        errorMessage: "The minimum value for this field is 1.",
+                                        attemptedValue: 0,
+                                        ruleName: minNumber.name
+                                    }
+                                ]
                             },
-                            validatedObject: {
-                                name: "cm",
-                                conversion: 0
-                            }
+                            validatedObject: ironStick.units[1]
                         }
                     ]
                 }

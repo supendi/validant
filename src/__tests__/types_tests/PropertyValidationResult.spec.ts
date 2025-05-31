@@ -13,6 +13,7 @@ describe("PropertyValidationResult Test", () => {
         }
 
         let person: PropertyValidationResult<Person> = {
+            ruleName: "anyRule",
             errorMessage: "Not good",
             isValid: false,
             object: {

@@ -46,10 +46,33 @@ describe("Validate customer with empty address", () => {
             message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
-                fullName: ["This field is required."],
-                email: ["This field is required.", "Invalid email address. The valid email example: john.doe@example.com."],
+                fullName: [
+                    {
+                        errorMessage: "This field is required.",
+                        attemptedValue: "",
+                        ruleName: required.name
+                    }
+                ],
+                email: [
+                    {
+                        errorMessage: "This field is required.",
+                        attemptedValue: "",
+                        ruleName: required.name
+                    },
+                    {
+                        errorMessage: "Invalid email address. The valid email example: john.doe@example.com.",
+                        attemptedValue: "",
+                        ruleName: emailAddress.name
+                    }
+                ],
                 addresses: {
-                    arrayErrors: ["This field is required."]
+                    arrayErrors: [
+                        {
+                            errorMessage: "This field is required.",
+                            attemptedValue: [],
+                            ruleName: required.name
+                        }
+                    ]
                 }
             }
         }
@@ -84,15 +107,44 @@ describe("Validate customer with address items", () => {
             message: defaultMessage.errorMessage,
             isValid: false,
             errors: {
-                fullName: ["This field is required."],
-                email: ["This field is required.", "Invalid email address. The valid email example: john.doe@example.com."],
+                fullName: [
+                    {
+                        errorMessage: "This field is required.",
+                        attemptedValue: "",
+                        ruleName: required.name
+                    }
+                ],
+                email: [
+                    {
+                        errorMessage: "This field is required.",
+                        attemptedValue: "",
+                        ruleName: required.name
+                    },
+                    {
+                        errorMessage: "Invalid email address. The valid email example: john.doe@example.com.",
+                        attemptedValue: "",
+                        ruleName: emailAddress.name
+                    }
+                ],
                 addresses: {
                     arrayElementErrors: [
                         {
                             index: 0,
                             errors: {
-                                cityId: ["Please enter a valid city id."],
-                                street: ["This field is required."],
+                                cityId: [
+                                    {
+                                        attemptedValue: 0,
+                                        errorMessage: "Please enter a valid city id.",
+                                        ruleName: minNumber.name
+                                    }
+                                ],
+                                street: [
+                                    {
+                                        attemptedValue: "",
+                                        errorMessage: "This field is required.",
+                                        ruleName: required.name
+                                    }
+                                ],
                             },
                             validatedObject: customer.addresses[0]
                         }
