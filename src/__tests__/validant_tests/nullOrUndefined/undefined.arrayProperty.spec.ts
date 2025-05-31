@@ -96,7 +96,7 @@ describe("Test undefined array properties", () => {
                                     ]
                                 },
                             },
-                            validatedObject: person.children ? person.children[0] : undefined
+                            attemptedValue: person.children ? person.children[0] : undefined
                         }
                     ]
                 }

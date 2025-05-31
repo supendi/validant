@@ -234,7 +234,7 @@ describe("Validate empty order items", () => {
                                     }
                                 ],
                             },
-                            validatedObject: order.orderItems[0]
+                            attemptedValue: order.orderItems[0]
                         },
                         {
                             index: 2,
@@ -254,7 +254,7 @@ describe("Validate empty order items", () => {
                                     }
                                 ],
                             },
-                            validatedObject: order.orderItems[2]
+                            attemptedValue: order.orderItems[2]
                         },
                     ]
                 }

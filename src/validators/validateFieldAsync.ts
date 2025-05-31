@@ -1,33 +1,54 @@
-import { GenericValidateFunc } from "../types/AsyncValidationRule";
-import { PropertyValidationResult, stringifyValue } from "./validateField";
+import { AsyncValidationRule } from "../types/AsyncValidationRule";
+import { FieldErrorOf } from "../types/FieldErrorOf";
+import { isAsyncArrayValidationRule, validateObjectAsync, validatePrimitiveFieldAsync } from "./validateObjectAsync";
 
-/**
- * Do a single validation against single property
- * @param propName
- * @param object
- * @param validateFunc
- * @returns
- */
-export const validateFieldAsync = async <TObject, TRoot>(propName: keyof TObject, object: TObject, root: TRoot, validateFunc: GenericValidateFunc<TObject[keyof TObject], TRoot>): Promise<PropertyValidationResult<TObject>> => {
-    const value = object[propName];
-
-    const violation = await validateFunc(value, root);
-    const isValid = !violation;
-    let errorMessage = violation ? violation.errorMessage : "";
-
-    let resolvedErrorMessage = errorMessage
-    if (resolvedErrorMessage) {
-        resolvedErrorMessage = resolvedErrorMessage.replace(":value", stringifyValue(value));
+export const validateFieldAsync = async <T, K extends Extract<keyof T, string>>(
+    object: T,
+    fieldName: K,
+    fieldRule: AsyncValidationRule<T, T>[K]
+): Promise<FieldErrorOf<T, K>> => {
+    if (!fieldRule) {
+        return {
+            isValid: true,
+            fieldName,
+        };
     }
 
-    const validationResult: PropertyValidationResult<TObject> = {
-        ruleName: violation ? violation.ruleName : "",
-        object: object,
-        propertyName: propName,
-        propertyValue: value,
-        errorMessage: isValid ? "" : resolvedErrorMessage,
-        isValid: isValid,
-    };
+    const isPrimitive = Array.isArray(fieldRule);
+    const isArrayValidation = isAsyncArrayValidationRule(fieldRule);
+    const isObjectRule = typeof fieldRule === "object" && !isPrimitive && !isArrayValidation;
 
-    return validationResult;
+    if (isPrimitive) {
+        const result = await validatePrimitiveFieldAsync(fieldName, object, object, fieldRule);
+        return {
+            isValid: result.isValid,
+            fieldName,
+            ...(result.isValid ? {} : { errors: { [fieldName]: result.errors } as any }),
+        };
+    }
+
+    if (isArrayValidation) {
+        const arrayErrors = await validateObjectAsync(object, object, { [fieldName]: fieldRule } as any);
+        const isValid = !arrayErrors || !arrayErrors[fieldName];
+        return {
+            isValid,
+            fieldName,
+            ...(isValid ? {} : { errors: { [fieldName]: arrayErrors[fieldName] } as any }),
+        };
+    }
+
+    if (isObjectRule) {
+        const nestedErrors = await validateObjectAsync(object, object, fieldRule as any);
+        const isValid = !nestedErrors;
+        return {
+            isValid,
+            fieldName,
+            ...(isValid ? {} : { errors: { [fieldName]: nestedErrors } as any }),
+        };
+    }
+
+    return {
+        isValid: true,
+        fieldName,
+    };
 };

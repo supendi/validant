@@ -4,8 +4,8 @@ import { RuleViolation } from "../../types/ValidationRule"
 describe(`Test ${elementOf.name}`, () => {
     it("should return false and have default error message", () => {
         const arr = [1, 2, 3]
-        const defaultErrorMessage = `The value ':value' is not an element of [${arr.join(", ")}].` // the ':value' is expected. its validateField.ts that replaces that.
         const input = 4
+        const defaultErrorMessage = `The value '${input}' is not an element of [${arr.join(", ")}].` // the ':value' is expected. its validateField.ts that replaces that.
 
         const validateFunc = elementOf(arr)
 

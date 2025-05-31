@@ -29,7 +29,7 @@ describe("IndexedErrorOf Test", () => {
                     }
                 ]
             },
-            validatedObject: {
+            attemptedValue: {
                 name: "",
                 age: 0
             }

@@ -133,7 +133,7 @@ describe("ValidateAsync Test", () => {
                     arrayElementErrors: [
                         {
                             index: 0,
-                            validatedObject: {
+                            attemptedValue: {
                                 productId: 0,
                                 quantity: 0
                             },

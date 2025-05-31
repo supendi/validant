@@ -502,7 +502,7 @@ describe("Attempt2: Dwi login and create product.", () => {
                     arrayElementErrors: [
                         {
                             index: 0,
-                            validatedObject: {
+                            attemptedValue: {
                                 level: 0,
                                 price: 0
                             },
@@ -525,7 +525,7 @@ describe("Attempt2: Dwi login and create product.", () => {
                         },
                         {
                             index: 1,
-                            validatedObject: {
+                            attemptedValue: {
                                 level: 2,
                                 price: 2
                             },
@@ -602,7 +602,7 @@ describe("Attempt3: Dwi login and create product.", () => {
                     arrayElementErrors: [
                         {
                             index: 2,
-                            validatedObject: {
+                            attemptedValue: {
                                 level: 4,
                                 price: 1
                             },
@@ -686,7 +686,7 @@ describe("Attempt4: Dwi login and create product.", () => {
                     arrayElementErrors: [
                         {
                             index: 1,
-                            validatedObject: {
+                            attemptedValue: {
                                 level: 1,
                                 price: 1
                             },
@@ -702,7 +702,7 @@ describe("Attempt4: Dwi login and create product.", () => {
                         },
                         {
                             index: 2,
-                            validatedObject: {
+                            attemptedValue: {
                                 level: 4,
                                 price: 1
                             },
@@ -998,7 +998,7 @@ describe("Attempt2: Reza Create an Order", () => {
                                     }
                                 ]
                             },
-                            validatedObject: {
+                            attemptedValue: {
                                 productId: 0,
                                 price: 0,
                                 qty: 0,
@@ -1112,7 +1112,7 @@ describe("Attempt2: Reza Create an Order", () => {
                                     }
                                 ]
                             },
-                            validatedObject: {
+                            attemptedValue: {
                                 productId: firstProduct.id,
                                 qty: 100,
                                 price: productPriceLevel1.price,

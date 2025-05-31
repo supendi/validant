@@ -1,5 +1,5 @@
 import { Validator, required, ValidationRule, } from "../../../index"
-import { FieldErrorOf } from "../../../types/ErrorOf"
+import { FieldErrorOf } from "../../../types/FieldErrorOf"
 
 interface Address {
     city: string
@@ -102,7 +102,7 @@ describe("Test validate field", () => {
                     arrayElementErrors: [
                         {
                             index: 0,
-                            validatedObject: {
+                            attemptedValue: {
                                 name: ""
                             },
                             errors: {

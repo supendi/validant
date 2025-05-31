@@ -2,7 +2,6 @@ import { ErrorOf, ErrorOfArray } from "../types/ErrorOf";
 import { ArrayValidationRule, RuleViolation } from "../types/ValidationRule";
 import { ValidateFunc } from "../types/ValidationRule";
 import { ValidationRule } from "../types/ValidationRule";
-import { validateField } from "./validateField";
 
 export type PropertyType = "array" | "object" | "primitive" | "undefined"
 
@@ -41,18 +40,14 @@ export function validatePrimitiveField<T, TRoot>(key: Extract<keyof T, string>, 
             throw Error("propertyRuleFunc is not a function")
         }
 
-        const propValidationResult = validateField(key, object, root, validateFunc);
+        const value = object[key];
+        const violation = validateFunc(value, root);
 
-        const isValid = propValidationResult.isValid;
-
-        if (!isValid) {
-            violations.push({
-                attemptedValue: propValidationResult.propertyValue,
-                errorMessage: propValidationResult.errorMessage,
-                ruleName: propValidationResult.ruleName,
-            });
+        if (violation) {
+            violations.push(violation);
         }
     }
+
     const validationResult: PrimitiveFieldValidationResult = {
         errors: violations,
         isValid: violations.length === 0
@@ -102,7 +97,7 @@ function validateArrayField<T, TRoot>(key: Extract<keyof T, string>, object: T, 
                 arrayFieldErrors.arrayElementErrors.push({
                     index: index,
                     errors: error,
-                    validatedObject: element
+                    attemptedValue: element
                 });
             }
             continue;

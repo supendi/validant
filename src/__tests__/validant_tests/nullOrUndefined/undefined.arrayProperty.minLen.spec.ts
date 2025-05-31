@@ -69,7 +69,7 @@ describe("Validator test with children array", () => {
                                     ]
                                 }
                             },
-                            validatedObject: {
+                            attemptedValue: {
                                 name: ""
                             }
                         }

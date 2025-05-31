@@ -1,6 +1,6 @@
 import { ErrorOf } from "./types/ErrorOf";
 import { ValidationRule } from "./types/ValidationRule";
-import { validateFieldOf } from "./validators/validateFieldOf";
+import { validateField } from "./validators/validateField";
 import { validateObject } from "./validators/validateObject";
 
 /**
@@ -21,6 +21,7 @@ export interface ValidationMessage {
 }
 
 export interface ValidantOptions {
+    flattenErrors: boolean
 }
 
 export class Validator<T> {
@@ -71,6 +72,6 @@ export class Validator<T> {
             };
         }
 
-        return validateFieldOf(object, fieldName, propertyValidationRule)
+        return validateField(object, fieldName, propertyValidationRule)
     }
 } 

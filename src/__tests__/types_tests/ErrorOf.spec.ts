@@ -144,7 +144,7 @@ describe("ErrorOf Test", () => {
                                 ]
                             },
                         },
-                        validatedObject: undefined
+                        attemptedValue: undefined
                     }
                 ]
             }
@@ -227,7 +227,7 @@ describe("ErrorOf Complex Person Test", () => {
                                 }
                             ]
                         },
-                        validatedObject: undefined
+                        attemptedValue: undefined
                     }
                 ]
             },
@@ -271,12 +271,12 @@ describe("ErrorOf Complex Person Test", () => {
                                                 }
                                             ]
                                         },
-                                        validatedObject: undefined
+                                        attemptedValue: undefined
                                     }
                                 ]
                             }
                         },
-                        validatedObject: undefined
+                        attemptedValue: undefined
                     }
                 ]
             }

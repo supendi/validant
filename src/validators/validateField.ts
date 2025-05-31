@@ -1,57 +1,54 @@
-import { ValidateFunc } from "../types/ValidationRule";
+import { FieldErrorOf } from "../types/FieldErrorOf";
+import { ValidationRule } from "../types/ValidationRule";
+import { isArrayValidationRule, validateObject, validatePrimitiveField } from "./validateObject";
 
-/**
- * Represents a single validation result of property
- */
-
-export interface PropertyValidationResult<T> {
-    object: T;
-    ruleName: string;
-    propertyName: keyof T;
-    propertyValue: T[keyof T];
-    isValid: boolean;
-    errorMessage: string;
-}
-
-export function stringifyValue<TValue>(value: TValue): string {
-    if (value === undefined) return "undefined"
-    if (value === null) return "null"
-
-    if (typeof value === "string") return value
-    if (typeof value === "object") return JSON.stringify(value)
-    if ((value as any).toString) {
-        return value.toString()
-    }
-    return `failed to stringify value, type of value was: ${typeof value}.`
-}
-
-/**
- * Do a single validation against single property
- * @param propName
- * @param object
- * @param validateFunc
- * @returns
- */
-export const validateField = <TObject, TRoot>(propName: keyof TObject, object: TObject, root: TRoot, validateFunc: ValidateFunc<TObject[keyof TObject], TRoot>): PropertyValidationResult<TObject> => {
-    const value = object[propName];
-
-    const violation = validateFunc(value, root);
-    const isValid = !violation;
-    let errorMessage = violation ? violation.errorMessage : "";
-
-    let resolvedErrorMessage = errorMessage
-    if (resolvedErrorMessage) {
-        resolvedErrorMessage = resolvedErrorMessage.replace(":value", stringifyValue(value));
+export const validateField = <T, K extends Extract<keyof T, string>>(
+    object: T,
+    fieldName: K,
+    fieldRule: ValidationRule<T, T>[K]
+): FieldErrorOf<T, K> => {
+    if (!fieldRule) {
+        return {
+            isValid: true,
+            fieldName,
+        };
     }
 
-    const validationResult: PropertyValidationResult<TObject> = {
-        ruleName: violation ? violation.ruleName : "",
-        object: object,
-        propertyName: propName,
-        propertyValue: value,
-        errorMessage: isValid ? "" : resolvedErrorMessage,
-        isValid: isValid
+    const isPrimitive = Array.isArray(fieldRule);
+    const isArray = isArrayValidationRule(fieldRule);
+    const isObjectRule = typeof fieldRule === "object" && !isPrimitive && !isArray;
+
+    if (isPrimitive) {
+        const result = validatePrimitiveField(fieldName, object, object, fieldRule);
+        return {
+            isValid: result.isValid,
+            fieldName,
+            ...(result.isValid ? {} : { errors: { [fieldName]: result.errors } as any }),
+        };
+    }
+
+    if (isArray) {
+        const arrayErrors = validateObject(object, object, { [fieldName]: fieldRule } as any);
+        const isValid = !arrayErrors || !arrayErrors[fieldName];
+        return {
+            isValid,
+            fieldName,
+            ...(isValid ? {} : { errors: { [fieldName]: arrayErrors[fieldName] } as any }),
+        };
+    }
+
+    if (isObjectRule) {
+        const nestedErrors = validateObject(object, object, fieldRule as any);
+        const isValid = !nestedErrors;
+        return {
+            isValid,
+            fieldName,
+            ...(isValid ? {} : { errors: { [fieldName]: nestedErrors } as any }),
+        };
+    }
+
+    return {
+        isValid: true,
+        fieldName,
     };
-
-    return validationResult;
 };

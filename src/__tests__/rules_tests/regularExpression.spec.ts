@@ -6,8 +6,8 @@ const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d])([A
 describe(`Test ${regularExpression.name}`, () => {
     it("should return false and have default error message", () => {
         const validateFunc = regularExpression(strongPasswordRegex)
-        const defaultErrorMessage = `The value ':value' doesn't match with the specified regular expression.`
         const value = "Hallo"
+        const defaultErrorMessage = `The value '${value}' doesn't match with the specified regular expression.`
 
         const actual = validateFunc(value, {})
         const expected: RuleViolation = {

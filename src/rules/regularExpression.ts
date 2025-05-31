@@ -1,4 +1,5 @@
 import { ValidateFunc } from "../types/ValidationRule"
+import { stringifyValue } from "./stringifyValue"
 
 /**
  * Specifies the rule if a value is match with the specified regular expression.
@@ -8,11 +9,13 @@ import { ValidateFunc } from "../types/ValidationRule"
 export const regularExpression = <TObject extends Object>(regex: RegExp, ruleName?: string, errorMessage?: string): ValidateFunc<string, TObject> => {
 
     return (value) => {
+        const stringifiedValue = stringifyValue(value)
+        let resolvedErrorMessage = errorMessage ?? `The value '${stringifiedValue}' doesn't match with the specified regular expression.`
 
         const violation = {
             ruleName: ruleName ? ruleName : regularExpression.name,
             attemptedValue: value,
-            errorMessage: errorMessage ?? `The value ':value' doesn't match with the specified regular expression.`
+            errorMessage: resolvedErrorMessage
         }
 
         const isValid = regex.test(value)

@@ -22,36 +22,19 @@ export type ErrorOf<T extends Object> = { [key in keyof T]?:
     : T[key] extends PossiblyUndefined<object> ? ErrorOf<T[key]>
     : RuleViolation[] }
 
-export type ErrorValueOf<T, K extends keyof T> =
-    T[K] extends Date
-    ? string[]
-    : T[K] extends PossiblyUndefined<Array<any>>
-    ? ErrorOfArray<T[K]>
-    : T[K] extends PossiblyUndefined<object>
-    ? ErrorOf<T[K]>
-    : RuleViolation[];
-
-export interface FieldErrorOf<T, K extends keyof T = keyof T> {
-    isValid: boolean;
-    fieldName: K;
-    errors?: {
-        [P in K]: ErrorValueOf<T, P>;
-    };
-}
-
 /**
- * Represent the error that has index as one of its properties.
- */
+* Represent the error that has index as one of its properties.
+*/
 export type IndexedErrorOf<T extends Object> = {
     index: number,
     errors: ErrorOf<T>,
-    validatedObject: T | null | undefined
+    attemptedValue: T | null | undefined
 }
 
 /**
  * Represent the error model for array.
  * Example: If T { name: string, children: T[]}
- * Then ErrorOfArray<T> will be  { name: string[], children: { errors: string[], arrayElementErrors: { index: number, errors: ErrorOf<T>, validatedObject: T | null | undefined }}[] }
+ * Then ErrorOfArray<T> will be  { name: string[], children: { errors: string[], arrayElementErrors: { index: number, errors: ErrorOf<T>, attemptedValue: T | null | undefined }}[] }
  */
 export type ErrorOfArray<TArray> = {
     /**
@@ -68,7 +51,7 @@ export type ErrorOfArray<TArray> = {
      * If each element of array need to be validated.
      * The arrayElementErrors represents the errors of the each element of the array.
      * Example :
-     * arrayElementErrors: { index: number, errors: ErrorOf<T>, validatedObject: T | null | undefined }}[] 
+     * arrayElementErrors: { index: number, errors: ErrorOf<T>, attemptedValue: T | null | undefined }}[] 
      */
     arrayElementErrors?: IndexedErrorOf<ArrayElementType<TArray>>[]
 }

@@ -83,7 +83,7 @@ describe("Validator Test The Custom Validator", () => {
                     arrayElementErrors: [
                         {
                             index: 0,
-                            validatedObject: {
+                            attemptedValue: {
                                 id: '1',
                                 productId: 1,
                                 quantity: 2,
@@ -117,7 +117,7 @@ describe("Validator Test The Custom Validator", () => {
                                                 }
                                             },
                                             index: 0,
-                                            validatedObject: {
+                                            attemptedValue: {
                                                 cities: [],
                                                 street: ""
                                             }

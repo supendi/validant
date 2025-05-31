@@ -146,7 +146,7 @@ describe("Validate customer with address items", () => {
                                     }
                                 ],
                             },
-                            validatedObject: customer.addresses[0]
+                            attemptedValue: customer.addresses[0]
                         }
                     ]
                 }

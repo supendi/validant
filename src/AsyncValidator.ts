@@ -1,6 +1,6 @@
 import { AsyncValidationRule } from "./types/AsyncValidationRule";
 import { ValidantOptions, ValidationMessage, ValidationResult } from "./Validator";
-import { validateFieldOfAsync } from "./validators/validateFieldOfAsync";
+import { validateFieldAsync } from "./validators/validateFieldAsync";
 import { validateObjectAsync } from "./validators/validateObjectAsync";
 
 export class AsyncValidator<T> {
@@ -50,6 +50,6 @@ export class AsyncValidator<T> {
             };
         }
 
-        return validateFieldOfAsync(object, fieldName, propertyValidationRule)
+        return validateFieldAsync(object, fieldName, propertyValidationRule)
     }
 } 

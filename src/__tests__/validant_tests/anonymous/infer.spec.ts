@@ -70,7 +70,7 @@ describe("Validate Inferred", () => {
                     arrayElementErrors: [
                         {
                             index: 0,
-                            validatedObject: {
+                            attemptedValue: {
                                 productId: 1,
                                 quantity: 0
                             },
@@ -152,7 +152,7 @@ describe("Validate Inferred", () => {
                     arrayElementErrors: [
                         {
                             index: 0,
-                            validatedObject: {
+                            attemptedValue: {
                                 productId: "1",
                                 quantity: "0"
                             },

@@ -78,7 +78,7 @@ describe("Validate null property", () => {
                     arrayElementErrors: [
                         {
                             index: 0,
-                            validatedObject: {
+                            attemptedValue: {
                                 productId: 1,
                                 quantity: 0
                             },

@@ -352,26 +352,26 @@ The result looks like this:
             {
                 attemptedValue: "",
                 errorMessage: "Account name is required.",
-                ruleName: required.name
+                ruleName: "required"
             }
         ],
         age: [
             {
                 attemptedValue: 0,
                 errorMessage: "Should be at least 17 years old.",
-                ruleName: minNumber.name
+                ruleName: "minNumber"
             }
         ],
         email: [
             {
                 errorMessage: "This field is required.",
                 attemptedValue: "",
-                ruleName: required.name
+                ruleName: "required"
             },
             {
                 errorMessage: "Invalid email address",
                 attemptedValue: "",
-                ruleName: emailAddress.name
+                ruleName: "emailAddress"
             }
         ]
     },
@@ -407,7 +407,7 @@ The result will be an object like this:
             {
                 attemptedValue: "",
                 errorMessage: "This field is required.",
-                ruleName: required.name
+                ruleName: "required"
             }
         ],
     }
@@ -483,26 +483,26 @@ You’ll get the same structured result:
             {
                 attemptedValue: "",
                 errorMessage: "Account name is required.",
-                ruleName: required.name
+                ruleName: "required"
             }
         ],
         age: [
             {
                 attemptedValue: 0,
                 errorMessage: "Should be at least 17 years old.",
-                ruleName: minNumber.name
+                ruleName: "minNumber"
             }
         ],
         email: [
             {
                 errorMessage: "This field is required.",
                 attemptedValue: "",
-                ruleName: required.name
+                ruleName: "required"
             },
             {
                 errorMessage: "Invalid email address",
                 attemptedValue: "",
-                ruleName: emailAddress.name
+                ruleName: "emailAddress"
             }
         ]
     },
@@ -538,12 +538,12 @@ The result will be an object like this:
             {
                 errorMessage: "This field is required.",
                 attemptedValue: "",
-                ruleName: required.name
+                ruleName: "required"
             },
             {
                 errorMessage: "Invalid email address",
                 attemptedValue: "",
-                ruleName: emailAddress.name
+                ruleName: "emailAddress"
             }
         ]
     }
@@ -863,7 +863,7 @@ The above validation results the following error structure
             arrayElementErrors: [
                 {
                     index: 0,
-                    validatedObject: {
+                    attemptedValue: {
                         productId: 1,
                         quantity: 0
                     },
@@ -1013,7 +1013,7 @@ Each item error is described using IndexedErrorOf:
 export type IndexedErrorOf<T extends Object> = {
     index: number; // the array item index being validated
     errors: ErrorOf<T>; // note this error still shape the original model.
-    validatedObject: T | null | undefined; // this is the array item that is being validated.
+    attemptedValue: T | null | undefined; // this is the array item that is being validated.
 };
 ```
 
@@ -1043,7 +1043,7 @@ The validation error might look like:
         arrayElementErrors: [ // array items error
             {
                 index: 0,
-                validatedObject: { // the object reference being validated
+                attemptedValue: { // the object reference being validated
                     productId: 1,
                     quantity: 0,
                 },
@@ -1750,7 +1750,7 @@ Represents the validation error for a specific item in an array. It includes the
 export type IndexedErrorOf<T extends Object> = {
     index: number;
     errors: ErrorOf<T>;
-    validatedObject: T | null | undefined;
+    attemptedValue: T | null | undefined;
 };
 ```
 
@@ -1761,7 +1761,7 @@ When validating arrays, this type helps track which item failed and why.
 ```ts
 {
     index: 0,
-    validatedObject: {
+    attemptedValue: {
         productId: 1,
         quantity: 0,
     },
@@ -1817,7 +1817,7 @@ And you have a rule like "Minimum 5 items required", the error might look like:
         arrayElementErrors: [
             {
                 index: 0,
-                validatedObject: { productId: 1, quantity: 0 },
+                attemptedValue: { productId: 1, quantity: 0 },
                 errors: {
                     productId: [
                         {
@@ -2339,3 +2339,127 @@ const validationRule = {
 ```
 
 This ensures that username is at least 5 characters long.
+
+## 🔄 Flat Error Structure for UI/API: `flattenError` and `FlattenErrorOf`
+
+Validant provides a utility to convert the default nested error structure (`ErrorOf<T>`) into a **flat, UI-friendly error structure** (`FlattenErrorOf<T>`). This is especially useful for rendering errors in forms, tables, or API responses where a flat array of errors is easier to work with.
+
+### When to Use
+
+-   You want to display all array-level and element-level errors in a single, flat array.
+-   You need a structure that is easier to consume in UI frameworks or APIs.
+-   You want to avoid traversing nested error objects to find all errors.
+
+### How to Use
+
+```ts
+import { flattenError } from "validant";
+// or import { flattenError } from "validant/flattenError" if not exported from main
+
+const validationResult = validator.validate(account);
+// validationResult.errors is of type ErrorOf<T>
+
+const flatErrors = flattenError(validationResult.errors);
+// flatErrors is of type FlattenErrorOf<T>
+```
+
+### Example
+
+Given a model:
+
+```ts
+interface OrderItem {
+    productId: number;
+    quantity: number;
+}
+
+interface Order {
+    orderDate: Date | null;
+    orderNumber: string;
+    orderItems: OrderItem[];
+}
+```
+
+Suppose you have this error structure (the default `ErrorOf<Order>`):
+
+```ts
+{
+    orderDate: [
+        { errorMessage: "This field is required.", attemptedValue: null, ruleName: "required" }
+    ],
+    orderItems: {
+        arrayErrors: [
+            { errorMessage: "At least 1 item required.", attemptedValue: [], ruleName: "arrayMinLen" }
+        ],
+        arrayElementErrors: [
+            {
+                index: 0,
+                errors: {
+                    productId: [
+                        { errorMessage: "Invalid product id.", attemptedValue: 0, ruleName: "elementOf" }
+                    ],
+                    quantity: [
+                        { errorMessage: "Minimum is 1.", attemptedValue: 0, ruleName: "minNumber" }
+                    ]
+                },
+                attemptedValue: { productId: 0, quantity: 0 }
+            }
+        ]
+    }
+}
+```
+
+Calling `flattenError` will produce:
+
+```ts
+{
+    orderDate: [
+        { errorMessage: "This field is required.", attemptedValue: null, ruleName: "required" }
+    ],
+    orderItems: [
+        {
+            errorLevel: "array",
+            errorMessage: "At least 1 item required.",
+            attemptedValue: [],
+            ruleName: "arrayMinLen"
+        },
+        {
+            errorLevel: "arrayElement",
+            index: 0,
+            errors: {
+                productId: [
+                    { errorMessage: "Invalid product id.", attemptedValue: 0, ruleName: "elementOf" }
+                ],
+                quantity: [
+                    { errorMessage: "Minimum is 1.", attemptedValue: 0, ruleName: "minNumber" }
+                ]
+            },
+            attemptedValue: { productId: 0, quantity: 0 }
+        }
+    ]
+}
+```
+
+### Type Reference
+
+```ts
+import { FlattenErrorOf } from "validant";
+
+type FlatErrors = FlattenErrorOf<Order>;
+```
+
+-   **Array-level errors** are objects with `errorLevel: "array"`.
+-   **Element-level errors** are objects with `errorLevel: "arrayElement"` and an `index` property.
+-   All other fields remain as arrays of `RuleViolation`.
+
+### Benefits
+
+-   **UI-friendly:** Flat arrays are easier to render and map to UI components.
+-   **No manual traversal:** All errors for an array field are in a single array, regardless of depth.
+-   **Type-safe:** Still fully typed with TypeScript.
+
+### See Also
+
+-   [flattenError.spec.ts](src/__tests__/validant_tests/flattenError.spec.ts) for real-world test cases and expected outputs.
+
+---

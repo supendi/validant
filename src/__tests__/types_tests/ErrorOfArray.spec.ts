@@ -38,7 +38,7 @@ describe("ErrorOfArray Test", () => {
                             }
                         ],
                     },
-                    validatedObject: {
+                    attemptedValue: {
                         name: "",
                         price: 0
                     }
@@ -61,7 +61,7 @@ describe("ErrorOfArray Test", () => {
                             }
                         ],
                     },
-                    validatedObject: {
+                    attemptedValue: {
                         name: "ProductName1",
                         price: 120
                     }

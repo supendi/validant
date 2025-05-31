@@ -212,7 +212,7 @@ describe("Validate Order Request With Max order item quantity", () => {
                     arrayElementErrors: [
                         {
                             index: 0,
-                            validatedObject: orderRequest.orderItems[0],
+                            attemptedValue: orderRequest.orderItems[0],
                             errors: {
                                 quantity: [
                                     {
@@ -289,7 +289,7 @@ describe("Jacky Chan Order Request", () => {
                     arrayElementErrors: [
                         {
                             index: 0,
-                            validatedObject: orderRequest.orderItems[0],
+                            attemptedValue: orderRequest.orderItems[0],
                             errors: {
                                 quantity: [
                                     {

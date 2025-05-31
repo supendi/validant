@@ -78,7 +78,7 @@ describe("Validate test with product", () => {
                                     }
                                 ]
                             },
-                            validatedObject: ironStick.units[0]
+                            attemptedValue: ironStick.units[0]
                         },
                         {
                             index: 1,
@@ -91,7 +91,7 @@ describe("Validate test with product", () => {
                                     }
                                 ]
                             },
-                            validatedObject: ironStick.units[1]
+                            attemptedValue: ironStick.units[1]
                         }
                     ]
                 }

@@ -91,7 +91,7 @@ describe("ValidationResult Test", () => {
                                     }
                                 ]
                             },
-                            validatedObject: {
+                            attemptedValue: {
                                 age: 1,
                                 children: [],
                                 name: ""
