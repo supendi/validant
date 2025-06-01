@@ -18,7 +18,7 @@ describe("Test Validate Against Undefined", () => {
         const actual = validator.validate(person)
 
         const expected: ValidationResult<Person> = {
-            message: "One or more validation errors occurred.",
+            message: "Validation failed. Please check and fix the errors to continue.",
             isValid: false,
             errors: {
                 name: [
@@ -50,7 +50,7 @@ describe("Test Validate Against null", () => {
         const actual = validator.validate(person)
 
         const expected: ValidationResult<Person> = {
-            message: "One or more validation errors occurred.",
+            message: "Validation failed. Please check and fix the errors to continue.",
             isValid: false,
             errors: {
                 name: [

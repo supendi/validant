@@ -15,7 +15,7 @@ describe("Test", () => {
         const validator = new Validator(rule)
         const actual = validator.validate(product)
         const expected: ValidationResult<Product> = {
-            message: "One or more validation errors occurred.",
+            message: "Validation failed. Please check and fix the errors to continue.",
             isValid: false,
             errors: {
                 expiredDate: [
@@ -41,7 +41,7 @@ describe("Test non empty date", () => {
         const actual = validator.validate(product)
 
         const expected: ValidationResult<Product> = {
-            message: "Good to go.",
+            message: "Validation successful.",
             isValid: true,
             errors: undefined
         }

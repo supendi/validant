@@ -23,7 +23,7 @@ describe("Test Validate Against Undefined", () => {
         const actual = await validator.validateAsync(person)
 
         const expected: ValidationResult<Person> = {
-            message: "Good to go.",
+            message: "Validation successful.",
             isValid: true,
             errors: undefined
         }
@@ -39,7 +39,7 @@ describe("Test Validate Against null", () => {
         const actual = await validator.validateAsync(person)
 
         const expected: ValidationResult<Person> = {
-            message: "Good to go.",
+            message: "Validation successful.",
             isValid: true,
             errors: undefined
         }

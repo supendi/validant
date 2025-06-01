@@ -109,11 +109,13 @@ export function createOrderValidationService(userRepository: UserRepository, pro
     async function validateAsync(request: OrderRequest) {
         const orderRule = buildOrderRule(userRepository, productRepository)
 
-        const validator = new AsyncValidator(orderRule)
-        return validator.validateAsync(request, {
-            errorMessage: "error",
-            okMessage: "ok"
+        const validator = new AsyncValidator(orderRule, {
+            validationMessage: {
+                errorMessage: "error",
+                successMessage: "ok"
+            }
         })
+        return validator.validateAsync(request)
     }
     return {
         validateAsync

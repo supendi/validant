@@ -345,7 +345,7 @@ The result looks like this:
 
 ```ts
  {
-    message: "One or more validation errors occurred.",
+    message: "Validation failed. Please check and fix the errors to continue.",
     isValid: false,
     errors: {
         name: [
@@ -476,7 +476,7 @@ You’ll get the same structured result:
 ```ts
 // The validationResult above is equivalent to the following:
   {
-    message: "One or more validation errors occurred.",
+    message: "Validation failed. Please check and fix the errors to continue.",
     isValid: false,
     errors: {
          name: [
@@ -664,7 +664,7 @@ const result = validator.validate(loginRequest);
 
 ```ts
  {
-    message: "One or more validation errors occurred.",
+    message: "Validation failed. Please check and fix the errors to continue.",
     isValid: false,
     errors: {
         userName: [
@@ -814,15 +814,15 @@ const emptyOrder: Order = {
     orderItems: [], // Fails arrayMinLen
 };
 
-const validator = new Validator(loginRule);
-const result = validator.validate(emptyOrder, orderRule);
+const validator = new Validator(orderRule);
+const result = validator.validate(emptyOrder);
 ```
 
 The above validation results error structure:
 
 ```ts
 {
-    message: "One or more validation errors occurred.",
+    message: "Validation failed. Please check and fix the errors to continue.",
     isValid: false,
     errors: {
         orderItems: {
@@ -856,7 +856,7 @@ The above validation results the following error structure
 
 ```ts
 {
-    message: "One or more validation errors occurred.",
+    message: "Validation failed. Please check and fix the errors to continue.",
     isValid: false,
     errors: {
         orderItems: {
@@ -1350,7 +1350,7 @@ And the validation result :
 
 ```ts
 {
-    message: "One or more validation errors occurred.",
+    message: "Validation failed. Please check and fix the errors to continue.",
         isValid: false,
          errors: {
             name: [
@@ -2340,7 +2340,9 @@ const validationRule = {
 
 This ensures that username is at least 5 characters long.
 
-## 🔄 Flat Error Structure for UI/API: `flattenError` and `FlattenErrorOf`
+## 🔄 Flat Error Structure for UI/API
+
+### `flattenError` and `FlattenErrorOf`
 
 Validant provides a utility to convert the default nested error structure (`ErrorOf<T>`) into a **flat, UI-friendly error structure** (`FlattenErrorOf<T>`). This is especially useful for rendering errors in forms, tables, or API responses where a flat array of errors is easier to work with.
 
@@ -2354,7 +2356,6 @@ Validant provides a utility to convert the default nested error structure (`Erro
 
 ```ts
 import { flattenError } from "validant";
-// or import { flattenError } from "validant/flattenError" if not exported from main
 
 const validationResult = validator.validate(account);
 // validationResult.errors is of type ErrorOf<T>

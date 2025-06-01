@@ -19,7 +19,7 @@ describe("Test Validate Against Undefined", () => {
 
         const expected: ValidationResult<Person> = {
             isValid: true,
-            message: "Good to go.",
+            message: "Validation successful.",
         }
 
         expect(actual).toEqual(expected)
@@ -35,7 +35,7 @@ describe("Test Validate Against null", () => {
 
         const expected: ValidationResult<Person> = {
             isValid: true,
-            message: "Good to go.",
+            message: "Validation successful.",
         }
 
         expect(actual).toEqual(expected)

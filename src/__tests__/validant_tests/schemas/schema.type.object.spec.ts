@@ -24,7 +24,7 @@ describe("Simple Object Test", () => {
         const actual = validator.validate(account)
 
         var expected: ValidationResult<typeof account> = {
-            message: "One or more validation errors occurred.",
+            message: "Validation failed. Please check and fix the errors to continue.",
             isValid: false,
             errors: {
                 name: [

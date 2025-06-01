@@ -28,7 +28,7 @@ describe("Validate Inferred", () => {
         const validator = new Validator(rule)
         const actual = validator.validate(order)
         const expected: ValidationResult<typeof order> = {
-            message: "One or more validation errors occurred.",
+            message: "Validation failed. Please check and fix the errors to continue.",
             isValid: false,
             errors: {
                 orderItems: {
@@ -63,7 +63,7 @@ describe("Validate Inferred", () => {
         const validator = new Validator(rule)
         const actual = validator.validate(order)
         const expected: ValidationResult<typeof order> = {
-            message: "One or more validation errors occurred.",
+            message: "Validation failed. Please check and fix the errors to continue.",
             isValid: false,
             errors: {
                 orderItems: {
@@ -145,7 +145,7 @@ describe("Validate Inferred", () => {
         const validator = new Validator(newOrderRule)
         const actual = validator.validate(order)
         const expected: ValidationResult<typeof order> = {
-            message: "One or more validation errors occurred.",
+            message: "Validation failed. Please check and fix the errors to continue.",
             isValid: false,
             errors: {
                 orderItems: {

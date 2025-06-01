@@ -22,7 +22,7 @@ describe("Ignore or skip undefined rule", () => {
         const actual = validator.validate(person)
 
         const expected: ValidationResult<Person> = {
-            message: "Good to go.",
+            message: "Validation successful.",
             isValid: true,
             errors: undefined
         }

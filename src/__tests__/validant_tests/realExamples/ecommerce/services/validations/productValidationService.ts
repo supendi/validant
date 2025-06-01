@@ -112,11 +112,13 @@ export function createProductValidationService(userRepository: UserRepository): 
     async function validateAsync(request: ProductRequest) {
         const productRule = buildProductRule(userRepository)
 
-        const validator = new AsyncValidator(productRule)
-        return validator.validateAsync(request, {
-            errorMessage: "error",
-            okMessage: "ok"
+        const validator = new AsyncValidator(productRule, {
+            validationMessage: {
+                errorMessage: "error",
+                successMessage: "ok"
+            }
         })
+        return validator.validateAsync(request)
     }
     return {
         validateAsync

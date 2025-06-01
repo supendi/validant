@@ -61,7 +61,7 @@ describe("ValidateAsync Test", () => {
         const validator = new AsyncValidator(rule)
         const actual = await validator.validateAsync(order)
         const expected: ValidationResult<Order> = {
-            message: "One or more validation errors occurred.",
+            message: "Validation failed. Please check and fix the errors to continue.",
             isValid: false,
             errors: {
                 orderItems: {
@@ -91,7 +91,7 @@ describe("Validate null property", () => {
         const validator = new AsyncValidator(rule)
         const actual = await validator.validateAsync(order)
         const expected: ValidationResult<Order> = {
-            message: "One or more validation errors occurred.",
+            message: "Validation failed. Please check and fix the errors to continue.",
             isValid: false,
             errors: {
                 orderItems: {
@@ -126,7 +126,7 @@ describe("ValidateAsync Test", () => {
         const validator = new AsyncValidator(rule)
         const actual = await validator.validateAsync(order)
         const expected: ValidationResult<Order> = {
-            message: "One or more validation errors occurred.",
+            message: "Validation failed. Please check and fix the errors to continue.",
             isValid: false,
             errors: {
                 orderItems: {

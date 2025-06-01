@@ -73,7 +73,7 @@ describe("Nested Object Test with nested address", () => {
         const actual = validator.validate(john)
 
         const expected: ValidationResult<Person> = {
-            message: "One or more validation errors occurred.",
+            message: "Validation failed. Please check and fix the errors to continue.",
             isValid: false,
             errors: {
                 name: [

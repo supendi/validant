@@ -27,7 +27,7 @@ describe("Validate Anonymous", () => {
         const validator = new Validator(rule)
         const actual = validator.validate(order)
         const expected: ValidationResult<typeof order> = {
-            message: "One or more validation errors occurred.",
+            message: "Validation failed. Please check and fix the errors to continue.",
             isValid: false,
             errors: {
                 orderItems: {
@@ -62,7 +62,7 @@ describe("Validate Anonymous", () => {
         const validator = new Validator(rule)
         const actual = validator.validate(order)
         const expected: ValidationResult<typeof order> = {
-            message: "One or more validation errors occurred.",
+            message: "Validation failed. Please check and fix the errors to continue.",
             isValid: false,
             errors: {
                 orderItems: {

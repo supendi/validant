@@ -16,22 +16,30 @@ export interface ValidationResult<T> {
  * Represents the validation message when the validation process is done.
  */
 export interface ValidationMessage {
-    okMessage: string
+    successMessage: string
     errorMessage: string
 }
 
-export interface ValidantOptions {
-    flattenErrors: boolean
+export interface ValidationOptions {
+    validationMessage?: ValidationMessage
 }
 
 export class Validator<T> {
-    options: ValidantOptions
-
+    options: ValidationOptions
     rule: ValidationRule<T>
 
-    constructor(rule: ValidationRule<T>, options?: ValidantOptions) {
+    constructor(rule: ValidationRule<T>, options?: ValidationOptions) {
         this.rule = rule
-        this.options = options
+        const defaultOptions: ValidationOptions = {
+            validationMessage: {
+                successMessage: "Validation successful.",
+                errorMessage: "Validation failed. Please check and fix the errors to continue."
+            }
+        }
+        this.options = defaultOptions
+        if (options) {
+            this.options = options
+        }
     }
 
     /**
@@ -40,7 +48,7 @@ export class Validator<T> {
      * @param validationRule 
      * @returns ValidationResult
      */
-    validate(object: T, validationMessage: ValidationMessage = { okMessage: "Good to go.", errorMessage: "One or more validation errors occurred." }): ValidationResult<T> {
+    validate(object: T): ValidationResult<T> {
         const errors = validateObject(object, object, this.rule)
         let isValid = true
 
@@ -54,8 +62,10 @@ export class Validator<T> {
             }
         }
 
+        const validationMessage = this.options.validationMessage
+
         return {
-            message: isValid ? validationMessage.okMessage : validationMessage.errorMessage,
+            message: isValid ? validationMessage.successMessage : validationMessage.errorMessage,
             isValid: isValid,
             errors: errors,
         }

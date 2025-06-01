@@ -50,7 +50,7 @@ const rule: ValidationRule<Order> = {
     }
 }
 
-const errorMessage = "One or more validation errors occurred.";
+const errorMessage = "Validation failed. Please check and fix the errors to continue.";
 
 describe("Validate empty order items", () => {
     it("Should return errors", () => {

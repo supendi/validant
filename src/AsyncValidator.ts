@@ -1,15 +1,24 @@
 import { AsyncValidationRule } from "./types/AsyncValidationRule";
-import { ValidantOptions, ValidationMessage, ValidationResult } from "./Validator";
+import { ValidationOptions, ValidationResult } from "./Validator";
 import { validateFieldAsync } from "./validators/validateFieldAsync";
 import { validateObjectAsync } from "./validators/validateObjectAsync";
 
 export class AsyncValidator<T> {
-    options: ValidantOptions
+    options: ValidationOptions
     asyncRule: AsyncValidationRule<T>
 
-    constructor(asyncRule: AsyncValidationRule<T>, options?: ValidantOptions) {
+    constructor(asyncRule: AsyncValidationRule<T>, options?: ValidationOptions) {
         this.asyncRule = asyncRule
-        this.options = options
+        const defaultOptions: ValidationOptions = {
+            validationMessage: {
+                successMessage: "Validation successful.",
+                errorMessage: "Validation failed. Please check and fix the errors to continue."
+            }
+        }
+        this.options = defaultOptions
+        if (options) {
+            this.options = options
+        }
     }
 
     /**
@@ -18,7 +27,7 @@ export class AsyncValidator<T> {
      * @param validationRule 
      * @returns ValidationResult
      */
-    async validateAsync(object: T, validationMessage: ValidationMessage = { okMessage: "Good to go.", errorMessage: "One or more validation errors occurred." }): Promise<ValidationResult<T>> {
+    async validateAsync(object: T): Promise<ValidationResult<T>> {
         const errors = await validateObjectAsync(object, object, this.asyncRule)
         let isValid = true
 
@@ -32,8 +41,10 @@ export class AsyncValidator<T> {
             }
         }
 
+        const validationMessage = this.options.validationMessage
+
         return {
-            message: isValid ? validationMessage.okMessage : validationMessage.errorMessage,
+            message: isValid ? validationMessage.successMessage : validationMessage.errorMessage,
             isValid: isValid,
             errors: errors,
         }

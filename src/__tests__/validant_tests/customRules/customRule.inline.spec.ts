@@ -51,7 +51,7 @@ describe("validate login request", () => {
         const actual = validator.validate(loginRequest)
 
         const expected: ValidationResult<LoginRequest> = {
-            message: "One or more validation errors occurred.",
+            message: "Validation failed. Please check and fix the errors to continue.",
             isValid: false,
             errors: {
                 userName: [
@@ -87,7 +87,7 @@ describe("validate login request", () => {
         const actual = validator.validate(loginRequest)
 
         const expected: ValidationResult<LoginRequest> = {
-            message: "One or more validation errors occurred.",
+            message: "Validation failed. Please check and fix the errors to continue.",
             isValid: false,
             errors: {
                 userName: [

@@ -1,7 +1,7 @@
 import { arrayMinLen, emailAddress, minNumber, required, ValidationResult, ValidationRule, Validator } from "../../../index"
 
 
-const defaultMessage = { okMessage: "Good to go.", errorMessage: "One or more validation errors occurred." }
+const defaultMessage = { okMessage: "Validation successful.", errorMessage: "Validation failed. Please check and fix the errors to continue." }
 
 interface Customer {
     fullName: string

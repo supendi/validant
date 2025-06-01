@@ -41,7 +41,7 @@ describe("Validate test with product", () => {
         const validationResult = validator.validate(ironStick)
 
         const expected: ValidationResult<Product> = {
-            message: "One or more validation errors occurred.",
+            message: "Validation failed. Please check and fix the errors to continue.",
             isValid: false,
             errors: {
                 name: [
