@@ -1,6 +1,6 @@
 {
   "name": "validant",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Validant is a TypeScript-first validation library for real-world, dynamic rules — no DSLs, just types and functions.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
