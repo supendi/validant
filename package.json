@@ -10,13 +10,13 @@
   "scripts": {
     "rm-node_modules": "rm -rf node_modules",
     "rm-dist": "rm -rf ./dist",
-    "clean": "yarn rm-node_modules && yarn rm-dist && rm -rf coverage",
-    "test": "yarn rm-dist && tsc --noEmit && jest --coverage",
-    "build": "yarn rm-dist && tsc",
+    "clean": "npm run rm-node_modules && npm run rm-dist && rm -rf coverage",
+    "test": "npm run rm-dist && tsc --noEmit && jest --coverage",
+    "build": "npm run rm-dist && tsc",
     "build-prod": "tsc -p tsconfig.production.json",
-    "prepare-publish": "yarn clean && yarn install && yarn test && yarn build-prod && yarn bundle-check",
+    "prepare-publish": "npm run clean && npm run install && npm run test && npm run build-prod && npm run bundle-check",
     "bundle-check": "npm pack --dry-run",
-    "publish": "yarn prepare-publish && npm version patch"
+    "publish": "npm run prepare-publish && npm version patch"
   },
   "devDependencies": {
     "@babel/core": "^7.13.16",
