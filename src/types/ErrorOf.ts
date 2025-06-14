@@ -18,7 +18,7 @@ export type ArrayElementType<TArray> = TArray extends (infer U)[] ? U : never;
  */
 export type ErrorOf<T extends Object> = { [key in keyof T]?:
     T[key] extends Date ? RuleViolation[]
-    : T[key] extends PossiblyUndefined<Array<any>> ? ErrorOfArray<T[key]>
+    : T[key] extends PossiblyUndefined<Array<infer U>> ? ErrorOfArray<U[]>
     : T[key] extends PossiblyUndefined<object> ? ErrorOf<T[key]>
     : RuleViolation[] }
 
