@@ -14,7 +14,7 @@
     "test": "npm run rm-dist && tsc --noEmit && jest --coverage",
     "build": "npm run rm-dist && tsc",
     "build-prod": "tsc -p tsconfig.production.json",
-    "prepare-publish": "npm run clean && npm run install && npm run test && npm run build-prod && npm run bundle-check",
+    "prepare-publish": "npm run clean && npm install && npm run test && npm run build-prod && npm run bundle-check",
     "bundle-check": "npm pack --dry-run",
     "publish": "npm run prepare-publish && npm version patch"
   },
