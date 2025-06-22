@@ -8,7 +8,7 @@
 -   🧠 No DSLs. No special syntax. Just plain functions.
 -   🧩 Composable: Easily combine validations and reuse them across your codebase.
 -   🪶 Zero dependencies. Minimal API. Maximum control.
--   🧪 Made for TypeScript first: Validant is written in and only tested with TypeScript. It’s built for modern TypeScript-first projects. It might work in JavaScript — but it’s never been tested there.
+-   🧪 Made for TypeScript first: Validant is written in and only tested with TypeScript. It's built for modern TypeScript-first projects. It might work in JavaScript — but it's never been tested there.
 -   ✅ Deep, fine-grained validation on individual fields — sync or async, arrays, nested objects, also support Validate per Field
 
 ## 🏁 Getting Started
@@ -69,7 +69,7 @@ const validationRule: ValidationRule<typeof account> = {
 
 ### ✅ IntelliSense That Just Works
 
-Here’s how validation rules align seamlessly with IntelliSense:
+Here's how validation rules align seamlessly with IntelliSense:
 
 ![image](https://github.com/user-attachments/assets/542e0b46-bb7f-4329-9fe1-8a78031b145c)
 
@@ -85,11 +85,11 @@ No mismatched property names. No type mismatches. TypeScript will catch it — i
 
 ![image](https://github.com/user-attachments/assets/177dc1de-4c3a-4886-824d-515d6b9716f0)
 
-For example, `Account` doesn’t have a `creditCardNumber` — and TypeScript will let you know right away.
+For example, `Account` doesn't have a `creditCardNumber` — and TypeScript will let you know right away.
 
 This is especially useful when your model changes: the validation rule will break where it should, making it easy to stay in sync.
 
-Rules are type-safe too — they know exactly what type they’re validating, and you can build your own custom rules with full type awareness.
+Rules are type-safe too — they know exactly what type they're validating, and you can build your own custom rules with full type awareness.
 
 ![image](https://github.com/user-attachments/assets/22eb3d49-afe3-4e4c-ba4a-d862f920038d)
 
@@ -417,7 +417,7 @@ const validator = new AsyncValidator(validationRule);
 const validationResult = await validator.validateAsync(account);
 ```
 
-You’ll get the same structured result:
+You'll get the same structured result:
 
 ```ts
 // The validationResult above is equivalent to the following:
@@ -499,7 +499,7 @@ This lets you perform precise, async field-level validation with clear error fee
 #### ✅ Intuitive Error Structure
 
 As you can see the above validationResult.errors **mirrors the shape** of your original object — field by field.
-There’s no guesswork, no opaque path strings ("user[0].email"), and no nested issues[] array to parse.
+There's no guesswork, no opaque path strings ("user[0].email"), and no nested issues[] array to parse.
 
 Validant gives you direct, predictable access to error messages using the same property keys as your data model.
 
@@ -684,9 +684,9 @@ const loginRule: ValidationRule<LoginRequest> = {
 
 ## 🔓 Loose Coupling
 
-The `adminShouldBeBlocked` function represents a domain-specific business validation. It’s too valuable to be tightly coupled to any particular validation library. That logic belongs to your domain, not to infrastructure.
+The `adminShouldBeBlocked` function represents a domain-specific business validation. It's too valuable to be tightly coupled to any particular validation library. That logic belongs to your domain, not to infrastructure.
 
-The type `ValidateFunc<string, LoginRequest>` is simply a helper — it gives you compile-time type safety and ensures your rule is compatible with the validation engine. But it’s not mandatory to explicitly annotate every rule with it.
+The type `ValidateFunc<string, LoginRequest>` is simply a helper — it gives you compile-time type safety and ensures your rule is compatible with the validation engine. But it's not mandatory to explicitly annotate every rule with it.
 
 For example, this will still work seamlessly:
 
@@ -942,7 +942,7 @@ Array validation errors differ slightly from object errors. Instead of mapping d
 -   Errors for the array itself
 -   Errors for each item in the array
 
-Here’s the structure:
+Here's the structure:
 
 ```ts
 export type ErrorOfArray<TArray> = {
@@ -1001,7 +1001,7 @@ The validation error might look like:
                     ],
                     quantity: [
                         {
-                            errorMessage: "Min qty is 1.",
+                            errorMessage: "Minimum quantity is 1",
                             attemptedValue: "1",
                             ruleName: "isNumber"
                         }
@@ -1043,7 +1043,7 @@ Because of this, it's type-safe—if the Product model changes (e.g., a field is
 
 ## 🧬 Validation Context Awareness: Property, Root Object, and Arrays
 
-Validant’s validation rules are **context-aware** — giving you access to both the property being validated and the full object it's part of.
+Validant's validation rules are **context-aware** — giving you access to both the property being validated and the full object it's part of.
 
 ### 🔹Property-Level Awareness
 
@@ -1155,7 +1155,7 @@ const rule: ValidationRule<Order> = {
 };
 ```
 
-Here, item refers to the current array element, and order is the root object. And yes — it’s fully type-safe.
+Here, item refers to the current array element, and order is the root object. And yes — it's fully type-safe.
 
 ![image](https://github.com/user-attachments/assets/a95614a5-0dfd-458c-b0c4-789ffa509ce2)
 
@@ -1558,7 +1558,7 @@ export function createProductValidationService(
 
 #### For more example please visit:
 
-`https://github.com/supendi/validant/tree/main/src/__tests__/validant_tests/realExamples`
+[Examples](https://github.com/supendi/validant/tree/main/src/__tests__/examples)
 
 ## 🧩 Validation Rule Composition
 
