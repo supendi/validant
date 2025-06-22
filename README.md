@@ -3,13 +3,547 @@
 **Validant** is a TypeScript-first validation library for real-world, dynamic rules — no DSLs, just types and functions.
 
 ## ✨ Why Validant?
-
 -   🔄 TYPE-FIRST, NOT SCHEMA-FIRST = LOOSE COUPLING: Unlike other libraries that generate types from schemas, Validant starts from your own types — allowing you to decouple your app from any validation library, including this one.
 -   🧠 No DSLs. No special syntax. Just plain functions.
 -   🧩 Composable: Easily combine validations and reuse them across your codebase.
 -   🪶 Zero dependencies. Minimal API. Maximum control.
 -   🧪 Made for TypeScript first: Validant is written in and only tested with TypeScript. It's built for modern TypeScript-first projects. It might work in JavaScript — but it's never been tested there.
 -   ✅ Deep, fine-grained validation on individual fields — sync or async, arrays, nested objects, also support Validate per Field
+
+## 🧩 When validation is not just required and complex
+```ts
+
+import {
+    ValidationRule,
+    AsyncValidationRule,
+    Validator,
+    AsyncValidator,
+    required,
+    minNumber,
+    maxNumber,
+    emailAddress,
+    isString,
+    isNumber,
+    elementOf,
+    arrayMinLen,
+    arrayMaxLen,
+    ValidateFunc,
+    AsyncValidateFunc,
+    RuleViolation,
+    ValidationResult
+} from '../../index';
+
+// =============================================================================
+// DOMAIN MODELS
+// =============================================================================
+
+interface Address {
+    street: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    country: string;
+}
+
+interface Person {
+    firstName: string;
+    lastName: string;
+    dateOfBirth: Date;
+    ssn: string; // Social Security Number
+    address: Address;
+    phone: string;
+    email: string;
+}
+
+interface PolicyHolder extends Person {
+    policyNumber: string;
+    policyStartDate: Date;
+    policyEndDate: Date;
+    premiumAmount: number;
+    coverageType: 'BASIC' | 'PREMIUM' | 'COMPREHENSIVE';
+    riskScore: number; // 1-100, calculated by underwriting
+}
+
+interface Vehicle {
+    vin: string; // Vehicle Identification Number
+    make: string;
+    model: string;
+    year: number;
+    mileage: number;
+    value: number; // Current market value
+    primaryUse: 'PERSONAL' | 'COMMERCIAL' | 'BUSINESS';
+    safetyRating: number; // 1-5 stars
+    antiTheftDevices: string[];
+}
+
+interface Incident {
+    incidentDate: Date;
+    incidentTime: string; // HH:MM format
+    location: Address;
+    description: string;
+    policeReportNumber?: string;
+    weatherConditions: 'CLEAR' | 'RAIN' | 'SNOW' | 'FOG' | 'ICE' | 'SEVERE';
+    roadConditions: 'DRY' | 'WET' | 'ICY' | 'CONSTRUCTION' | 'POOR_VISIBILITY';
+    atFaultParties: string[]; // Can be multiple parties
+    witnessCount: number;
+}
+
+interface Damage {
+    component: string; // e.g., "Front Bumper", "Engine", "Windshield"
+    severity: 'MINOR' | 'MODERATE' | 'SEVERE' | 'TOTAL_LOSS';
+    estimatedCost: number;
+    repairShop?: string;
+    partsRequired: string[];
+    laborHours: number;
+    isPreExistingDamage: boolean;
+}
+
+interface MedicalClaim {
+    injuredParty: Person;
+    injuryType: string;
+    severity: 'MINOR' | 'MODERATE' | 'SEVERE' | 'CRITICAL';
+    treatmentFacility: string;
+    doctorName: string;
+    estimatedTreatmentCost: number;
+    isPreExistingCondition: boolean;
+    requiresSpecialistCare: boolean;
+}
+
+interface InsuranceClaim {
+    claimNumber: string;
+    claimType: 'AUTO_ACCIDENT' | 'THEFT' | 'VANDALISM' | 'NATURAL_DISASTER' | 'COMPREHENSIVE';
+    policyHolder: PolicyHolder;
+    claimant: Person; // Person filing the claim (might be different from policy holder)
+    vehicle: Vehicle;
+    incident: Incident;
+    damages: Damage[];
+    medicalClaims: MedicalClaim[];
+    claimAmount: number; // Total claimed amount
+    supportingDocuments: string[]; // Document IDs
+    attorneyInvolved: boolean;
+    attorneyDetails?: {
+        name: string;
+        barNumber: string;
+        firm: string;
+        phone: string;
+    };
+    priorClaims: number; // Number of claims in last 5 years
+    submissionDate: Date;
+    adjusterId?: string;
+}
+
+// =============================================================================
+// MOCK EXTERNAL SERVICES
+// =============================================================================
+
+interface ExternalServices {
+    validateSSN(ssn: string): Promise<boolean>;
+    validateVIN(vin: string): Promise<{ isValid: boolean; vehicleInfo?: any }>;
+    validatePolicyStatus(policyNumber: string): Promise<{ isActive: boolean; hasOutstandingPremiums: boolean }>;
+}
+
+// Mock implementation
+const externalServices: ExternalServices = {
+    async validateSSN(ssn: string): Promise<boolean> {
+        await new Promise(resolve => setTimeout(resolve, 10));
+        return /^\d{3}-\d{2}-\d{4}$/.test(ssn);
+    },
+
+    async validateVIN(vin: string): Promise<{ isValid: boolean; vehicleInfo?: any }> {
+        await new Promise(resolve => setTimeout(resolve, 15));
+        const isValid = /^[A-HJ-NPR-Z0-9]{17}$/.test(vin);
+        return {
+            isValid,
+            vehicleInfo: isValid ? { decoded: true } : undefined
+        };
+    },
+
+    async validatePolicyStatus(policyNumber: string): Promise<{ isActive: boolean; hasOutstandingPremiums: boolean }> {
+        await new Promise(resolve => setTimeout(resolve, 10));
+        return {
+            isActive: !policyNumber.includes('EXPIRED'),
+            hasOutstandingPremiums: policyNumber.includes('OVERDUE')
+        };
+    }
+};
+
+// =============================================================================
+// BUSINESS RULE VALIDATORS
+// =============================================================================
+
+function validateSSNFormat(): AsyncValidateFunc<string, any> {
+    return async function (ssn: string) {
+        if (!ssn) return undefined;
+
+        const isValidFormat = await externalServices.validateSSN(ssn);
+        if (!isValidFormat) {
+            return {
+                ruleName: 'validateSSNFormat',
+                attemptedValue: ssn,
+                errorMessage: 'Invalid Social Security Number format or number does not exist.'
+            };
+        }
+    };
+}
+
+function validateVINNumber(): AsyncValidateFunc<string, InsuranceClaim> {
+    return async function (vin: string, claim: InsuranceClaim) {
+        if (!vin) return undefined;
+
+        const result = await externalServices.validateVIN(vin);
+        if (!result.isValid) {
+            return {
+                ruleName: 'validateVINNumber',
+                attemptedValue: vin,
+                errorMessage: 'Invalid Vehicle Identification Number. Please verify the VIN.'
+            };
+        }
+    };
+}
+
+function validatePolicyActive(): AsyncValidateFunc<string, InsuranceClaim> {
+    return async function (policyNumber: string, claim: InsuranceClaim) {
+        if (!policyNumber) return undefined;
+
+        const status = await externalServices.validatePolicyStatus(policyNumber);
+
+        if (!status.isActive) {
+            return {
+                ruleName: 'validatePolicyActive',
+                attemptedValue: policyNumber,
+                errorMessage: 'Policy is not active. Claims cannot be processed for inactive policies.'
+            };
+        }
+
+        if (status.hasOutstandingPremiums) {
+            return {
+                ruleName: 'validatePolicyActive',
+                attemptedValue: policyNumber,
+                errorMessage: 'Policy has outstanding premiums. Please resolve payment issues before filing a claim.'
+            };
+        }
+    };
+}
+
+function validateIncidentDate(): ValidateFunc<Date, InsuranceClaim> {
+    return function (incidentDate: Date, claim: InsuranceClaim) {
+        if (!incidentDate) return undefined;
+
+        const now = new Date();
+        const policyStart = claim.policyHolder.policyStartDate;
+        const policyEnd = claim.policyHolder.policyEndDate;
+
+        // Can't be in the future
+        if (incidentDate > now) {
+            return {
+                ruleName: 'validateIncidentDate',
+                attemptedValue: incidentDate,
+                errorMessage: 'Incident date cannot be in the future.'
+            };
+        }
+
+        // Must be within policy period
+        if (incidentDate < policyStart || incidentDate > policyEnd) {
+            return {
+                ruleName: 'validateIncidentDate',
+                attemptedValue: incidentDate,
+                errorMessage: `Incident must have occurred during the policy period (${policyStart.toDateString()} - ${policyEnd.toDateString()}).`
+            };
+        }
+
+        // Claims must be filed within 30 days of incident (business rule)
+        const daysSinceIncident = Math.floor((now.getTime() - incidentDate.getTime()) / (1000 * 60 * 60 * 24));
+        if (daysSinceIncident > 30) {
+            return {
+                ruleName: 'validateIncidentDate',
+                attemptedValue: incidentDate,
+                errorMessage: 'Claims must be filed within 30 days of the incident. Late filing requires special approval.'
+            };
+        }
+    };
+}
+
+// =============================================================================
+// COMPREHENSIVE VALIDATION RULES
+// =============================================================================
+
+const insuranceClaimValidationRules: AsyncValidationRule<InsuranceClaim> = {
+    claimNumber: [
+        required('Claim number is required.'),
+        isString('Claim number must be a string.'),
+        function (claimNumber: string) {
+            if (!/^INS-\d{4}-\d{6}$/.test(claimNumber)) {
+                return {
+                    ruleName: 'claimNumberFormat',
+                    attemptedValue: claimNumber,
+                    errorMessage: 'Claim number must follow format: INS-YEAR-XXXXXX (e.g., INS-2024-000001)'
+                };
+            }
+        }
+    ],
+
+    claimType: [
+        required('Claim type is required.'),
+        elementOf(['AUTO_ACCIDENT', 'THEFT', 'VANDALISM', 'NATURAL_DISASTER', 'COMPREHENSIVE'], 'Invalid claim type.')
+    ],
+
+    policyHolder: {
+        firstName: [required('Policy holder first name is required.'), isString()],
+        lastName: [required('Policy holder last name is required.'), isString()],
+
+        dateOfBirth: [
+            required('Date of birth is required.'),
+            function (dob: Date, claim: InsuranceClaim) {
+                const age = Math.floor((Date.now() - dob.getTime()) / (1000 * 60 * 60 * 24 * 365));
+                if (age < 16) {
+                    return {
+                        ruleName: 'minimumAge',
+                        attemptedValue: dob,
+                        errorMessage: 'Policy holder must be at least 16 years old.'
+                    };
+                }
+                if (age > 100) {
+                    return {
+                        ruleName: 'maximumAge',
+                        attemptedValue: dob,
+                        errorMessage: 'Please verify date of birth. Age appears to be over 100 years.'
+                    };
+                }
+            }
+        ],
+
+        ssn: [
+            required('Social Security Number is required.'),
+            validateSSNFormat()
+        ],
+
+        policyNumber: [
+            required('Policy number is required.'),
+            validatePolicyActive()
+        ],
+
+        email: [required(), emailAddress()],
+
+        premiumAmount: [
+            required(),
+            minNumber(100, 'Minimum premium amount is $100.'),
+            maxNumber(50000, 'Premium amount seems unusually high. Please verify.')
+        ],
+
+        coverageType: [
+            required(),
+            elementOf(['BASIC', 'PREMIUM', 'COMPREHENSIVE'], 'Invalid coverage type.')
+        ],
+
+        riskScore: [
+            required(),
+            minNumber(1, 'Risk score must be between 1 and 100.'),
+            maxNumber(100, 'Risk score must be between 1 and 100.')
+        ],
+
+        address: {
+            street: [required()],
+            city: [required()],
+            state: [required()],
+            zipCode: [
+                required(),
+                function (zipCode: string) {
+                    if (!/^\d{5}(-\d{4})?$/.test(zipCode)) {
+                        return {
+                            ruleName: 'zipCodeFormat',
+                            attemptedValue: zipCode,
+                            errorMessage: 'ZIP code must be in format: 12345 or 12345-6789'
+                        };
+                    }
+                }
+            ],
+            country: [required()]
+        }
+    },
+
+    claimant: {
+        firstName: [required()],
+        lastName: [required()],
+        email: [required(), emailAddress()],
+        ssn: [validateSSNFormat()],
+        address: {
+            street: [required()],
+            city: [required()],
+            state: [required()],
+            zipCode: [required()],
+            country: [required()]
+        }
+    },
+
+    vehicle: {
+        vin: [
+            required('Vehicle VIN is required.'),
+            validateVINNumber()
+        ],
+
+        make: [required()],
+        model: [required()],
+
+        year: [
+            required(),
+            minNumber(1990, 'Vehicles older than 1990 require special underwriting.'),
+            maxNumber(new Date().getFullYear() + 1, 'Vehicle year cannot be in the future.')
+        ],
+
+        mileage: [
+            required(),
+            minNumber(0, 'Mileage cannot be negative.'),
+            function (mileage: number, claim: InsuranceClaim) {
+                const vehicleAge = new Date().getFullYear() - claim.vehicle.year;
+                const expectedMaxMileage = vehicleAge * 15000;
+
+                if (mileage > expectedMaxMileage * 1.5) {
+                    return {
+                        ruleName: 'mileageValidation',
+                        attemptedValue: mileage,
+                        errorMessage: `Mileage (${mileage.toLocaleString()}) appears unusually high for a ${claim.vehicle.year} vehicle.`
+                    };
+                }
+            }
+        ],
+
+        value: [
+            required(),
+            minNumber(1000, 'Vehicle value must be at least $1,000 to be eligible for coverage.')
+        ],
+
+        primaryUse: [
+            required(),
+            elementOf(['PERSONAL', 'COMMERCIAL', 'BUSINESS'], 'Invalid primary use type.')
+        ],
+
+        safetyRating: [
+            required(),
+            minNumber(1, 'Safety rating must be between 1 and 5.'),
+            maxNumber(5, 'Safety rating must be between 1 and 5.')
+        ]
+    },
+
+    incident: {
+        incidentDate: [
+            required('Incident date is required.'),
+            validateIncidentDate()
+        ],
+
+        incidentTime: [
+            required(),
+            function (time: string) {
+                if (!/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/.test(time)) {
+                    return {
+                        ruleName: 'timeFormat',
+                        attemptedValue: time,
+                        errorMessage: 'Time must be in HH:MM format (24-hour).'
+                    };
+                }
+            }
+        ],
+
+        description: [
+            required(),
+            function (description: string) {
+                if (description.length < 50) {
+                    return {
+                        ruleName: 'descriptionLength',
+                        attemptedValue: description,
+                        errorMessage: 'Incident description must be at least 50 characters long.'
+                    };
+                }
+            }
+        ],
+
+        weatherConditions: [
+            required(),
+            elementOf(['CLEAR', 'RAIN', 'SNOW', 'FOG', 'ICE', 'SEVERE'], 'Invalid weather condition.')
+        ],
+
+        roadConditions: [
+            required(),
+            elementOf(['DRY', 'WET', 'ICY', 'CONSTRUCTION', 'POOR_VISIBILITY'], 'Invalid road condition.')
+        ],
+
+        witnessCount: [
+            required(),
+            minNumber(0, 'Witness count cannot be negative.'),
+            maxNumber(20, 'Witness count seems unusually high. Please verify.')
+        ],
+
+        location: {
+            street: [required()],
+            city: [required()],
+            state: [required()],
+            zipCode: [required()],
+            country: [required()]
+        }
+    },
+
+    damages: {
+        arrayRules: [
+            arrayMinLen(1, 'At least one damage entry is required.')
+        ],
+        arrayElementRule: {
+            component: [required()],
+            severity: [
+                required(),
+                elementOf(['MINOR', 'MODERATE', 'SEVERE', 'TOTAL_LOSS'], 'Invalid damage severity.')
+            ],
+            estimatedCost: [
+                required(),
+                minNumber(1, 'Damage cost must be greater than $0.'),
+                maxNumber(200000, 'Damage cost exceeds maximum limit.')
+            ],
+            laborHours: [
+                required(),
+                minNumber(0, 'Labor hours cannot be negative.'),
+                maxNumber(500, 'Labor hours seem excessive.')
+            ]
+        }
+    },
+
+    claimAmount: [
+        required('Claim amount is required.'),
+        minNumber(1, 'Claim amount must be greater than $0.')
+    ],
+
+    supportingDocuments: {
+        arrayRules: [
+            arrayMinLen(1, 'At least one supporting document is required.')
+        ]
+    },
+
+    priorClaims: [
+        required(),
+        minNumber(0, 'Prior claims count cannot be negative.'),
+        function (priorClaims: number, claim: InsuranceClaim) {
+            if (priorClaims >= 5) {
+                return {
+                    ruleName: 'priorClaimsLimit',
+                    attemptedValue: priorClaims,
+                    errorMessage: 'Policy holders with 5+ prior claims require executive approval.'
+                };
+            }
+        }
+    ],
+
+    submissionDate: [
+        required(),
+        function (submissionDate: Date) {
+            const now = new Date();
+            if (submissionDate > now) {
+                return {
+                    ruleName: 'submissionDateFuture',
+                    attemptedValue: submissionDate,
+                    errorMessage: 'Submission date cannot be in the future.'
+                };
+            }
+        }
+    ]
+};
+```
 
 ## 🏁 Getting Started
 
