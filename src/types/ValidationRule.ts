@@ -46,9 +46,22 @@ export type ArrayValidationRule<TArrayValue, TRoot extends Object> = {
     arrayRules?: ValidateFunc<TArrayValue, TRoot>[];
 
     /**
-     * The validation rule foreach element of an array.
-     * Example:
-     * { orderItems: { arrayElementRule: { qty: [minNumber(5)] } }
+     * The validation rule for each element of an array.
+     * 
+     * For object arrays: ValidationRule<T> or function returning ValidationRule<T>
+     * For primitive arrays: ValidateFunc<T>[] or function returning ValidateFunc<T>[]
+     * 
+     * Examples:
+     * Object array: { orderItems: { arrayElementRule: { qty: [minNumber(5)] } } }
+     * Primitive array: { tags: { arrayElementRule: [required(), stringMinLen(3)] } }
+     * Dynamic object: { orderItems: { arrayElementRule: (item, root) => ({ qty: [minNumber(item.type === 'bulk' ? 10 : 1)] }) } }
+     * Dynamic primitive: { tags: { arrayElementRule: (tag, root) => [required(), stringMinLen(root.isAdmin ? 1 : 3)] } }
      */
-    arrayElementRule?: ValidationRule<PossiblyUndefined<ArrayElementType<TArrayValue>>, TRoot> | ((arrayItem: ArrayElementType<TArrayValue>, root: TRoot) => ValidationRule<ArrayElementType<TArrayValue>, TRoot>);
+    arrayElementRule?: ArrayElementType<TArrayValue> extends string | number | boolean | Date
+        ? // Primitive elements: ValidateFunc[] or function returning ValidateFunc[]
+          ValidateFunc<ArrayElementType<TArrayValue>, TRoot>[] | 
+          ((element: ArrayElementType<TArrayValue>, root: TRoot) => ValidateFunc<ArrayElementType<TArrayValue>, TRoot>[])
+        : // Object elements: ValidationRule or function returning ValidationRule
+          ValidationRule<PossiblyUndefined<ArrayElementType<TArrayValue>>, TRoot> | 
+          ((element: ArrayElementType<TArrayValue>, root: TRoot) => ValidationRule<ArrayElementType<TArrayValue>, TRoot>);
 };

@@ -67,58 +67,6 @@ const validationRule: ValidationRule<typeof account> = {
 };
 ```
 
-Even JavaScript understands that account.name is a string — why not build on that?
-
-### ❌ No Shape Ceremony. No Infer.
-
-Infer from schema often ties you closely to the validation library — unless used carefully. Your domain model is fundamental, yet simple to define.
-
-Here's how common validation libraries define shape-first schemas:
-
-**Zod**
-
-```ts
-import { z } from "zod";
-
-const User = z.object({
-    username: z.string(),
-});
-
-User.parse({ username: "Ludwig" });
-
-// extract the inferred type
-type User = z.infer<typeof User>;
-```
-
-Or **superstruct**
-
-```ts
-import { create, object, number, string, defaulted } from "superstruct";
-
-let i = 0;
-
-const User = object({
-    id: defaulted(number(), () => i++),
-    name: string(),
-});
-```
-
-Or **yup**
-
-```ts
-import { object, string, number, date, InferType } from "yup";
-
-let userSchema = object({
-    name: string().required(),
-    age: number().required().positive().integer(),
-    email: string().email(),
-    website: string().url().nullable(),
-    createdOn: date().default(() => new Date()),
-});
-```
-
-Validant takes a different approach: keep your model where it belongs — in your domain — and let validation wrap around it cleanly.
-
 ### ✅ IntelliSense That Just Works
 
 Here’s how validation rules align seamlessly with IntelliSense:
@@ -402,15 +350,13 @@ The result will be an object like this:
 {
     isValid: false,
     fieldName: "name",
-    errors: {
-        name: [
-            {
-                attemptedValue: "",
-                errorMessage: "This field is required.",
-                ruleName: "required"
-            }
-        ],
-    }
+    errors: [
+        {
+            attemptedValue: "",
+            errorMessage: "This field is required.",
+            ruleName: "required"
+        }
+    ]
 }
 ```
 
@@ -479,7 +425,7 @@ You’ll get the same structured result:
     message: "Validation failed. Please check and fix the errors to continue.",
     isValid: false,
     errors: {
-         name: [
+        name: [
             {
                 attemptedValue: "",
                 errorMessage: "Account name is required.",
@@ -533,20 +479,18 @@ The result will be an object like this:
 {
     isValid: false,
     fieldName: "email",
-    errors: {
-        email: [
-            {
-                errorMessage: "This field is required.",
-                attemptedValue: "",
-                ruleName: "required"
-            },
-            {
-                errorMessage: "Invalid email address",
-                attemptedValue: "",
-                ruleName: "emailAddress"
-            }
-        ]
-    }
+    errors: [
+        {
+            errorMessage: "This field is required.",
+            attemptedValue: "",
+            ruleName: "required"
+        },
+        {
+            errorMessage: "Invalid email address",
+            attemptedValue: "",
+            ruleName: "emailAddress"
+        }
+    ]
 }
 ```
 

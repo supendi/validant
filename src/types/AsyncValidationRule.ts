@@ -44,9 +44,22 @@ export type AsyncArrayValidationRule<TArrayValue, TRoot extends Object> = {
     arrayRules?: GenericValidateFunc<TArrayValue, TRoot>[];
 
     /**
-     * The validation rule foreach element of an array.
-     * Example:
-     * { orderItems: { arrayElementRule: { qty: [minNumber(5)] } }
+     * The validation rule for each element of an array.
+     * 
+     * For object arrays: AsyncValidationRule<T> or function returning AsyncValidationRule<T>
+     * For primitive arrays: GenericValidateFunc<T>[] or function returning GenericValidateFunc<T>[]
+     * 
+     * Examples:
+     * Object array: { orderItems: { arrayElementRule: { qty: [minNumber(5)] } } }
+     * Primitive array: { tags: { arrayElementRule: [required(), stringMinLen(3)] } }
+     * Dynamic object: { orderItems: { arrayElementRule: (item, root) => ({ qty: [minNumber(item.type === 'bulk' ? 10 : 1)] }) } }
+     * Dynamic primitive: { tags: { arrayElementRule: (tag, root) => [required(), stringMinLen(root.isAdmin ? 1 : 3)] } }
      */
-    arrayElementRule?: AsyncValidationRule<PossiblyUndefined<ArrayElementType<TArrayValue>>, TRoot> | ((arrayItem: ArrayElementType<TArrayValue>, root: TRoot) => AsyncValidationRule<ArrayElementType<TArrayValue>, TRoot>);
+    arrayElementRule?: ArrayElementType<TArrayValue> extends string | number | boolean | Date
+        ? // Primitive elements: GenericValidateFunc[] or function returning GenericValidateFunc[]
+          GenericValidateFunc<ArrayElementType<TArrayValue>, TRoot>[] | 
+          ((element: ArrayElementType<TArrayValue>, root: TRoot) => GenericValidateFunc<ArrayElementType<TArrayValue>, TRoot>[])
+        : // Object elements: AsyncValidationRule or function returning AsyncValidationRule
+          AsyncValidationRule<PossiblyUndefined<ArrayElementType<TArrayValue>>, TRoot> | 
+          ((element: ArrayElementType<TArrayValue>, root: TRoot) => AsyncValidationRule<ArrayElementType<TArrayValue>, TRoot>);
 };

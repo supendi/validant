@@ -1,57 +1,97 @@
 import { RuleViolation } from "./ValidationRule";
 
 /**
- * Represents a generic type that is possibly undefined
+ * Represents a generic type that is possibly undefined.
  */
 export type PossiblyUndefined<T> = T | undefined
 
 /**
- * Infers array element type.
- * Example: if we have a type of T[], then the ArrayElementType<T[]> is T. 
+ * Infers the element type from an array type.
+ * 
+ * @example
+ * ```typescript
+ * type StringArray = string[];
+ * type Element = ArrayElementType<StringArray>; // string
+ * 
+ * type NumberArray = number[];
+ * type Element = ArrayElementType<NumberArray>; // number
+ * ```
  */
 export type ArrayElementType<TArray> = TArray extends (infer U)[] ? U : never;
 
 /**
- * Represents an error of T.
- * Example: If T is { name: string }
- * Then ErrorOf<T> is { name: string[] } 
+ * Represents the error structure for a given object type T.
+ * Each property of T becomes an optional property in ErrorOf<T> with an array of RuleViolation.
+ * 
+ * @example
+ * ```typescript
+ * interface User {
+ *   name: string;
+ *   age: number;
+ * }
+ * 
+ * type UserErrors = ErrorOf<User>;
+ * // Result: { name?: RuleViolation[], age?: RuleViolation[] }
+ * ```
  */
-export type ErrorOf<T extends Object> = { [key in keyof T]?:
+export type ErrorOf<T> = { [key in keyof T]?:
     T[key] extends Date ? RuleViolation[]
     : T[key] extends PossiblyUndefined<Array<infer U>> ? ErrorOfArray<U[]>
     : T[key] extends PossiblyUndefined<object> ? ErrorOf<T[key]>
     : RuleViolation[] }
 
 /**
-* Represent the error that has index as one of its properties.
-*/
-export type IndexedErrorOf<T extends Object> = {
+ * Represents an error for a specific array element, including its index and attempted value.
+ */
+export type IndexedErrorOf<T> = {
+    /** The index of the array element that failed validation */
     index: number,
-    errors: ErrorOf<T>,
+    /** The validation errors for this specific element */
+    errors: T extends object ? ErrorOf<T> : RuleViolation[],
+    /** The actual value that was attempted to be validated */
     attemptedValue: T | null | undefined
 }
 
 /**
- * Represent the error model for array.
- * Example: If T { name: string, children: T[]}
- * Then ErrorOfArray<T> will be  { name: string[], children: { errors: string[], arrayElementErrors: { index: number, errors: ErrorOf<T>, attemptedValue: T | null | undefined }}[] }
+ * Represents the error model for array validation.
+ * Contains errors both at the array level (e.g., length constraints) and element level.
+ * 
+ * @example
+ * ```typescript
+ * interface OrderItem {
+ *   name: string;
+ *   quantity: number;
+ * }
+ * 
+ * interface Order {
+ *   items: OrderItem[];
+ * }
+ * 
+ * // If validation fails, errors might look like:
+ * const orderErrors: ErrorOf<Order> = {
+ *   items: {
+ *     arrayErrors: ["Minimum 1 item required"],
+ *     arrayElementErrors: [
+ *       {
+ *         index: 0,
+ *         errors: { name: ["Name is required"] },
+ *         attemptedValue: { name: "", quantity: 1 }
+ *       }
+ *     ]
+ *   }
+ * };
+ * ```
  */
 export type ErrorOfArray<TArray> = {
     /**
-     * Represents the error on array level.
-     * Example: 
-     * { orderItems: OrderItem[] } 
-     * If we specify rule minimum count of order items to be 5 items.
-     * The error will be represented as:
-     * { orderItems: { errors: ["The minimum order is 5 items"]}}
+     * Validation errors that apply to the array as a whole.
+     * Examples: minimum/maximum length violations, required array constraints.
      */
     arrayErrors?: RuleViolation[],
 
     /**
-     * If each element of array need to be validated.
-     * The arrayElementErrors represents the errors of the each element of the array.
-     * Example :
-     * arrayElementErrors: { index: number, errors: ErrorOf<T>, attemptedValue: T | null | undefined }}[] 
+     * Validation errors for individual array elements.
+     * Each element error includes the index, specific field errors, and the attempted value.
      */
     arrayElementErrors?: IndexedErrorOf<ArrayElementType<TArray>>[]
 }
