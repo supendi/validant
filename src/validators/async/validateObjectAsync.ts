@@ -13,26 +13,29 @@ export function isAsyncArrayValidationRule<T, TRoot>(rule: AsyncValidationRule<T
 }
 
 export async function validatePrimitiveFieldAsync<T, TRoot>(key: Extract<keyof T, string>, object: T, root: TRoot, rule: GenericValidateFunc<T[Extract<keyof T, string>], TRoot>[]): Promise<PrimitiveFieldValidationResult> {
-    var violations: Violations = [];
-    for (let index = 0; index < rule.length; index++) {
-        const validateFunc = rule[index];
+    const value = object[key];
+    
+    // Create promises for all validation functions to run in parallel
+    const validationPromises = rule.map(async (validateFunc) => {
         if (!validateFunc) {
-            continue;
+            return null;
         }
 
         const isFunction = typeof (validateFunc) === "function";
         if (!isFunction) {
             throw Error("validateFunc is not a function")
-            // continue;
         }
 
-        const value = object[key];
         const violation = await validateFunc(value, root);
+        return violation;
+    });
 
-        if (violation) {
-            violations.push(violation);
-        }
-    }
+    // Execute all validations in parallel
+    const results = await Promise.all(validationPromises);
+    
+    // Filter out null/undefined results to get actual violations
+    const violations: Violations = results.filter(result => result !== null && result !== undefined);
+    
     const validationResult: PrimitiveFieldValidationResult = {
         errors: violations,
         isValid: violations.length === 0
@@ -42,11 +45,10 @@ export async function validatePrimitiveFieldAsync<T, TRoot>(key: Extract<keyof T
 
 // Helper function to validate a single primitive element asynchronously
 async function validatePrimitiveElementAsync<T, TRoot>(element: T, root: TRoot, rules: GenericValidateFunc<T, TRoot>[]): Promise<Violations> {
-    var violations: Violations = [];
-    for (let index = 0; index < rules.length; index++) {
-        const validateFunc = rules[index];
+    // Create promises for all validation functions to run in parallel
+    const validationPromises = rules.map(async (validateFunc) => {
         if (!validateFunc) {
-            continue;
+            return null;
         }
 
         const isFunction = typeof (validateFunc) === "function";
@@ -55,11 +57,15 @@ async function validatePrimitiveElementAsync<T, TRoot>(element: T, root: TRoot, 
         }
 
         const violation = await validateFunc(element, root);
+        return violation;
+    });
 
-        if (violation) {
-            violations.push(violation);
-        }
-    }
+    // Execute all validations in parallel
+    const results = await Promise.all(validationPromises);
+    
+    // Filter out null/undefined results to get actual violations
+    const violations: Violations = results.filter(result => result !== null && result !== undefined);
+    
     return violations;
 }
 
@@ -87,9 +93,8 @@ async function validateArrayFieldAsync<T, TRoot>(key: Extract<keyof T, string>, 
     }
 
     if (arrayValidationRule.arrayElementRule && Array.isArray(value)) {
-        for (let index = 0; index < value.length; index++) {
-            const element = value[index];
-            
+        // Collect promises for parallel validation of array elements
+        const elementValidationPromises = value.map(async (element, index) => {
             if (typeof arrayValidationRule.arrayElementRule === "function") {
                 const elementRule = await arrayValidationRule.arrayElementRule(element, root);
                 
@@ -98,27 +103,21 @@ async function validateArrayFieldAsync<T, TRoot>(key: Extract<keyof T, string>, 
                     // Primitive element validation
                     const violations = await validatePrimitiveElementAsync(element, root, elementRule);
                     if (violations.length > 0) {
-                        if (!arrayFieldErrors.arrayElementErrors) {
-                            arrayFieldErrors.arrayElementErrors = []
-                        }
-                        arrayFieldErrors.arrayElementErrors.push({
-                            index: index,
-                            errors: violations as any, // Type assertion for now
+                        return {
+                            index,
+                            errors: violations as any,
                             attemptedValue: element
-                        });
+                        };
                     }
                 } else {
                     // Object element validation
-                    const error = await validateObjectAsync(element, root, elementRule as any); // Type assertion for now
+                    const error = await validateObjectAsync(element, root, elementRule as any);
                     if (error) {
-                        if (!arrayFieldErrors.arrayElementErrors) {
-                            arrayFieldErrors.arrayElementErrors = []
-                        }
-                        arrayFieldErrors.arrayElementErrors.push({
-                            index: index,
-                            errors: error as any, // Type assertion for now
+                        return {
+                            index,
+                            errors: error as any,
                             attemptedValue: element
-                        });
+                        };
                     }
                 }
             } else {
@@ -127,30 +126,34 @@ async function validateArrayFieldAsync<T, TRoot>(key: Extract<keyof T, string>, 
                     // Primitive element validation
                     const violations = await validatePrimitiveElementAsync(element, root, arrayValidationRule.arrayElementRule);
                     if (violations.length > 0) {
-                        if (!arrayFieldErrors.arrayElementErrors) {
-                            arrayFieldErrors.arrayElementErrors = []
-                        }
-                        arrayFieldErrors.arrayElementErrors.push({
-                            index: index,
-                            errors: violations as any, // Type assertion for now
+                        return {
+                            index,
+                            errors: violations as any,
                             attemptedValue: element
-                        });
+                        };
                     }
                 } else {
                     // Object element validation
-                    const error = await validateObjectAsync(element, root, arrayValidationRule.arrayElementRule as any); // Type assertion for now
+                    const error = await validateObjectAsync(element, root, arrayValidationRule.arrayElementRule as any);
                     if (error) {
-                        if (!arrayFieldErrors.arrayElementErrors) {
-                            arrayFieldErrors.arrayElementErrors = []
-                        }
-                        arrayFieldErrors.arrayElementErrors.push({
-                            index: index,
-                            errors: error as any, // Type assertion for now
+                        return {
+                            index,
+                            errors: error as any,
                             attemptedValue: element
-                        });
+                        };
                     }
                 }
             }
+            return null; // No error
+        });
+
+        // Execute all element validations in parallel
+        const results = await Promise.all(elementValidationPromises);
+        
+        // Filter out null results and collect errors
+        const elementErrors = results.filter(result => result !== null);
+        if (elementErrors.length > 0) {
+            arrayFieldErrors.arrayElementErrors = elementErrors;
         }
     }
 
@@ -183,17 +186,18 @@ export const validateObjectAsync = async <T, TRoot>(object: T, rootObject: TRoot
     if (!object) {
         object = {} as T
     }
-    var errors: ErrorOf<T> = undefined;
 
-    function assignErrorsIfAny(key: any, violations: Violations | ErrorOfArray<T> | ErrorOf<T[Extract<keyof T, string>]>) {
-        if (!errors) {
-            errors = {};
-        }
-        errors[key as any] = violations
-    }
+    // Collect all validation promises for parallel execution
+    const validationPromises: Array<{
+        key: Extract<keyof T, string>;
+        promise: Promise<{
+            key: Extract<keyof T, string>;
+            violations?: Violations | ErrorOfArray<T> | ErrorOf<T[Extract<keyof T, string>]>;
+            hasErrors: boolean;
+        }>;
+    }> = [];
 
-    //Iterate against validation rule instead.
-    //Example : the rule is {name:[required()]}, if we passed an empty object {}, then the validation wont work. It will always returns empty errors, which is very wrong. 
+    // First pass: collect all validation promises
     for (const key in validationRule) {
         if (Object.prototype.hasOwnProperty.call(validationRule, key)) {
             const value = object[key];
@@ -213,27 +217,63 @@ export const validateObjectAsync = async <T, TRoot>(object: T, rootObject: TRoot
             const isArrayProperty = isAsyncArrayValidationRule(rule)
             const isObjectProperty = typeof value === "object"
 
+            let validationPromise: Promise<{
+                key: Extract<keyof T, string>;
+                violations?: Violations | ErrorOfArray<T> | ErrorOf<T[Extract<keyof T, string>]>;
+                hasErrors: boolean;
+            }>;
+
             if (isPrimitiveProperty) {
-                const validationResult = await validatePrimitiveFieldAsync(key, object, rootObject, rule)
-                if (!validationResult.isValid) {
-                    assignErrorsIfAny(key, validationResult.errors)
-                }
-                continue
+                validationPromise = validatePrimitiveFieldAsync(key, object, rootObject, rule)
+                    .then(validationResult => ({
+                        key,
+                        violations: validationResult.isValid ? undefined : validationResult.errors,
+                        hasErrors: !validationResult.isValid
+                    }));
+            } else if (isArrayProperty) {
+                validationPromise = validateArrayFieldAsync(key, object, rootObject, rule)
+                    .then(result => ({
+                        key,
+                        violations: (result?.arrayErrors || result?.arrayElementErrors) ? result : undefined,
+                        hasErrors: !!(result?.arrayErrors || result?.arrayElementErrors)
+                    }));
+            } else if (isObjectProperty) {
+                validationPromise = validateObjectFieldAsync(key, object, rootObject, rule)
+                    .then(error => ({
+                        key,
+                        violations: (error && !error.isValid) ? error.errors : undefined,
+                        hasErrors: !!(error && !error.isValid)
+                    }));
+            } else {
+                // Skip invalid property types
+                continue;
             }
-            if (isArrayProperty) {
-                const result = await validateArrayFieldAsync(key, object, rootObject, rule)
-                if (result?.arrayErrors || result?.arrayElementErrors) {
-                    assignErrorsIfAny(key, result)
-                }
-                continue
-            }
-            if (isObjectProperty) {
-                const error = await validateObjectFieldAsync(key, object, rootObject, rule)
-                if (error && !error.isValid) {
-                    assignErrorsIfAny(key, error.errors)
-                }
-            }
+
+            validationPromises.push({
+                key,
+                promise: validationPromise
+            });
         }
     }
+
+    // Execute all validations in parallel
+    const results = await Promise.all(validationPromises.map(vp => vp.promise));
+
+    // Process results and collect errors
+    var errors: ErrorOf<T> = undefined;
+
+    function assignErrorsIfAny(key: any, violations: Violations | ErrorOfArray<T> | ErrorOf<T[Extract<keyof T, string>]>) {
+        if (!errors) {
+            errors = {};
+        }
+        errors[key as any] = violations
+    }
+
+    for (const result of results) {
+        if (result.hasErrors && result.violations) {
+            assignErrorsIfAny(result.key, result.violations);
+        }
+    }
+
     return errors;
 };
