@@ -2478,393 +2478,77 @@ orderItems: {
 
 ## Built-in Rules
 
-### `alphabetOnly<T extends Object>(errorMessage?: string)`
+| Rule | Description | Parameters | Example Usage |
+|------|-------------|------------|---------------|
+| `alphabetOnly` | String contains only alphabetic characters | `errorMessage?: string` | `name: [alphabetOnly("Letters only")]` |
+| `arrayMaxLen` | Array length ≤ specified maximum | `maxLen: number, errorMessage?: string` | `items: [arrayMaxLen(5, "Max 5 items")]` |
+| `arrayMinLen` | Array length ≥ specified minimum | `minLen: number, errorMessage?: string` | `items: [arrayMinLen(1, "At least 1 item")]` |
+| `elementOf` | Value exists in provided array | `array: TValue[], errorMessage?: string` | `status: [elementOf(["active", "inactive"])]` |
+| `emailAddress` | Valid email address format | `errorMessage?: string` | `email: [emailAddress("Invalid email")]` |
+| `equalToPropertyValue` | Value equals another property's value | `propertyName: keyof TObject, errorMessage?: string` | `confirmPassword: [equalToPropertyValue("password")]` |
+| `isBool` | Value is boolean (true/false) | `errorMessage?: string` | `subscribed: [isBool("Must be true/false")]` |
+| `isDateObject` | Value is valid Date object | `errorMessage?: string` | `startDate: [isDateObject("Invalid date")]` |
+| `isNumber` | Value is number (not NaN) | `errorMessage?: string` | `price: [isNumber("Must be a number")]` |
+| `isString` | Value is string type | `errorMessage?: string` | `name: [isString("Must be a string")]` |
+| `maxNumber` | Number ≤ specified maximum | `max: number, errorMessage?: string` | `price: [maxNumber(1000, "Max $1000")]` |
+| `minNumber` | Number ≥ specified minimum | `min: number, errorMessage?: string` | `price: [minNumber(1, "Min $1")]` |
+| `regularExpression` | String matches regex pattern | `regex: RegExp, errorMessage?: string` | `username: [regularExpression(/^[a-zA-Z0-9_]+$/)]` |
+| `required` | Value is not null/undefined/empty | `errorMessage?: string` | `name: [required("Name is required")]` |
+| `stringMaxLen` | String length ≤ specified maximum | `maxLength: number, errorMessage?: string` | `username: [stringMaxLen(20, "Max 20 chars")]` |
+| `stringMinLen` | String length ≥ specified minimum | `minLen: number, errorMessage?: string` | `username: [stringMinLen(3, "Min 3 chars")]` |
 
-Ensures that a string contains only alphabetic characters.
+### Special Value Handling
 
-Usage:
-
-```ts
-import { alphabetOnly } from "validant";
-
-type User = {
-    name: string;
-};
-
-const validationRule = {
-    name: [alphabetOnly("Name can only contain letters.")],
-};
-```
-
-### `arrayMaxLen<TValue, TObject extends Object>(maxLen: number, errorMessage?: string)`
-
-Validates that the array length is less than or equal to the specified maxLen.
-
-Usage:
-
-```ts
-import { arrayMaxLen } from "validant";
-
-type Order = {
-    orderItems: string[];
-};
-
-const validationRule = {
-    orderItems: [arrayMaxLen(5, "Order items cannot exceed 5.")],
-};
-```
-
-### `arrayMinLen<TValue, TObject extends Object>(minLen: number, errorMessage?: string)`
-
-Validates that the array has at least the specified minimum length.
-
-Usage:
-
-```ts
-import { arrayMinLen } from "validant";
-
-type Order = {
-    orderItems: string[];
-};
-
-const validationRule = {
-    orderItems: [arrayMinLen(3, "You need to select at least 3 items.")],
-};
-```
-
-### `elementOf<TValue, TObject extends Object>(array: TValue[], errorMessage?: string)`
-
-Validates that the value is one of the elements in the provided array.
-
-Usage:
-
-```ts
-import { elementOf } from "validant";
-
-type User = {
-    status: string;
-};
-
-const validationRule = {
-    status: [
-        elementOf(
-            ["active", "inactive"],
-            "Status must be either 'active' or 'inactive'."
-        ),
-    ],
-};
-```
-
-### `emailAddress<TObject extends Object>(errorMessage?: string)`
-
-Validates that the value is a valid email address.
-
-Usage:
-
-```ts
-import { emailAddress } from "validant";
-
-type User = {
-    email: string;
-};
-
-const validationRule = {
-    email: [emailAddress("Please enter a valid email address.")],
-};
-```
-
-### `equalToPropertyValue<TObject extends Object>(propertyNameToCompare: keyof TObject, errorMessage?: string)`
-
-Validates that a property's value is equal to the value of another property in the same object.
-
-Usage:
-
-```ts
-import { equalToPropertyValue } from "validant";
-
-type PasswordForm = {
-    password: string;
-    confirmPassword: string;
-};
-
-const validationRule = {
-    confirmPassword: [
-        equalToPropertyValue("password", "Passwords do not match."),
-    ],
-};
-```
-
-This ensures confirmPassword is equal to password.
-
-### `isBool<TValue, TObject extends Object>(errorMessage?: string)`
-
-Validates that the value is a boolean (true or false).
-
-Usage:
-
-```ts
-import { isBool } from "validant";
-
-type Settings = {
-    subscribed: boolean;
-};
-
-const validationRule = {
-    subscribed: [isBool("Must be true or false.")],
-};
-```
-
-This ensures the subscribed field is explicitly a boolean value.
-
-### `isBool<TValue, TObject extends Object>(errorMessage?: string)`
-
-Validates that the value is a boolean (true or false).
-
-Usage:
-
-```ts
-import { isBool } from "validant";
-
-type Settings = {
-    subscribed: boolean;
-};
-
-const validationRule = {
-    subscribed: [isBool("Must be true or false.")],
-};
-```
-
-This ensures the subscribed field is explicitly a boolean value.
-
-### `isDateObject<TValue, TObject extends Object>(errorMessage?: string)`
-
-Validates that the value is a valid JavaScript Date object (i.e., value instanceof Date and not an invalid date).
-Date strings and epoch numbers will be treated as invalid.
+#### `required` Rule
 | Value | Result |
-| ------------- | --------- |
+|-------|--------|
 | `undefined` | ❌ Invalid |
 | `null` | ❌ Invalid |
 | `""` | ❌ Invalid |
-| `"Invalid Date"` | ❌ Invalid |
 | `"   "` | ❌ Invalid |
-| `new Date()` | ✅ Valid |
-| `new Date('bad')` | ❌ Invalid |
-
-Usage:
-
-```ts
-import { isDateObject } from "validant";
-
-type Booking = {
-    startDate: Date;
-};
-
-const validationRule = {
-    startDate: [isDateObject("Start date must be a valid date.")],
-};
-```
-
-This ensures the startDate is a valid Date instance, not just a string or an invalid date.
-
-### `isNumber<TValue, TObject extends Object>(errorMessage?: string)`
-
-Validates that the value is a number (typeof value === "number" and not NaN).
-
-| Value       | Result                 |
-| ----------- | ---------------------- |
-| `undefined` | ❌ Invalid             |
-| `null`      | ❌ Invalid             |
-| `""`        | ❌ Invalid             |
-| `"   "`     | ❌ Invalid white space |
-| 0           | ✅ Valid               |
-| `NaN`       | ❌ Invalid             |
-| `false`     | ❌ Invalid             |
-| `[]`        | ❌ Invalid             |
-| `[1]`       | ❌ Invalid             |
-| `{}`        | ❌ Invalid             |
-| `{ a: 1 }`  | ❌ Invalid             |
-
-Usage:
-
-```ts
-import { isNumber } from "validant";
-
-type Invoice = {
-    totalAmount: number;
-};
-
-const validationRule = {
-    totalAmount: [isNumber("Total amount must be a valid number.")],
-};
-```
-
-This ensures that totalAmount is a valid number type, not a string or NaN.
-
-### `isString<TValue, TObject extends Object>(errorMessage?: string)`
-
-Validates that the value is a string (typeof value === "string").
-
-| Value       | Result     |
-| ----------- | ---------- |
-| `"hello"`   | ✅ Valid   |
-| `""`        | ✅ Valid   |
-| `"   "`     | ✅ Valid   |
-| `123`       | ❌ Invalid |
-| `null`      | ❌ Invalid |
-| `undefined` | ❌ Invalid |
-| `{}`        | ❌ Invalid |
-
-Usage:
-
-```ts
-import { isString } from "validant";
-
-type Product = {
-    name: string;
-};
-
-const validationRule = {
-    name: [isString("Product name must be a string.")],
-};
-```
-
-This ensures that name is a valid string type.
-
-### `maxNumber<TObject extends Object>(max: number, errorMessage?: string)`
-
-Validates that a number is less than or equal to the specified maximum value.
-
-Usage:
-
-```ts
-import { maxNumber } from "validant";
-
-type Product = {
-    price: number;
-};
-
-const validationRule = {
-    price: [maxNumber(1000, "Price must not exceed 1000.")],
-};
-```
-
-This ensures the price does not go over the defined max value.
-
-### `minNumber<TObject extends Object>(min: number, errorMessage?: string)`
-
-Validates that a number is greater than or equal to the specified minimum value.
-
-Usage:
-
-```ts
-import { minNumber } from "validant";
-
-type Product = {
-    price: number;
-};
-
-const validationRule = {
-    price: [minNumber(10, "Price must be at least 10.")],
-};
-```
-
-This ensures the price is not below the defined min value.
-
-### `regularExpression<TObject extends Object>(regex: RegExp, errorMessage?: string)`
-
-Validates that a string matches the provided regular expression.
-
-Usage:
-
-```ts
-import { regularExpression } from "validant";
-
-type User = {
-    username: string;
-};
-
-const validationRule = {
-    username: [
-        regularExpression(
-            /^[a-zA-Z0-9_]+$/,
-            "Username can only contain letters, numbers, and underscores."
-        ),
-    ],
-};
-```
-
-This ensures the username matches the specified pattern.
-
-### `required<TValue, TObject extends Object>(errorMessage?: string)`
-
-Validates that a value is not null, undefined, or an empty string/array.
-| Value | Result |
-| ----------- | --------- |
-| `undefined` | ❌ Invalid |
-| `null` | ❌ Invalid |
-| `""` | ❌ Invalid |
-| `"   "` | ❌ Invalid white space |
 | `0` | ✅ Valid |
 | `false` | ✅ Valid |
 | `[]` | ❌ Invalid |
 | `[1]` | ✅ Valid |
 | `{}` | ❌ Invalid |
 | `{ a: 1 }` | ✅ Valid |
-Usage:
+
+#### `isNumber` Rule
+| Value | Result |
+|-------|--------|
+| `0` | ✅ Valid |
+| `NaN` | ❌ Invalid |
+| `"123"` | ❌ Invalid |
+| `null` | ❌ Invalid |
+| `undefined` | ❌ Invalid |
+
+#### `isDateObject` Rule
+| Value | Result |
+|-------|--------|
+| `new Date()` | ✅ Valid |
+| `new Date('invalid')` | ❌ Invalid |
+| `"2023-01-01"` | ❌ Invalid |
+| `1234567890` | ❌ Invalid |
+
+### Usage Examples
 
 ```ts
-import { required } from "validant";
+import { required, emailAddress, minNumber, arrayMinLen } from "validant";
 
-type User = {
+interface User {
     name: string;
-};
+    email: string;
+    age: number;
+    hobbies: string[];
+}
 
-const validationRule = {
-    name: [required("Name is required.")],
-};
-```
-
-This ensures that name is provided and not empty.
-
-### `stringMaxLen<TObject extends Object>(maxLength: number, errorMessage?: string)`
-
-Validates that a string is less than or equal to the specified maximum length.
-
-Usage:
-
-```ts
-import { stringMaxLen } from "validant";
-
-type User = {
-    username: string;
-};
-
-const validationRule = {
-    username: [stringMaxLen(20, "Username must be 20 characters or fewer.")],
+const userRule: ValidationRule<User> = {
+    name: [required("Name is required")],
+    email: [required(), emailAddress("Invalid email format")],
+    age: [required(), minNumber(18, "Must be at least 18")],
+    hobbies: [arrayMinLen(1, "At least one hobby required")]
 };
 ```
-
-This ensures that username does not exceed 20 characters in length.
-
-### `stringMinLen<TObject>(minLen: number, errorMessage?: string)`
-
-Validates that a string is at least the specified minimum length.
-
-Usage:
-
-```ts
-import { stringMinLen } from "validant";
-
-type User = {
-    username: string;
-};
-
-const validationRule = {
-    username: [stringMinLen(5, "Username must be at least 5 characters long.")],
-};
-```
-
-This ensures that username is at least 5 characters long.
 
 ## 🔄 Flat Error Structure for UI/API
 
