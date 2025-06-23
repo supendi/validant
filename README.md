@@ -2,6 +2,50 @@
 
 **Validant** is a TypeScript-first validation library for real-world, dynamic rules — no DSLs, just types and functions.
 
+## Table of Contents
+
+- [✨ Why Validant?](#-why-validant)
+- [📊 Benchmark Results](https://github.com/supendi/validant-bench/blob/main/BENCHMARK_RESULTS.md)
+- [🧩 When validation is complex and not just "required()"](#-when-validation-is-not-just-required-and-complex)
+- [🏁 Getting Started](#-getting-started)
+  - [📦 Installation](#-installation)
+  - [🛠️ Validation Rule, Not Schema](#️-validation-rule-not-schema)
+  - [✅ IntelliSense That Just Works](#-intellisense-that-just-works)
+- [🛡️ Type Safe](#️-type-safe)
+  - [🔒 Safe at Compile Time](#-safe-at-compile-time)
+  - [🔒 Safe at Run Time](#-safe-at-run-time)
+- [✅ Type Freedom](#-type-freedom)
+- [🛠️ Validation](#️-validation)
+  - [⚡Sync Validation](#sync-validation)
+    - [Object Level Validation](#object-level-validation)
+    - [Field Level Validation](#field-level-validation)
+  - [🌐 Async Validation](#-async-validation)
+    - [Async Object Level Validation](#async-object-level-validation)
+    - [Async Field Level Validation](#async-field-level-validation)
+    - [✅ Intuitive Error Structure](#-intuitive-error-structure)
+- [🔧 Custom Validation](#-custom-validation)
+  - [🧩 Inline Custom Rule Example](#-inline-custom-rule-example)
+  - [🧩 Composable Rule](#-composable-rule)
+  - [🔓 Loose Coupling](#-loose-coupling)
+- [🧮 Array Validation](#-array-validation)
+- [⚠️ Error Structure Breakdown](#️-error-structure-breakdown)
+  - [🧱 {} Object Error](#-object-error)
+  - [🧱 [] Array Error](#-array-error)
+  - [🛡️ Type-Safe Error](#️-type-safe-error)
+- [🧬 Validation Context Awareness: Property, Root Object, and Arrays](#-validation-context-awareness-property-root-object-and-arrays)
+  - [🔹Property-Level Awareness](#property-level-awareness)
+  - [🔹Root object awareness](#root-object-awareness)
+  - [🔹Array (Item) Awareness](#array-item-awareness)
+- [Examples](#examples)
+  - [Sync Example](#sync-example)
+  - [Async Examples](#async-examples)
+- [🧩 Validation Rule Composition](#-validation-rule-composition)
+- [📚 API Reference](#-api-reference)
+  - [Types](#types)
+  - [Custom Validate Function](#custom-rule-function-property-validator)
+- [Built-in Rules](#built-in-rules)
+- [🔄 Flat Error Structure for UI/API](#-flat-error-structure-for-uiapi)
+
 ## ✨ Why Validant?
 -   🔄 TYPE-FIRST, NOT SCHEMA-FIRST = LOOSE COUPLING: Unlike other libraries that generate types from schemas, Validant starts from your own types — allowing you to decouple your app from any validation library, including this one.
 -   🧠 No DSLs. No special syntax. Just plain functions.
@@ -10,7 +54,7 @@
 -   🧪 Made for TypeScript first: Validant is written in and only tested with TypeScript. It's built for modern TypeScript-first projects. It might work in JavaScript — but it's never been tested there.
 -   ✅ Deep, fine-grained validation on individual fields — sync or async, arrays, nested objects, also support Validate per Field
 
-## 🧩 When validation is not just required and complex
+## 🧩 When validation is complex and not just "required()"
 ```ts
 
 import {
@@ -569,7 +613,7 @@ class Account {
 }
 ```
 
-Then you simply declare your validation rule:
+Then you simply declare your validation rule dan validate:
 
 ```ts
 import { minNumber, required, emailAddress, ValidationRule } from "validant";
@@ -579,6 +623,10 @@ const validationRule: ValidationRule<Account> = {
     age: [required(), minNumber(17, "Should be at least 17 years old.")],
     email: [required(), emailAddress("Invalid email address")],
 };
+
+// validate
+const validator = new Validator(validationRule);
+const validationResult = validator.validate(account);
 ```
 
 If your model already defines the structure, why repeat it with something like `name: string()` or `username: z.string()`?
@@ -611,7 +659,7 @@ Because Validant uses your existing model, the validation rule knows your proper
 
 No inference hacks. No schema dance. Just proper TypeScript support, right out of the box.
 
-## 🛡️ TYPE SAFE
+## 🛡️ Type Safe
 
 ### 🔒 Safe at Compile Time
 
@@ -2139,7 +2187,7 @@ Whether you're validating a single nested object or a list of them, Validant kee
 
 ## 📚 API Reference
 
-### TYPES
+### Types
 
 ### `ValidationRule<T, TRoot extends Object = T>`
 
@@ -2320,7 +2368,7 @@ And you have a rule like "Minimum 5 items required", the error might look like:
 
 Use this structure to display detailed and indexed feedback per array element — and at the same time handle overall constraints at the array level.
 
-### Custom Rule Function (Property Validator)
+### Custom Validate Function
 
 These types let you define your own custom validation rules for individual properties in a type-safe way.
 
@@ -2428,7 +2476,7 @@ orderItems: {
 }
 ```
 
-## BUILT IN RULES
+## Built-in Rules
 
 ### `alphabetOnly<T extends Object>(errorMessage?: string)`
 
