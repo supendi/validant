@@ -1,6 +1,30 @@
 # Validant
 
+[![npm version](https://badge.fury.io/js/validant.svg)](https://badge.fury.io/js/validant)
+[![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg)](http://www.typescriptlang.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 **Validant** is a TypeScript-first validation library for real-world, dynamic rules — no DSLs, just types and functions.
+
+```ts
+// Define your model
+interface User {
+    name: string;
+    email: string;
+    age: number;
+}
+
+// Create validation rules
+const userRule: ValidationRule<User> = {
+    name: [required("Name is required")],
+    email: [required(), emailAddress("Invalid email")],
+    age: [required(), minNumber(18, "Must be 18+")]
+};
+
+// Validate
+const validator = new Validator(userRule);
+const result = validator.validate(user);
+```
 
 ## Table of Contents
 
@@ -2671,6 +2695,4 @@ type FlatErrors = FlattenErrorOf<Order>;
 
 ### See Also
 
--   [flattenError.spec.ts](src/__tests__/validant_tests/flattenError.spec.ts) for real-world test cases and expected outputs.
-
----
+-   [flattenError.spec.ts](src/__tests__/unit/validators/flattenError.spec.ts) for real-world test cases and expected outputs.
