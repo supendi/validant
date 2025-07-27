@@ -15,8 +15,8 @@ describe("Test Against undefined properties with undefined rules", () => {
 
         const person: Person = {}
 
-        const validator = new Validator(rule)
-        const actual = validator.validate(person)
+        const validator = new Validator()
+        const actual = validator.validate(person, rule)
 
         const expected: ValidationResult<Person> = {
             message: "Validation successful.",
@@ -37,8 +37,8 @@ describe("Test Simple Object", () => {
         }
         const person: Person = {}
 
-        const validator = new Validator(rule)
-        const actual = validator.validate(person)
+        const validator = new Validator()
+        const actual = validator.validate(person, rule)
 
         const expected: ValidationResult<Person> = {
             message: "Validation failed. Please check and fix the errors to continue.",

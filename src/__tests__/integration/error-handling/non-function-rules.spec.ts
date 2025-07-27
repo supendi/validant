@@ -16,8 +16,8 @@ describe("Test Not Function Property Rule", () => {
             age: ["dev use any and dont know if this is not a func" as any as ValidateFunc<1, Person>]
         }
 
-        const validator = new Validator(rule)
-        const actual = () => validator.validate(person)
+        const validator = new Validator()
+        const actual = () => validator.validate(person, rule)
 
         const expected = new Error("propertyRuleFunc is not a function")
 

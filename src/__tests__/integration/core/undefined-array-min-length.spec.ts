@@ -26,8 +26,8 @@ describe("Validator test with children array", () => {
             ]
         }
 
-        const validator = new Validator(rule)
-        const actual = validator.validate(person)
+        const validator = new Validator()
+        const actual = validator.validate(person, rule)
 
         const expected: ValidationResult<Person> = {
             message: "Validation failed. Please check and fix the errors to continue.",

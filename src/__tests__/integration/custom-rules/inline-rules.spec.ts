@@ -47,8 +47,8 @@ describe("validate login request", () => {
             password: ""
         }
 
-        const validator = new Validator(loginRule)
-        const actual = validator.validate(loginRequest)
+        const validator = new Validator()
+        const actual = validator.validate(loginRequest, loginRule)
 
         const expected: ValidationResult<LoginRequest> = {
             message: "Validation failed. Please check and fix the errors to continue.",
@@ -83,8 +83,8 @@ describe("validate login request", () => {
             password: ""
         }
 
-        const validator = new Validator(loginRule)
-        const actual = validator.validate(loginRequest)
+        const validator = new Validator()
+        const actual = validator.validate(loginRequest, loginRule)
 
         const expected: ValidationResult<LoginRequest> = {
             message: "Validation failed. Please check and fix the errors to continue.",

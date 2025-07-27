@@ -21,8 +21,8 @@ describe("Simple Object Test", () => {
             email: ""
         }
 
-        const validator = new Validator(validationRule)
-        const actual = validator.validate(account)
+        const validator = new Validator()
+        const actual = validator.validate(account, validationRule)
 
         var expected: ValidationResult<Account> = {
             message: "Validation failed. Please check and fix the errors to continue.",

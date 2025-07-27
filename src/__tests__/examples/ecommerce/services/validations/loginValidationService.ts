@@ -43,13 +43,13 @@ export interface LoginValidationService {
 export function createLoginValidationService(userRepository: UserRepository): LoginValidationService {
     async function validateAsync(request: LoginRequest) {
         const registrationRule = buildLoginRule(userRepository)
-        const validator = new AsyncValidator(registrationRule, {
+        const validator = new AsyncValidator({
             validationMessage: {
                 errorMessage: "error",
                 successMessage: "ok"
             }
         })
-        return validator.validateAsync(request)
+        return validator.validateAsync(request, registrationRule)
     }
     return {
         validateAsync

@@ -32,8 +32,8 @@ describe("Validate null property", () => {
             orderItems: null
         }
 
-        const validator = new AsyncValidator(rule)
-        const actual1 = await validator.validateAsync(newOrder1)
+        const validator = new AsyncValidator()
+        const actual1 = await validator.validateAsync(newOrder1, rule)
         const expected1: ValidationResult<Order> = {
             message: "Validation failed. Please check and fix the errors to continue.",
             isValid: false,

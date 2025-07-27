@@ -17,8 +17,8 @@ const person: Person = {
 
 describe("Ignore or skip undefined rule", () => {
     it("return true", async () => {
-        const validator = new AsyncValidator(rule)
-        const actual = await validator.validateAsync(person)
+        const validator = new AsyncValidator()
+        const actual = await validator.validateAsync(person, rule)
 
         const expected: ValidationResult<Person> = {
             message: "Validation successful.",

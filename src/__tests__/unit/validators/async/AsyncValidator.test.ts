@@ -120,10 +120,9 @@ describe('AsyncValidator', () => {
             };
 
             // Act
-            const validator = new AsyncValidator(rule);
+            const validator = new AsyncValidator();
 
             // Assert
-            expect(validator.asyncRule).toBe(rule);
             expect(validator.options).toEqual({
                 validationMessage: {
                     successMessage: "Validation successful.",
@@ -145,10 +144,9 @@ describe('AsyncValidator', () => {
             };
 
             // Act
-            const validator = new AsyncValidator(rule, customOptions);
+            const validator = new AsyncValidator(customOptions);
 
             // Assert
-            expect(validator.asyncRule).toBe(rule);
             expect(validator.options).toEqual(customOptions);
         });
 
@@ -165,7 +163,7 @@ describe('AsyncValidator', () => {
             };
 
             // Act
-            const validator = new AsyncValidator(rule, customOptions);
+            const validator = new AsyncValidator(customOptions);
 
             // Assert
             expect(validator.options.validationMessage!.successMessage).toBe("Override success");
@@ -177,10 +175,9 @@ describe('AsyncValidator', () => {
             const rule: AsyncValidationRule<TestUser> = {};
 
             // Act
-            const validator = new AsyncValidator(rule);
+            const validator = new AsyncValidator();
 
             // Assert
-            expect(validator.asyncRule).toEqual({});
             expect(validator.options).toBeDefined();
         });
 
@@ -191,7 +188,7 @@ describe('AsyncValidator', () => {
             };
 
             // Act
-            const validator = new AsyncValidator(rule, undefined);
+            const validator = new AsyncValidator();
 
             // Assert
             expect(validator.options).toEqual({
@@ -210,7 +207,7 @@ describe('AsyncValidator', () => {
             const partialOptions: ValidationOptions = {};
 
             // Act
-            const validator = new AsyncValidator(rule, partialOptions);
+            const validator = new AsyncValidator(partialOptions);
 
             // Assert
             // The current implementation replaces options entirely, not merging
@@ -226,7 +223,7 @@ describe('AsyncValidator', () => {
                 email: [mockAsyncEmail],
                 age: [mockAsyncMinAge]
             };
-            const validator = new AsyncValidator(rule);
+            const validator = new AsyncValidator();
             const validUser: TestUser = {
                 name: "John Doe",
                 email: "john@example.com",
@@ -236,7 +233,7 @@ describe('AsyncValidator', () => {
             mockValidateObjectAsync.mockResolvedValueOnce({} as any);
 
             // Act
-            const result: ValidationResult<TestUser> = await validator.validateAsync(validUser);
+            const result: ValidationResult<TestUser> = await validator.validateAsync(validUser, rule);
 
             // Assert
             expect(result.isValid).toBe(true);
@@ -251,7 +248,7 @@ describe('AsyncValidator', () => {
                 name: [mockAsyncRequired],
                 email: [mockAsyncEmail]
             };
-            const validator = new AsyncValidator(rule);
+            const validator = new AsyncValidator();
             const invalidUser: TestUser = {
                 name: "",
                 email: "invalid-email",
@@ -266,7 +263,7 @@ describe('AsyncValidator', () => {
             mockValidateObjectAsync.mockResolvedValueOnce(mockErrors as any);
 
             // Act
-            const result: ValidationResult<TestUser> = await validator.validateAsync(invalidUser);
+            const result: ValidationResult<TestUser> = await validator.validateAsync(invalidUser, rule);
 
             // Assert
             expect(result.isValid).toBe(false);
@@ -285,7 +282,7 @@ describe('AsyncValidator', () => {
                     errorMessage: "Please fix the issues below"
                 }
             };
-            const validator = new AsyncValidator(rule, customOptions);
+            const validator = new AsyncValidator(customOptions);
             const validUser: TestUser = {
                 name: "John",
                 email: "john@example.com",
@@ -295,7 +292,7 @@ describe('AsyncValidator', () => {
             mockValidateObjectAsync.mockResolvedValueOnce({} as any);
 
             // Act
-            const result = await validator.validateAsync(validUser);
+            const result = await validator.validateAsync(validUser, rule);
 
             // Assert
             expect(result.isValid).toBe(true);
@@ -305,13 +302,13 @@ describe('AsyncValidator', () => {
         test('should handle empty object validation', async () => {
             // Arrange
             const rule: AsyncValidationRule<TestUser> = {};
-            const validator = new AsyncValidator(rule);
+            const validator = new AsyncValidator();
             const emptyUser = {} as TestUser;
 
             mockValidateObjectAsync.mockResolvedValueOnce({} as any);
 
             // Act
-            const result = await validator.validateAsync(emptyUser);
+            const result = await validator.validateAsync(emptyUser, rule);
 
             // Assert
             expect(result.isValid).toBe(true);
@@ -323,7 +320,7 @@ describe('AsyncValidator', () => {
             const rule: AsyncValidationRule<TestUser> = {
                 name: [mockAsyncRequired]
             };
-            const validator = new AsyncValidator(rule);
+            const validator = new AsyncValidator();
             const user: TestUser = {
                 name: "John",
                 email: "john@example.com",
@@ -339,7 +336,7 @@ describe('AsyncValidator', () => {
             mockValidateObjectAsync.mockResolvedValueOnce(mockErrors as any);
 
             // Act
-            const result = await validator.validateAsync(user);
+            const result = await validator.validateAsync(user, rule);
 
             // Assert
             // Empty array [] is truthy, so validation fails
@@ -354,7 +351,7 @@ describe('AsyncValidator', () => {
                 email: [mockAsyncEmail],
                 age: [mockAsyncMinAge]
             };
-            const validator = new AsyncValidator(rule);
+            const validator = new AsyncValidator();
             const user: TestUser = {
                 name: "John",
                 email: "john@example.com",
@@ -372,7 +369,7 @@ describe('AsyncValidator', () => {
             mockValidateObjectAsync.mockResolvedValueOnce(mockErrors as any);
 
             // Act
-            const result = await validator.validateAsync(user);
+            const result = await validator.validateAsync(user, rule);
 
             // Assert
             expect(result.isValid).toBe(true);
@@ -384,7 +381,7 @@ describe('AsyncValidator', () => {
             const rule: AsyncValidationRule<TestUser> = {
                 name: [mockAsyncRequired]
             };
-            const validator = new AsyncValidator(rule);
+            const validator = new AsyncValidator();
             const user: TestUser = {
                 name: "",
                 email: "john@example.com",
@@ -398,7 +395,7 @@ describe('AsyncValidator', () => {
             mockValidateObjectAsync.mockResolvedValueOnce(mockErrors as any);
 
             // Act
-            const result = await validator.validateAsync(user);
+            const result = await validator.validateAsync(user, rule);
 
             // Assert
             expect(result.isValid).toBe(false);
@@ -414,7 +411,7 @@ describe('AsyncValidator', () => {
                     location: [mockAsyncRequired]
                 }
             };
-            const validator = new AsyncValidator(rule);
+            const validator = new AsyncValidator();
             const user: TestNestedUser = {
                 name: "John",
                 profile: {
@@ -432,7 +429,7 @@ describe('AsyncValidator', () => {
             mockValidateObjectAsync.mockResolvedValueOnce(mockErrors as any);
 
             // Act
-            const result = await validator.validateAsync(user);
+            const result = await validator.validateAsync(user, rule);
 
             // Assert
             expect(result.isValid).toBe(false);
@@ -448,7 +445,7 @@ describe('AsyncValidator', () => {
                     arrayElementRule: [mockAsyncRequired]
                 }
             };
-            const validator = new AsyncValidator(rule);
+            const validator = new AsyncValidator();
             const user: TestUserWithArray = {
                 name: "John",
                 tags: ["tag1", ""]
@@ -467,7 +464,7 @@ describe('AsyncValidator', () => {
             mockValidateObjectAsync.mockResolvedValueOnce(mockErrors as any);
 
             // Act
-            const result = await validator.validateAsync(user);
+            const result = await validator.validateAsync(user, rule);
 
             // Assert
             expect(result.isValid).toBe(false);
@@ -480,7 +477,7 @@ describe('AsyncValidator', () => {
                 name: [mockSyncRequired, mockAsyncRequired],
                 email: [mockAsyncEmail]
             };
-            const validator = new AsyncValidator(rule);
+            const validator = new AsyncValidator();
             const user: TestUser = {
                 name: "",
                 email: "john@example.com",
@@ -494,7 +491,7 @@ describe('AsyncValidator', () => {
             mockValidateObjectAsync.mockResolvedValueOnce(mockErrors as any);
 
             // Act
-            const result = await validator.validateAsync(user);
+            const result = await validator.validateAsync(user, rule);
 
             // Assert
             expect(result.isValid).toBe(false);
@@ -508,7 +505,7 @@ describe('AsyncValidator', () => {
                 email: [mockAsyncEmail],
                 age: [mockAsyncMinAge]
             };
-            const validator = new AsyncValidator(rule);
+            const validator = new AsyncValidator();
             const user: TestUser = {
                 name: "",
                 email: "invalid-email",
@@ -525,7 +522,7 @@ describe('AsyncValidator', () => {
             mockValidateObjectAsync.mockResolvedValueOnce(mockErrors as any);
 
             // Act
-            const result = await validator.validateAsync(user);
+            const result = await validator.validateAsync(user, rule);
 
             // Assert
             expect(result.isValid).toBe(false);
@@ -538,11 +535,11 @@ describe('AsyncValidator', () => {
             const rule: AsyncValidationRule<TestUser> = {
                 name: [mockAsyncRequired]
             };
-            const validator = new AsyncValidator(rule);
-            
+            const validator = new AsyncValidator();
+
             // Manually set options to undefined validationMessage to test edge case
             validator.options = { validationMessage: undefined };
-            
+
             const user: TestUser = {
                 name: "John",
                 email: "john@example.com",
@@ -553,7 +550,7 @@ describe('AsyncValidator', () => {
 
             // Act & Assert
             // This should throw an error because validationMessage is undefined
-            await expect(validator.validateAsync(user)).rejects.toThrow();
+            await expect(validator.validateAsync(user, rule)).rejects.toThrow();
         });
     });
 
@@ -563,7 +560,7 @@ describe('AsyncValidator', () => {
             const rule: AsyncValidationRule<TestUser> = {
                 email: [mockAsyncEmail] // No rule for 'name'
             };
-            const validator = new AsyncValidator(rule);
+            const validator = new AsyncValidator();
             const user: TestUser = {
                 name: "John",
                 email: "john@example.com",
@@ -571,7 +568,7 @@ describe('AsyncValidator', () => {
             };
 
             // Act
-            const result = await validator.validateFieldAsync(user, 'name');
+            const result = await validator.validateFieldAsync(user, 'name', rule);
 
             // Assert
             expect(result.isValid).toBe(true);
@@ -585,7 +582,7 @@ describe('AsyncValidator', () => {
                 name: [mockAsyncRequired],
                 email: [mockAsyncEmail]
             };
-            const validator = new AsyncValidator(rule);
+            const validator = new AsyncValidator();
             const user: TestUser = {
                 name: "John",
                 email: "john@example.com",
@@ -600,7 +597,7 @@ describe('AsyncValidator', () => {
             mockValidateFieldAsync.mockResolvedValueOnce(mockFieldResult as any);
 
             // Act
-            const result = await validator.validateFieldAsync(user, 'name');
+            const result = await validator.validateFieldAsync(user, 'name', rule);
 
             // Assert
             expect(result).toEqual(mockFieldResult);
@@ -612,7 +609,7 @@ describe('AsyncValidator', () => {
             const rule: AsyncValidationRule<TestUser> = {
                 name: [mockAsyncRequired]
             };
-            const validator = new AsyncValidator(rule);
+            const validator = new AsyncValidator();
             const user: TestUser = {
                 name: "",
                 email: "john@example.com",
@@ -628,7 +625,7 @@ describe('AsyncValidator', () => {
             mockValidateFieldAsync.mockResolvedValueOnce(mockFieldResult as any);
 
             // Act
-            const result = await validator.validateFieldAsync(user, 'name');
+            const result = await validator.validateFieldAsync(user, 'name', rule);
 
             // Assert
             expect(result).toEqual(mockFieldResult);
@@ -641,7 +638,7 @@ describe('AsyncValidator', () => {
                 name: [mockAsyncRequired],
                 email: [mockAsyncEmail]
             };
-            const validator = new AsyncValidator(rule);
+            const validator = new AsyncValidator();
             const user: TestUserWithOptional = {
                 name: "John"
                 // email is optional and not provided
@@ -655,7 +652,7 @@ describe('AsyncValidator', () => {
             mockValidateFieldAsync.mockResolvedValueOnce(mockFieldResult as any);
 
             // Act
-            const result = await validator.validateFieldAsync(user, 'email');
+            const result = await validator.validateFieldAsync(user, 'email', rule);
 
             // Assert
             expect(result).toEqual(mockFieldResult);
@@ -671,7 +668,7 @@ describe('AsyncValidator', () => {
                     arrayElementRule: [mockAsyncRequired]
                 }
             };
-            const validator = new AsyncValidator(rule);
+            const validator = new AsyncValidator();
             const user: TestUserWithArray = {
                 name: "John",
                 tags: ["tag1", "tag2"]
@@ -685,7 +682,7 @@ describe('AsyncValidator', () => {
             mockValidateFieldAsync.mockResolvedValueOnce(mockFieldResult as any);
 
             // Act
-            const result = await validator.validateFieldAsync(user, 'tags');
+            const result = await validator.validateFieldAsync(user, 'tags', rule);
 
             // Assert
             expect(result).toEqual(mockFieldResult);
@@ -701,7 +698,7 @@ describe('AsyncValidator', () => {
                     location: [mockAsyncRequired]
                 }
             };
-            const validator = new AsyncValidator(rule);
+            const validator = new AsyncValidator();
             const user: TestNestedUser = {
                 name: "John",
                 profile: {
@@ -718,7 +715,7 @@ describe('AsyncValidator', () => {
             mockValidateFieldAsync.mockResolvedValueOnce(mockFieldResult as any);
 
             // Act
-            const result = await validator.validateFieldAsync(user, 'profile');
+            const result = await validator.validateFieldAsync(user, 'profile', rule);
 
             // Assert
             expect(result).toEqual(mockFieldResult);
@@ -732,7 +729,7 @@ describe('AsyncValidator', () => {
                 email: [mockAsyncEmail],
                 age: [mockAsyncMinAge]
             };
-            const validator = new AsyncValidator(rule);
+            const validator = new AsyncValidator();
             const user: TestUser = {
                 name: "John",
                 email: "john@example.com",
@@ -740,9 +737,9 @@ describe('AsyncValidator', () => {
             };
 
             // Act & Assert - These should all be valid field names
-            await validator.validateFieldAsync(user, 'name');
-            await validator.validateFieldAsync(user, 'email');
-            await validator.validateFieldAsync(user, 'age');
+            await validator.validateFieldAsync(user, 'name', rule);
+            await validator.validateFieldAsync(user, 'email', rule);
+            await validator.validateFieldAsync(user, 'age', rule);
 
             // These would cause TypeScript errors if uncommented:
             // await validator.validateFieldAsync(user, 'nonexistentField'); // TS Error: Argument of type '"nonexistentField"' is not assignable
@@ -773,7 +770,7 @@ describe('AsyncValidator', () => {
                 }
             };
 
-            const validator = new AsyncValidator(rule);
+            const validator = new AsyncValidator();
             const complexObject: ComplexType = {
                 stringField: "test",
                 numberField: 25,
@@ -791,7 +788,7 @@ describe('AsyncValidator', () => {
             mockValidateFieldAsync.mockResolvedValueOnce(mockFieldResult as any);
 
             // Act
-            const result = await validator.validateFieldAsync(complexObject, 'stringField');
+            const result = await validator.validateFieldAsync(complexObject, 'stringField', rule);
 
             // Assert
             expect(result).toEqual(mockFieldResult);
@@ -805,7 +802,7 @@ describe('AsyncValidator', () => {
             const rule: AsyncValidationRule<TestUser> = {
                 name: [mockAsyncRequired]
             };
-            const validator = new AsyncValidator(rule);
+            const validator = new AsyncValidator();
             const user: TestUser = {
                 name: "John",
                 email: "john@example.com",
@@ -816,7 +813,7 @@ describe('AsyncValidator', () => {
             mockValidateObjectAsync.mockRejectedValueOnce(error);
 
             // Act & Assert
-            await expect(validator.validateAsync(user)).rejects.toThrow('Validation engine error');
+            await expect(validator.validateAsync(user, rule)).rejects.toThrow('Validation engine error');
         });
 
         test('should handle errors thrown by validateFieldAsync', async () => {
@@ -824,7 +821,7 @@ describe('AsyncValidator', () => {
             const rule: AsyncValidationRule<TestUser> = {
                 name: [mockAsyncRequired]
             };
-            const validator = new AsyncValidator(rule);
+            const validator = new AsyncValidator();
             const user: TestUser = {
                 name: "John",
                 email: "john@example.com",
@@ -835,7 +832,7 @@ describe('AsyncValidator', () => {
             mockValidateFieldAsync.mockRejectedValueOnce(error);
 
             // Act & Assert
-            await expect(validator.validateFieldAsync(user, 'name')).rejects.toThrow('Field validation error');
+            await expect(validator.validateFieldAsync(user, 'name', rule)).rejects.toThrow('Field validation error');
         });
 
         test('should handle validateObjectAsync returning undefined', async () => {
@@ -843,7 +840,7 @@ describe('AsyncValidator', () => {
             const rule: AsyncValidationRule<TestUser> = {
                 name: [mockAsyncRequired]
             };
-            const validator = new AsyncValidator(rule);
+            const validator = new AsyncValidator();
             const user: TestUser = {
                 name: "John",
                 email: "john@example.com",
@@ -853,7 +850,7 @@ describe('AsyncValidator', () => {
             mockValidateObjectAsync.mockResolvedValueOnce(undefined as any);
 
             // Act
-            const result = await validator.validateAsync(user);
+            const result = await validator.validateAsync(user, rule);
 
             // Assert
             expect(result.isValid).toBe(true);
@@ -865,7 +862,7 @@ describe('AsyncValidator', () => {
             const rule: AsyncValidationRule<TestUser> = {
                 name: [mockAsyncRequired]
             };
-            const validator = new AsyncValidator(rule);
+            const validator = new AsyncValidator();
             const user: TestUser = {
                 name: "John",
                 email: "john@example.com",
@@ -875,7 +872,7 @@ describe('AsyncValidator', () => {
             mockValidateObjectAsync.mockResolvedValueOnce({} as any);
 
             // Act
-            const result = await validator.validateAsync(user);
+            const result = await validator.validateAsync(user, rule);
 
             // Assert
             expect(result.isValid).toBe(true);
@@ -898,7 +895,7 @@ describe('AsyncValidator', () => {
             circularOptions.self = circularOptions;
 
             // Act
-            const validator = new AsyncValidator(rule, circularOptions);
+            const validator = new AsyncValidator(circularOptions);
 
             // Assert
             expect(validator.options).toEqual(circularOptions);
@@ -932,7 +929,7 @@ describe('AsyncValidator', () => {
                 field10: [mockAsyncRequired]
             };
 
-            const validator = new AsyncValidator(rule);
+            const validator = new AsyncValidator();
             const largeObject: LargeType = {
                 field1: "value1",
                 field2: "value2",
@@ -949,7 +946,7 @@ describe('AsyncValidator', () => {
             mockValidateObjectAsync.mockResolvedValueOnce({} as any);
 
             // Act
-            const result = await validator.validateAsync(largeObject);
+            const result = await validator.validateAsync(largeObject, rule);
 
             // Assert
             expect(result.isValid).toBe(true);
@@ -960,7 +957,7 @@ describe('AsyncValidator', () => {
     describe('Type Safety and Limitations', () => {
         test('should demonstrate type inference limitations', async () => {
             // This test demonstrates the limitations of the current type system
-            
+
             interface RequiredAllFields {
                 name: string;
                 email: string;
@@ -995,47 +992,18 @@ describe('AsyncValidator', () => {
                 // email and age are correctly optional
             };
 
-            const validator1 = new AsyncValidator(validRule);
-            const validator2 = new AsyncValidator(partialRule);
-            const validator3 = new AsyncValidator(optionalRule);
+            const validator1 = new AsyncValidator();
+            const validator2 = new AsyncValidator();
+            const validator3 = new AsyncValidator();
 
             expect(validator1).toBeDefined();
             expect(validator2).toBeDefined();
             expect(validator3).toBeDefined();
         });
 
-        test('should demonstrate validation rule mutation limitations', () => {
-            // This test shows that the AsyncValidator holds a reference to the rule object
-            // and any mutations to the original rule will affect the validator
-            
-            interface MutableType {
-                name: string;
-                email?: string;
-            }
-
-            const rule: AsyncValidationRule<MutableType> = {
-                name: [mockAsyncRequired]
-            };
-
-            const validator = new AsyncValidator(rule);
-
-            // Original rule has no email validation
-            expect(validator.asyncRule.email).toBeUndefined();
-
-            // Mutate the original rule
-            rule.email = [mockAsyncEmail];
-
-            // The validator now has email validation due to shared reference
-            expect(validator.asyncRule.email).toEqual([mockAsyncEmail]);
-
-            // Limitation: This could lead to unexpected behavior if rules are modified
-            // after creating validators. To avoid this, the constructor could create
-            // a deep copy of the rule, but this would impact performance.
-        });
-
         test('should demonstrate field name extraction limitations', async () => {
             // This test shows how the Extract<keyof T, string> works and its limitations
-            
+
             interface MixedKeyTypes {
                 stringKey: string;
                 123: number; // Numeric key
@@ -1048,7 +1016,7 @@ describe('AsyncValidator', () => {
                 // This is a TypeScript limitation, not a bug in our implementation
             };
 
-            const validator = new AsyncValidator(rule);
+            const validator = new AsyncValidator();
             const obj: MixedKeyTypes = {
                 stringKey: "test",
                 123: 456,
@@ -1056,7 +1024,7 @@ describe('AsyncValidator', () => {
             };
 
             // This works:
-            await validator.validateFieldAsync(obj, 'stringKey');
+            await validator.validateFieldAsync(obj, 'stringKey', rule);
 
             // These would cause TypeScript errors:
             // await validator.validateFieldAsync(obj, '123'); // Error: string literal not assignable
@@ -1067,7 +1035,7 @@ describe('AsyncValidator', () => {
 
         test('should demonstrate generic type constraints', () => {
             // This test shows how generic types work with the AsyncValidator
-            
+
             interface BaseType {
                 id: string;
             }
@@ -1084,14 +1052,14 @@ describe('AsyncValidator', () => {
                 value: [mockAsyncMinAge]
             };
 
-            const extendedValidator = new AsyncValidator(extendedRule);
+            const extendedValidator = new AsyncValidator();
 
             // This also works - using just the base type:
             const baseRule: AsyncValidationRule<BaseType> = {
                 id: [mockAsyncRequired]
             };
 
-            const baseValidator = new AsyncValidator(baseRule);
+            const baseValidator = new AsyncValidator();
 
             // Limitation: We cannot use a base rule with an extended type object
             // because the validation rule might be incomplete
@@ -1103,7 +1071,7 @@ describe('AsyncValidator', () => {
 
         test('should demonstrate async/sync rule mixing limitations', () => {
             // This test shows how async and sync rules can be mixed
-            
+
             interface TestType {
                 asyncField: string;
                 syncField: string;
@@ -1118,7 +1086,7 @@ describe('AsyncValidator', () => {
                 mixedField: [mockSyncRequired, mockAsyncRequired] // Mixed async/sync
             };
 
-            const validator = new AsyncValidator(rule);
+            const validator = new AsyncValidator();
 
             // Even though some fields have only sync rules, we must still use async methods
             // This is a design choice - once we use AsyncValidator, everything becomes async
@@ -1130,7 +1098,7 @@ describe('AsyncValidator', () => {
 
         test('should demonstrate array validation rule limitations', () => {
             // This test shows the complexity and limitations of array validation rules
-            
+
             interface ArrayType {
                 primitiveArray: string[];
                 objectArray: Array<{ name: string; value: number }>;
@@ -1160,7 +1128,7 @@ describe('AsyncValidator', () => {
                 }
             };
 
-            const validator = new AsyncValidator(rule);
+            const validator = new AsyncValidator();
 
             // Limitation: Deep nesting becomes complex and hard to maintain
             // The type system provides some safety, but the rules can become unwieldy
@@ -1179,11 +1147,10 @@ describe('AsyncValidator', () => {
             };
 
             // Act - Create multiple instances
-            const validators = Array.from({ length: 100 }, () => new AsyncValidator(rule));
+            const validators = Array.from({ length: 100 }, () => new AsyncValidator());
 
             // Assert - All instances should be independent
             validators.forEach((validator, index) => {
-                expect(validator.asyncRule).toBe(rule); // Same rule reference (efficient)
                 expect(validator.options).toEqual({ // But different options object
                     validationMessage: {
                         successMessage: "Validation successful.",
@@ -1193,43 +1160,6 @@ describe('AsyncValidator', () => {
             });
 
             expect(validators).toHaveLength(100);
-        });
-
-        test('should handle validation rule reuse', () => {
-            // Arrange
-            const sharedRule: AsyncValidationRule<TestUser> = {
-                name: [mockAsyncRequired],
-                email: [mockAsyncEmail]
-            };
-
-            // Act - Reuse the same rule across multiple validators
-            const validator1 = new AsyncValidator(sharedRule);
-            const validator2 = new AsyncValidator(sharedRule);
-
-            // Assert - Rule should be shared (memory efficient)
-            expect(validator1.asyncRule).toBe(validator2.asyncRule);
-            expect(validator1.asyncRule).toBe(sharedRule);
-        });
-
-        test('should handle large validation rule modifications', () => {
-            // This test demonstrates that modifying the original rule affects all validators using it
-            
-            // Arrange
-            const mutableRule: AsyncValidationRule<TestUser> = {
-                name: [mockAsyncRequired]
-            };
-
-            const validator = new AsyncValidator(mutableRule);
-
-            // Act - Modify the original rule
-            mutableRule.email = [mockAsyncEmail];
-
-            // Assert - The validator now has the modified rule
-            expect(validator.asyncRule.email).toEqual([mockAsyncEmail]);
-            
-            // This demonstrates that the rule is shared by reference
-            // Limitation: Modifying the rule after creating the validator affects the validator
-            // This could be unexpected behavior in some scenarios
         });
     });
 }); 

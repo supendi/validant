@@ -39,8 +39,8 @@ describe("Test Inline Custom Rule", () => {
             name: "John",
         }
 
-        const validator = new Validator(validationRule)
-        const validationResult = validator.validate(account)
+        const validator = new Validator()
+        const validationResult = validator.validate(account, validationRule)
 
         const expected: ValidationResult<Account> = {
             message: "Validation failed. Please check and fix the errors to continue.",

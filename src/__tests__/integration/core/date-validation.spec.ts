@@ -12,8 +12,8 @@ describe("Test", () => {
     it("return error empty Date", () => {
         const product: Product = {} // date undefined
 
-        const validator = new Validator(rule)
-        const actual = validator.validate(product)
+        const validator = new Validator()
+        const actual = validator.validate(product, rule)
         const expected: ValidationResult<Product> = {
             message: "Validation failed. Please check and fix the errors to continue.",
             isValid: false,
@@ -37,8 +37,8 @@ describe("Test non empty date", () => {
         const product = {
             expiredDate: new Date()
         }
-        const validator = new Validator(rule)
-        const actual = validator.validate(product)
+        const validator = new Validator()
+        const actual = validator.validate(product, rule)
 
         const expected: ValidationResult<Product> = {
             message: "Validation successful.",

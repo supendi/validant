@@ -58,8 +58,8 @@ describe("ValidateAsync Test", () => {
             orderItems: []
         }
 
-        const validator = new AsyncValidator(rule)
-        const actual = await validator.validateAsync(order)
+        const validator = new AsyncValidator()
+        const actual = await validator.validateAsync(order, rule)
         const expected: ValidationResult<Order> = {
             message: "Validation failed. Please check and fix the errors to continue.",
             isValid: false,
@@ -88,8 +88,8 @@ describe("Validate null property", () => {
             orderItems: []
         }
 
-        const validator = new AsyncValidator(rule)
-        const actual = await validator.validateAsync(order)
+        const validator = new AsyncValidator()
+        const actual = await validator.validateAsync(order, rule)
         const expected: ValidationResult<Order> = {
             message: "Validation failed. Please check and fix the errors to continue.",
             isValid: false,
@@ -123,8 +123,8 @@ describe("ValidateAsync Test", () => {
             ]
         }
 
-        const validator = new AsyncValidator(rule)
-        const actual = await validator.validateAsync(order)
+        const validator = new AsyncValidator()
+        const actual = await validator.validateAsync(order, rule)
         const expected: ValidationResult<Order> = {
             message: "Validation failed. Please check and fix the errors to continue.",
             isValid: false,

@@ -69,8 +69,8 @@ describe("Nested Object Test with nested address", () => {
             }
         }
 
-        const validator = new Validator(rule)
-        const actual = validator.validate(john)
+        const validator = new Validator()
+        const actual = validator.validate(john, rule)
 
         const expected: ValidationResult<Person> = {
             message: "Validation failed. Please check and fix the errors to continue.",

@@ -90,8 +90,8 @@ describe("Validator another order, this time a valid order", () => {
             ]
         }
 
-        const validator = new Validator(rule)
-        const actual = validator.validate(newOrder)
+        const validator = new Validator()
+        const actual = validator.validate(newOrder, rule)
         const expected: ValidationResult<Order> = {
             message: "Validation successful.",
             isValid: true,

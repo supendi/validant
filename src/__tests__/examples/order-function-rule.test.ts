@@ -93,8 +93,8 @@ describe("Validate Order Request with empty order items", () => {
             orderItems: []
         }
 
-        const validator = new Validator(orderRule)
-        const actual = validator.validate(orderRequest)
+        const validator = new Validator()
+        const actual = validator.validate(orderRequest, orderRule)
 
         const expected: ValidationResult<OrderRequest> = {
             message: defaultMessage.errorMessage,
@@ -168,8 +168,8 @@ describe("Validate Order Request With Max order item quantity", () => {
             ]
         }
 
-        const validator = new Validator(orderRule)
-        const actual = validator.validate(orderRequest)
+        const validator = new Validator()
+        const actual = validator.validate(orderRequest, orderRule)
 
         const expected: ValidationResult<OrderRequest> = {
             message: defaultMessage.errorMessage,
@@ -252,8 +252,8 @@ describe("Jacky Chan Order Request", () => {
             ]
         }
 
-        const validator = new Validator(orderRule)
-        const actual = validator.validate(orderRequest)
+        const validator = new Validator()
+        const actual = validator.validate(orderRequest, orderRule)
 
         const expected: ValidationResult<OrderRequest> = {
             message: defaultMessage.errorMessage,

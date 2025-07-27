@@ -22,8 +22,8 @@ describe("Test Simple Object", () => {
         const person: Person = {
             name: "",
         }
-        const validator = new Validator(rule)
-        const actual = validator.validateField(person, "name")
+        const validator = new Validator()
+        const actual = validator.validateField(person, "name", rule)
 
         const expected: FieldErrorOf<Person, "name"> = {
             isValid: false,
@@ -51,8 +51,8 @@ describe("Test validate field", () => {
         const person: Person = {
             name: "",
         }
-        const validator = new Validator(rule)
-        const actual = validator.validateField(person, "children")
+        const validator = new Validator()
+        const actual = validator.validateField(person, "children", rule)
 
         const expected: FieldErrorOf<Person, "children"> = {
             isValid: true,
@@ -87,8 +87,8 @@ describe("Test validate field", () => {
             ]
         }
 
-        const validator = new Validator(rule)
-        const actual = validator.validateField(person, "children")
+        const validator = new Validator()
+        const actual = validator.validateField(person, "children", rule)
 
         const expected: FieldErrorOf<Person, "children"> = {
             isValid: false,
@@ -137,8 +137,8 @@ describe("Test validate field", () => {
             name: "",
         }
 
-        const validator = new Validator(rule)
-        const actual = validator.validateField(person, "address")
+        const validator = new Validator()
+        const actual = validator.validateField(person, "address", rule)
 
         const expected: FieldErrorOf<Person, "address"> = {
             isValid: false,

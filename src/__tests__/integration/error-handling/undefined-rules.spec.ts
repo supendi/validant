@@ -14,8 +14,8 @@ describe("Test Validate Against null validation rule", () => {
 
         const rule: ValidationRule<Person> = undefined
         
-        const validator = new Validator(rule)
-        const actual = () => validator.validate(person)
+        const validator = new Validator()
+        const actual = () => validator.validate(person, rule)
 
         const expected = new Error(`validant: validation rule is null or undefined.`)
 

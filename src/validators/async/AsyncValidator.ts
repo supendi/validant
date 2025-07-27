@@ -3,12 +3,10 @@ import { ValidationOptions, ValidationResult } from "../sync/Validator";
 import { validateFieldAsync } from "./validateFieldAsync";
 import { validateObjectAsync } from "./validateObjectAsync";
 
-export class AsyncValidator<T> {
+export class AsyncValidator {
     options: ValidationOptions
-    asyncRule: AsyncValidationRule<T>
 
-    constructor(asyncRule: AsyncValidationRule<T>, options?: ValidationOptions) {
-        this.asyncRule = asyncRule
+    constructor(options?: ValidationOptions) {
         const defaultOptions: ValidationOptions = {
             validationMessage: {
                 successMessage: "Validation successful.",
@@ -27,8 +25,8 @@ export class AsyncValidator<T> {
      * @param validationRule 
      * @returns ValidationResult
      */
-    async validateAsync(object: T): Promise<ValidationResult<T>> {
-        const errors = await validateObjectAsync(object, object, this.asyncRule)
+    async validateAsync<T>(object: T, validationRule: AsyncValidationRule<T>): Promise<ValidationResult<T>> {
+        const errors = await validateObjectAsync(object, object, validationRule)
         let isValid = true
 
         for (const key in errors) {
@@ -50,8 +48,8 @@ export class AsyncValidator<T> {
         }
     }
 
-    async validateFieldAsync(object: T, fieldName: Extract<keyof T, string>) {
-        const propertyValidationRule = this.asyncRule[fieldName]
+    async validateFieldAsync<T>(object: T, fieldName: Extract<keyof T, string>, validationRule: AsyncValidationRule<T>) {
+        const propertyValidationRule = validationRule[fieldName]
 
         // Doesnt have rule, its valid then
         if (!propertyValidationRule) {

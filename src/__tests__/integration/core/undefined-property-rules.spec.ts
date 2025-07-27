@@ -18,8 +18,8 @@ const person: Person = {
 describe("Ignore or skip undefined rule", () => {
     it("return true", () => {
 
-        const validator = new Validator(rule)
-        const actual = validator.validate(person)
+        const validator = new Validator()
+        const actual = validator.validate(person, rule)
 
         const expected: ValidationResult<Person> = {
             message: "Validation successful.",

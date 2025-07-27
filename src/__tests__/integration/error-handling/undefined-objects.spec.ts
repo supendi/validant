@@ -14,8 +14,8 @@ describe("Test Validate Against Undefined", () => {
     it("Doesnt throw error", () => {
         const person: Person | undefined = undefined
 
-        const validator = new Validator(rule)
-        const actual = validator.validate(person)
+        const validator = new Validator()
+        const actual = validator.validate(person, rule)
 
         const expected: ValidationResult<Person> = {
             isValid: true,
@@ -30,8 +30,8 @@ describe("Test Validate Against null", () => {
     it("Doesnt throw error", () => {
         const person: Person | undefined | null = null
 
-        const validator = new Validator(rule)
-        const actual = validator.validate(person)
+        const validator = new Validator()
+        const actual = validator.validate(person, rule)
 
         const expected: ValidationResult<Person> = {
             isValid: true,

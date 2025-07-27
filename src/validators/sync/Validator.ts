@@ -24,12 +24,10 @@ export interface ValidationOptions {
     validationMessage?: ValidationMessage
 }
 
-export class Validator<T> {
+export class Validator {
     options: ValidationOptions
-    rule: ValidationRule<T>
 
-    constructor(rule: ValidationRule<T>, options?: ValidationOptions) {
-        this.rule = rule
+    constructor(options?: ValidationOptions) {
         const defaultOptions: ValidationOptions = {
             validationMessage: {
                 successMessage: "Validation successful.",
@@ -48,8 +46,8 @@ export class Validator<T> {
      * @param validationRule 
      * @returns ValidationResult
      */
-    validate(object: T): ValidationResult<T> {
-        const errors = validateObject(object, object, this.rule)
+    validate<T>(object: T, rule: ValidationRule<T>): ValidationResult<T> {
+        const errors = validateObject(object, object, rule)
         let isValid = true
 
         for (const key in errors) {
@@ -71,8 +69,8 @@ export class Validator<T> {
         }
     }
 
-    validateField(object: T, fieldName: Extract<keyof T, string>) {
-        const propertyValidationRule = this.rule[fieldName]
+    validateField<T>(object: T, fieldName: Extract<keyof T, string>, rule: ValidationRule<T>) {
+        const propertyValidationRule = rule[fieldName]
 
         // Doesnt have rule, its valid then
         if (!propertyValidationRule) {

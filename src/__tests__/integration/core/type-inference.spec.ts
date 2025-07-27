@@ -25,8 +25,8 @@ const rule: ValidationRule<typeof order> = {
 describe("Validate Inferred", () => {
     it("return errors", () => {
 
-        const validator = new Validator(rule)
-        const actual = validator.validate(order)
+        const validator = new Validator()
+        const actual = validator.validate(order, rule)
         const expected: ValidationResult<typeof order> = {
             message: "Validation failed. Please check and fix the errors to continue.",
             isValid: false,
@@ -60,8 +60,8 @@ describe("Validate Inferred", () => {
             ]
         }
 
-        const validator = new Validator(rule)
-        const actual = validator.validate(order)
+        const validator = new Validator()
+        const actual = validator.validate(order, rule)
         const expected: ValidationResult<typeof order> = {
             message: "Validation failed. Please check and fix the errors to continue.",
             isValid: false,
@@ -106,8 +106,8 @@ describe("Validate Inferred", () => {
             ]
         }
 
-        const validator = new Validator(rule)
-        const actual = () => validator.validate(order)
+        const validator = new Validator()
+        const actual = () => validator.validate(order, rule)
         const error = new Error("minNumber: Value is not a number. The value was: 0 (type: 'string')")
 
         expect(actual).toThrow(error)
@@ -142,8 +142,8 @@ describe("Validate Inferred", () => {
             }
         }
 
-        const validator = new Validator(newOrderRule)
-        const actual = validator.validate(order)
+        const validator = new Validator()
+        const actual = validator.validate(order, newOrderRule)
         const expected: ValidationResult<typeof order> = {
             message: "Validation failed. Please check and fix the errors to continue.",
             isValid: false,

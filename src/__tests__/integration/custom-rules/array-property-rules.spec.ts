@@ -73,8 +73,8 @@ describe("Validator Test The Custom Validator", () => {
             ]
         }
 
-        const validator = new Validator(orderRule)
-        const actual = validator.validate(order)
+        const validator = new Validator()
+        const actual = validator.validate(order, orderRule)
         const expected: ValidationResult<Order> = {
             message: "Validation failed. Please check and fix the errors to continue.",
             isValid: false,

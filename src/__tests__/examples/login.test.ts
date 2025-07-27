@@ -19,8 +19,8 @@ describe("validate login request", () => {
             password: ""
         }
 
-        const validator = new Validator(loginRule)
-        const actual = validator.validate(loginRequest)
+        const validator = new Validator()
+        const actual = validator.validate(loginRequest, loginRule)
 
         const expected: ValidationResult<LoginRequest> = {
             message: defaultMessage.errorMessage,

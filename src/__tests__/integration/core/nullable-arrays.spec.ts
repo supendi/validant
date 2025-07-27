@@ -33,8 +33,8 @@ describe("Validate null property", () => {
             orderItems: null
         }
 
-        const validator = new Validator(rule)
-        const actual = validator.validate(order)
+        const validator = new Validator()
+        const actual = validator.validate(order, rule)
         const expected: ValidationResult<Order> = {
             message: "Validation failed. Please check and fix the errors to continue.",
             isValid: false,

@@ -20,8 +20,8 @@ const validationRule: ValidationRule<typeof account> = {
 
 describe("Simple Object Test", () => {
     it("Should return errors", () => {
-        const validator = new Validator(validationRule)
-        const actual = validator.validate(account)
+        const validator = new Validator()
+        const actual = validator.validate(account, validationRule)
 
         var expected: ValidationResult<typeof account> = {
             message: "Validation failed. Please check and fix the errors to continue.",

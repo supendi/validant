@@ -17,8 +17,8 @@ describe("Test Invalid Rule", () => {
             children: "123123" as any
         }
 
-        const validator = new AsyncValidator(rule)
-        const actual = () => validator.validateAsync(person)
+        const validator = new AsyncValidator()
+        const actual = () => validator.validateAsync(person, rule)
 
         const expected = new Error(`string is not a valid rule.`)
 

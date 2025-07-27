@@ -22,8 +22,8 @@ describe("Test Simple Object", () => {
         const person: Person = {
             name: "",
         }
-        const validator = new AsyncValidator(rule)
-        const actual = await validator.validateFieldAsync(person, "name")
+        const validator = new AsyncValidator()
+        const actual = await validator.validateFieldAsync(person, "name", rule)
 
         const expected: FieldErrorOf<Person, "name"> = {
             isValid: false,
@@ -51,8 +51,8 @@ describe("Test validate field", () => {
         const person: Person = {
             name: "",
         }
-        const validator = new AsyncValidator(rule)
-        const actual = await validator.validateFieldAsync(person, "children")
+        const validator = new AsyncValidator()
+        const actual = await validator.validateFieldAsync(person, "children", rule)
 
         const expected: FieldErrorOf<Person, "children"> = {
             isValid: true,
@@ -87,8 +87,8 @@ describe("Test validate field", () => {
             ]
         }
 
-        const validator = new AsyncValidator(rule)
-        const actual = await validator.validateFieldAsync(person, "children")
+        const validator = new AsyncValidator()
+        const actual = await validator.validateFieldAsync(person, "children", rule)
 
         const expected: FieldErrorOf<Person, "children"> = {
             isValid: false,
@@ -137,8 +137,8 @@ describe("Test validate field", () => {
             name: "",
         }
 
-        const validator = new AsyncValidator(rule)
-        const actual = await validator.validateFieldAsync(person, "address")
+        const validator = new AsyncValidator()
+        const actual = await validator.validateFieldAsync(person, "address", rule)
 
         const expected: FieldErrorOf<Person, "address"> = {
             isValid: false,

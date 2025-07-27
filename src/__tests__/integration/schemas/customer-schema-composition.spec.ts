@@ -39,8 +39,8 @@ describe("Validate customer with empty address", () => {
             addresses: []
         }
 
-        const validator = new Validator(customerRule)
-        const actual = validator.validate(customer)
+        const validator = new Validator()
+        const actual = validator.validate(customer, customerRule)
 
         const expected: ValidationResult<Customer> = {
             message: defaultMessage.errorMessage,
@@ -100,8 +100,8 @@ describe("Validate customer with address items", () => {
             ]
         }
 
-        const validator = new Validator(customerRule)
-        const actual = validator.validate(customer)
+        const validator = new Validator()
+        const actual = validator.validate(customer, customerRule)
 
         const expected: ValidationResult<Customer> = {
             message: defaultMessage.errorMessage,

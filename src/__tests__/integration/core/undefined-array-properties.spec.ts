@@ -19,8 +19,8 @@ describe("Test undefined array properties", () => {
     it("All properties should return errors", () => {
         const person: Person = {} // empty object
 
-        const validator = new Validator(personRule)
-        const actual = validator.validate(person)
+        const validator = new Validator()
+        const actual = validator.validate(person, personRule)
 
         const expected: ValidationResult<Person> = {
             message: "Validation failed. Please check and fix the errors to continue.",
@@ -60,8 +60,8 @@ describe("Test undefined array properties", () => {
                 },
             ]
         }
-        const validator = new Validator(personRule)
-        const actual = validator.validate(person)
+        const validator = new Validator()
+        const actual = validator.validate(person, personRule)
 
         const expected: ValidationResult<Person> = {
             message: "Validation failed. Please check and fix the errors to continue.",

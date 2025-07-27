@@ -15,8 +15,8 @@ const person: Person = {
 describe("Test Simple Object", () => {
     it("Person name should return errors", () => {
 
-        const validator = new Validator(rule)
-        const actual = validator.validate(person)
+        const validator = new Validator()
+        const actual = validator.validate(person, rule)
 
         const expected: ValidationResult<Person> = {
             message: "Validation failed. Please check and fix the errors to continue.",

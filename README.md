@@ -22,8 +22,8 @@ const userRule: ValidationRule<User> = {
 };
 
 // Validate
-const validator = new Validator(userRule);
-const result = validator.validate(user);
+const validator = new Validator();
+const result = validator.validate(user, userRule);
 ```
 
 ## Table of Contents
@@ -649,8 +649,8 @@ const validationRule: ValidationRule<Account> = {
 };
 
 // validate
-const validator = new Validator(validationRule);
-const validationResult = validator.validate(account);
+const validator = new Validator();
+const validationResult = validator.validate(account, validationRule);
 ```
 
 If your model already defines the structure, why repeat it with something like `name: string()` or `username: z.string()`?
@@ -891,8 +891,8 @@ const account: Account = {
 };
 
 // validate
-const validator = new Validator(validationRule);
-const validationResult = validator.validate(account);
+const validator = new Validator();
+const validationResult = validator.validate(account, validationRule);
 ```
 
 The result looks like this:
@@ -944,10 +944,10 @@ const account: Account = {
 };
 
 // Create a validator with your validation rules
-const validator = new Validator(validationRule);
+const validator = new Validator();
 
 // Validate the "name" field of the account object
-const validationResult = validator.validateField("name", account);
+const validationResult = validator.validateField(account, "name", validationRule);
 ```
 
 The result will be an object like this:
@@ -1019,8 +1019,8 @@ const account: Account = {
 };
 
 // validate
-const validator = new AsyncValidator(validationRule);
-const validationResult = await validator.validateAsync(account);
+const validator = new AsyncValidator();
+const validationResult = await validator.validateAsync(account, validationRule);
 ```
 
 You'll get the same structured result:
@@ -1073,10 +1073,10 @@ const account: Account = {
 };
 
 // Create a validator with your validation rules
-const validator = new AsyncValidator(validationRule);
+const validator = new AsyncValidator();
 
 // Validate the "email" field of the account object
-const validationResult = await validator.validateFieldAsync("email", account);
+const validationResult = await validator.validateFieldAsync(account, "email", validationRule);
 ```
 
 The result will be an object like this:
@@ -1206,8 +1206,8 @@ const loginRequest: LoginRequest = {
     password: "",
 };
 
-const validator = new Validator(loginRule);
-const result = validator.validate(loginRequest);
+const validator = new Validator();
+const result = validator.validate(loginRequest, loginRule);
 ```
 
 **Result Structure**
@@ -1364,8 +1364,8 @@ const emptyOrder: Order = {
     orderItems: [], // Fails arrayMinLen
 };
 
-const validator = new Validator(orderRule);
-const result = validator.validate(emptyOrder);
+const validator = new Validator();
+const result = validator.validate(emptyOrder, orderRule);
 ```
 
 The above validation results error structure:
@@ -2150,11 +2150,8 @@ export function createProductValidationService(
         // pass the repository required by the validation rule builder for validation purpose
         const registrationRule = buildProductRule(userRepository);
 
-        const validator = new AsyncValidator(loginRule);
-        return validator.validateAsync(request, registrationRule, {
-            errorMessage: "error",
-            okMessage: "ok",
-        });
+        const validator = new AsyncValidator();
+        return validator.validateAsync(request, registrationRule);
     }
     return {
         validateAsync,
@@ -2591,7 +2588,7 @@ Validant provides a utility to convert the default nested error structure (`Erro
 ```ts
 import { flattenError } from "validant";
 
-const validationResult = validator.validate(account);
+const validationResult = validator.validate(account, validationRule);
 // validationResult.errors is of type ErrorOf<T>
 
 const flatErrors = flattenError(validationResult.errors);

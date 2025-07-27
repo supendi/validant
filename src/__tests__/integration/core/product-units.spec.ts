@@ -37,8 +37,8 @@ describe("Validate test with product", () => {
             ]
         }
 
-        const validator = new Validator(validationRule)
-        const validationResult = validator.validate(ironStick)
+        const validator = new Validator()
+        const validationResult = validator.validate(ironStick, validationRule)
 
         const expected: ValidationResult<Product> = {
             message: "Validation failed. Please check and fix the errors to continue.",

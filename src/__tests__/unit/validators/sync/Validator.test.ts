@@ -53,10 +53,9 @@ describe('Validator', () => {
             };
 
             // Act
-            const validator = new Validator(rule);
+            const validator = new Validator();
 
             // Assert
-            expect(validator.rule).toBe(rule);
             expect(validator.options).toEqual({
                 validationMessage: {
                     successMessage: "Validation successful.",
@@ -78,10 +77,9 @@ describe('Validator', () => {
             };
 
             // Act
-            const validator = new Validator(rule, customOptions);
+            const validator = new Validator(customOptions);
 
             // Assert
-            expect(validator.rule).toBe(rule);
             expect(validator.options).toEqual(customOptions);
         });
 
@@ -98,7 +96,7 @@ describe('Validator', () => {
             };
 
             // Act
-            const validator = new Validator(rule, customOptions);
+            const validator = new Validator(customOptions);
 
             // Assert
             expect(validator.options.validationMessage.successMessage).toBe("Override success");
@@ -110,10 +108,9 @@ describe('Validator', () => {
             const rule: ValidationRule<TestUser> = {};
 
             // Act
-            const validator = new Validator(rule);
+            const validator = new Validator();
 
             // Assert
-            expect(validator.rule).toEqual({});
             expect(validator.options).toBeDefined();
         });
     });
@@ -126,7 +123,7 @@ describe('Validator', () => {
                 email: [required(), isString()],
                 age: [required()]
             };
-            const validator = new Validator(rule);
+            const validator = new Validator();
             const validUser: TestUser = {
                 name: "John Doe",
                 email: "john@example.com",
@@ -134,7 +131,7 @@ describe('Validator', () => {
             };
 
             // Act
-            const result: ValidationResult<TestUser> = validator.validate(validUser);
+            const result: ValidationResult<TestUser> = validator.validate(validUser, rule);
 
             // Assert
             expect(result.isValid).toBe(true);
@@ -149,7 +146,7 @@ describe('Validator', () => {
                 email: [required(), isString()],
                 age: [required()]
             };
-            const validator = new Validator(rule);
+            const validator = new Validator();
             const invalidUser: TestUser = {
                 name: "", // Invalid - empty string
                 email: "john@example.com",
@@ -157,7 +154,7 @@ describe('Validator', () => {
             };
 
             // Act
-            const result: ValidationResult<TestUser> = validator.validate(invalidUser);
+            const result: ValidationResult<TestUser> = validator.validate(invalidUser, rule);
 
             // Assert
             expect(result.isValid).toBe(false);
@@ -176,7 +173,7 @@ describe('Validator', () => {
                     errorMessage: "Please fix the issues below"
                 }
             };
-            const validator = new Validator(rule, customOptions);
+            const validator = new Validator(customOptions);
             const validUser: TestUser = {
                 name: "John",
                 email: "john@example.com",
@@ -184,7 +181,7 @@ describe('Validator', () => {
             };
 
             // Act
-            const result = validator.validate(validUser);
+            const result = validator.validate(validUser, rule);
 
             // Assert
             expect(result.isValid).toBe(true);
@@ -194,11 +191,11 @@ describe('Validator', () => {
         test('should handle empty object validation', () => {
             // Arrange
             const rule: ValidationRule<TestUser> = {};
-            const validator = new Validator(rule);
+            const validator = new Validator();
             const emptyUser = {} as TestUser;
 
             // Act
-            const result = validator.validate(emptyUser);
+            const result = validator.validate(emptyUser, rule);
 
             // Assert
             expect(result.isValid).toBe(true);
@@ -212,7 +209,7 @@ describe('Validator', () => {
                 email: [required(), isString()],
                 age: [required()]
             };
-            const validator = new Validator(rule);
+            const validator = new Validator();
             const invalidUser: TestUser = {
                 name: "", // Invalid
                 email: "", // Invalid
@@ -220,7 +217,7 @@ describe('Validator', () => {
             };
 
             // Act
-            const result = validator.validate(invalidUser);
+            const result = validator.validate(invalidUser, rule);
 
             // Assert
             expect(result.isValid).toBe(false);
@@ -234,7 +231,7 @@ describe('Validator', () => {
                 email: [required(), isString()],
                 age: [required()]
             };
-            const validator = new Validator(rule);
+            const validator = new Validator();
             const mixedUser: TestUser = {
                 name: "John", // Valid
                 email: "", // Invalid
@@ -242,7 +239,7 @@ describe('Validator', () => {
             };
 
             // Act
-            const result = validator.validate(mixedUser);
+            const result = validator.validate(mixedUser, rule);
 
             // Assert
             expect(result.isValid).toBe(false);
@@ -258,14 +255,14 @@ describe('Validator', () => {
                     arrayElementRule: [required(), isString()]
                 }
             };
-            const validator = new Validator(rule);
+            const validator = new Validator();
             const userWithTags: TestUserWithArray = {
                 name: "John",
                 tags: ["javascript", "typescript"]
             };
 
             // Act
-            const result = validator.validate(userWithTags);
+            const result = validator.validate(userWithTags, rule);
 
             // Assert
             expect(result.isValid).toBe(true);
@@ -280,7 +277,7 @@ describe('Validator', () => {
                     location: [required(), isString()]
                 }
             };
-            const validator = new Validator(rule);
+            const validator = new Validator();
             const nestedUser: TestNestedUser = {
                 name: "John",
                 profile: {
@@ -290,7 +287,7 @@ describe('Validator', () => {
             };
 
             // Act
-            const result = validator.validate(nestedUser);
+            const result = validator.validate(nestedUser, rule);
 
             // Assert
             expect(result.isValid).toBe(true);
@@ -302,10 +299,10 @@ describe('Validator', () => {
             const rule: ValidationRule<TestUser> = {
                 name: [required()]
             };
-            const validator = new Validator(rule);
+            const validator = new Validator();
 
             // Act
-            const result = validator.validate(null as any);
+            const result = validator.validate(null as any, rule);
 
             // Assert
             expect(result.isValid).toBe(false);
@@ -316,10 +313,10 @@ describe('Validator', () => {
             const rule: ValidationRule<TestUser> = {
                 name: [required()]
             };
-            const validator = new Validator(rule);
+            const validator = new Validator();
 
             // Act
-            const result = validator.validate(undefined as any);
+            const result = validator.validate(undefined as any, rule);
 
             // Assert
             expect(result.isValid).toBe(false);
@@ -331,8 +328,8 @@ describe('Validator', () => {
             const rule: ValidationRule<TestUser> = {
                 name: [required()]
             };
-            const validator = new Validator(rule);
-            
+            const validator = new Validator();
+
             // Create a mock object that would cause validateObject to return an errors object
             // but with some properties having falsy values
             const userWithValidName: TestUser = {
@@ -342,7 +339,7 @@ describe('Validator', () => {
             };
 
             // Act
-            const result = validator.validate(userWithValidName);
+            const result = validator.validate(userWithValidName, rule);
 
             // Assert - this should be valid since name is provided
             expect(result.isValid).toBe(true);
@@ -357,7 +354,7 @@ describe('Validator', () => {
                 name: [required()]
                 // No rule for email
             };
-            const validator = new Validator(rule);
+            const validator = new Validator();
             const user: TestUser = {
                 name: "John",
                 email: "john@example.com",
@@ -365,7 +362,7 @@ describe('Validator', () => {
             };
 
             // Act
-            const result = validator.validateField(user, 'email');
+            const result = validator.validateField(user, 'email', rule);
 
             // Assert
             expect(result.isValid).toBe(true);
@@ -379,7 +376,7 @@ describe('Validator', () => {
                 email: [required(), isString()],
                 age: [required()]
             };
-            const validator = new Validator(rule);
+            const validator = new Validator();
             const user: TestUser = {
                 name: "John",
                 email: "john@example.com",
@@ -387,7 +384,7 @@ describe('Validator', () => {
             };
 
             // Act
-            const result = validator.validateField(user, 'name');
+            const result = validator.validateField(user, 'name', rule);
 
             // Assert
             expect(result.isValid).toBe(true);
@@ -401,7 +398,7 @@ describe('Validator', () => {
                 email: [required(), isString()],
                 age: [required()]
             };
-            const validator = new Validator(rule);
+            const validator = new Validator();
             const user: TestUser = {
                 name: "", // Invalid - empty string
                 email: "john@example.com",
@@ -409,7 +406,7 @@ describe('Validator', () => {
             };
 
             // Act
-            const result = validator.validateField(user, 'name');
+            const result = validator.validateField(user, 'name', rule);
 
             // Assert
             expect(result.isValid).toBe(false);
@@ -425,14 +422,14 @@ describe('Validator', () => {
                     arrayElementRule: [required(), isString()]
                 }
             };
-            const validator = new Validator(rule);
+            const validator = new Validator();
             const user: TestUserWithArray = {
                 name: "John",
                 tags: ["javascript", "typescript"]
             };
 
             // Act
-            const result = validator.validateField(user, 'tags');
+            const result = validator.validateField(user, 'tags', rule);
 
             // Assert
             expect(result.isValid).toBe(true);
@@ -448,7 +445,7 @@ describe('Validator', () => {
                     location: [required(), isString()]
                 }
             };
-            const validator = new Validator(rule);
+            const validator = new Validator();
             const user: TestNestedUser = {
                 name: "John",
                 profile: {
@@ -458,7 +455,7 @@ describe('Validator', () => {
             };
 
             // Act
-            const result = validator.validateField(user, 'profile');
+            const result = validator.validateField(user, 'profile', rule);
 
             // Assert
             expect(result.isValid).toBe(true);
@@ -471,13 +468,13 @@ describe('Validator', () => {
             const rule: ValidationRule<TestUserWithOptional> = {
                 name: [required(), isString()]
             };
-            const validator = new Validator(rule);
+            const validator = new Validator();
             const user: TestUserWithOptional = {
                 name: undefined
             };
 
             // Act
-            const result = validator.validateField(user, 'name');
+            const result = validator.validateField(user, 'name', rule);
 
             // Assert
             expect(result.isValid).toBe(false);
@@ -489,7 +486,7 @@ describe('Validator', () => {
             const rule: ValidationRule<TestUser> = {
                 name: [required(), isString()]
             };
-            const validator = new Validator(rule);
+            const validator = new Validator();
             const user: TestUser = {
                 name: null as any,
                 email: "test@example.com",
@@ -497,7 +494,7 @@ describe('Validator', () => {
             };
 
             // Act
-            const result = validator.validateField(user, 'name');
+            const result = validator.validateField(user, 'name', rule);
 
             // Assert
             expect(result.isValid).toBe(false);
@@ -535,18 +532,18 @@ describe('Validator', () => {
             // The '?' makes all properties optional, which means:
             // - We don't have to provide validation rules for all properties ✅
             // - But we also can't enforce that certain critical fields must have rules ❌
-            
+
             // Example of what we might want but can't achieve with current type definition:
             // type StrictValidationRule<T> = { [key in keyof T]: ValidationRule<T[key]> }
             // This would require ALL properties to have validation rules
 
-            const validator1 = new Validator(completeRule);
-            const validator2 = new Validator(partialRule);
-            const validator3 = new Validator(emptyRule);
+            const validator1 = new Validator();
+            const validator2 = new Validator();
+            const validator3 = new Validator();
 
-            expect(validator1.rule).toBeDefined();
-            expect(validator2.rule).toBeDefined();
-            expect(validator3.rule).toBeDefined();
+            expect(validator1).toBeDefined();
+            expect(validator2).toBeDefined();
+            expect(validator3).toBeDefined();
         });
 
         test('should demonstrate ValidationOptions type structure limitations', () => {
@@ -577,20 +574,18 @@ describe('Validator', () => {
             // Limitation: We cannot enforce that if validationMessage is provided,
             // both successMessage and errorMessage must be provided
             // The current type allows partial message objects:
-            
+
             // This would ideally be invalid but TypeScript allows it:
             // const partialMessageOptions: ValidationOptions = {
             //     validationMessage: {
             //         successMessage: "Success!",
             //         // errorMessage is missing - this should be caught by the type system
             //     }
-            // };
+            // }; 
 
-            const rule: ValidationRule<TestUser> = { name: [required()] };
-            
-            const validator1 = new Validator(rule, completeOptions);
-            const validator2 = new Validator(rule, emptyOptions);
-            const validator3 = new Validator(rule, undefinedMessageOptions);
+            const validator1 = new Validator(completeOptions);
+            const validator2 = new Validator(emptyOptions);
+            const validator3 = new Validator(undefinedMessageOptions);
 
             expect(validator1.options).toBeDefined();
             expect(validator2.options).toBeDefined();
@@ -599,13 +594,9 @@ describe('Validator', () => {
 
         test('should demonstrate generic type constraints limitations', () => {
             // The Validator<T> generic type has limitations in type inference
-            
+
             // ✅ Explicit type works well
-            const explicitValidator = new Validator<TestUser>({
-                name: [required()],
-                email: [required()],
-                age: [required()]
-            });
+            const explicitValidator = new Validator();
 
             // ✅ Type inference works in most cases
             const rule: ValidationRule<TestUser> = {
@@ -613,11 +604,11 @@ describe('Validator', () => {
                 email: [required()],
                 age: [required()]
             };
-            const inferredValidator = new Validator(rule);
+            const inferredValidator = new Validator();
 
             // Limitation: Complex nested types might not infer correctly
             // and require explicit type annotations
-            
+
             interface ComplexNested {
                 user: {
                     profile: {
@@ -639,7 +630,7 @@ describe('Validator', () => {
                 }
             };
 
-            const complexValidator = new Validator<ComplexNested>(complexRule);
+            const complexValidator = new Validator();
 
             expect(explicitValidator).toBeDefined();
             expect(inferredValidator).toBeDefined();
@@ -649,23 +640,23 @@ describe('Validator', () => {
         test('should demonstrate ValidationResult return type limitations', () => {
             // ValidationResult<T> has a limitation where errors are optional
             // but when isValid is false, errors should always be present
-            
+
             const rule: ValidationRule<TestUser> = {
                 name: [required()]
             };
-            const validator = new Validator(rule);
+            const validator = new Validator();
             const invalidUser: TestUser = {
                 name: "",
-                email: "test@example.com", 
+                email: "test@example.com",
                 age: 30
             };
 
-            const result = validator.validate(invalidUser);
+            const result = validator.validate(invalidUser, rule);
 
             // Limitation: TypeScript doesn't enforce that when isValid is false,
             // errors must be defined. The type system allows:
             // { isValid: false, message: "error", errors: undefined }
-            
+
             // Ideally, we'd want a discriminated union like:
             // type ValidationResult<T> = 
             //   | { isValid: true; message: string; errors?: undefined }
@@ -688,8 +679,8 @@ describe('Validator', () => {
             const rule: ValidationRule<TestUser> = {
                 name: [required()]
             };
-            const validator = new Validator(rule);
-            
+            const validator = new Validator();
+
             // Test with an object that might cause validation issues
             const problematicUser = {
                 name: "John",
@@ -700,7 +691,7 @@ describe('Validator', () => {
 
             // Act & Assert - should not throw
             expect(() => {
-                const result = validator.validate(problematicUser);
+                const result = validator.validate(problematicUser, rule);
                 expect(result).toBeDefined();
             }).not.toThrow();
         });
@@ -709,14 +700,14 @@ describe('Validator', () => {
             // This test ensures the for...in loop in validate method works correctly
             // when errors object has no enumerable properties
             const rule: ValidationRule<TestUser> = {};
-            const validator = new Validator(rule);
+            const validator = new Validator();
             const user: TestUser = {
                 name: "John",
                 email: "john@example.com",
                 age: 30
             };
 
-            const result = validator.validate(user);
+            const result = validator.validate(user, rule);
 
             expect(result.isValid).toBe(true);
             expect(result.errors).toBeUndefined();
@@ -727,8 +718,8 @@ describe('Validator', () => {
             const rule: ValidationRule<TestUser> = {
                 name: [required()]
             };
-            const validator = new Validator(rule);
-            
+            const validator = new Validator();
+
             // Create an object that might have inherited properties
             const userWithPrototype = Object.create({
                 inheritedProperty: "should not affect validation"
@@ -737,7 +728,7 @@ describe('Validator', () => {
             userWithPrototype.email = "john@example.com";
             userWithPrototype.age = 30;
 
-            const result = validator.validate(userWithPrototype as TestUser);
+            const result = validator.validate(userWithPrototype as TestUser, rule);
 
             expect(result.isValid).toBe(true);
         });
@@ -757,20 +748,20 @@ describe('Validator', () => {
                 '123numeric': [required()],
                 $special: [required()]
             };
-            
-            const validator = new Validator(rule);
+
+            const validator = new Validator();
             const obj: ComplexFields = {
                 'field-with-dash': 'value1',
-                'field with space': 'value2', 
+                'field with space': 'value2',
                 '123numeric': 'value3',
                 $special: 'value4'
             };
 
             // Test each field type
-            expect(validator.validateField(obj, 'field-with-dash').isValid).toBe(true);
-            expect(validator.validateField(obj, 'field with space').isValid).toBe(true);
-            expect(validator.validateField(obj, '123numeric').isValid).toBe(true);
-            expect(validator.validateField(obj, '$special').isValid).toBe(true);
+            expect(validator.validateField(obj, 'field-with-dash', rule).isValid).toBe(true);
+            expect(validator.validateField(obj, 'field with space', rule).isValid).toBe(true);
+            expect(validator.validateField(obj, '123numeric', rule).isValid).toBe(true);
+            expect(validator.validateField(obj, '$special', rule).isValid).toBe(true);
         });
     });
 }); 

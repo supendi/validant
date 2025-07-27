@@ -638,8 +638,8 @@ describe('Insurance Claim Processing System - Enterprise Validation', () => {
                 adjusterId: 'ADJ-001'
             };
 
-            const validator = new AsyncValidator(insuranceClaimValidationRules);
-            const result = await validator.validateAsync(validClaim);
+            const validator = new AsyncValidator();
+            const result = await validator.validateAsync(validClaim, insuranceClaimValidationRules);
 
             expect(result.isValid).toBe(true);
             expect(result.message).toBe('Validation successful.');
@@ -731,8 +731,8 @@ describe('Insurance Claim Processing System - Enterprise Validation', () => {
                 submissionDate: new Date('2024-03-11')
             };
 
-            const validator = new AsyncValidator(insuranceClaimValidationRules);
-            const result = await validator.validateAsync(theftClaim);
+            const validator = new AsyncValidator();
+            const result = await validator.validateAsync(theftClaim, insuranceClaimValidationRules);
 
             expect(result.isValid).toBe(false);
         }, 15000);
@@ -824,8 +824,8 @@ describe('Insurance Claim Processing System - Enterprise Validation', () => {
                 submissionDate: new Date('2024-03-02')
             };
 
-            const validator = new AsyncValidator(insuranceClaimValidationRules);
-            const result = await validator.validateAsync(invalidClaim);
+            const validator = new AsyncValidator();
+            const result = await validator.validateAsync(invalidClaim, insuranceClaimValidationRules);
 
             expect(result.isValid).toBe(false);
             expect(result.errors?.policyHolder?.ssn).toBeDefined();
@@ -920,8 +920,8 @@ describe('Insurance Claim Processing System - Enterprise Validation', () => {
                 submissionDate: new Date('2024-03-06')
             };
 
-            const validator = new AsyncValidator(insuranceClaimValidationRules);
-            const result = await validator.validateAsync(expiredPolicyClaim);
+            const validator = new AsyncValidator();
+            const result = await validator.validateAsync(expiredPolicyClaim, insuranceClaimValidationRules);
 
             expect(result.isValid).toBe(false);
             expect(result.errors?.policyHolder?.policyNumber).toBeDefined();
@@ -1014,8 +1014,8 @@ describe('Insurance Claim Processing System - Enterprise Validation', () => {
                 submissionDate: new Date('2024-03-21')
             };
 
-            const validator = new AsyncValidator(insuranceClaimValidationRules);
-            const result = await validator.validateAsync(highRiskClaim);
+            const validator = new AsyncValidator();
+            const result = await validator.validateAsync(highRiskClaim, insuranceClaimValidationRules);
 
             expect(result.isValid).toBe(false);
             expect(result.errors?.priorClaims).toBeDefined();
@@ -1100,8 +1100,8 @@ describe('Insurance Claim Processing System - Enterprise Validation', () => {
                 submissionDate: new Date('2020-01-01') // Old date
             } as any;
 
-            const validator = new AsyncValidator(insuranceClaimValidationRules);
-            const result = await validator.validateAsync(multipleErrorsClaim);
+            const validator = new AsyncValidator();
+            const result = await validator.validateAsync(multipleErrorsClaim, insuranceClaimValidationRules);
 
             expect(result.isValid).toBe(false);
             expect(Object.keys(result.errors || {}).length).toBeGreaterThan(5);
@@ -1113,8 +1113,8 @@ describe('Insurance Claim Processing System - Enterprise Validation', () => {
                 claimType: 'AUTO_ACCIDENT'
             };
 
-            const validator = new AsyncValidator(insuranceClaimValidationRules);
-            const actual = () => validator.validateAsync(partialClaim as InsuranceClaim)
+            const validator = new AsyncValidator();
+            const actual = () => validator.validateAsync(partialClaim as InsuranceClaim, insuranceClaimValidationRules)
 
             const expected = new Error("minNumber: Value is not a number. The value was: undefined (type: 'undefined')")
 
@@ -1256,8 +1256,8 @@ describe('Insurance Claim Processing System - Enterprise Validation', () => {
                 submissionDate: new Date('2024-03-26')
             };
 
-            const validator = new AsyncValidator(insuranceClaimValidationRules);
-            const result = await validator.validateAsync(medicalClaimScenario);
+            const validator = new AsyncValidator();
+            const result = await validator.validateAsync(medicalClaimScenario, insuranceClaimValidationRules);
 
             expect(result.isValid).toBe(false);
             expect(result.message).toBe("Validation failed. Please check and fix the errors to continue.");
@@ -1352,8 +1352,8 @@ describe('Insurance Claim Processing System - Enterprise Validation', () => {
                 submissionDate: new Date() // Current date
             };
 
-            const validator = new AsyncValidator(insuranceClaimValidationRules);
-            const result = await validator.validateAsync(boundaryClaim);
+            const validator = new AsyncValidator();
+            const result = await validator.validateAsync(boundaryClaim, insuranceClaimValidationRules);
 
             expect(result.isValid).toBe(false);
         }, 15000);
@@ -1375,8 +1375,8 @@ describe('Insurance Claim Processing System - Enterprise Validation', () => {
                 const claim = createMinimalValidClaim();
                 claim.claimNumber = testCase.claimNumber;
 
-                const validator = new AsyncValidator(insuranceClaimValidationRules);
-                const result = await validator.validateAsync(claim);
+                const validator = new AsyncValidator();
+                const result = await validator.validateAsync(claim, insuranceClaimValidationRules);
 
                 if (testCase.shouldBeValid) {
                     expect(result.errors?.claimNumber).toBeUndefined();
@@ -1405,8 +1405,8 @@ describe('Insurance Claim Processing System - Enterprise Validation', () => {
                 claim.claimant.address.zipCode = testCase.zipCode;
                 claim.incident.location.zipCode = testCase.zipCode;
 
-                const validator = new AsyncValidator(insuranceClaimValidationRules);
-                const result = await validator.validateAsync(claim);
+                const validator = new AsyncValidator();
+                const result = await validator.validateAsync(claim, insuranceClaimValidationRules);
 
                 if (testCase.shouldBeValid) {
                     expect(result.errors?.policyHolder?.address?.zipCode).toBeUndefined();
@@ -1431,8 +1431,8 @@ describe('Insurance Claim Processing System - Enterprise Validation', () => {
                 const claim = createMinimalValidClaim();
                 claim.vehicle.year = testCase.year;
 
-                const validator = new AsyncValidator(insuranceClaimValidationRules);
-                const result = await validator.validateAsync(claim);
+                const validator = new AsyncValidator();
+                const result = await validator.validateAsync(claim, insuranceClaimValidationRules);
 
                 if (testCase.shouldBeValid) {
                     expect(result.errors?.vehicle?.year).toBeUndefined();
@@ -1459,8 +1459,8 @@ describe('Insurance Claim Processing System - Enterprise Validation', () => {
                 const claim = createMinimalValidClaim();
                 claim.incident.incidentTime = testCase.time;
 
-                const validator = new AsyncValidator(insuranceClaimValidationRules);
-                const result = await validator.validateAsync(claim);
+                const validator = new AsyncValidator();
+                const result = await validator.validateAsync(claim, insuranceClaimValidationRules);
 
                 if (testCase.shouldBeValid) {
                     expect(result.errors?.incident?.incidentTime).toBeUndefined();
@@ -1487,8 +1487,8 @@ describe('Insurance Claim Processing System - Enterprise Validation', () => {
                 const claim = createMinimalValidClaim();
                 claim.policyHolder.dateOfBirth = dob;
 
-                const validator = new AsyncValidator(insuranceClaimValidationRules);
-                const result = await validator.validateAsync(claim);
+                const validator = new AsyncValidator();
+                const result = await validator.validateAsync(claim, insuranceClaimValidationRules);
 
                 if (testCase.shouldBeValid) {
                     expect(result.errors?.policyHolder?.dateOfBirth).toBeUndefined();
@@ -1505,9 +1505,9 @@ describe('Insurance Claim Processing System - Enterprise Validation', () => {
             const claim = createMinimalValidClaim();
             claim.policyHolder.ssn = '999-99-9999'; // Valid format
 
-            const validator = new AsyncValidator(insuranceClaimValidationRules);
+            const validator = new AsyncValidator();
             const startTime = Date.now();
-            const result = await validator.validateAsync(claim);
+            const result = await validator.validateAsync(claim, insuranceClaimValidationRules);
             const endTime = Date.now();
 
             // Should complete within reasonable time even with async calls
@@ -1527,8 +1527,8 @@ describe('Insurance Claim Processing System - Enterprise Validation', () => {
                 const claim = createMinimalValidClaim();
                 claim.vehicle.vin = vin;
 
-                const validator = new AsyncValidator(insuranceClaimValidationRules);
-                const result = await validator.validateAsync(claim);
+                const validator = new AsyncValidator();
+                const result = await validator.validateAsync(claim, insuranceClaimValidationRules);
 
                 expect(result.errors?.vehicle?.vin).toBeUndefined();
             }
@@ -1545,8 +1545,8 @@ describe('Insurance Claim Processing System - Enterprise Validation', () => {
                 const claim = createMinimalValidClaim();
                 claim.policyHolder.policyNumber = testCase.policyNumber;
 
-                const validator = new AsyncValidator(insuranceClaimValidationRules);
-                const result = await validator.validateAsync(claim);
+                const validator = new AsyncValidator();
+                const result = await validator.validateAsync(claim, insuranceClaimValidationRules);
 
                 if (testCase.shouldBeValid) {
                     expect(result.errors?.policyHolder?.policyNumber).toBeUndefined();
@@ -1565,20 +1565,20 @@ describe('Insurance Claim Processing System - Enterprise Validation', () => {
 
             // Test incident before policy start
             claim.incident.incidentDate = new Date('2023-12-31');
-            let validator = new AsyncValidator(insuranceClaimValidationRules);
-            let result = await validator.validateAsync(claim);
+            let validator = new AsyncValidator();
+            let result = await validator.validateAsync(claim, insuranceClaimValidationRules);
             expect(result.errors?.incident?.incidentDate).toBeDefined();
 
             // Test incident after policy end
             claim.incident.incidentDate = new Date('2026-01-01');
-            result = await validator.validateAsync(claim);
+            result = await validator.validateAsync(claim, insuranceClaimValidationRules);
             expect(result.errors?.incident?.incidentDate).toBeDefined();
 
             // Test valid incident within policy period and within 30 days
             const validIncidentDate = new Date();
             validIncidentDate.setDate(validIncidentDate.getDate() - 10); // 10 days ago
             claim.incident.incidentDate = validIncidentDate;
-            result = await validator.validateAsync(claim);
+            result = await validator.validateAsync(claim, insuranceClaimValidationRules);
             expect(result.errors?.incident?.incidentDate).toBeUndefined();
         });
 
@@ -1588,13 +1588,13 @@ describe('Insurance Claim Processing System - Enterprise Validation', () => {
 
             // Normal mileage for 4-year-old car
             claim.vehicle.mileage = 60000; // 15k per year
-            let validator = new AsyncValidator(insuranceClaimValidationRules);
-            let result = await validator.validateAsync(claim);
+            let validator = new AsyncValidator();
+            let result = await validator.validateAsync(claim, insuranceClaimValidationRules);
             expect(result.errors?.vehicle?.mileage).toBeUndefined();
 
             // Excessive mileage
             claim.vehicle.mileage = 200000; // Too high for 4-year-old car
-            result = await validator.validateAsync(claim);
+            result = await validator.validateAsync(claim, insuranceClaimValidationRules);
             expect(result.errors?.vehicle?.mileage).toBeDefined();
         });
 
@@ -1622,8 +1622,8 @@ describe('Insurance Claim Processing System - Enterprise Validation', () => {
             // Total damage cost: 2800
             claim.claimAmount = 2800; // Matches exactly
 
-            const validator = new AsyncValidator(insuranceClaimValidationRules);
-            const result = await validator.validateAsync(claim);
+            const validator = new AsyncValidator();
+            const result = await validator.validateAsync(claim, insuranceClaimValidationRules);
 
             expect(result.isValid).toBe(false);
         });
@@ -1636,8 +1636,8 @@ describe('Insurance Claim Processing System - Enterprise Validation', () => {
             incidentDate.setDate(incidentDate.getDate() - 45);
             claim.incident.incidentDate = incidentDate;
 
-            const validator = new AsyncValidator(insuranceClaimValidationRules);
-            const result = await validator.validateAsync(claim);
+            const validator = new AsyncValidator();
+            const result = await validator.validateAsync(claim, insuranceClaimValidationRules);
 
             expect(result.errors?.incident?.incidentDate).toBeDefined();
             expect(result.errors?.incident?.incidentDate?.[0]?.errorMessage).toContain("Incident must have occurred during the policy period (Mon Jan 01 2024 - Tue Dec 31 2024).");
@@ -1650,8 +1650,8 @@ describe('Insurance Claim Processing System - Enterprise Validation', () => {
 
             // Test empty damages array
             claim.damages = [];
-            let validator = new AsyncValidator(insuranceClaimValidationRules);
-            let result = await validator.validateAsync(claim);
+            let validator = new AsyncValidator();
+            let result = await validator.validateAsync(claim, insuranceClaimValidationRules);
             expect(result.errors?.damages?.arrayErrors).toBeDefined();
 
             // Test valid damages array
@@ -1665,7 +1665,7 @@ describe('Insurance Claim Processing System - Enterprise Validation', () => {
                     isPreExistingDamage: false
                 }
             ];
-            result = await validator.validateAsync(claim);
+            result = await validator.validateAsync(claim, insuranceClaimValidationRules);
             expect(result.errors?.damages?.arrayErrors).toBeUndefined();
         });
 
@@ -1674,13 +1674,13 @@ describe('Insurance Claim Processing System - Enterprise Validation', () => {
 
             // Test empty documents
             claim.supportingDocuments = [];
-            let validator = new AsyncValidator(insuranceClaimValidationRules);
-            let result = await validator.validateAsync(claim);
+            let validator = new AsyncValidator();
+            let result = await validator.validateAsync(claim, insuranceClaimValidationRules);
             expect(result.errors?.supportingDocuments?.arrayErrors).toBeDefined();
 
             // Test valid documents
             claim.supportingDocuments = ['POLICE_REPORT', 'PHOTOS', 'ESTIMATE'];
-            result = await validator.validateAsync(claim);
+            result = await validator.validateAsync(claim, insuranceClaimValidationRules);
             expect(result.errors?.supportingDocuments?.arrayErrors).toBeUndefined();
         });
 
@@ -1717,8 +1717,8 @@ describe('Insurance Claim Processing System - Enterprise Validation', () => {
                 }
             ];
 
-            const validator = new AsyncValidator(insuranceClaimValidationRules);
-            const result = await validator.validateAsync(claim);
+            const validator = new AsyncValidator();
+            const result = await validator.validateAsync(claim, insuranceClaimValidationRules);
 
             expect(result.isValid).toBe(false);
         });
@@ -1741,8 +1741,8 @@ describe('Insurance Claim Processing System - Enterprise Validation', () => {
             claim.claimAmount = claim.damages.reduce((sum, damage) => sum + damage.estimatedCost, 0);
 
             const startTime = Date.now();
-            const validator = new AsyncValidator(insuranceClaimValidationRules);
-            const result = await validator.validateAsync(claim);
+            const validator = new AsyncValidator();
+            const result = await validator.validateAsync(claim, insuranceClaimValidationRules);
             const endTime = Date.now();
 
             expect(result.isValid).toBe(false);
@@ -1756,11 +1756,11 @@ describe('Insurance Claim Processing System - Enterprise Validation', () => {
                 return claim;
             });
 
-            const validator = new AsyncValidator(insuranceClaimValidationRules);
+            const validator = new AsyncValidator();
             const startTime = Date.now();
 
             const results = await Promise.all(
-                claims.map(claim => validator.validateAsync(claim))
+                claims.map(claim => validator.validateAsync(claim, insuranceClaimValidationRules))
             );
 
             const endTime = Date.now();
@@ -1828,8 +1828,8 @@ describe('Insurance Claim Processing System - Enterprise Validation', () => {
             const claim = createMinimalValidClaim();
             claim.policyHolder.address = incompleteAddress as AddressType; // Type assertion bypasses safety
 
-            const validator = new AsyncValidator(insuranceClaimValidationRules);
-            const result = await validator.validateAsync(claim);
+            const validator = new AsyncValidator();
+            const result = await validator.validateAsync(claim, insuranceClaimValidationRules);
 
             // Validation catches what TypeScript interface can't enforce at runtime
             expect(result.isValid).toBe(false);
@@ -1846,8 +1846,8 @@ describe('Insurance Claim Processing System - Enterprise Validation', () => {
             claim.policyHolder.ssn = 'INVALID-FORMAT'; // This will fail SSN validation
             claim.policyHolder.policyNumber = 'POL-EXPIRED-001'; // This will fail policy validation
 
-            const validator = new AsyncValidator(insuranceClaimValidationRules);
-            const result = await validator.validateAsync(claim);
+            const validator = new AsyncValidator();
+            const result = await validator.validateAsync(claim, insuranceClaimValidationRules);
 
             // Limitation: We can't create a validation rule that says 
             // "only validate policy if SSN is valid" easily with current architecture
@@ -1893,8 +1893,8 @@ describe('Insurance Claim Processing System - Enterprise Validation', () => {
             const claim = createMinimalValidClaim();
             claim.priorClaims = 7; // Exceeds limit of 5
 
-            const validator = new AsyncValidator(insuranceClaimValidationRules);
-            const result = await validator.validateAsync(claim);
+            const validator = new AsyncValidator();
+            const result = await validator.validateAsync(claim, insuranceClaimValidationRules);
 
             expect(result.isValid).toBe(false);
             expect(result.errors?.priorClaims?.[0]?.errorMessage).toContain('executive approval');
@@ -1907,8 +1907,8 @@ describe('Insurance Claim Processing System - Enterprise Validation', () => {
             claim.vehicle.year = 1985; // Too old
             claim.policyHolder.premiumAmount = 50; // Too low
 
-            const validator = new AsyncValidator(insuranceClaimValidationRules);
-            const result = await validator.validateAsync(claim);
+            const validator = new AsyncValidator();
+            const result = await validator.validateAsync(claim, insuranceClaimValidationRules);
 
             expect(result.errors?.vehicle?.year?.[0]?.attemptedValue).toBe(1985);
             expect(result.errors?.policyHolder?.premiumAmount?.[0]?.attemptedValue).toBe(50);
@@ -1919,8 +1919,8 @@ describe('Insurance Claim Processing System - Enterprise Validation', () => {
             // Create a scenario where multiple rules fail for the same field
             claim.policyHolder.email = ''; // Fails both required and emailAddress rules
 
-            const validator = new AsyncValidator(insuranceClaimValidationRules);
-            const result = await validator.validateAsync(claim);
+            const validator = new AsyncValidator();
+            const result = await validator.validateAsync(claim, insuranceClaimValidationRules);
 
             expect(result.errors?.policyHolder?.email?.length).toBeGreaterThan(0);
         });

@@ -66,8 +66,8 @@ describe("Validate empty order items", () => {
             orderItems: []
         }
 
-        const validator = new Validator(rule)
-        const actual1 = validator.validate(orderWithEmptyItem)
+        const validator = new Validator()
+        const actual1 = validator.validate(orderWithEmptyItem, rule)
         const expected1: ValidationResult<Order> = {
             message: errorMessage,
             isValid: false,
@@ -158,8 +158,8 @@ describe("Validate empty order items", () => {
             ]
         }
 
-        const validator = new Validator(rule)
-        const actual = validator.validate(order)
+        const validator = new Validator()
+        const actual = validator.validate(order, rule)
 
         const expected: ValidationResult<Order> = {
             message: errorMessage,

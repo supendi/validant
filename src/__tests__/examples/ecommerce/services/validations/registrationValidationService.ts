@@ -70,13 +70,13 @@ export function createRegistrationValidationService(userRepository: UserReposito
     async function validateAsync(request: RegistrationRequest) {
         const registrationRule = buildRegistrationRule(userRepository)
 
-        const validator = new AsyncValidator(registrationRule, {
+        const validator = new AsyncValidator({
             validationMessage: {
                 errorMessage: "error",
                 successMessage: "ok"
             }
         })
-        return validator.validateAsync(request)
+        return validator.validateAsync(request, registrationRule)
     }
     return {
         validateAsync
